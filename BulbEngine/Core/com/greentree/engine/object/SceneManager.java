@@ -1,14 +1,12 @@
-package com.greentree.engine;
+package com.greentree.engine.object;
 
-import com.greentree.engine.object.Scene;
+import com.greentree.engine.Game;
+import com.greentree.engine.Log;
 import com.greentree.util.xml.XMLElement;
 import com.greentree.util.xml.XMLParser;
 
 public final class SceneManager {
 
-	private SceneManager() {
-	}
-	
 	public static Scene getScene(final String name) {
 		Log.info("Scene load : " + name);
 		final XMLElement in = XMLParser.parse(Game.getRoot(), name + ".scene");
@@ -25,5 +23,8 @@ public final class SceneManager {
 			}
 			Runtime.getRuntime().runFinalization();
 		}, "scene " + name + " is loading").start();
+	}
+	
+	private SceneManager() {
 	}
 }

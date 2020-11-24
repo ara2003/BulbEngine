@@ -1,7 +1,6 @@
 package com.greentree.engine.object;
 
-import static com.greentree.engine.object.GameObjectEvent.EventType.created;
-import static com.greentree.engine.object.GameObjectEvent.EventType.creating;
+import static com.greentree.engine.object.GameObjectEvent.EventType.create;
 import static com.greentree.engine.object.GameObjectEvent.EventType.destroy;
 
 import java.io.File;
@@ -10,8 +9,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.greentree.engine.Debug;
 import com.greentree.engine.Game;
 import com.greentree.engine.Log;
+import com.greentree.engine.Time;
 import com.greentree.engine.component.util.GameComponent;
 import com.greentree.util.xml.XMLElement;
 import com.greentree.util.xml.XMLParser;
@@ -24,16 +25,18 @@ public final class GameObject implements Serializable {
 	private final String name;
 	private final List<String> tags;
 
-	public GameObject(final String name, final Scene scene) throws IllegalArgumentException {
-		this(scene.getResurse(name), scene);
+	public GameObject(final String name) throws IllegalArgumentException {
+		this(Game.getResurse(name), true);
 	}
 	
-	GameObject(XMLElement in, final Scene scene) {
+	GameObject(XMLElement in, boolean prefab) {
 		if(!in.getAttribute("file").equals("")) {
 			final String file = in.getAttribute("file");
-			name = new File(file).getName();
+			name = new File(file).getName().replaceFirst(".obj", "");
 			in = XMLParser.parse(Game.getRoot(), file, "obj");
-		}else name = in.getAttribute("name");
+		}else {
+			name = in.getAttribute("name");
+		}
 		//
 		component = new HashMap<>();
 		for(final XMLElement element : in.getChildrens("component")) {
@@ -45,7 +48,10 @@ public final class GameObject implements Serializable {
 		tags = new ArrayList<>();
 		for(final XMLElement element : in.getChildrens("tags"))
 			for(final XMLElement element1 : element.getChildrens("tag")) tags.add(element1.getAttribute("name"));
-		scene.getEventSystem().event(new GameObjectEvent(creating, this));
+		
+		if(prefab) {
+			Game.getCurrentScene().addObject(this);
+		}
 	}
 
 	public void CollideEvent(final GameObject other) {
@@ -53,7 +59,7 @@ public final class GameObject implements Serializable {
 	}
 
 	public void destroy() {
-		Game.getEventSystem().event(new GameObjectEvent(destroy, this));
+		Game.getEventSystem().eventNoQueue(new GameObjectEvent(destroy, this));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -79,14 +85,14 @@ public final class GameObject implements Serializable {
 		return tags.contains(tag);
 	}
 
-	void init(final Scene scene) {
+	void init() {
 		if(initialize) {
-			Log.warn("second init object " + this + " from " + Thread.currentThread().getStackTrace()[2]);
+			Log.error("second init object " + this + " from " + Thread.currentThread().getStackTrace()[2]);
 			return;
 		}
 		initialize = true;
-		for(final GameComponent gc : component.values()) gc.start(scene, this);
-		Game.getEventSystem().event(new GameObjectEvent(created, this));
+		for(final GameComponent gc : component.values()) gc.start(this);
+		Game.getEventSystem().event(new GameObjectEvent(create, this));
 	}
 	
 	@Override
@@ -95,6 +101,10 @@ public final class GameObject implements Serializable {
 	}
 	
 	public void update() {
-		for(final GameComponent c : component.values()) c.update();
+		for(final GameComponent c : component.values()) {
+			Time.start(0);
+			c.update();
+			Debug.addTime(c.getClass().getSimpleName(), "" + Time.finish(0));
+		}
 	}
 }

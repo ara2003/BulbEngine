@@ -4,9 +4,9 @@
 package com.greentree.opengl;
 
 public class ImageDataFactory {
-	
+
 	private static boolean usePngLoader = true;
-	
+
 	public static LoadableImageData getImageDataFor(String ref) {
 		ref = ref.toLowerCase();
 		if(ref.endsWith(".tga")) return new TGAImageData();

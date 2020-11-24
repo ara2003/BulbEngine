@@ -17,6 +17,28 @@ import com.greentree.opengl.rendener.Renderer;
 import com.greentree.opengl.rendener.SGL;
 
 public class ParticleSystem implements Serializable {
+
+	private class ParticlePool implements Serializable {
+
+		/**
+		 *
+		 */
+		private static final long serialVersionUID = 1L;
+		public transient ArrayList<Particle> available;
+		public transient Particle[] particles;
+
+		public ParticlePool(final ParticleSystem system, final int maxParticles) {
+			particles = new Particle[maxParticles];
+			available = new ArrayList<>();
+			for(int i = 0; i < particles.length; ++i) particles[i] = createParticle(system);
+			this.reset(system);
+		}
+
+		public void reset(final ParticleSystem system) {
+			available.clear();
+			for(final Particle particle : particles) available.add(particle);
+		}
+	}
 	
 	public static final int BLEND_ADDITIVE = 1;
 	public static final int BLEND_COMBINE = 2;
@@ -37,7 +59,7 @@ public class ParticleSystem implements Serializable {
 	private boolean visible;
 	private float x;
 	private float y;
-
+	
 	public ParticleSystem(final Image defaultSprite) {
 		this(defaultSprite, 100);
 	}
@@ -54,15 +76,15 @@ public class ParticleSystem implements Serializable {
 		sprite = defaultSprite;
 		dummy = createParticle(this);
 	}
-	
+
 	public ParticleSystem(final String defaultSpriteRef) {
 		this(defaultSpriteRef, 100);
 	}
-	
+
 	public ParticleSystem(final String defaultSpriteRef, final int maxParticles) {
 		this(defaultSpriteRef, maxParticles, null);
 	}
-	
+
 	public ParticleSystem(final String defaultSpriteRef, final int maxParticles, final Color mask) {
 		GL = Renderer.get();
 		removeMe = new ArrayList<>();
@@ -76,29 +98,29 @@ public class ParticleSystem implements Serializable {
 		setDefaultImageName(defaultSpriteRef);
 		dummy = createParticle(this);
 	}
-	
+
 	public void addEmitter(final ParticleEmitter emitter) {
 		emitters.add(emitter);
 		final ParticlePool pool = new ParticlePool(this, maxParticlesPerEmitter);
 		particlesByEmitter.put(emitter, pool);
 	}
-	
+
 	protected Particle createParticle(final ParticleSystem system) {
 		return new Particle(system);
 	}
-	
+
 	public int getBlendingMode() {
 		return blendingMode;
 	}
-	
+
 	public ParticleEmitter getEmitter(final int index) {
 		return emitters.get(index);
 	}
-	
+
 	public int getEmitterCount() {
 		return emitters.size();
 	}
-	
+
 	public Particle getNewParticle(final ParticleEmitter emitter, final float life) {
 		final ParticlePool pool = particlesByEmitter.get(emitter);
 		final ArrayList<Particle> available = pool.available;
@@ -111,23 +133,23 @@ public class ParticleSystem implements Serializable {
 		Log.warn("Ran out of particles (increase the limit)!");
 		return dummy;
 	}
-	
+
 	public int getParticleCount() {
 		return pCount;
 	}
-	
+
 	public float getPositionX() {
 		return x;
 	}
-	
+
 	public float getPositionY() {
 		return y;
 	}
-	
+
 	public boolean isVisible() {
 		return visible;
 	}
-	
+
 	private void loadSystemParticleImage() {
 		AccessController.doPrivileged((PrivilegedAction<Object>) ()-> {
 			if(ParticleSystem.this.mask != null)
@@ -136,19 +158,19 @@ public class ParticleSystem implements Serializable {
 			return null;
 		});
 	}
-	
+
 	public void moveAll(final ParticleEmitter emitter, final float x, final float y) {
 		final ParticlePool pool = particlesByEmitter.get(emitter);
 		for(final Particle particle : pool.particles) if(particle.inUse()) particle.move(x, y);
 	}
-	
+
 	public void release(final Particle particle) {
 		if(particle != dummy) {
 			final ParticlePool pool = particlesByEmitter.get(particle.getEmitter());
 			pool.available.add(particle);
 		}
 	}
-	
+
 	public void releaseAll(final ParticleEmitter emitter) {
 		if(!particlesByEmitter.isEmpty()) for(final ParticlePool pool : particlesByEmitter.values())
 			for(final Particle particle : pool.particles) if(particle.inUse() && particle.getEmitter() == emitter) {
@@ -156,20 +178,20 @@ public class ParticleSystem implements Serializable {
 				release(particle);
 			}
 	}
-	
+
 	public void removeAllEmitters() {
 		for(int i = 0; i < emitters.size(); --i, ++i) removeEmitter(emitters.get(i));
 	}
-	
+
 	public void removeEmitter(final ParticleEmitter emitter) {
 		emitters.remove(emitter);
 		particlesByEmitter.remove(emitter);
 	}
-	
+
 	public void render() {
 		this.render(x, y);
 	}
-	
+
 	public void render(final float x, final float y) {
 		if(sprite == null && defaultImageName != null) loadSystemParticleImage();
 		if(!visible) return;
@@ -194,38 +216,38 @@ public class ParticleSystem implements Serializable {
 		Color.white.bind();
 		GL.glTranslatef(-x, -y, 0.0f);
 	}
-	
+
 	public void reset() {
 		for(final ParticlePool pool : particlesByEmitter.values()) pool.reset(this);
 		for(final ParticleEmitter emitter : emitters) emitter.resetState();
 	}
-	
+
 	public void setBlendingMode(final int mode) {
 		blendingMode = mode;
 	}
-	
+
 	public void setDefaultImageName(final String ref) {
 		defaultImageName = ref;
 		sprite = null;
 	}
-	
+
 	public void setPosition(final float x, final float y) {
 		this.x = x;
 		this.y = y;
 	}
-	
+
 	public void setRemoveCompletedEmitters(final boolean remove) {
 		removeCompletedEmitters = remove;
 	}
-	
+
 	public void setUsePoints(final boolean usePoints) {
 		this.usePoints = usePoints;
 	}
-	
+
 	public void setVisible(final boolean visible) {
 		this.visible = visible;
 	}
-	
+
 	public void update(final int delta) {
 		if(sprite == null && defaultImageName != null) loadSystemParticleImage();
 		removeMe.clear();
@@ -251,30 +273,8 @@ public class ParticleSystem implements Serializable {
 				}
 			}
 	}
-	
+
 	public boolean usePoints() {
 		return usePoints;
-	}
-	
-	private class ParticlePool implements Serializable {
-		
-		/**
-		 *
-		 */
-		private static final long serialVersionUID = 1L;
-		public transient ArrayList<Particle> available;
-		public transient Particle[] particles;
-		
-		public ParticlePool(final ParticleSystem system, final int maxParticles) {
-			particles = new Particle[maxParticles];
-			available = new ArrayList<>();
-			for(int i = 0; i < particles.length; ++i) particles[i] = createParticle(system);
-			this.reset(system);
-		}
-		
-		public void reset(final ParticleSystem system) {
-			available.clear();
-			for(final Particle particle : particles) available.add(particle);
-		}
 	}
 }

@@ -44,16 +44,16 @@ package com.greentree.util.math;
  *
  * @author Kevin Glass */
 public strictfp class Matrix2f {
-	
+
 	/** The first column of the matrix */
 	public Vector2f col1 = new Vector2f();
 	/** The second column of the matrix */
 	public Vector2f col2 = new Vector2f();
-
+	
 	/** Create an empty matrix */
 	public Matrix2f() {
 	}
-
+	
 	/** Create a matrix with a rotation
 	 *
 	 * @param angle The angle of the rotation decribed by the matrix */
@@ -65,7 +65,7 @@ public strictfp class Matrix2f {
 		col1.y = s;
 		col2.y = c;
 	}
-	
+
 	/** Create a matrix
 	 *
 	 * @param col1 The first column
@@ -74,7 +74,7 @@ public strictfp class Matrix2f {
 		this.col1.set(col1);
 		this.col2.set(col2);
 	}
-	
+
 	/** Transpose the invert
 	 *
 	 * @return A newly created matrix containing the invert of this matrix */
@@ -90,7 +90,7 @@ public strictfp class Matrix2f {
 		B.col2.y = det * a;
 		return B;
 	}
-	
+
 	/** Transpose the matrix
 	 *
 	 * @return A newly created matrix containing the transpose of this matrix */

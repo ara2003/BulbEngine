@@ -16,6 +16,14 @@ import com.greentree.util.BufferedImageUtil;
 
 public final class BasicFont implements Font {
 	
+	private class IntObject {
+		
+		public int height;
+		public int storedX;
+		public int storedY;
+		public int width;
+	}
+
 	private static final SGL GL = Renderer.get();
 	private final boolean antiAlias;
 	private final Map<Character, IntObject> customChars;
@@ -26,7 +34,7 @@ public final class BasicFont implements Font {
 	private Texture fontTexture;
 	private final int textureHeight;
 	private int textureWidth;
-
+	
 	public BasicFont(final java.awt.Font font, final boolean antiAlias) {
 		this(font, antiAlias, null);
 	}
@@ -105,13 +113,14 @@ public final class BasicFont implements Font {
 	}
 	
 	@Override
-	public void drawString(final float x, final float y, final String whatchars, final com.greentree.engine.gui.Color color) {
+	public void drawString(final float x, final float y, final String whatchars,
+			final com.greentree.engine.gui.Color color) {
 		this.drawString(x, y, whatchars, color, 0, whatchars.length() - 1);
 	}
 	
 	@Override
-	public void drawString(final float x, final float y, final String whatchars, final com.greentree.engine.gui.Color color,
-			final int startIndex, final int endIndex) {
+	public void drawString(final float x, final float y, final String whatchars,
+			final com.greentree.engine.gui.Color color, final int startIndex, final int endIndex) {
 		color.bind();
 		fontTexture.bind();
 		IntObject intObject = null;
@@ -159,7 +168,7 @@ public final class BasicFont implements Font {
 	public int getHeight(final String HeightString) {
 		return fontHeight;
 	}
-	
+
 	@Override
 	public int getLineHeight() {
 		return fontHeight;
@@ -176,13 +185,5 @@ public final class BasicFont implements Font {
 			if(intObject != null) totalwidth += intObject.width;
 		}
 		return totalwidth;
-	}
-
-	private class IntObject {
-		
-		public int height;
-		public int storedX;
-		public int storedY;
-		public int width;
 	}
 }

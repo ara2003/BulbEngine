@@ -6,10 +6,7 @@ public abstract class GameObjectListener implements Listener {
 
 	private static final long serialVersionUID = 1L;
 
-	public void created(final GameObject gameObject) {
-	}
-
-	public void creating(final GameObject object) {
+	public void create(final GameObject gameObject) {
 	}
 
 	public void destroy(final GameObject gameObject) {

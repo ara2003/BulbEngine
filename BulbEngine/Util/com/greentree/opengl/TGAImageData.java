@@ -13,64 +13,64 @@ import java.nio.ByteOrder;
 import org.lwjgl.BufferUtils;
 
 public class TGAImageData implements LoadableImageData {
-	
+
 	private int height;
 	private short pixelDepth;
 	private int texHeight;
 	private int texWidth;
 	private int width;
-	
+
 	@Override
 	public void configureEdging(final boolean edging) {
 	}
-	
+
 	private short flipEndian(final short signedShort) {
 		final int input = signedShort & 0xFFFF;
 		return (short) (input << 8 | (input & 0xFF00) >>> 8);
 	}
-	
+
 	private int get2Fold(final int fold) {
 		int ret;
 		for(ret = 2; ret < fold; ret *= 2) {
 		}
 		return ret;
 	}
-	
+
 	@Override
 	public int getDepth() {
 		return pixelDepth;
 	}
-	
+
 	@Override
 	public int getHeight() {
 		return height;
 	}
-	
+
 	@Override
 	public ByteBuffer getImageBufferData() {
 		throw new RuntimeException("TGAImageData doesn't store it's image.");
 	}
-	
+
 	@Override
 	public int getTexHeight() {
 		return texHeight;
 	}
-	
+
 	@Override
 	public int getTexWidth() {
 		return texWidth;
 	}
-	
+
 	@Override
 	public int getWidth() {
 		return width;
 	}
-	
+
 	@Override
 	public ByteBuffer loadImage(final InputStream fis) throws IOException {
 		return this.loadImage(fis, true, null);
 	}
-	
+
 	@Override
 	public ByteBuffer loadImage(final InputStream fis, boolean flipped, boolean forceAlpha, final int[] transparent)
 			throws IOException {
@@ -190,7 +190,7 @@ public class TGAImageData implements LoadableImageData {
 		scratch.flip();
 		return scratch;
 	}
-	
+
 	@Override
 	public ByteBuffer loadImage(final InputStream fis, final boolean flipped, final int[] transparent)
 			throws IOException {

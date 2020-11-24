@@ -12,6 +12,11 @@ public class KeyListenerManager extends ListenerManager {
 	private static final long serialVersionUID = 1L;
 	private final List<KeyListener> listeners = new ArrayList<>();
 
+	@SuppressWarnings("unchecked")
+	public KeyListenerManager() {
+		super(KeyEvent.class);
+	}
+
 	@Override
 	public void addListener(final Listener listener) {
 		if(listener instanceof KeyListener) listeners.add((KeyListener) listener);

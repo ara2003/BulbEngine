@@ -1,31 +1,37 @@
 package com.greentree.engine.component;
 
-import com.greentree.engine.collider.CircleCollider;
-import com.greentree.engine.collider.Collider;
-import com.greentree.engine.component.util.GameComponent;
 import com.greentree.engine.component.util.XmlData;
+import com.greentree.geom.Circle;
+import com.greentree.geom.Shape;
 
 /** @author ara */
-public final class CircleColliderComponent extends GameComponent {
-	
+public final class CircleColliderComponent extends ColliderComponent {
+
 	private static final long serialVersionUID = 1L;
-	public Collider collider;
+	private Shape shape;
 	@XmlData
 	public float radius;
-	private Transform t;
 	@XmlData(def = "true")
-	public boolean triger;
-	@XmlData(name = "typeCollider")
-	public String type;
+	private boolean triger;
+	
+	@Override
+	public Shape getShape() {
+		return shape;
+	}
+
+	@Override
+	public boolean isTriger() {
+		return triger;
+	}
 
 	@Override
 	public void start() {
-		collider = new CircleCollider(radius, triger);
-		scene.addCollider(collider, object);
+		shape = new Circle(0, 0, radius);
+		super.start();
 	}
-	
+
 	@Override
 	public void update() {
-		collider.moveTo(t.x, t.y);
+		shape.moveTo(t.x, t.y);
 	}
 }

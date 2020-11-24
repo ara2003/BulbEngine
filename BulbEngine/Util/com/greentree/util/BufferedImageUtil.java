@@ -11,21 +11,18 @@ import com.greentree.opengl.TextureImpl;
 import com.greentree.opengl.rendener.Renderer;
 
 public class BufferedImageUtil {
-
-	private BufferedImageUtil() {
-	}
-
+	
 	public static Texture getTexture(final String resourceName, final BufferedImage resourceImage) throws IOException {
 		final Texture tex = BufferedImageUtil.getTexture(resourceName, resourceImage, 3553, 6408, 9729, 9729);
 		return tex;
 	}
-
+	
 	public static Texture getTexture(final String resourceName, final BufferedImage resourceImage, final int filter)
 			throws IOException {
 		final Texture tex = BufferedImageUtil.getTexture(resourceName, resourceImage, 3553, 6408, filter, filter);
 		return tex;
 	}
-
+	
 	public static Texture getTexture(final String resourceName, final BufferedImage resourceimage, final int target,
 			final int dstPixelFormat, final int minFilter, final int magFilter) throws IOException {
 		final ImageIOImageData data = new ImageIOImageData();
@@ -57,5 +54,8 @@ public class BufferedImageUtil {
 		Renderer.get().glTexImage2D(target, 0, dstPixelFormat, texture.getTextureWidth(), texture.getTextureHeight(), 0,
 				srcPixelFormat, 5121, textureBuffer);
 		return texture;
+	}
+	
+	private BufferedImageUtil() {
 	}
 }

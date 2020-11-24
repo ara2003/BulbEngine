@@ -15,12 +15,9 @@ import org.xml.sax.SAXException;
 import com.greentree.engine.Log;
 
 public class XMLParser {
-
+	
 	private static DocumentBuilderFactory factory;
-
-	private XMLParser() {
-	}
-
+	
 	public static XMLElement parse(final File file) {
 		try {
 			return XMLParser.parse(new FileInputStream(file));
@@ -37,7 +34,7 @@ public class XMLParser {
 	public static XMLElement parse(final File root, final String string) {
 		return XMLParser.parse(new File(root, string));
 	}
-
+	
 	public static XMLElement parse(final File root, final String file, final String string) {
 		return XMLParser.parse(root, file + "." + string);
 	}
@@ -52,5 +49,8 @@ public class XMLParser {
 
 	public static XMLElement parse(final String file) {
 		return XMLParser.parse(new File(file));
+	}
+	
+	private XMLParser() {
 	}
 }

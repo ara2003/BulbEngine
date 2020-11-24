@@ -1,11 +1,11 @@
 package com.greentree.particles;
 
 public class MyFire extends AbstractParticleEmitter {
-
+	
 	private static final long serialVersionUID = 1L;
 	private final int interval = 15, wInterval = 80;
 	private int timer, wTimer;
-
+	
 	@Override
 	public void update(final ParticleSystem system, final int delta) {
 		timer -= delta;
@@ -24,7 +24,7 @@ public class MyFire extends AbstractParticleEmitter {
 			}
 		}
 	}
-
+	
 	@Override
 	public void updateParticle(final Particle particle, final int delta) {
 		if(wTimer <= 0) //particle.adjustVelocity((float) (Math.pow(particle.getY()*2, 4)), 0);

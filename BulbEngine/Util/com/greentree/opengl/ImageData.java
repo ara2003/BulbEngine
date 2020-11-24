@@ -6,7 +6,7 @@ package com.greentree.opengl;
 import java.nio.ByteBuffer;
 
 public interface ImageData {
-	
+
 	int getDepth();
 	int getHeight();
 	ByteBuffer getImageBufferData();

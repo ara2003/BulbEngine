@@ -4,7 +4,7 @@
 package com.greentree.opengl.rendener;
 
 public interface LineStripRenderer {
-	
+
 	boolean applyGLLineFixes();
 	void color(final float p0, final float p1, final float p2, final float p3);
 	void end();

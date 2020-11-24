@@ -7,82 +7,24 @@ import java.util.Random;
 
 import com.greentree.engine.Game;
 import com.greentree.engine.Log;
-import com.greentree.engine.Time;
 import com.greentree.engine.loading.LoaderUtil;
 import com.greentree.engine.object.GameObject;
-import com.greentree.engine.object.Scene;
 import com.greentree.util.xml.XMLElement;
 
 public abstract class GameComponent implements Serializable {
+	
+	@FunctionalInterface
+	protected interface Corutine {
 
+		void run() throws InterruptedException;
+		
+	}
+	
 	protected static final Random random = new Random();
 	private static final long serialVersionUID = 1L;
-	transient boolean initialize = false;
-	protected transient GameObject object;
-	protected transient Scene scene;
-	
-	protected GameComponent() {
-	}
-	
-	public void CollideEvent(final GameObject other) {
-	}
-	
-	public void destroy() {
-		object.destroy();
-	}
-
-	protected final <T extends GameComponent> T getComponent(final Class<T> clazz) {
-		return object.getComponent(clazz);
-	}
-	
-	protected long getTime() {
-		return System.currentTimeMillis();
-	}
-
-	protected void start() {
-	}
-
-	@SuppressWarnings("unchecked")
-	public final void start(final Scene scene, final GameObject object) {
-		if(initialize) {
-			Log.error("second init component " + object + ":" + this + " from "
-					+ Thread.currentThread().getStackTrace()[2]);
-			return;
-		}
-		initialize = true;
-		this.scene = scene;
-		this.object = object;
-		for(final Field f : LoaderUtil.getAllFields(getClass())) try {
-			f.setAccessible(true);
-			if(f.getType().asSubclass(GameComponent.class) != null)
-				if(f.get(this) == null) f.set(this, getComponent((Class<? extends GameComponent>) f.getType()));
-		}catch(IllegalArgumentException | IllegalAccessException e) {
-			e.printStackTrace();
-		}catch(final ClassCastException e) {
-		}
-		start();
-	}
-
-	protected void startCorutine(final Corutine cor) {
-		new Thread(()-> {
-			try {
-				cor.run();
-			}catch(final InterruptedException e) {
-				e.printStackTrace();
-			}
-		}).start();
-	}
-	
-	@Override
-	public String toString() {
-		return getClass().getSimpleName();
-	}
-	
-	public void update() {
-	}
 	
 	@SuppressWarnings("unchecked")
-	public static GameComponent createComponent(final XMLElement in) {
+	public final static GameComponent createComponent(final XMLElement in) {
 		final String[] w = in.getAttribute("type").split(":");
 		Class<?> clazz;
 		try {
@@ -103,8 +45,8 @@ public abstract class GameComponent implements Serializable {
 			if(f.getAnnotation(XmlData.class) != null) try {
 				String xmlValue = "";
 				{
-					String xmlName = f.getAnnotation(XmlData.class).name(); // ��� ���� � xml �����
-					if(xmlName.equals("*")) xmlName = f.getName(); // ���� ��� �� ������ ���������, �� ����� ��� ����
+					String xmlName = f.getAnnotation(XmlData.class).name();
+					if(xmlName.equals("*")) xmlName = f.getName();
 					if(xmlName.equals("type"))
 						Log.error("name of field " + component.getClass() + "." + f.getName() + " is \"type\"");
 					xmlValue = in.getAttribute(xmlName);
@@ -154,10 +96,63 @@ public abstract class GameComponent implements Serializable {
 			}
 		return component;
 	}
+	
+	private transient boolean initialize = false;
+	private GameObject object;
 
-	@FunctionalInterface
-	protected interface Corutine {
+	protected GameComponent() {
+	}
 
-		void run() throws InterruptedException;
+	public void CollideEvent(final GameObject other) {
+	}
+	
+	protected final <T extends GameComponent> T getComponent(final Class<T> clazz) {
+		return getObject().getComponent(clazz);
+	}
+	
+	public GameObject getObject() {
+		return object;
+	}
+	
+	protected void start() {
+	}
+
+	@SuppressWarnings("unchecked")
+	public final void start(final GameObject object) {
+		if(initialize) {
+			Log.error("second init component " + object + ":" + this + " from "
+					+ Thread.currentThread().getStackTrace()[2]);
+			return;
+		}
+		initialize = true;
+		this.object = object;
+		for(final Field f : LoaderUtil.getAllFields(getClass())) try {
+			f.setAccessible(true);
+			if(f.getType().asSubclass(GameComponent.class) != null)
+				if(f.get(this) == null) f.set(this, getComponent((Class<? extends GameComponent>) f.getType()));
+		}catch(IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+		}catch(final ClassCastException e) {
+		}
+		start();
+	}
+
+	protected final void startCorutine(final Corutine cor) {
+		final Thread corutine = new Thread(()-> {
+			try {
+				cor.run();
+			}catch(final InterruptedException e) {
+				e.printStackTrace();
+			}
+		}, "Corutine(" + cor.hashCode() + ") in class " + getClass().getSimpleName());
+		corutine.start();
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName();
+	}
+	
+	public void update() {
 	}
 }

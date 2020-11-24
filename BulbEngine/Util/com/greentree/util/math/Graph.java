@@ -10,11 +10,16 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Graph<E> implements Serializable {
-
+	
+	public interface Writer<T> {
+		
+		void print(T data);
+	}
+	
 	private static final long serialVersionUID = 1L;
 	private final ArrayList<Set<Integer>> joint = new ArrayList<>();
 	protected final CopyOnWriteArrayList<E> point = new CopyOnWriteArrayList<>();
-
+	
 	public Graph() {
 	}
 
@@ -27,7 +32,7 @@ public class Graph<E> implements Serializable {
 		this.joint.add(new HashSet<>());
 		this.point.add(t);
 	}
-
+	
 	public final void add(final E i, final E j) {
 		add(getPoint(i), getPoint(j));
 	}
@@ -36,7 +41,7 @@ public class Graph<E> implements Serializable {
 		this.joint.get(i).add(j);
 		//this.joint.get(j).add(i);
 	}
-	
+
 	public void addAll(final Collection<E> t) {
 		for(int i = 0; i < t.size(); i++) this.joint.add(new HashSet<>());
 		this.point.addAll(t);
@@ -45,7 +50,7 @@ public class Graph<E> implements Serializable {
 	public boolean contains(final E e) {
 		return this.point.contains(e);
 	}
-
+	
 	@Override
 	public boolean equals(final Object obj) {
 		if(!(obj instanceof Graph)) return false;
@@ -55,11 +60,11 @@ public class Graph<E> implements Serializable {
 		if(!joint.equals(g.joint)) return false;
 		return true;
 	}
-
+	
 	protected E get(final int v) {
 		return this.point.get(v);
 	}
-
+	
 	public int getConected(final E v1, final E v2) {
 		final int f = getPoint(v2);
 		final Set<Integer> used = new HashSet<>(point.size());
@@ -77,7 +82,7 @@ public class Graph<E> implements Serializable {
 		}
 		return -1;
 	}
-
+	
 	public E getElemeny(final int i) {
 		return this.point.get(i);
 	}
@@ -85,7 +90,7 @@ public class Graph<E> implements Serializable {
 	public final int getPoint(final E e) {
 		return this.point.indexOf(e);
 	}
-	
+
 	public int howJoint() {
 		int n = 0;
 		for(final Set<Integer> l : this.joint) n += l.size();
@@ -105,7 +110,7 @@ public class Graph<E> implements Serializable {
 		for(final Set<Integer> l : this.joint) if(f) if(l.isEmpty()) f = false;
 		return f;
 	}
-
+	
 	public void printTree(final E root, final Writer<E> w) throws MathException {
 		printTree(this.point.indexOf(root), w);
 	}
@@ -115,7 +120,7 @@ public class Graph<E> implements Serializable {
 		else if(isEmpty()) return;
 		else printTree0(root, -1, 0, w);
 	}
-	
+
 	private void printTree0(final int v, final int last, final int d, final Writer<E> w) {
 		for(int i = 0; i < d; i++) System.out.print("- ");
 		w.print(get(v));
@@ -128,16 +133,16 @@ public class Graph<E> implements Serializable {
 	public int size() {
 		return this.point.size();
 	}
-
+	
 	@Override
 	public String toString() {
 		return "p = " + howPoint() + " j = " + howJoint() + " " + point + "\n" + joint;
 	}
-
+	
 	public Tree<E> toTree(final E root) {
 		return toTree(getPoint(root));
 	}
-
+	
 	private Tree<E> toTree(final int root) {
 		if(!isTree()) return null;
 		final Tree<E> t = new Tree<>();
@@ -154,25 +159,20 @@ public class Graph<E> implements Serializable {
 			toTree0(to, v, t);
 		}
 	}
-	
+
 	public void trim() {
 	}
-	
+
 	public CopyOnWriteArrayList<E> values() {
 		return this.point;
-	}
-	
-	public interface Writer<T> {
-
-		void print(T data);
 	}
 }
 
 class pair<A, B> {
-
+	
 	A first;
 	B seconde;
-
+	
 	pair(final A a, final B b) {
 		pair.this.first = a;
 		pair.this.seconde = b;

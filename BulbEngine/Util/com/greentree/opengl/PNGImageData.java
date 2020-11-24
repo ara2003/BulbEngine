@@ -7,60 +7,60 @@ import java.nio.ByteBuffer;
 import org.lwjgl.BufferUtils;
 
 public class PNGImageData implements LoadableImageData {
-	
+
 	private int bitDepth;
 	private int height;
 	private ByteBuffer scratch;
 	private int texHeight;
 	private int texWidth;
 	private int width;
-	
+
 	@Override
 	public void configureEdging(final boolean edging) {
 	}
-	
+
 	private int get2Fold(final int fold) {
 		int ret;
 		for(ret = 2; ret < fold; ret *= 2) {
 		}
 		return ret;
 	}
-	
+
 	@Override
 	public int getDepth() {
 		return bitDepth;
 	}
-	
+
 	@Override
 	public int getHeight() {
 		return height;
 	}
-	
+
 	@Override
 	public ByteBuffer getImageBufferData() {
 		return scratch;
 	}
-	
+
 	@Override
 	public int getTexHeight() {
 		return texHeight;
 	}
-	
+
 	@Override
 	public int getTexWidth() {
 		return texWidth;
 	}
-	
+
 	@Override
 	public int getWidth() {
 		return width;
 	}
-	
+
 	@Override
 	public ByteBuffer loadImage(final InputStream fis) throws IOException {
 		return this.loadImage(fis, false, null);
 	}
-	
+
 	@Override
 	public ByteBuffer loadImage(final InputStream fis, final boolean flipped, boolean forceAlpha,
 			final int[] transparent) throws IOException {
@@ -108,7 +108,7 @@ public class PNGImageData implements LoadableImageData {
 		scratch.position(0);
 		return scratch;
 	}
-	
+
 	@Override
 	public ByteBuffer loadImage(final InputStream fis, final boolean flipped, final int[] transparent)
 			throws IOException {

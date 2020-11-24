@@ -46,23 +46,23 @@ import java.io.Serializable;
  *
  * @author Kevin Glass */
 public strictfp class Vector2f implements ROVector2f, Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 	/** The x component of this vector */
 	public float x;
 	/** The y component of this vector */
 	public float y;
-	
+
 	/** Create an empty vector */
 	public Vector2f() {
 	}
-
+	
 	public Vector2f(final double theta) {
 		x = 1.0f;
 		y = 0.0f;
 		setTheta(theta);
 	}
-
+	
 	/** Create a new vector
 	 *
 	 * @param x The x component to assign
@@ -71,28 +71,28 @@ public strictfp class Vector2f implements ROVector2f, Serializable {
 		this.x = x;
 		this.y = y;
 	}
-
+	
 	public Vector2f(final float[] coords) {
 		x = coords[0];
 		y = coords[1];
 	}
-
+	
 	/** Create a new vector based on another
 	 *
 	 * @param other The other vector to copy into this one */
 	public Vector2f(final ROVector2f other) {
 		this(other.getX(), other.getY());
 	}
-	
+
 	public Vector2f(final Vector2f other) {
 		this(other.getX(), other.getY());
 	}
-
+	
 	public strictfp Vector2f add(final double theta) {
 		setTheta(getTheta() + theta);
 		return this;
 	}
-
+	
 	/** Add a vector to this vector
 	 *
 	 * @param v The vector to add */
@@ -100,17 +100,17 @@ public strictfp class Vector2f implements ROVector2f, Serializable {
 		x += v.getX();
 		y += v.getY();
 	}
-	
+
 	public strictfp Vector2f add(final Vector2f v) {
 		x += v.getX();
 		y += v.getY();
 		return this;
 	}
-
+	
 	public strictfp Vector2f copy() {
 		return new Vector2f(x, y);
 	}
-
+	
 	/** Get the distance from this point to another
 	 *
 	 * @param other The other point we're measuring to
@@ -119,11 +119,11 @@ public strictfp class Vector2f implements ROVector2f, Serializable {
 	public float distance(final ROVector2f other) {
 		return (float) Math.sqrt(distanceSquared(other));
 	}
-	
+
 	public strictfp float distance(final Vector2f other) {
 		return (float) Math.sqrt(distanceSquared(other));
 	}
-	
+
 	/** Get the distance squared from this point to another
 	 *
 	 * @param other The other point we're measuring to
@@ -134,23 +134,23 @@ public strictfp class Vector2f implements ROVector2f, Serializable {
 		final float dy = other.getY() - getY();
 		return dx * dx + dy * dy;
 	}
-
+	
 	public strictfp float distanceSquared(final Vector2f other) {
 		final float dx = other.getX() - getX();
 		final float dy = other.getY() - getY();
 		return dx * dx + dy * dy;
 	}
-
+	
 	/** @see com.greentree.util.math.ROVector2f#dot(com.greentree.util.math.ROVector2f) */
 	@Override
 	public float dot(final ROVector2f other) {
 		return x * other.getX() + y * other.getY();
 	}
-
+	
 	public strictfp float dot(final Vector2f other) {
 		return x * other.getX() + y * other.getY();
 	}
-
+	
 	@Override
 	public strictfp boolean equals(final Object other) {
 		if(other instanceof Vector2f) {
@@ -159,7 +159,7 @@ public strictfp class Vector2f implements ROVector2f, Serializable {
 		}
 		return false;
 	}
-
+	
 	/** Compare two vectors allowing for a (small) error as indicated by the delta.
 	 * Note that the delta is used for the vector's components separately, i.e. any
 	 * other vector that is contained in the square box with sides 2*delta and this
@@ -173,47 +173,47 @@ public strictfp class Vector2f implements ROVector2f, Serializable {
 		return other.getX() - delta < x && other.getX() + delta > x && other.getY() - delta < y
 				&& other.getY() + delta > y;
 	}
-	
+
 	public strictfp Vector2f getNormal() {
 		final Vector2f cp = copy();
 		cp.normalise();
 		return cp;
 	}
-
+	
 	public strictfp Vector2f getPerpendicular() {
 		return new Vector2f(-y, x);
 	}
-
+	
 	public strictfp double getTheta() {
 		double theta = StrictMath.toDegrees(StrictMath.atan2(y, x));
 		if(theta < -360.0 || theta > 360.0) theta %= 360.0;
 		if(theta < 0.0) theta += 360.0;
 		return theta;
 	}
-
+	
 	/** @see com.greentree.util.math.ROVector2f#getX() */
 	@Override
 	public float getX() {
 		return x;
 	}
-
+	
 	/** @see com.greentree.util.math.ROVector2f#getY() */
 	@Override
 	public float getY() {
 		return y;
 	}
-
+	
 	@Override
 	public strictfp int hashCode() {
 		return 997 * (int) x ^ 991 * (int) y;
 	}
-
+	
 	/** @see com.greentree.util.math.ROVector2f#length() */
 	@Override
 	public float length() {
 		return (float) Math.sqrt(lengthSquared());
 	}
-
+	
 	/** The length of the vector squared
 	 *
 	 * @return The length of the vector squared */
@@ -221,20 +221,20 @@ public strictfp class Vector2f implements ROVector2f, Serializable {
 	public float lengthSquared() {
 		return x * x + y * y;
 	}
-
+	
 	/** Negate this vector
 	 *
 	 * @return A copy of this vector negated */
 	public Vector2f negate() {
 		return new Vector2f(-x, -y);
 	}
-
+	
 	public strictfp Vector2f negateLocal() {
 		x = -x;
 		y = -y;
 		return this;
 	}
-
+	
 	/** Normalise the vector */
 	public void normalise() {
 		final float l = length();
@@ -242,7 +242,7 @@ public strictfp class Vector2f implements ROVector2f, Serializable {
 		x /= l;
 		y /= l;
 	}
-
+	
 	/** Project this vector onto another
 	 *
 	 * @param b      The vector to project onto
@@ -253,13 +253,13 @@ public strictfp class Vector2f implements ROVector2f, Serializable {
 		result.x = dp * b.getX();
 		result.y = dp * b.getY();
 	}
-
+	
 	public strictfp void projectOntoUnit(final Vector2f b, final Vector2f result) {
 		final float dp = b.dot(this);
 		result.x = dp * b.getX();
 		result.y = dp * b.getY();
 	}
-
+	
 	/** Scale this vector by a value
 	 *
 	 * @param a The value to scale this vector by */
@@ -267,7 +267,7 @@ public strictfp class Vector2f implements ROVector2f, Serializable {
 		x *= a;
 		y *= a;
 	}
-	
+
 	/** Set the values in this vector
 	 *
 	 * @param x The x component to set
@@ -276,18 +276,18 @@ public strictfp class Vector2f implements ROVector2f, Serializable {
 		this.x = x;
 		this.y = y;
 	}
-	
+
 	/** Set the value of this vector
 	 *
 	 * @param other The values to set into the vector */
 	public void set(final ROVector2f other) {
 		set(other.getX(), other.getY());
 	}
-
+	
 	public strictfp void set(final Vector2f other) {
 		this.set(other.getX(), other.getY());
 	}
-
+	
 	public strictfp void setTheta(double theta) {
 		theta %= 360.0;
 		if(theta < 0.0) theta += 360.0;
@@ -296,12 +296,12 @@ public strictfp class Vector2f implements ROVector2f, Serializable {
 		x = len * (float) FastTrig.cos(StrictMath.toRadians(theta));
 		y = len * (float) FastTrig.sin(StrictMath.toRadians(theta));
 	}
-
+	
 	public strictfp Vector2f sub(final double theta) {
 		setTheta(getTheta() - theta);
 		return this;
 	}
-
+	
 	/** Subtract a vector from this vector
 	 *
 	 * @param v The vector subtract */
@@ -309,13 +309,13 @@ public strictfp class Vector2f implements ROVector2f, Serializable {
 		x -= v.getX();
 		y -= v.getY();
 	}
-
+	
 	public strictfp Vector2f sub(final Vector2f v) {
 		x -= v.getX();
 		y -= v.getY();
 		return this;
 	}
-	
+
 	/** @see java.lang.Object#toString() */
 	@Override
 	public strictfp String toString() {

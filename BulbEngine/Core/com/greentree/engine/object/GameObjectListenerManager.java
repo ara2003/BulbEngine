@@ -12,6 +12,11 @@ public class GameObjectListenerManager extends ListenerManager {
 	private static final long serialVersionUID = 1L;
 	private final List<GameObjectListener> listeners = new ArrayList<>();
 
+	@SuppressWarnings("unchecked")
+	GameObjectListenerManager() {
+		super(GameObjectEvent.class);
+	}
+	
 	@Override
 	public void addListener(final Listener listener) {
 		if(listener instanceof GameObjectListener) listeners.add((GameObjectListener) listener);
@@ -22,14 +27,11 @@ public class GameObjectListenerManager extends ListenerManager {
 		if(event instanceof GameObjectEvent) {
 			final GameObjectEvent objevent = (GameObjectEvent) event;
 			switch(objevent.getEventType()) {
-				case creating:
-					for(final GameObjectListener lis : listeners) lis.creating(objevent.getObject());
-				break;
 				case destroy:
 					for(final GameObjectListener lis : listeners) lis.destroy(objevent.getObject());
 				break;
-				case created:
-					for(final GameObjectListener lis : listeners) lis.created(objevent.getObject());
+				case create:
+					for(final GameObjectListener lis : listeners) lis.create(objevent.getObject());
 				break;
 			}
 		}

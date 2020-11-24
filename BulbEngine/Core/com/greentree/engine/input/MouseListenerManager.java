@@ -8,15 +8,20 @@ import com.greentree.engine.event.Listener;
 import com.greentree.engine.event.ListenerManager;
 
 public class MouseListenerManager extends ListenerManager {
-	
+
 	private static final long serialVersionUID = 1L;
 	private final List<MouseListener> listeners = new ArrayList<>();
-
+	
+	@SuppressWarnings("unchecked")
+	public MouseListenerManager() {
+		super(MouseEvent.class);
+	}
+	
 	@Override
 	public void addListener(final Listener listener) {
 		if(listener instanceof MouseListener) listeners.add((MouseListener) listener);
 	}
-	
+
 	@Override
 	public void event(final Event event) {
 		if(event instanceof MouseEvent) {

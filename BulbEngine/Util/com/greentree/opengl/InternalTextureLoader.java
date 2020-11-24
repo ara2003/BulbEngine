@@ -19,46 +19,69 @@ import com.greentree.opengl.rendener.Renderer;
 import com.greentree.opengl.rendener.SGL;
 
 public class InternalTextureLoader {
-
+	
 	protected static SGL GL = Renderer.get();
 	private static final InternalTextureLoader loader = new InternalTextureLoader();
+	
+	public static IntBuffer createIntBuffer(final int size) {
+		final ByteBuffer temp = ByteBuffer.allocateDirect(4 * size);
+		temp.order(ByteOrder.nativeOrder());
+		return temp.asIntBuffer();
+	}
+	
+	public static int createTextureID() {
+		final IntBuffer tmp = InternalTextureLoader.createIntBuffer(1);
+		InternalTextureLoader.GL.glGenTextures(tmp);
+		return tmp.get(0);
+	}
+	
+	public static InternalTextureLoader get() {
+		return InternalTextureLoader.loader;
+	}
+	
+	public static int get2Fold(final int fold) {
+		int ret = 2;
+		while(ret < fold) ret *= 2;
+		return ret;
+	}
+	
 	private int dstPixelFormat = 6408;
 	private boolean holdTextureData;
 	private final HashMap<String, TextureImpl> texturesLinear = new HashMap<>();
 	private final HashMap<String, TextureImpl> texturesNearest = new HashMap<>();
-
+	
 	public void clear() {
 		texturesLinear.clear();
 		texturesNearest.clear();
 	}
-
+	
 	public void clear(final String name) {
 		texturesLinear.remove(name);
 		texturesNearest.remove(name);
 	}
-
+	
 	public Texture createTexture(final int width, final int height) throws IOException {
 		return createTexture(width, height, 9728);
 	}
-
+	
 	public Texture createTexture(final int width, final int height, final int filter) throws IOException {
 		final ImageData ds = new EmptyImageData(width, height);
 		return getTexture(ds, filter);
 	}
-
+	
 	public Texture getTexture(final File source, final boolean flipped, final int filter) throws IOException {
 		final String resourceName = source.getAbsolutePath();
 		final InputStream in = new FileInputStream(source);
 		return getTexture(in, resourceName, flipped, filter, null);
 	}
-
+	
 	public Texture getTexture(final File source, final boolean flipped, final int filter, final int[] transparent)
 			throws IOException {
 		final String resourceName = source.getAbsolutePath();
 		final InputStream in = new FileInputStream(source);
 		return getTexture(in, resourceName, flipped, filter, transparent);
 	}
-
+	
 	public Texture getTexture(final ImageData dataSource, final int filter) throws IOException {
 		final int target = 3553;
 		final ByteBuffer textureBuffer = dataSource.getImageBufferData();
@@ -91,12 +114,12 @@ public class InternalTextureLoader {
 				InternalTextureLoader.get2Fold(height), 0, srcPixelFormat, 5121, textureBuffer);
 		return texture;
 	}
-
+	
 	public Texture getTexture(final InputStream in, final String resourceName, final boolean flipped, final int filter)
 			throws IOException {
 		return getTexture(in, resourceName, flipped, filter, null);
 	}
-
+	
 	@SuppressWarnings({"rawtypes","unchecked"})
 	public TextureImpl getTexture(final InputStream in, final String resourceName, final boolean flipped,
 			final int filter, final int[] transparent) throws IOException {
@@ -163,18 +186,18 @@ public class InternalTextureLoader {
 				InternalTextureLoader.get2Fold(height), 0, srcPixelFormat, 5121, textureBuffer);
 		return texture;
 	}
-
+	
 	public Texture getTexture(final String resourceName, final boolean flipped, final int filter) throws IOException {
 		final InputStream in = ResourceLoader.getResourceAsStream(resourceName);
 		return getTexture(in, resourceName, flipped, filter, null);
 	}
-
+	
 	public Texture getTexture(final String resourceName, final boolean flipped, final int filter,
 			final int[] transparent) throws IOException {
 		final InputStream in = ResourceLoader.getResourceAsStream(resourceName);
 		return getTexture(in, resourceName, flipped, filter, transparent);
 	}
-
+	
 	public void reload() {
 		Iterator<TextureImpl> texs = texturesLinear.values().iterator();
 		while(texs.hasNext()) texs.next().reload();
@@ -193,34 +216,12 @@ public class InternalTextureLoader {
 				texture.getTextureHeight(), 0, srcPixelFormat, 5121, textureBuffer);
 		return textureID;
 	}
-
+	
 	public void set16BitMode() {
 		dstPixelFormat = 32859;
 	}
-
+	
 	public void setHoldTextureData(final boolean holdTextureData) {
 		this.holdTextureData = holdTextureData;
-	}
-
-	public static IntBuffer createIntBuffer(final int size) {
-		final ByteBuffer temp = ByteBuffer.allocateDirect(4 * size);
-		temp.order(ByteOrder.nativeOrder());
-		return temp.asIntBuffer();
-	}
-
-	public static int createTextureID() {
-		final IntBuffer tmp = InternalTextureLoader.createIntBuffer(1);
-		InternalTextureLoader.GL.glGenTextures(tmp);
-		return tmp.get(0);
-	}
-
-	public static InternalTextureLoader get() {
-		return InternalTextureLoader.loader;
-	}
-
-	public static int get2Fold(final int fold) {
-		int ret = 2;
-		while(ret < fold) ret *= 2;
-		return ret;
 	}
 }

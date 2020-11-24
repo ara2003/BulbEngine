@@ -13,68 +13,68 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 public class XMLElement implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 	private List<XMLElement> children;
 	private transient final Element dom;
 	private final String name;
-	
+
 	XMLElement(final Element xmlElement) {
 		dom = xmlElement;
 		name = dom.getTagName();
 	}
-	
+
 	public XMLElement(final File root, final String xmlElement) {
 		this(XMLParser.parse(root, xmlElement));
 	}
-	
+
 	public XMLElement(final String xmlElement) {
 		this(XMLParser.parse(xmlElement));
 	}
-
+	
 	XMLElement(final XMLElement xmlElement) {
 		dom = xmlElement.dom;
 		name = xmlElement.name;
 	}
-	
+
 	public String getAttribute(final String name) {
 		return dom.getAttribute(name);
 	}
-	
+
 	public String getAttribute(final String name, final String def) {
 		final String value = dom.getAttribute(name);
 		if(value == null || value.length() == 0) return def;
 		return value;
 	}
-	
+
 	public String[] getAttributeNames() {
 		final NamedNodeMap map = dom.getAttributes();
 		final String[] names = new String[map.getLength()];
 		for(int i = 0; i < names.length; ++i) names[i] = map.item(i).getNodeName();
 		return names;
 	}
-	
+
 	public Map<String, String> getAttributes() {
 		final String[] n = getAttributeNames();
 		final Map<String, String> map = new HashMap<>(n.length);
 		for(final String str : n) map.put(str, getAttribute(str));
 		return map;
 	}
-	
+
 	public boolean getBooleanAttribute(final String name) throws XMLException {
 		final String value = this.getAttribute(name);
 		if(value.equalsIgnoreCase("true")) return true;
 		if(value.equalsIgnoreCase("false")) return false;
 		throw new XMLException("Value read: '" + this.getAttribute(name) + "' is not a boolean");
 	}
-	
+
 	public boolean getBooleanAttribute(final String name, final boolean def) throws XMLException {
 		final String value = this.getAttribute(name, "" + def);
 		if(value.equalsIgnoreCase("true")) return true;
 		if(value.equalsIgnoreCase("false")) return false;
 		throw new XMLException("Value read: '" + this.getAttribute(name, "" + def) + "' is not a boolean");
 	}
-	
+
 	public List<XMLElement> getChildren() {
 		if(children != null) return children;
 		final NodeList list = dom.getChildNodes();
@@ -83,13 +83,13 @@ public class XMLElement implements Serializable {
 			if(list.item(i) instanceof Element) children.add(new XMLElement((Element) list.item(i)));
 		return children;
 	}
-	
+
 	public XMLElement getChildren(final String name) {
 		final List<XMLElement> c = getChildrens(name);
 		if(c.isEmpty()) return null;
 		return c.get(0);
 	}
-	
+
 	public List<XMLElement> getChildrens(final String name) {
 		final List<XMLElement> selected = new ArrayList<>();
 		final List<XMLElement> children = getChildren();
@@ -97,7 +97,7 @@ public class XMLElement implements Serializable {
 			if(children.get(i).getName().equals(name)) selected.add(children.get(i));
 		return selected;
 	}
-	
+
 	public String getContent() {
 		String content = "";
 		final NodeList list = dom.getChildNodes();
@@ -105,7 +105,7 @@ public class XMLElement implements Serializable {
 			if(list.item(i) instanceof Text) content += list.item(i).getNodeValue();
 		return content.replace("\n", "");
 	}
-	
+
 	public double getDoubleAttribute(final String name) throws XMLException {
 		try {
 			return Double.parseDouble(this.getAttribute(name));
@@ -113,7 +113,7 @@ public class XMLElement implements Serializable {
 			throw new XMLException("Value read: '" + this.getAttribute(name) + "' is not a double", e);
 		}
 	}
-	
+
 	public double getDoubleAttribute(final String name, final double def) throws XMLException {
 		try {
 			return Double.parseDouble(this.getAttribute(name, "" + def));
@@ -121,7 +121,7 @@ public class XMLElement implements Serializable {
 			throw new XMLException("Value read: '" + this.getAttribute(name, "" + def) + "' is not a double", e);
 		}
 	}
-	
+
 	public int getIntAttribute(final String name) throws XMLException {
 		try {
 			return Integer.parseInt(this.getAttribute(name));
@@ -129,7 +129,7 @@ public class XMLElement implements Serializable {
 			throw new XMLException("Value read: '" + this.getAttribute(name) + "' is not an integer", e);
 		}
 	}
-	
+
 	public int getIntAttribute(final String name, final int def) throws XMLException {
 		try {
 			return Integer.parseInt(this.getAttribute(name, "" + def));
@@ -137,11 +137,11 @@ public class XMLElement implements Serializable {
 			throw new XMLException("Value read: '" + this.getAttribute(name, "" + def) + "' is not an integer", e);
 		}
 	}
-
+	
 	public String getName() {
 		return name;
 	}
-
+	
 	@Override
 	public String toString() {
 		String res = "<" + name;

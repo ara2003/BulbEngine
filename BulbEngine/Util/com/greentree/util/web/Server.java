@@ -11,50 +11,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import com.greentree.engine.Log;
 
 public final class Server {
-	
-	private final Object lock = new Object();
-	private final CopyOnWriteArrayList<oneListener> mons = new CopyOnWriteArrayList<>();
-	
-	public Server(final int port) {
-		new Thread((Runnable) ()-> {
-			try(ServerSocket server = new ServerSocket(port)) {
-				System.out.println("Server create");
-				while(true) {
-					final oneListener mon = new oneListener(mons.size(), server.accept());
-					new Thread(mon).start();
-					mons.add(mon);
-				}
-			}catch(final IOException e) {
-				e.printStackTrace();
-			}
-		}, "connect new Client").start();
-	}
-	
-	private void addMessage(final WebContext message) {
-		if(message == null) return;
-		new Thread((Runnable) ()-> {
-			for(int i = 0; i < mons.size(); i++) if(i != message.getName()) try {
-				mons.get(i).sendMessage(message);
-			}catch(final SocketException e) {
-				synchronized(lock) {
-					mons.get(i).close();
-					mons.set(i, null);
-				}
-			}catch(final IOException e) {
-				e.printStackTrace();
-			}catch(final NullPointerException e) {
-				mons.remove(i);
-			}
-		}, "Message write").start();
-	}
-	
+
 	private final class oneListener implements Runnable {
-		
+
 		private ObjectInputStream in;
 		private final Object lock = new Object();
 		protected ObjectOutputStream out;
 		private final Socket socket;
-
+		
 		public oneListener(final int name, final Socket socket) {
 			this.socket = socket;
 			try {
@@ -65,7 +29,7 @@ public final class Server {
 				e.printStackTrace();
 			}
 		}
-
+		
 		public void close() {
 			try {
 				socket.close();
@@ -74,7 +38,7 @@ public final class Server {
 			}catch(final IOException e) {
 			}
 		}
-		
+
 		@Override
 		public void run() {
 			try {
@@ -93,7 +57,7 @@ public final class Server {
 				e.printStackTrace();
 			}
 		}
-		
+
 		public void sendMessage(final WebContext context) throws IOException {
 			synchronized(lock) {
 				try {
@@ -106,5 +70,41 @@ public final class Server {
 				}
 			}
 		}
+	}
+	
+	private final Object lock = new Object();
+	private final CopyOnWriteArrayList<oneListener> mons = new CopyOnWriteArrayList<>();
+
+	public Server(final int port) {
+		new Thread((Runnable) ()-> {
+			try(ServerSocket server = new ServerSocket(port)) {
+				System.out.println("Server create");
+				while(true) {
+					final oneListener mon = new oneListener(mons.size(), server.accept());
+					new Thread(mon).start();
+					mons.add(mon);
+				}
+			}catch(final IOException e) {
+				e.printStackTrace();
+			}
+		}, "connect new Client").start();
+	}
+
+	private void addMessage(final WebContext message) {
+		if(message == null) return;
+		new Thread((Runnable) ()-> {
+			for(int i = 0; i < mons.size(); i++) if(i != message.getName()) try {
+				mons.get(i).sendMessage(message);
+			}catch(final SocketException e) {
+				synchronized(lock) {
+					mons.get(i).close();
+					mons.set(i, null);
+				}
+			}catch(final IOException e) {
+				e.printStackTrace();
+			}catch(final NullPointerException e) {
+				mons.remove(i);
+			}
+		}, "Message write").start();
 	}
 }

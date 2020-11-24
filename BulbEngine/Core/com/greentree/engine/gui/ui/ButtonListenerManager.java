@@ -11,6 +11,11 @@ public class ButtonListenerManager extends ListenerManager {
 	
 	private static final long serialVersionUID = 1L;
 	private final List<ButtonAdapter> listeners = new ArrayList<>();
+
+	@SuppressWarnings("unchecked")
+	public ButtonListenerManager() {
+		super(ButtonEvent.class);
+	}
 	
 	@Override
 	public void addListener(final Listener listener) {

@@ -25,12 +25,16 @@ public class SpriteRendener extends GameComponent {
 	}
 	
 	@Override
-	public void update() {
+	protected void start() {
 		if(img == null) {
 			img = new Image(image);
 			if(width == 0) width = img.getWidth();
 			if(height == 0) height = img.getHeight();
 		}
+	}
+	
+	@Override
+	public void update() {
 		img.draw(t.x - width / 2, t.y - height / 2, width, height);
 	}
 }

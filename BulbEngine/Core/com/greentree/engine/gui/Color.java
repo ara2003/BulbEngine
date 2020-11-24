@@ -28,11 +28,48 @@ public class Color implements Serializable {
 	public static final Color transparent = new Color(0.0f, 0.0f, 0.0f, 0.0f);
 	public static final Color white = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 	public static final Color yellow = new Color(1.0f, 1.0f, 0.0f, 1.0f);
+
+	public static Color decode(final String nm) {
+		return new Color(Integer.decode(nm));
+	}
+
+	public static Color getRandom() {
+		switch(new Random().nextInt(14)) {
+			case 0:
+				return black;
+			case 1:
+				return blue;
+			case 2:
+				return cyan;
+			case 3:
+				return darkGray;
+			case 4:
+				return getRandom();
+			case 6:
+				return green;
+			case 7:
+				return lightGray;
+			case 8:
+				return magenta;
+			case 9:
+				return orange;
+			case 10:
+				return pink;
+			case 11:
+				return red;
+			case 12:
+				return white;
+			case 13:
+				return yellow;
+		}
+		return red;
+	}
+
 	public float a;
 	public float b;
 	public float g;
 	public float r;
-	
+
 	public Color(final Color color) {
 		a = 1.0f;
 		r = color.r;
@@ -207,45 +244,9 @@ public class Color implements Serializable {
 		color4.a *= value;
 		return copy;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Color (" + r + "," + g + "," + b + "," + a + ")";
-	}
-
-	public static Color decode(final String nm) {
-		return new Color(Integer.decode(nm));
-	}
-	
-	public static Color getRandom() {
-		switch(new Random().nextInt(14)) {
-			case 0:
-				return black;
-			case 1:
-				return blue;
-			case 2:
-				return cyan;
-			case 3:
-				return darkGray;
-			case 4:
-				return getRandom();
-			case 6:
-				return green;
-			case 7:
-				return lightGray;
-			case 8:
-				return magenta;
-			case 9:
-				return orange;
-			case 10:
-				return pink;
-			case 11:
-				return red;
-			case 12:
-				return white;
-			case 13:
-				return yellow;
-		}
-		return red;
 	}
 }

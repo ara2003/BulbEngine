@@ -6,10 +6,6 @@ import com.greentree.util.math.ROVector2f;
 import com.greentree.util.math.Vector2f;
 
 public class MathUtil {
-
-	/** Prevent construction */
-	private MathUtil() {
-	}
 	
 	/** Create the absolute version of a matrix
 	 *
@@ -26,7 +22,7 @@ public class MathUtil {
 	public static Vector2f abs(final Vector2f a) {
 		return new Vector2f(Math.abs(a.x), Math.abs(a.y));
 	}
-
+	
 	/** Add two matricies
 	 *
 	 * @param A The first matrix
@@ -39,13 +35,13 @@ public class MathUtil {
 		temp2.add(B.col2);
 		return new Matrix2f(temp1, temp2);
 	}
-
+	
 	public static double[] addition(final double[] a, final double[] b) {
 		final double[] v = new double[Math.max(a.length, b.length)];
 		for(int i = 0; i < v.length; i++) v[i] = (a.length > i ? a[i] : 0) + (b.length > i ? b[i] : 0);
 		return v;
 	}
-
+	
 	/** Clamp a value
 	 *
 	 * @param a    The original value
@@ -55,7 +51,7 @@ public class MathUtil {
 	public static float clamp(final float a, final float low, final float high) {
 		return Math.max(low, Math.min(a, high));
 	}
-
+	
 	/** Find the cross product of a vector and a float
 	 *
 	 * @param s The scalar float
@@ -64,7 +60,7 @@ public class MathUtil {
 	public static Vector2f cross(final float s, final Vector2f a) {
 		return new Vector2f(-s * a.y, s * a.x);
 	}
-
+	
 	/** Find the cross product of a vector and a float
 	 *
 	 * @param s The scalar float
@@ -82,7 +78,7 @@ public class MathUtil {
 	public static float cross(final Vector2f a, final Vector2f b) {
 		return a.x * b.y - a.y * b.x;
 	}
-	
+
 	public static double det(final double[][] A) {
 		final int n = A.length;
 		if(n == 1) return A[0][0];
@@ -127,14 +123,14 @@ public class MathUtil {
 		normal.normalise();
 		return normal;
 	}
-	
+
 	public static Vector[] getVectors(final double[][] f) {//no work
 		final double[][] r = MathUtil.transposed(f);
 		final Vector[] v = new Vector[r.length];
 		for(int i = 0; i < v.length; i++) v[i] = new Vector(r[i]);
 		return v;
 	}
-	
+
 	public static double[][] inverse(final double[][] A0) throws MathException {
 		if(A0[0].length != A0.length) throw new MathException();
 		double temp;
@@ -165,13 +161,13 @@ public class MathUtil {
 		}
 		return E;
 	}
-	
+
 	public static double module(final double[] a) {
 		float sum = 0;
 		for(final double v : a) sum += v * v;
 		return (float) Math.sqrt(sum);
 	}
-	
+
 	/** Multiple two matricies
 	 *
 	 * @param A The first matrix
@@ -214,7 +210,7 @@ public class MathUtil {
 		for(int i = 0; i < m.length; i++) for(int j = 0; j < m[i].length; j++) m[i][j] *= f;
 		return m;
 	}
-
+	
 	public static double[][] multiply(final double[][] m1, final double[][] m2) {
 		if(m1[0].length != m2.length) return null;
 		final double[][] mResult = new double[m1.length][m2[0].length];
@@ -233,13 +229,13 @@ public class MathUtil {
 		for(int i = 1; i < n; i++) m = MathUtil.multiply(m, baze);
 		return baze;
 	}
-	
+
 	public static double scalarMultiply(final double[] a, final double[] b) {
 		double res = 0;
 		for(int i = 0; i < Math.min(a.length, b.length); i++) res += a[i] * b[i];
 		return res;
 	}
-	
+
 	/** Scale a vector by a given value
 	 *
 	 * @param a     The vector to be scaled
@@ -250,7 +246,7 @@ public class MathUtil {
 		temp.scale(scale);
 		return temp;
 	}
-	
+
 	/** Check the sign of a value
 	 *
 	 * @param x The value to check
@@ -258,7 +254,7 @@ public class MathUtil {
 	public static float sign(final float x) {
 		return x < 0.0f ? -1.0f : 1.0f;
 	}
-	
+
 	/** Subtract one vector from another
 	 *
 	 * @param a The vector to be subtracted from
@@ -287,10 +283,14 @@ public class MathUtil {
 	//				startA.x + uA * (endA.x - startA.x),
 	//				startA.y + uA * (endA.y - startA.y));
 	//	}
-	
+
 	public static double[][] transposed(final double[][] m) {
 		final double[][] r = new double[m[0].length][m.length];
 		for(int i = 0; i < m.length; i++) for(int j = 0; j < m[i].length; j++) r[j][i] = m[i][j];
 		return r;
+	}
+
+	/** Prevent construction */
+	private MathUtil() {
 	}
 }

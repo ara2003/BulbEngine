@@ -4,7 +4,7 @@
 package com.greentree.opengl;
 
 public interface Texture {
-	
+
 	void bind();
 	float getHeight();
 	int getImageHeight();

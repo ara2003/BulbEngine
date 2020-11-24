@@ -13,21 +13,30 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.PixelFormat;
 
 import com.greentree.engine.event.EventSystem;
 import com.greentree.engine.gui.Color;
 import com.greentree.engine.gui.Graphics;
 import com.greentree.engine.input.Input;
 import com.greentree.engine.object.Scene;
+import com.greentree.engine.object.SceneManager;
 import com.greentree.opengl.InternalTextureLoader;
 import com.greentree.opengl.rendener.Renderer;
 import com.greentree.opengl.rendener.SGL;
+import com.greentree.util.xml.XMLElement;
 
 public final class Game {
 	
 	private static Scene currentScene;
+	
+	public static Scene getCurrentScene() {
+		return currentScene;
+	}
+
+
+
 	private static ClassLoader gameLoader;
 	private static SGL GL;
 	private static final Object globalCock = new Object();
@@ -38,9 +47,6 @@ public final class Game {
 	private static DisplayMode targetDisplayMode;
 	private static Map<Class<?>, FileWriter> writer = new HashMap<>();
 	private static int width, height;
-
-	private Game() {
-	}
 
 	public static void addTime(final Class<?> clazz, final long time) {
 		if(clazz == null) Log.warn("class is null");
@@ -93,15 +99,15 @@ public final class Game {
 	public static EventSystem getEventSystem() {
 		return Game.currentScene.getEventSystem();
 	}
-	
+
 	public static Object getGlobalCock() {
 		return Game.globalCock;
 	}
-
+	
 	public static File getRoot() {
 		return Game.root;
 	}
-	
+
 	private static boolean isFullscreen() {
 		return Display.isFullscreen();
 	}
@@ -196,7 +202,7 @@ public final class Game {
 				{
 					Scanner in = null;
 					try {
-						in = new Scanner(new FileInputStream(file + "//config.game"));
+						in = new Scanner(new FileInputStream(file + "\\config.game"));
 					}catch(final FileNotFoundException e1) {
 						e1.printStackTrace();
 						return;
@@ -229,5 +235,14 @@ public final class Game {
 			System.exit(0);
 		}, "Mian Game Loop");
 		Game.mianGameLoop.start();
+	}
+
+	private Game() {
+	}
+
+	
+	
+	public static XMLElement getResurse(String name) {
+		return currentScene.getResurse(name);
 	}
 }

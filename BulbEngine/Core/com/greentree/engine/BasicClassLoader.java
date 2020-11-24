@@ -2,7 +2,7 @@ package com.greentree.engine;
 
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.gui.ui.Button;
-import com.greentree.engine.system.PhisicSystem;
+import com.greentree.engine.system.ColliderSystem;
 
 public class BasicClassLoader extends ClassLoader {
 
@@ -21,7 +21,7 @@ public class BasicClassLoader extends ClassLoader {
 		}catch(final ClassNotFoundException e) {
 		}
 		try {
-			return super.loadClass(PhisicSystem.class.getPackageName() + "." + name);
+			return super.loadClass(ColliderSystem.class.getPackageName() + "." + name);
 		}catch(final ClassNotFoundException e) {
 		}
 		throw new ClassNotFoundException(name);

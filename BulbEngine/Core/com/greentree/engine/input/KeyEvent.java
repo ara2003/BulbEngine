@@ -2,12 +2,16 @@ package com.greentree.engine.input;
 
 import com.greentree.engine.event.Event;
 
-public class KeyEvent extends Event {
+public class KeyEvent implements Event {
 	
+	public enum EventType{
+		keyPressed,keyReleased;
+	}
+
 	private static final long serialVersionUID = 1L;
 	int code = 0;
 	private final EventType type;
-	
+
 	public KeyEvent(final EventType type, final int code) {
 		this.type = type;
 		this.code = code;
@@ -19,9 +23,5 @@ public class KeyEvent extends Event {
 
 	public EventType getEventType() {
 		return type;
-	}
-
-	public enum EventType{
-		keyPressed,keyReleased;
 	}
 }

@@ -44,7 +44,7 @@ package com.greentree.util.math;
  *
  * @author Kevin Glass */
 public interface ROVector2f {
-	
+
 	/** Get the distance from this point to another
 	 *
 	 * @param other The other point we're measuring to

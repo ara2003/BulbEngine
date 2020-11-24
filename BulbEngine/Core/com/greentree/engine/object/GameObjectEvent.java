@@ -2,13 +2,17 @@ package com.greentree.engine.object;
 
 import com.greentree.engine.event.Event;
 
-public class GameObjectEvent extends Event {
+public class GameObjectEvent implements Event {
+
+	public enum EventType{
+		create,destroy;
+	}
 
 	private static final long serialVersionUID = 1L;
 	private final GameObject object;
 	private final EventType type;
 	
-	public GameObjectEvent(final EventType type, final GameObject object) {
+	GameObjectEvent(final EventType type, final GameObject object) {
 		this.type = type;
 		this.object = object;
 	}
@@ -20,13 +24,9 @@ public class GameObjectEvent extends Event {
 	public GameObject getObject() {
 		return object;
 	}
-	
+
 	@Override
 	public String toString() {
 		return type + " " + object;
-	}
-
-	public enum EventType{
-		created,creating,destroy;
 	}
 }

@@ -39,9 +39,6 @@ public final class Graphics {
 	private static float sx = 1.0f;
 	private static float sy = 1.0f;
 
-	private Graphics() {
-	}
-
 	private static void checkPush() {
 		if(!Graphics.pushed) {
 			Graphics.GL.glPushMatrix();
@@ -64,11 +61,11 @@ public final class Graphics {
 		Graphics.setDrawMode(originalMode);
 		Graphics.popTransform();
 	}
-	
+
 	public static void clearClip() {
 		Graphics.GL.glDisable(SGL.GL_SCISSOR_TEST);
 	}
-
+	
 	public static void clearWorldClip() {
 		Graphics.GL.glDisable(SGL.GL_CLIP_PLANE0);
 		Graphics.GL.glDisable(SGL.GL_CLIP_PLANE1);
@@ -487,7 +484,7 @@ public final class Graphics {
 		Graphics.LSR.setWidth(width);
 		Graphics.GL.glPointSize(width);
 	}
-	
+
 	private static int translate(final byte b) {
 		if(b < 0) return 256 + b;
 		return b;
@@ -496,5 +493,8 @@ public final class Graphics {
 	public static void translate(final float x, final float y) {
 		Graphics.checkPush();
 		Graphics.GL.glTranslatef(x, y, 0.0f);
+	}
+	
+	private Graphics() {
 	}
 }

@@ -2,16 +2,20 @@ package com.greentree.engine.input;
 
 import com.greentree.engine.event.Event;
 
-public class MouseEvent extends Event {
+public class MouseEvent implements Event {
+
+	public enum EventType{
+		mouseDragged,mouseMoved,mousePressed,mouseReleased;
+	}
 
 	private static final long serialVersionUID = 1L;
 	private final int button, x1, y1, x2, y2;
 	private final EventType type;
-	
+
 	public MouseEvent(final EventType type, final int button, final int x, final int y) {
 		this(type, button, x, y, x, y);
 	}
-
+	
 	public MouseEvent(final EventType type, final int x1, final int y1, final int x2, final int y2) {
 		this(type, -1, x1, y1, x2, y2);
 	}
@@ -24,7 +28,7 @@ public class MouseEvent extends Event {
 		this.x2 = x2;
 		this.y2 = y2;
 	}
-	
+
 	public int getButton() {
 		return button;
 	}
@@ -52,12 +56,8 @@ public class MouseEvent extends Event {
 	public int getY1() {
 		return y1;
 	}
-
+	
 	public int getY2() {
 		return y2;
-	}
-	
-	public enum EventType{
-		mouseDragged,mouseMoved,mousePressed,mouseReleased;
 	}
 }

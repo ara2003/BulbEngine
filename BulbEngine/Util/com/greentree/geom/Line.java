@@ -2,6 +2,7 @@ package com.greentree.geom;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 import com.greentree.util.math.vector.float2f;
 
@@ -17,7 +18,18 @@ public class Line extends Shape {
 		this.p1 = p1;
 		this.p2 = p2;
 	}
-	
+
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj) return true;
+		if(obj == null) return false;
+		if(getClass() != obj.getClass()) return false;
+		Line other = (Line) obj;
+		 if(!p1.equals(other.p1)) return false;
+		 if(!p2.equals(other.p2)) return false;
+		return true;
+	}
+
 	@Override
 	public void add(final float2f step) {
 		p1.add(step);
@@ -84,5 +96,15 @@ public class Line extends Shape {
 	@Override
 	public String toString() {
 		return (int) p1.getX() + " " + (int) p1.getY() + " " + (int) p2.getX() + " " + (int) p2.getY();
+	}
+
+	public float2f getVector() {
+		return new float2f(p1.getX() - p2.getX(), p1.getY() - p2.getY());
+	}
+
+	public float length() {
+		float x = p1.getX() - p2.getX();
+		float y = p1.getY() - p2.getY();
+		return (float) Math.sqrt((x*x)+(y*y));
 	}
 }

@@ -8,13 +8,13 @@ import java.net.Socket;
 import java.net.SocketException;
 
 public abstract class Client {
-	
+
 	private ObjectInputStream in;
 	private Thread inThread, outThread;
 	private int name, pink;
 	private ObjectOutputStream out;
 	private Socket socket;
-	
+
 	public Client(final String host, final int port) {
 		try {
 			try {
@@ -67,7 +67,7 @@ public abstract class Client {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void close() {
 		try {
 			socket.close();
@@ -77,20 +77,20 @@ public abstract class Client {
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected abstract void createServer(String host, int port);
 	public abstract void EventMassage(WebContext message);
 	public abstract Message getMessage();
-	
+
 	public int getPink() {
 		return pink;
 	}
-	
+
 	public final void sendMessage() {
 		final Message m = getMessage();
 		if(m != null) sendMessage(m);
 	}
-
+	
 	public final void sendMessage(final Message m) {
 		final WebContext message = new WebContext(name, m);
 		message.send();
@@ -105,22 +105,22 @@ public abstract class Client {
 			serverDisconected();
 		}
 	}
-	
+
 	protected abstract void serverDisconected();
-	
+
 	public void setName(final int name) {
 		this.name = name;
 	}
-
+	
 	public void setPink(final int delta) {
 		pink = delta;
 	}
-	
+
 	public void start() {
 		inThread.start();
 		outThread.start();
 	}
-
+	
 	@SuppressWarnings("deprecation")
 	public void stop() {
 		inThread.stop();

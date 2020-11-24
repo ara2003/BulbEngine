@@ -7,6 +7,10 @@ import com.greentree.util.math.vector.float2f;
 
 public class Phisic extends GameComponent {
 	
+	public enum Type{
+		DINAMIC,STATIC;
+	}
+
 	private static final long serialVersionUID = 1L;
 	public CircleColliderComponent col;
 	@XmlData(def = "1")
@@ -20,12 +24,8 @@ public class Phisic extends GameComponent {
 	@Override
 	public void start() {
 	}
-
+	
 	@Override
 	public void update() {
-	}
-	
-	public enum Type{
-		DINAMIC,STATIC;
 	}
 }

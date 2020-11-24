@@ -3,7 +3,6 @@ package com.greentree.geom;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.greentree.geom.Shape.T;
 import com.greentree.util.math.vector.float2f;
 
 public abstract class Shape {
@@ -23,6 +22,21 @@ public abstract class Shape {
 		return res;
 	}
 
+	@FunctionalInterface
+	public interface Translete {
+
+		public float translete(float c);
+	
+	}
+	
+	public void transleteX(final Translete t) {
+		for(final Point p : getPoints()) p.transleteX(t);
+	}
+
+	public void transleteY(final Translete t) {
+		for(final Point p : getPoints()) p.transleteY(t);
+	}
+	
 	public boolean isClosed(){
 		return true;
 	}
@@ -31,11 +45,6 @@ public abstract class Shape {
 		add(new float2f(x - getCenter().getX(), y - getCenter().getY()));
 	}
 	
-	@FunctionalInterface
-	public interface T {
-
-		public Point translete(float x, float y);
-	}
 	public List<Point> contactLine(final Line line) {
 		final List<Line> A = getLines();
 		if(A == null) return new ArrayList<>();

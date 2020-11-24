@@ -8,7 +8,7 @@ import java.io.Serializable;
 import com.greentree.engine.gui.Image;
 
 public interface ParticleEmitter extends Serializable {
-	
+
 	boolean completed();
 	Image getImage();
 	boolean isEnabled();
