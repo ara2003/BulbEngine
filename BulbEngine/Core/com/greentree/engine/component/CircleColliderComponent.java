@@ -1,6 +1,6 @@
 package com.greentree.engine.component;
 
-import com.greentree.engine.component.util.XmlData;
+import com.greentree.engine.component.util.EditorData;
 import com.greentree.geom.Circle;
 import com.greentree.geom.Shape;
 
@@ -9,9 +9,9 @@ public final class CircleColliderComponent extends ColliderComponent {
 
 	private static final long serialVersionUID = 1L;
 	private Shape shape;
-	@XmlData
+	@EditorData
 	public float radius;
-	@XmlData(def = "true")
+	@EditorData(def = "true")
 	private boolean triger;
 	
 	@Override

@@ -1,17 +1,15 @@
 package com.greentree.engine.component;
 
-import com.greentree.engine.component.util.GameComponent;
-import com.greentree.engine.component.util.XmlData;
-import com.greentree.engine.component.util.webComponent;
+import com.greentree.engine.component.util.EditorData;
+import com.greentree.engine.object.GameComponent;
 
-@webComponent
 public final class Transform extends GameComponent {
 	
 	private static final long serialVersionUID = 1L;
 	private float lastx, lasty;
-	@XmlData
+	@EditorData
 	public float scaleX, scaleY;
-	@XmlData
+	@EditorData
 	public float x, y;
 
 	public Transform() {

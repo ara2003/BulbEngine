@@ -39,7 +39,7 @@ public class EventSystem {
 	
 	public void update() {
 		synchronized(eventLock) {
-			if(!eventQueue.isEmpty())Debug.addEvent(getClass().getSimpleName(), eventQueue.toString());
+			if(!eventQueue.isEmpty()) Debug.addEvent(getClass().getSimpleName(), eventQueue.toString());
 			while(!eventQueue.isEmpty()) {
 				final Event e = eventQueue.remove();
 				for(final ListenerManager l : listeners) {

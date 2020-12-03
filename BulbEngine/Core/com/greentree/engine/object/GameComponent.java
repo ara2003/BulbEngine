@@ -1,4 +1,4 @@
-package com.greentree.engine.component.util;
+package com.greentree.engine.object;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -7,32 +7,32 @@ import java.util.Random;
 
 import com.greentree.engine.Game;
 import com.greentree.engine.Log;
+import com.greentree.engine.component.util.EditorData;
+import com.greentree.engine.component.util.GameComponentEvent;
+import com.greentree.engine.component.util.necessarilySystem;
+import com.greentree.engine.component.util.GameComponentEvent.EventType;
+import com.greentree.engine.corutine.Corutine;
 import com.greentree.engine.loading.LoaderUtil;
-import com.greentree.engine.object.GameObject;
+import com.greentree.engine.phisic.ColliderListener;
+import com.greentree.engine.system.util.GameSystem;
 import com.greentree.util.xml.XMLElement;
 
 public abstract class GameComponent implements Serializable {
-	
-	@FunctionalInterface
-	protected interface Corutine {
 
-		void run() throws InterruptedException;
-		
-	}
-	
 	protected static final Random random = new Random();
 	private static final long serialVersionUID = 1L;
+	private transient boolean initialize = false;
+	private GameObject object;
+
+	protected GameComponent() {
+		Game.getEventSystem().event(new GameComponentEvent(EventType.create, this));
+	}
 	
 	@SuppressWarnings("unchecked")
 	public final static GameComponent createComponent(final XMLElement in) {
 		final String[] w = in.getAttribute("type").split(":");
 		Class<?> clazz;
-		try {
-			clazz = Game.loadClass(w[w.length - 1]);
-		}catch(final ClassNotFoundException e) {
-			Log.warn("component type " + in.getAttribute("type") + " not found");
-			return null;
-		}
+		clazz = Game.loadClass(w[w.length - 1]);
 		GameComponent component = null;
 		try {
 			component = (GameComponent) clazz.getConstructor().newInstance();
@@ -42,16 +42,16 @@ public abstract class GameComponent implements Serializable {
 		}
 		if(component == null) return null;
 		for(final Field f : LoaderUtil.getAllFields(component.getClass()))
-			if(f.getAnnotation(XmlData.class) != null) try {
+			if(f.getAnnotation(EditorData.class) != null) try {
 				String xmlValue = "";
 				{
-					String xmlName = f.getAnnotation(XmlData.class).name();
+					String xmlName = f.getAnnotation(EditorData.class).name();
 					if(xmlName.equals("*")) xmlName = f.getName();
 					if(xmlName.equals("type"))
 						Log.error("name of field " + component.getClass() + "." + f.getName() + " is \"type\"");
 					xmlValue = in.getAttribute(xmlName);
 				}
-				if(xmlValue.equals("")) xmlValue = f.getAnnotation(XmlData.class).def();
+				if(xmlValue.equals("")) xmlValue = f.getAnnotation(EditorData.class).def();
 				if(xmlValue.equals("*")) continue;
 				f.setAccessible(true);
 				if(f.getType().equals(String.class)) f.set(component, xmlValue);
@@ -97,23 +97,17 @@ public abstract class GameComponent implements Serializable {
 		return component;
 	}
 	
-	private transient boolean initialize = false;
-	private GameObject object;
-
-	protected GameComponent() {
-	}
-
 	public void CollideEvent(final GameObject other) {
 	}
 	
 	protected final <T extends GameComponent> T getComponent(final Class<T> clazz) {
 		return getObject().getComponent(clazz);
 	}
-	
+
 	public GameObject getObject() {
 		return object;
 	}
-	
+
 	protected void start() {
 	}
 
@@ -126,6 +120,12 @@ public abstract class GameComponent implements Serializable {
 		}
 		initialize = true;
 		this.object = object;
+		{
+			final necessarilySystem necessarilySystem = LoaderUtil.getAnnotationofPeraent(getClass(),
+					necessarilySystem.class);
+			if(necessarilySystem != null) for(final Class<? extends GameSystem> c : necessarilySystem.value())
+				Game.getCurrentScene().addSystem(c);
+		}
 		for(final Field f : LoaderUtil.getAllFields(getClass())) try {
 			f.setAccessible(true);
 			if(f.getType().asSubclass(GameComponent.class) != null)
@@ -135,19 +135,22 @@ public abstract class GameComponent implements Serializable {
 		}catch(final ClassCastException e) {
 		}
 		start();
-	}
+		Game.getEventSystem().addListener(new ColliderListener() {
+			
+			private static final long serialVersionUID = 1L;
 
-	protected final void startCorutine(final Corutine cor) {
-		final Thread corutine = new Thread(()-> {
-			try {
-				cor.run();
-			}catch(final InterruptedException e) {
-				e.printStackTrace();
+			@Override
+			public void CollisionStay(final GameObject object1, final GameObject object2) {
+				if(object == object1) CollideEvent(object2);
+				if(object == object2) CollideEvent(object1);
 			}
-		}, "Corutine(" + cor.hashCode() + ") in class " + getClass().getSimpleName());
-		corutine.start();
+		});
 	}
-
+	
+	protected final void startCorutine(final Corutine corutine) {
+		object.startCorutine(corutine);
+	}
+	
 	@Override
 	public String toString() {
 		return getClass().getSimpleName();

@@ -3,26 +3,26 @@ package com.greentree.engine.gui.ui;
 import com.greentree.engine.Game;
 import com.greentree.engine.Time;
 import com.greentree.engine.component.Transform;
-import com.greentree.engine.component.util.GameComponent;
-import com.greentree.engine.component.util.XmlData;
+import com.greentree.engine.component.util.EditorData;
 import com.greentree.engine.gui.Color;
 import com.greentree.engine.gui.Graphics;
 import com.greentree.engine.input.Input;
 import com.greentree.engine.input.KeyAdapter;
 import com.greentree.engine.input.MouseAdapter;
+import com.greentree.engine.object.GameComponent;
 
 public class Edit extends GameComponent {
 	
 	private static final long serialVersionUID = 1L;
-	@XmlData(name = "text", def = "")
+	@EditorData(name = "text", def = "")
 	String _text;
-	@XmlData(def = "2")
+	@EditorData(def = "2")
 	int border;
 	private boolean focus, capsLock;
 	private float height;
 	Transform t;
 	String text = "";
-	@XmlData(def = "100")
+	@EditorData(def = "100")
 	private float width;
 	
 	private boolean click0(final int button, final int x, final int y) {

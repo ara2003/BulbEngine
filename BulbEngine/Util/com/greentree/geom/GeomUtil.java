@@ -6,10 +6,7 @@ import java.util.List;
 import com.greentree.util.math.vector.float2f;
 
 public final class GeomUtil {
-
-	private GeomUtil() {
-	}
-
+	
 	public static Point contact(final Line a, final Line b, final boolean border) {
 		final float a1 = a.getY1() - a.getY2();
 		final float a2 = b.getY1() - b.getY2();
@@ -27,7 +24,7 @@ public final class GeomUtil {
 		}
 		return new Point(x, y);
 	}
-
+	
 	public static Point contactLine(final Line line, final Line line_no_border) {
 		final Point p = GeomUtil.contact(line, line_no_border, false);
 		if(p.getX() > Math.max(line.getX1(), line.getX2())) return null;
@@ -36,13 +33,13 @@ public final class GeomUtil {
 		if(p.getY() < Math.min(line.getY1(), line.getY2())) return null;
 		return p;
 	}
-
+	
 	public static float distanse(final Point p, final List<Shape> a) {
 		float dis = Float.MAX_VALUE;
 		for(final Shape l : a) dis = Math.min(dis, l.distanse(p));
 		return dis;
 	}
-
+	
 	public static Point getCenter(final List<Point> point) {
 		float x = 0, y = 0;
 		for(final Point p : point) {
@@ -51,13 +48,13 @@ public final class GeomUtil {
 		}
 		return new Point(x / point.size(), y / point.size());
 	}
-
+	
 	public static Point[] getPoint(final float... point) {
 		final Point[] res = new Point[point.length / 2];
 		for(int i = 0; i < point.length - point.length % 2; i += 2) res[i / 2] = new Point(point[i], point[i + 1]);
 		return res;
 	}
-
+	
 	public static Point minPoint(final Point point, final List<Shape> world) {
 		final List<Point> con = new ArrayList<>();
 		for(final Shape s : world) {
@@ -109,11 +106,14 @@ public final class GeomUtil {
 		}
 		return null;
 	}
-
+	
 	public static List<Line> toLine(final List<Point> points) {
 		final List<Line> res = new ArrayList<>();
 		for(int i = 1; i < points.size(); i++) res.add(new Line(points.get(i - 1), points.get(i)));
 		res.set(0, new Line(points.get(0), points.get(points.size() - 1)));
 		return res;
+	}
+	
+	private GeomUtil() {
 	}
 }

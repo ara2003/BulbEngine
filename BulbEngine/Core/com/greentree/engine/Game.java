@@ -21,22 +21,15 @@ import com.greentree.engine.gui.Color;
 import com.greentree.engine.gui.Graphics;
 import com.greentree.engine.input.Input;
 import com.greentree.engine.object.Scene;
-import com.greentree.engine.object.SceneManager;
 import com.greentree.opengl.InternalTextureLoader;
 import com.greentree.opengl.rendener.Renderer;
 import com.greentree.opengl.rendener.SGL;
 import com.greentree.util.xml.XMLElement;
+import com.greentree.util.xml.XMLParser;
 
 public final class Game {
 	
 	private static Scene currentScene;
-	
-	public static Scene getCurrentScene() {
-		return currentScene;
-	}
-
-
-
 	private static ClassLoader gameLoader;
 	private static SGL GL;
 	private static final Object globalCock = new Object();
@@ -47,6 +40,9 @@ public final class Game {
 	private static DisplayMode targetDisplayMode;
 	private static Map<Class<?>, FileWriter> writer = new HashMap<>();
 	private static int width, height;
+
+	private Game() {
+	}
 
 	public static void addTime(final Class<?> clazz, final long time) {
 		if(clazz == null) Log.warn("class is null");
@@ -96,14 +92,22 @@ public final class Game {
 		if(Display.isCloseRequested()) Game.running = false;
 	}
 
+	public static Scene getCurrentScene() {
+		return currentScene;
+	}
+
 	public static EventSystem getEventSystem() {
 		return Game.currentScene.getEventSystem();
 	}
-
+	
 	public static Object getGlobalCock() {
 		return Game.globalCock;
 	}
-	
+
+	public static XMLElement getResurse(final String name) {
+		return currentScene.getResurse(name);
+	}
+
 	public static File getRoot() {
 		return Game.root;
 	}
@@ -112,12 +116,28 @@ public final class Game {
 		return Display.isFullscreen();
 	}
 
-	public static Class<?> loadClass(final String name) throws ClassNotFoundException {
-		return Game.gameLoader.loadClass(name);
+	public static Class<?> loadClass(final String name) {
+		try {
+			return Game.gameLoader.loadClass(name);
+		}catch(final ClassNotFoundException e) {
+			Log.warn(e);
+		}
+		return null;
+	}
+
+	public static void loadScene(final String name) {
+		final XMLElement in = XMLParser.parse(Game.getRoot(), name + ".scene");
+		final Scene scene = new Scene();
+		Log.info("Scene load : " + name);
+		synchronized(Game.globalCock) {
+			Game.currentScene = scene;
+			scene.start(in);
+			Game.reset();
+		}
 	}
 
 	public static void reset() {
-		if(Game.gameLoader == null) Game.gameLoader = new BasicClassLoader();
+		Game.gameLoader = new BasicClassLoader();
 	}
 
 	private static void setDisplayMode(final int width, final int height, final boolean fullscreen) {
@@ -151,13 +171,6 @@ public final class Game {
 			if(Game.targetDisplayMode.getBitsPerPixel() == 16) InternalTextureLoader.get().set16BitMode();
 		}catch(final LWJGLException e) {
 			Log.error("Unable to setup mode " + width + "x" + height + " fullscreen=" + fullscreen, e);
-		}
-	}
-
-	public static void setScene(final Scene scene) {
-		if(!scene.equals(Game.currentScene)) synchronized(Game.globalCock) {
-			Game.currentScene = scene;
-			Game.reset();
 		}
 	}
 
@@ -225,7 +238,7 @@ public final class Game {
 				Game.originalDisplayMode = Display.getDisplayMode();
 				Game.setDisplayMode(width, height, fullscreen);
 				Game.setup();
-				Game.currentScene = SceneManager.getScene(firstScene);
+				loadScene(firstScene);
 			}
 			while(Game.running) synchronized(Game.globalCock) {
 				Game.gameLoop();
@@ -235,14 +248,5 @@ public final class Game {
 			System.exit(0);
 		}, "Mian Game Loop");
 		Game.mianGameLoop.start();
-	}
-
-	private Game() {
-	}
-
-	
-	
-	public static XMLElement getResurse(String name) {
-		return currentScene.getResurse(name);
 	}
 }

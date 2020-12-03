@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.lwjgl.BufferUtils;
 
+import com.greentree.geom.Line;
 import com.greentree.geom.Point;
 import com.greentree.geom.Shape;
 import com.greentree.opengl.TextureImpl;
@@ -39,6 +40,9 @@ public final class Graphics {
 	private static float sx = 1.0f;
 	private static float sy = 1.0f;
 
+	private Graphics() {
+	}
+
 	private static void checkPush() {
 		if(!Graphics.pushed) {
 			Graphics.GL.glPushMatrix();
@@ -61,11 +65,11 @@ public final class Graphics {
 		Graphics.setDrawMode(originalMode);
 		Graphics.popTransform();
 	}
-
+	
 	public static void clearClip() {
 		Graphics.GL.glDisable(SGL.GL_SCISSOR_TEST);
 	}
-	
+
 	public static void clearWorldClip() {
 		Graphics.GL.glDisable(SGL.GL_CLIP_PLANE0);
 		Graphics.GL.glDisable(SGL.GL_CLIP_PLANE1);
@@ -218,9 +222,11 @@ public final class Graphics {
 		Graphics.currentColor.bind();
 		TextureImpl.bindNone();
 		Graphics.LSR.start();
-		final List<Point> point = s.getPoints();
-		for(final Point p : point) Graphics.LSR.vertex(p.getX(), p.getY());
-		if(s.isClosed()) Graphics.LSR.vertex(point.get(0).getX(), point.get(0).getY());
+		final List<Line> point = s.getLines();
+		for(final Line l : point) {
+			Graphics.LSR.vertex(l.getX1(), l.getY1());
+			Graphics.LSR.vertex(l.getX2(), l.getY2());
+		}
 		Graphics.LSR.end();
 	}
 
@@ -484,7 +490,7 @@ public final class Graphics {
 		Graphics.LSR.setWidth(width);
 		Graphics.GL.glPointSize(width);
 	}
-
+	
 	private static int translate(final byte b) {
 		if(b < 0) return 256 + b;
 		return b;
@@ -493,8 +499,5 @@ public final class Graphics {
 	public static void translate(final float x, final float y) {
 		Graphics.checkPush();
 		Graphics.GL.glTranslatef(x, y, 0.0f);
-	}
-	
-	private Graphics() {
 	}
 }

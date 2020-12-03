@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 @Retention(RUNTIME)
 @Target(FIELD)
-public @interface XmlData{
+public @interface EditorData{
 
 	public String def() default "*";
 

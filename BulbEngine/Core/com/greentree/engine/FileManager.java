@@ -6,6 +6,9 @@ import java.nio.file.Files;
 
 public final class FileManager {
 	
+	private FileManager() {
+	}
+	
 	public static File getDirectory(final File root, final String name) {
 		final File file = new File(root, name);
 		if(!Files.isExecutable(file.toPath())) try {
@@ -15,7 +18,7 @@ public final class FileManager {
 		}
 		return file;
 	}
-	
+
 	public static File getDirectory(final String name) {
 		return getDirectory(Game.getRoot(), name);
 	}
@@ -32,8 +35,5 @@ public final class FileManager {
 
 	public static File getFile(final String name) {
 		return getFile(Game.getRoot(), name);
-	}
-
-	private FileManager() {
 	}
 }

@@ -4,10 +4,6 @@ import com.greentree.engine.event.Event;
 
 public class KeyEvent implements Event {
 	
-	public enum EventType{
-		keyPressed,keyReleased;
-	}
-
 	private static final long serialVersionUID = 1L;
 	int code = 0;
 	private final EventType type;
@@ -23,5 +19,9 @@ public class KeyEvent implements Event {
 
 	public EventType getEventType() {
 		return type;
+	}
+
+	public enum EventType{
+		keyPressed,keyReleased;
 	}
 }

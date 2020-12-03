@@ -18,6 +18,9 @@ public final class Log {
 		Log.forcedVerbose = false;
 	}
 
+	private Log() {
+	}
+
 	public static void checkVerboseLogSetting() {
 		try {
 			AccessController.doPrivileged((PrivilegedAction<Object>) ()-> {
@@ -37,7 +40,7 @@ public final class Log {
 		Log.err.println(new Date() + " ERROR:" + message);
 		Game.exit();
 	}
-
+	
 	public static void error(final String message, final Throwable e) {
 		Log.error(message);
 		Log.error(e);
@@ -53,7 +56,7 @@ public final class Log {
 	public static void info(final String message) {
 		Log.out.println(new Date() + " INFO:" + message);
 	}
-	
+
 	public static void setForcedVerboseOn() {
 		Log.forcedVerbose = true;
 	}
@@ -61,16 +64,17 @@ public final class Log {
 	public static void setVerbose(final boolean v) {
 		if(Log.forcedVerbose) return;
 	}
-
+	
 	public static void warn(final String message) {
 		Log.err.println(new Date() + " WARN:" + message);
 	}
 	
 	public static void warn(final String message, final Throwable e) {
 		Log.warn(message);
-		e.printStackTrace(Log.err);
+		Log.warn(e);
 	}
-	
-	private Log() {
+
+	public static void warn(final Throwable e) {
+		e.printStackTrace(Log.err);
 	}
 }

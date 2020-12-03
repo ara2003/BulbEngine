@@ -5,7 +5,7 @@ import com.greentree.engine.gui.ui.Button;
 import com.greentree.engine.system.ColliderSystem;
 
 public class BasicClassLoader extends ClassLoader {
-
+	
 	@Override
 	public Class<?> loadClass(final String name) throws ClassNotFoundException {
 		try {
@@ -24,6 +24,6 @@ public class BasicClassLoader extends ClassLoader {
 			return super.loadClass(ColliderSystem.class.getPackageName() + "." + name);
 		}catch(final ClassNotFoundException e) {
 		}
-		throw new ClassNotFoundException(name);
+		throw new ClassNotFoundException("can not found \"" + name + "\"");
 	}
 }

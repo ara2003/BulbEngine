@@ -1,16 +1,16 @@
 package com.greentree.engine.gui.ui;
 
 import com.greentree.engine.component.Transform;
-import com.greentree.engine.component.util.GameComponent;
-import com.greentree.engine.component.util.XmlData;
+import com.greentree.engine.component.util.EditorData;
 import com.greentree.engine.gui.Color;
 import com.greentree.engine.gui.Graphics;
+import com.greentree.engine.object.GameComponent;
 
 public final class Text extends GameComponent {
 	
 	private static final long serialVersionUID = 1L;
 	Transform t;
-	@XmlData
+	@EditorData
 	String text;
 	private float w, h;
 	

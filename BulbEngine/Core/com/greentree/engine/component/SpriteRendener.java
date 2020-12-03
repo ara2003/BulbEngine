@@ -1,19 +1,21 @@
 package com.greentree.engine.component;
 
-import com.greentree.engine.component.util.GameComponent;
-import com.greentree.engine.component.util.XmlData;
+import com.greentree.engine.component.util.EditorData;
+import com.greentree.engine.component.util.necessarilyComponent;
 import com.greentree.engine.component.util.render;
 import com.greentree.engine.gui.Image;
+import com.greentree.engine.object.GameComponent;
 
+@necessarilyComponent(Transform.class)
 @render
 public class SpriteRendener extends GameComponent {
 
 	private static final long serialVersionUID = 1L;
-	@XmlData
+	@EditorData
 	private String image;
 	private transient Image img;
 	private transient Transform t;
-	@XmlData
+	@EditorData
 	private int width, height;
 
 	public int getHeight() {

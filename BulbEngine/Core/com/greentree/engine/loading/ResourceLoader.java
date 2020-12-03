@@ -17,10 +17,13 @@ public class ResourceLoader {
 		ResourceLoader.locations.add(new FileSystemLocation(new File(".")));
 	}
 
+	private ResourceLoader() {
+	}
+
 	public static void addResourceLocation(final ResourceLocation location) {
 		ResourceLoader.locations.add(location);
 	}
-
+	
 	public static URL getResource(final String ref) {
 		URL url = null;
 		for(final Object element : ResourceLoader.locations) {
@@ -58,8 +61,5 @@ public class ResourceLoader {
 			if(url != null) return true;
 		}
 		return false;
-	}
-	
-	private ResourceLoader() {
 	}
 }

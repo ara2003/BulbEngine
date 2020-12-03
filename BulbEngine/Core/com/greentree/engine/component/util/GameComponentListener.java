@@ -1,14 +1,13 @@
 package com.greentree.engine.component.util;
 
 import com.greentree.engine.event.Listener;
+import com.greentree.engine.object.GameComponent;
 
-public abstract class GameComponentListener implements Listener {
-	
-	private static final long serialVersionUID = 1L;
-	
-	public void create(final GameComponent gameObject) {
+public interface GameComponentListener extends Listener {
+
+	default void create(final GameComponent component) {
 	}
-	
-	public void destroy(final GameComponent gameObject) {
+
+	default void destroy(final GameComponent component) {
 	}
 }

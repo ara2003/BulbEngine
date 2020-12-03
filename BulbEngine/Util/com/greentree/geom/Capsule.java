@@ -3,8 +3,6 @@ package com.greentree.geom;
 import java.util.Arrays;
 import java.util.List;
 
-import com.greentree.util.math.vector.float2f;
-
 @Deprecated
 public class Capsule extends Shape {
 	
@@ -15,12 +13,6 @@ public class Capsule extends Shape {
 		p1 = new Point(x1, y1);
 		p2 = new Point(x2, y2);
 		this.radius = radius;
-	}
-	
-	@Override
-	public void add(final float2f step) {
-		p1.add(step);
-		p2.add(step);
 	}
 	
 	@Override

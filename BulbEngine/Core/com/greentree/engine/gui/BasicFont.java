@@ -16,14 +16,6 @@ import com.greentree.util.BufferedImageUtil;
 
 public final class BasicFont implements Font {
 	
-	private class IntObject {
-		
-		public int height;
-		public int storedX;
-		public int storedY;
-		public int width;
-	}
-
 	private static final SGL GL = Renderer.get();
 	private final boolean antiAlias;
 	private final Map<Character, IntObject> customChars;
@@ -34,7 +26,7 @@ public final class BasicFont implements Font {
 	private Texture fontTexture;
 	private final int textureHeight;
 	private int textureWidth;
-	
+
 	public BasicFont(final java.awt.Font font, final boolean antiAlias) {
 		this(font, antiAlias, null);
 	}
@@ -168,7 +160,7 @@ public final class BasicFont implements Font {
 	public int getHeight(final String HeightString) {
 		return fontHeight;
 	}
-
+	
 	@Override
 	public int getLineHeight() {
 		return fontHeight;
@@ -185,5 +177,13 @@ public final class BasicFont implements Font {
 			if(intObject != null) totalwidth += intObject.width;
 		}
 		return totalwidth;
+	}
+
+	private class IntObject {
+		
+		public int height;
+		public int storedX;
+		public int storedY;
+		public int width;
 	}
 }

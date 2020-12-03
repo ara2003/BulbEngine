@@ -7,7 +7,16 @@ import com.greentree.util.math.vector.float2f;
 
 public abstract class Shape {
 	
-	public abstract void add(float2f step);
+	protected Point center;
+
+	public Shape() {
+	}
+	
+	public void add(final float2f step) {
+		final List<Point> points = getPoints();
+		for(final Point point : points) point.add(step);
+		if(!points.contains(getCenter())) getCenter().add(step);
+	}
 
 	public final List<Point> contact(final Shape other) {
 		final List<Line> A = getLines();
@@ -22,59 +31,29 @@ public abstract class Shape {
 		return res;
 	}
 
-	@FunctionalInterface
-	public interface Translete {
-
-		public float translete(float c);
-	
-	}
-	
-	public void transleteX(final Translete t) {
-		for(final Point p : getPoints()) p.transleteX(t);
-	}
-
-	public void transleteY(final Translete t) {
-		for(final Point p : getPoints()) p.transleteY(t);
-	}
-	
-	public boolean isClosed(){
-		return true;
-	}
-
-	public void moveTo(final float x, final float y) {
-		add(new float2f(x - getCenter().getX(), y - getCenter().getY()));
-	}
-	
-	public List<Point> contactLine(final Line line) {
-		final List<Line> A = getLines();
-		if(A == null) return new ArrayList<>();
-		final List<Point> res = new ArrayList<>(2);
-		for(final Line element : A) {
-			final Point c = GeomUtil.contactLine(element, line);
-			if(c != null) res.add(c);
-		}
-		return res;
-	}
-	
 	public float distanse(final Point p) {
 		return p.distanse(minPoint(p));
 	}
 	
 	public Point getCenter() {
-		return GeomUtil.getCenter(getPoints());
+		return center;
 	}
 
 	public List<Line> getLines() {
 		return GeomUtil.toLine(getPoints());
 	}
-	
+
 	public abstract List<Point> getPoints();
 	
 	public float getRadius() {
-		final Point c = getCenter();
 		float dis = 0;
-		for(final Point p : getPoints()) dis = Math.max(dis, c.distanse(p));
+		for(final Point p : getPoints()) dis = Math.max(dis, center.distanse(p));
 		return dis;
+	}
+
+	public boolean isTouch(final Shape other) {
+		if(getCenter().distanse(other.getCenter()) - getRadius() - other.getRadius() > 0) return false;
+		return true;
 	}
 
 	public Point minPoint(final Point point) {
@@ -91,6 +70,31 @@ public abstract class Shape {
 		}
 		return res;
 	}
+	
+	public void moveTo(final float x, final float y) {
+		add(new float2f(x - getCenter().getX(), y - getCenter().getY()));
+	}
+	
+	public void rotate(final Point point, final double ang) {
+		for(final Point p : getPoints()) p.rotate(point, ang);
+		center.rotate(point, ang);
+	}
 
-	public abstract void rotate(Point point, double ang);
+	public void transleteX(final Translete t) {
+		for(final Point p : getPoints()) p.transleteX(t);
+	}
+	
+	public void transleteY(final Translete t) {
+		for(final Point p : getPoints()) p.transleteY(t);
+	}
+	
+	protected void trim() {
+		center = GeomUtil.getCenter(getPoints());
+	}
+
+	@FunctionalInterface
+	public interface Translete {
+
+		float translete(float c);
+	}
 }

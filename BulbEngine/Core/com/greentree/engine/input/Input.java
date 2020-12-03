@@ -159,6 +159,9 @@ public class Input {
 	private static float xoffset = 0.0F;
 	private static float yoffset = 0.0F;
 	
+	private Input() {
+	}
+	
 	private static boolean anyMouseDown() {
 		for(int i = 0; i < 3; ++i) if(Mouse.isButtonDown(i)) return true;
 		return false;
@@ -313,12 +316,12 @@ public class Input {
 			}
 		}
 	}
-	
+
 	public static void resetInputTransform() {
 		Input.setOffset(0.0F, 0.0F);
 		Input.setScale(1.0F, 1.0F);
 	}
-
+	
 	private static int resolveEventKey(final int key, final char c) {
 		return c != '=' && key != 0 ? key : 13;
 	}
@@ -335,8 +338,5 @@ public class Input {
 	public static void setScale(final float scaleX, final float scaleY) {
 		Input.scaleX = scaleX;
 		Input.scaleY = scaleY;
-	}
-	
-	private Input() {
 	}
 }

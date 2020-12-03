@@ -1,8 +1,8 @@
 package com.greentree.geom;
 
+import static java.lang.Math.abs;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
-import static java.lang.Math.abs;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,14 +19,19 @@ public class Point extends Shape {
 	public Point(final float x, final float y) {
 		this.x = x;
 		this.y = y;
+		trim();
 	}
-
+	
+	protected void trim(){
+		super.center = this;
+	}
+	
 	@Override
-	public void add(final float2f v) {
-		x += v.getX();
-		y += v.getY();
+	public void add(final float2f step) {
+		x += step.getX();
+		y += step.getY();
 	}
-
+	
 	@Override
 	public float distanse(final Point p) {
 		return (float) Math.sqrt(Math.pow(p.getX() - getX(), 2) + Math.pow(p.getY() - getY(), 2));
@@ -41,6 +46,11 @@ public class Point extends Shape {
 		if(abs(y - other.y) > 1E-9) return false;
 		return true;
 	}
+	
+	@Override
+	public Point getCenter() {
+		return this;
+	}
 
 	@Override
 	public List<Line> getLines() {
@@ -50,6 +60,11 @@ public class Point extends Shape {
 	@Override
 	public List<Point> getPoints() {
 		return Arrays.asList(this);
+	}
+
+	@Override
+	public float getRadius() {
+		return 0;
 	}
 
 	public float getX() {
@@ -69,12 +84,9 @@ public class Point extends Shape {
 	public void rotate(final Point c, final double ang) {
 		x -= c.getX();
 		y -= c.getY();
-		
 		final float x_ = x, y_ = y;
-		
 		x = (float) (x_ * cos(ang) - y_ * sin(ang));
 		y = (float) (x_ * sin(ang) + y_ * cos(ang));
-		
 		x += c.getX();
 		y += c.getY();
 	}
