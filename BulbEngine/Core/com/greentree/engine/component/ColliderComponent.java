@@ -1,7 +1,7 @@
 package com.greentree.engine.component;
 
+import com.greentree.engine.GameComponent;
 import com.greentree.engine.component.util.necessarilySystem;
-import com.greentree.engine.object.GameComponent;
 import com.greentree.engine.system.ColliderSystem;
 import com.greentree.geom.Shape;
 
