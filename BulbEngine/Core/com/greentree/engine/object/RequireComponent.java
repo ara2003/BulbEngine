@@ -6,7 +6,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import com.greentree.engine.GameComponent;
+import com.greentree.engine.component.util.GameComponent;
 
 @Retention(RUNTIME)
 @Target(TYPE)

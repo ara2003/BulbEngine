@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 @Target(FIELD)
 public @interface EditorData{
 	
-	public String def() default "*";
+	public String reserve() default "*";
 	
 	public String name() default "*";
 }

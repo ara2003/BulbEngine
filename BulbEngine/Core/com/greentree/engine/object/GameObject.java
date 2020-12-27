@@ -13,10 +13,9 @@ import java.util.Set;
 
 import com.greentree.engine.Debug;
 import com.greentree.engine.Game;
-import com.greentree.engine.GameComponent;
 import com.greentree.engine.Log;
 import com.greentree.engine.Timer;
-import com.greentree.engine.component.collider.ColliderComponent;
+import com.greentree.engine.component.util.GameComponent;
 import com.greentree.engine.component.util.GameComponentEvent;
 import com.greentree.engine.corutine.Corutine;
 import com.greentree.util.ClassList;
@@ -61,12 +60,6 @@ public final class GameObject implements Serializable {
 		}
 		Game.getCurrentScene().addObject(this);
 		Game.eventNoQueue(new GameObjectEvent(create, this));
-	}
-	
-	public void CollideEvent(final ColliderComponent other) {
-		for(final GameComponent gc : components) {
-			gc.CollideEvent(other);
-		}
 	}
 	
 	public void destroy() {

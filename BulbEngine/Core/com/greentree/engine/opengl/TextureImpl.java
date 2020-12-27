@@ -7,8 +7,8 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 
 import com.greentree.engine.Log;
-import com.greentree.opengl.rendener.Renderer;
-import com.greentree.opengl.rendener.SGL;
+import com.greentree.engine.opengl.rendener.Renderer;
+import com.greentree.engine.opengl.rendener.SGL;
 
 public class TextureImpl implements Texture {
 	

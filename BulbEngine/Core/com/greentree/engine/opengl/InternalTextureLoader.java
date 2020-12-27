@@ -15,8 +15,8 @@ import java.util.Iterator;
 import org.lwjgl.BufferUtils;
 
 import com.greentree.engine.loading.ResourceLoader;
-import com.greentree.opengl.rendener.Renderer;
-import com.greentree.opengl.rendener.SGL;
+import com.greentree.engine.opengl.rendener.Renderer;
+import com.greentree.engine.opengl.rendener.SGL;
 
 public class InternalTextureLoader {
 	

@@ -5,8 +5,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.greentree.engine.corutine.CustomResemInstruction;
-
 public final class LoaderUtil {
 	
 	public static List<Field> getAllFields(final Class<?> clazz) {

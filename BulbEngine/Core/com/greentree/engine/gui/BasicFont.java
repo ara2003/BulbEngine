@@ -11,8 +11,8 @@ import java.util.Map;
 
 import com.greentree.engine.opengl.BufferedImageUtil;
 import com.greentree.engine.opengl.Texture;
-import com.greentree.opengl.rendener.Renderer;
-import com.greentree.opengl.rendener.SGL;
+import com.greentree.engine.opengl.rendener.Renderer;
+import com.greentree.engine.opengl.rendener.SGL;
 
 public final class BasicFont implements Font {
 	

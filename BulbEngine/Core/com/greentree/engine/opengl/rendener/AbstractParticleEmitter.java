@@ -1,4 +1,4 @@
-package com.greentree.particles;
+package com.greentree.engine.opengl.rendener;
 
 import com.greentree.engine.gui.Image;
 
@@ -28,12 +28,12 @@ public abstract class AbstractParticleEmitter implements ParticleEmitter {
 	public Image getImage() {
 		return null;
 	}
-
+	
 	@Override
 	public boolean isEnabled() {
 		return true;
 	}
-
+	
 	@Override
 	public boolean isOriented() {
 		return false;

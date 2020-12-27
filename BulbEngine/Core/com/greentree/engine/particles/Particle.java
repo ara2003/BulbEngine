@@ -6,8 +6,8 @@ package com.greentree.engine.particles;
 import com.greentree.engine.gui.Color;
 import com.greentree.engine.gui.Image;
 import com.greentree.engine.opengl.TextureImpl;
-import com.greentree.opengl.rendener.Renderer;
-import com.greentree.opengl.rendener.SGL;
+import com.greentree.engine.opengl.rendener.Renderer;
+import com.greentree.engine.opengl.rendener.SGL;
 
 public class Particle {
 	

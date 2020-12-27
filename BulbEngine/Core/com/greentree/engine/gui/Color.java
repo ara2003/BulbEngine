@@ -7,8 +7,8 @@ import java.io.Serializable;
 import java.nio.FloatBuffer;
 import java.util.Random;
 
-import com.greentree.opengl.rendener.Renderer;
-import com.greentree.opengl.rendener.SGL;
+import com.greentree.engine.opengl.rendener.Renderer;
+import com.greentree.engine.opengl.rendener.SGL;
 
 public class Color implements Serializable {
 	

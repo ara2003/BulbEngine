@@ -1,4 +1,4 @@
-package com.greentree.particles;
+package com.greentree.engine.opengl.rendener;
 
 public class MyFire extends AbstractParticleEmitter {
 	
@@ -16,10 +16,10 @@ public class MyFire extends AbstractParticleEmitter {
 			while(iter-- > 0) {
 				final Particle p = system.getNewParticle(this, 500.0F);
 				p.setColor(1.0F, 1.0F, 1.0F, 0.5F);
-				p.setPosition((float) (x + 100 * Math.random()), y);
+				p.setPosition((float) (x + (100 * Math.random())), y);
 				p.setSize(8);
-				final float vx = delta * (float) (0.04f * Math.random() + 0.01f);
-				final float vy = delta * -(float) (0.04f * Math.random() + 0.01f);
+				final float vx = delta * (float) ((0.04f * Math.random()) + 0.01f);
+				final float vy = delta * -(float) ((0.04f * Math.random()) + 0.01f);
 				p.setVelocity(vx, vy, 1.0F);
 			}
 		}

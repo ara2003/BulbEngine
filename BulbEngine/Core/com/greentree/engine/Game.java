@@ -24,9 +24,9 @@ import com.greentree.engine.loading.FileSystemLocation;
 import com.greentree.engine.loading.ResourceLoader;
 import com.greentree.engine.object.Scene;
 import com.greentree.engine.opengl.InternalTextureLoader;
+import com.greentree.engine.opengl.rendener.Renderer;
+import com.greentree.engine.opengl.rendener.SGL;
 import com.greentree.engine.system.ColliderSystem;
-import com.greentree.opengl.rendener.Renderer;
-import com.greentree.opengl.rendener.SGL;
 import com.greentree.xml.XMLElement;
 import com.greentree.xml.XMLParser;
 
@@ -215,7 +215,6 @@ public final class Game {
 		root = new File(file);
 		assets = new File(root, "Assets");
 		ResourceLoader.addResourceLocation(new FileSystemLocation(assets));
-		
 		Game.mianGameLoop = new Thread(()-> {
 			Game.GL = Renderer.get();
 			Game.reset();

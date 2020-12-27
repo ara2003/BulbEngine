@@ -1,9 +1,9 @@
 package com.greentree.engine.gui.ui;
 
 import com.greentree.engine.Game;
-import com.greentree.engine.GameComponent;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.component.util.EditorData;
+import com.greentree.engine.component.util.GameComponent;
 import com.greentree.engine.gui.Graphics;
 import com.greentree.engine.input.MouseAdapter;
 import com.greentree.engine.input.MouseListenerManager;
@@ -13,7 +13,7 @@ import com.greentree.engine.object.necessarily;
 public class Button extends GameComponent {
 	
 	private static final long serialVersionUID = 1L;
-	@EditorData(def = "2")
+	@EditorData(reserve = "2")
 	private int border;
 	private Transform t;
 	@EditorData

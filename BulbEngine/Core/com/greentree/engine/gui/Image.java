@@ -9,8 +9,8 @@ import com.greentree.engine.opengl.ImageData;
 import com.greentree.engine.opengl.InternalTextureLoader;
 import com.greentree.engine.opengl.Texture;
 import com.greentree.engine.opengl.TextureImpl;
-import com.greentree.opengl.rendener.Renderer;
-import com.greentree.opengl.rendener.SGL;
+import com.greentree.engine.opengl.rendener.Renderer;
+import com.greentree.engine.opengl.rendener.SGL;
 
 public class Image implements Serializable {
 	

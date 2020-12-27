@@ -1,7 +1,7 @@
 //
 // Decompiled by Procyon v0.5.36
 //
-package com.greentree.opengl.rendener;
+package com.greentree.engine.opengl.rendener;
 
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;

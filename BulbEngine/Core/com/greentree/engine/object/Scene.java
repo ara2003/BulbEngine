@@ -11,8 +11,8 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import com.greentree.engine.Game;
-import com.greentree.engine.GameComponent;
 import com.greentree.engine.Log;
+import com.greentree.engine.component.util.GameComponent;
 import com.greentree.engine.component.util.GameComponentListener;
 import com.greentree.engine.component.util.GameComponentListenerManager;
 import com.greentree.engine.event.EventSystem;
@@ -73,6 +73,12 @@ public class Scene implements Serializable {
 	public List<GameObject> findObjects(final Predicate<GameObject> filter) {
 		final List<GameObject> list = new ArrayList<>(objects);
 		list.removeIf(o->!filter.test(o));
+		return list;
+	}
+	
+	public List<GameObject> findObjectsHasComponent(Class<? extends GameComponent> clazz) {
+		final List<GameObject> list = new ArrayList<>();
+		for(GameObject obj : objects)if(obj.hasComponent(clazz))list.add(obj);
 		return list;
 	}
 	

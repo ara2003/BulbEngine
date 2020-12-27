@@ -1,7 +1,7 @@
 package com.greentree.engine.component;
 
-import com.greentree.engine.GameComponent;
 import com.greentree.engine.component.util.EditorData;
+import com.greentree.engine.component.util.GameComponent;
 import com.greentree.engine.component.util.render;
 import com.greentree.engine.gui.Image;
 
@@ -17,7 +17,7 @@ public class SpriteRendener extends GameComponent {
 	@EditorData
 	private int width, height;
 	private int imgWidth, imgHeight;
-	@EditorData(def = "scale")
+	@EditorData(reserve = "scale")
 	private RendenerType renderType;
 	public int getHeight() {
 		return height;

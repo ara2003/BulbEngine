@@ -1,8 +1,8 @@
 package com.greentree.engine.gui.ui;
 
-import com.greentree.engine.GameComponent;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.component.util.EditorData;
+import com.greentree.engine.component.util.GameComponent;
 import com.greentree.engine.gui.Color;
 import com.greentree.engine.gui.Graphics;
 

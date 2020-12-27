@@ -1,12 +1,12 @@
-package com.greentree.engine;
+package com.greentree.engine.component.util;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Random;
 
+import com.greentree.engine.Game;
+import com.greentree.engine.Log;
 import com.greentree.engine.component.collider.ColliderComponent;
-import com.greentree.engine.component.util.EditorData;
-import com.greentree.engine.component.util.GameComponentEvent;
 import com.greentree.engine.component.util.GameComponentEvent.EventType;
 import com.greentree.engine.corutine.Corutine;
 import com.greentree.engine.event.Listener;
@@ -19,10 +19,10 @@ import com.greentree.xml.XMLElement;
 public abstract class GameComponent implements Serializable {
 	
 	protected static final Random random = new Random();
+	
 	private static final long serialVersionUID = 1L;
 	private transient boolean initialize = false;
 	private GameObject object;
-	
 	protected GameComponent() {
 		Game.event(new GameComponentEvent(EventType.create, this));
 	}
@@ -47,7 +47,7 @@ public abstract class GameComponent implements Serializable {
 						Log.error("name of field " + component.getClass() + "." + f.getName() + " is \"type\"");
 					xmlValue = data.getAttribute(xmlName);
 				}
-				if(xmlValue.equals("")) xmlValue = f.getAnnotation(EditorData.class).def();
+				if(xmlValue.equals("")) xmlValue = f.getAnnotation(EditorData.class).reserve();
 				if(xmlValue.equals("*")) continue;
 				f.setAccessible(true);
 				
@@ -70,14 +70,24 @@ public abstract class GameComponent implements Serializable {
 		return component;
 	}
 	
+	protected void addComponentListener(ColliderListenerFun collider) {
+		Game.addListener(new ColliderListener() {
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public void CollisionStay(final ColliderComponent object1, final ColliderComponent object2) {
+				if(object.hasComponent(object1)) {
+					collider.event(object2.getObject());
+				}
+				if(object.hasComponent(object2)) {
+					collider.event(object1.getObject());
+				}
+			}
+		});
+	}
+	
 	protected void addListener(final Listener listener) {
 		Game.addListener(listener);
-	}
-	
-	public void CollideEvent(final ColliderComponent other) {
-	}
-	
-	public void CollideEvent(final GameObject other) {
 	}
 	
 	public final <T extends GameComponent> T getComponent(final Class<T> clazz) {
@@ -106,21 +116,7 @@ public abstract class GameComponent implements Serializable {
 		}catch(final Exception e) {
 		}
 		start();
-		Game.addListener(new ColliderListener() {
-			private static final long serialVersionUID = 1L;
-			
-			@Override
-			public void CollisionStay(final ColliderComponent object1, final ColliderComponent object2) {
-				if(object.hasComponent(object1)) {
-					CollideEvent(object2);
-					CollideEvent(object2.getObject());
-				}
-				if(object.hasComponent(object2)) {
-					CollideEvent(object1);
-					CollideEvent(object1.getObject());
-				}
-			}
-		});
+		
 	}
 	
 	protected final void startCorutine(final Corutine corutine) {
@@ -133,5 +129,11 @@ public abstract class GameComponent implements Serializable {
 	}
 	
 	public void update() {
+	}
+	
+	public interface ColliderListenerFun {
+		
+		void event(GameObject object);
+		
 	}
 }

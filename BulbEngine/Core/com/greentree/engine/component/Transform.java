@@ -1,16 +1,16 @@
 package com.greentree.engine.component;
 
-import com.greentree.engine.GameComponent;
 import com.greentree.engine.component.util.EditorData;
+import com.greentree.engine.component.util.GameComponent;
 import com.greentree.math.vector.float2f;
 
 public final class Transform extends GameComponent {
 	
 	private static final long serialVersionUID = 1L;
 	private float lastx, lasty;
-	@EditorData(def = "0")
+	@EditorData(reserve = "0")
 	public float scaleX, scaleY;
-	@EditorData(def = "0")
+	@EditorData(reserve = "0")
 	public float x, y;
 	
 	public Transform() {

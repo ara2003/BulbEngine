@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import com.greentree.opengl.rendener.Renderer;
+import com.greentree.engine.opengl.rendener.Renderer;
 
 public class BufferedImageUtil {
 	

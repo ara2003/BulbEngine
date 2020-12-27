@@ -1,6 +1,5 @@
 package com.greentree.engine.component.util;
 
-import com.greentree.engine.GameComponent;
 import com.greentree.engine.event.Event;
 
 /*

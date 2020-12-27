@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Random;
 
 import com.greentree.engine.Game;
-import com.greentree.engine.GameComponent;
 import com.greentree.engine.Log;
+import com.greentree.engine.component.util.GameComponent;
 import com.greentree.engine.event.Listener;
 
 public abstract class GameSystem implements Serializable {

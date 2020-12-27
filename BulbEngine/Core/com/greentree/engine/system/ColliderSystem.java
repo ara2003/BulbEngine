@@ -18,7 +18,6 @@ public class ColliderSystem extends GameSystem {
 	@Override
 	public void execute() {
 		final List<ColliderComponent> colliderComponent = getComponents(ColliderComponent.class);
-		//
 		for(final ColliderComponent a : colliderComponent) {
 			for(final ColliderComponent b : colliderComponent) {
 				if(a == b)break;//break to process one pair once

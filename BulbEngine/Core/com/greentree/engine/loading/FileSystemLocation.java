@@ -1,6 +1,3 @@
-//
-// Decompiled by Procyon v0.5.36
-//
 package com.greentree.engine.loading;
 
 import java.io.File;
@@ -8,8 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-
-import com.greentree.engine.Game;
 
 public class FileSystemLocation implements ResourceLocation {
 	

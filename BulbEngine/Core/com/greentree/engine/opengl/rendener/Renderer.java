@@ -1,4 +1,4 @@
-package com.greentree.opengl.rendener;
+package com.greentree.engine.opengl.rendener;
 
 public class Renderer {
 	

@@ -1,9 +1,9 @@
 package com.greentree.engine.component;
 
-import com.greentree.engine.GameComponent;
 import com.greentree.engine.Time;
 import com.greentree.engine.component.collider.ColliderComponent;
 import com.greentree.engine.component.util.EditorData;
+import com.greentree.engine.component.util.GameComponent;
 import com.greentree.engine.object.RequireComponent;
 import com.greentree.engine.object.necessarily;
 import com.greentree.engine.phisic.Matirial;
@@ -19,12 +19,12 @@ public class Phisic extends GameComponent {
 	
 	private static final long serialVersionUID = 1L;
 	private Transform position;
-	@EditorData(def = "1")
+	@EditorData(reserve = "1")
 	private float mass;
 	private Point massCenter;
-	@EditorData(def = "Assets\\iron")
+	@EditorData(reserve = "Assets\\iron")
 	private Matirial matirial;
-	@EditorData(def = "DINAMIC", name = "typeCollizion")
+	@EditorData(reserve = "DINAMIC", name = "typeCollizion")
 	private Type type;
 	private float2f velosity = new float2f();
 	private float rotationVelosity = 0f;

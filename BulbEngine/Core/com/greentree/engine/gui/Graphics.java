@@ -8,12 +8,12 @@ import java.util.List;
 import org.lwjgl.BufferUtils;
 
 import com.greentree.engine.opengl.TextureImpl;
+import com.greentree.engine.opengl.rendener.LineStripRenderer;
+import com.greentree.engine.opengl.rendener.Renderer;
+import com.greentree.engine.opengl.rendener.SGL;
 import com.greentree.geom.Point;
 import com.greentree.geom.Shape;
 import com.greentree.math.FastTrig;
-import com.greentree.opengl.rendener.LineStripRenderer;
-import com.greentree.opengl.rendener.Renderer;
-import com.greentree.opengl.rendener.SGL;
 
 public final class Graphics {
 	
