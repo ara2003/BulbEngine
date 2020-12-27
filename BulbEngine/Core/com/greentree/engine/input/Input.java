@@ -334,4 +334,8 @@ public class Input {
 		Input.scaleX = scaleX;
 		Input.scaleY = scaleY;
 	}
+
+	public static int getKeyIndex(String substring) {
+		return Keyboard.getKeyIndex(substring);
+	}
 }
