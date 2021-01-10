@@ -3,12 +3,12 @@ package com.greentree.engine.system.util;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 import java.util.Random;
 
 import com.greentree.engine.Game;
+import com.greentree.engine.GameComponent;
 import com.greentree.engine.Log;
-import com.greentree.engine.component.util.GameComponent;
+import com.greentree.engine.component.util.ComponentList;
 import com.greentree.engine.event.Listener;
 
 public abstract class GameSystem implements Serializable {
@@ -36,7 +36,7 @@ public abstract class GameSystem implements Serializable {
 	public void execute() {
 	}
 	
-	protected <T extends GameComponent> List<T> getComponents(final Class<T> clazz) {
+	protected <T extends GameComponent> ComponentList<T> getComponents(final Class<T> clazz) {
 		return Game.getCurrentScene().getComponents(clazz);
 	}
 	

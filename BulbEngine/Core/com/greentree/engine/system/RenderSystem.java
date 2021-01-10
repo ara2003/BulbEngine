@@ -1,9 +1,8 @@
 package com.greentree.engine.system;
 
-import java.util.List;
-
+import com.greentree.engine.Log;
 import com.greentree.engine.component.Camera;
-import com.greentree.engine.component.RendenerComponent;
+import com.greentree.engine.opengl.rendener.LineStripRenderer;
 import com.greentree.engine.opengl.rendener.Renderer;
 import com.greentree.engine.opengl.rendener.SGL;
 import com.greentree.engine.system.util.GameSystem;
@@ -17,17 +16,25 @@ public class RenderSystem extends GameSystem {
 	
 	private static final long serialVersionUID = 1L;
 	private static SGL GL = Renderer.get();
+	private static LineStripRenderer LSR = Renderer.getLineStripRenderer();
+	private Camera mainCamera;
+	
+	@Override
+	protected void start() {
+		if(getComponents(Camera.class).size() < 1) Log.error("Camera not found", new NullPointerException());
+		if(getComponents(Camera.class).size() > 1) Log.error("Found more one camera", new Exception());
+		mainCamera = getComponents(Camera.class).get(0);
+	}
 	
 	@Override
 	public void execute() {
-		List<Camera> cameras = getComponents(Camera.class);
-		List<RendenerComponent> rendeners = getComponents(RendenerComponent.class);
 		
-		for(Camera camera : cameras)
-			for(RendenerComponent rendener : rendeners) if(camera.mustDraw(rendener)){
-				rendener.draw(GL);
-			}
+		mainCamera.draw(GL, LSR);
 		
+	}
+
+	public Camera getMainCamera() {
+		return mainCamera;
 	}
 	
 }

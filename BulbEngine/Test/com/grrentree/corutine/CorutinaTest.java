@@ -72,10 +72,10 @@ public class CorutinaTest {
 	
 	@Test
 	public void testUnLoop() {
-		class A {
+		class Log {
 			String log = "";
 		}
-		final A a = new A();
+		final Log a = new Log();
 		final Corutine corutine = new Corutine(()-> {
 			a.log += "1";
 		}, null).addCorutine(new Corutine(()-> {

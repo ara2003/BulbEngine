@@ -123,11 +123,10 @@ public class InternalTextureLoader {
 	@SuppressWarnings({"rawtypes","unchecked"})
 	public TextureImpl getTexture(final InputStream in, final String resourceName, final boolean flipped,
 			final int filter, final int[] transparent) throws IOException {
-		HashMap hash = texturesLinear;
-		if(filter == 9728) hash = texturesNearest;
+		HashMap hash = filter == 9728 ? texturesNearest : texturesLinear;
 		String resName = resourceName;
-		if(transparent != null) resName = resName + ":" + transparent[0] + ":" + transparent[1] + ":" + transparent[2];
-		resName = resName + ":" + flipped;
+		if(transparent != null) resName += ":" + transparent[0] + ":" + transparent[1] + ":" + transparent[2];
+		resName += ":" + flipped;
 		if(holdTextureData) {
 			final TextureImpl tex = (TextureImpl) hash.get(resName);
 			if(tex != null) return tex;

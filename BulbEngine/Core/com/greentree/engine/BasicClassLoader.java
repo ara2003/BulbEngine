@@ -20,6 +20,7 @@ public class BasicClassLoader extends ClassLoader {
 		Class<?> clazz = null;
 		for(final String bin : packages) try {
 			if(clazz != null) break;
+			
 			clazz = super.loadClass(bin + name, resolve);
 		}catch(final ClassNotFoundException e) {
 		}

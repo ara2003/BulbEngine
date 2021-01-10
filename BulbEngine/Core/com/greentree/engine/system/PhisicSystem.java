@@ -2,9 +2,9 @@ package com.greentree.engine.system;
 
 import com.greentree.engine.Game;
 import com.greentree.engine.Time;
+import com.greentree.engine.necessarily;
 import com.greentree.engine.component.Phisic;
 import com.greentree.engine.component.collider.ColliderComponent;
-import com.greentree.engine.object.necessarily;
 import com.greentree.engine.phisic.ColliderListener;
 import com.greentree.engine.system.util.GameSystem;
 import com.greentree.math.vector.float2f;

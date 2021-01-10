@@ -1,8 +1,8 @@
 package com.greentree.engine.phisic;
 
+import com.greentree.engine.necessarily;
 import com.greentree.engine.component.collider.ColliderComponent;
 import com.greentree.engine.event.Listener;
-import com.greentree.engine.object.necessarily;
 
 @necessarily({ColliderListenerManager.class})
 public interface ColliderListener extends Listener {

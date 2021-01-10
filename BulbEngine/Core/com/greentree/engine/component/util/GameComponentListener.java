@@ -1,7 +1,8 @@
 package com.greentree.engine.component.util;
 
+import com.greentree.engine.GameComponent;
+import com.greentree.engine.necessarily;
 import com.greentree.engine.event.Listener;
-import com.greentree.engine.object.necessarily;
 
 @necessarily(GameComponent.class)
 public interface GameComponentListener extends Listener {

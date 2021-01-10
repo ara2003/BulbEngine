@@ -18,21 +18,17 @@ public class Image implements Serializable {
 	public static final int BOTTOM_RIGHT = 2;
 	public static final int FILTER_LINEAR = 1;
 	public static final int FILTER_NEAREST = 2;
-	protected static SGL GL;
+	protected static SGL GL = Renderer.get();
 	protected static Image inUse;
 	private static final long serialVersionUID = 1L;
 	public static final int TOP_LEFT = 0;
 	public static final int TOP_RIGHT = 1;
-	static {
-		Image.GL = Renderer.get();
-	}
 	protected float alpha;
 	protected float angle;
 	protected float centerX;
 	protected float centerY;
 	protected Color[] corners;
 	protected boolean destroyed;
-	private int filter;
 	protected int height;
 	protected boolean inited;
 	protected String name;
@@ -48,13 +44,11 @@ public class Image implements Serializable {
 	protected Image() {
 		alpha = 1.0f;
 		inited = false;
-		filter = 9729;
 	}
 	
 	protected Image(final Image other) {
 		alpha = 1.0f;
 		inited = false;
-		filter = 9729;
 		width = other.getWidth();
 		height = other.getHeight();
 		texture = other.texture;
@@ -85,9 +79,8 @@ public class Image implements Serializable {
 	public Image(final ImageData data, final int f) {
 		alpha = 1.0f;
 		inited = false;
-		filter = 9729;
 		try {
-			filter = f == 1 ? 9729 : 9728;
+			int filter = f == 1 ? 9729 : 9728;
 			texture = InternalTextureLoader.get().getTexture(data, filter);
 			ref = texture.toString();
 		}catch(final IOException e) {
@@ -102,7 +95,6 @@ public class Image implements Serializable {
 	public Image(final InputStream in, final String ref, final boolean flipped, final int filter) {
 		alpha = 1.0f;
 		inited = false;
-		this.filter = 9729;
 		load(in, ref, flipped, filter, null);
 	}
 	
@@ -113,9 +105,8 @@ public class Image implements Serializable {
 	public Image(final int width, final int height, final int f) {
 		alpha = 1.0f;
 		inited = false;
-		filter = 9729;
 		ref = super.toString();
-		filter = f == 1 ? 9729 : 9728;
+		int filter = f == 1 ? 9729 : 9728;
 		try {
 			texture = InternalTextureLoader.get().createTexture(width, height, filter);
 		}catch(final IOException e) {
@@ -139,8 +130,7 @@ public class Image implements Serializable {
 	public Image(final String ref, final boolean flipped, final int f, final Color transparent) {
 		alpha = 1.0f;
 		inited = false;
-		filter = 9729;
-		filter = f == 1 ? 9729 : 9728;
+		int filter = f == 1 ? 9729 : 9728;
 		this.ref = ref;
 		int[] trans = null;
 		if(transparent != null) trans = new int[]{(int) (transparent.r * 255.0f),(int) (transparent.g * 255.0f),
@@ -159,7 +149,6 @@ public class Image implements Serializable {
 	public Image(final Texture texture) {
 		alpha = 1.0f;
 		inited = false;
-		filter = 9729;
 		this.texture = texture;
 		ref = texture.toString();
 		clampTexture();
@@ -335,10 +324,6 @@ public class Image implements Serializable {
 				translate(pixelData[offset + 2]));
 	}
 	
-	public int getFilter() {
-		return filter;
-	}
-	
 	public Image getFlippedCopy(final boolean flipHorizontal, final boolean flipVertical) {
 		init();
 		final Image image = copy();
@@ -460,7 +445,7 @@ public class Image implements Serializable {
 	
 	private void load(final InputStream in, final String ref, final boolean flipped, final int f,
 			final Color transparent) {
-		filter = f == 1 ? 9729 : 9728;
+		int filter = f == 1 ? 9729 : 9728;
 		try {
 			this.ref = ref;
 			int[] trans = null;
@@ -509,7 +494,7 @@ public class Image implements Serializable {
 	}
 	
 	public void setFilter(final int f) {
-		filter = f == 1 ? 9729 : 9728;
+		int filter = f == 1 ? 9729 : 9728;
 		texture.bind();
 		Image.GL.glTexParameteri(3553, 10241, filter);
 		Image.GL.glTexParameteri(3553, 10240, filter);

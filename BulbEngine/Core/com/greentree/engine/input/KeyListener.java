@@ -1,7 +1,7 @@
 package com.greentree.engine.input;
 
+import com.greentree.engine.necessarily;
 import com.greentree.engine.event.Listener;
-import com.greentree.engine.object.necessarily;
 
 @necessarily({KeyListenerManager.class})
 public interface KeyListener extends Listener {

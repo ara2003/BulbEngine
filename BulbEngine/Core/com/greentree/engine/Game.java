@@ -3,6 +3,7 @@ package com.greentree.engine;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Scanner;
 
 import org.lwjgl.LWJGLException;
@@ -12,6 +13,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.PixelFormat;
 
+import com.greentree.engine.component.Camera;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.component.collider.ColliderComponent;
 import com.greentree.engine.event.Event;
@@ -22,19 +24,18 @@ import com.greentree.engine.gui.ui.Button;
 import com.greentree.engine.input.Input;
 import com.greentree.engine.loading.FileSystemLocation;
 import com.greentree.engine.loading.ResourceLoader;
-import com.greentree.engine.object.Scene;
 import com.greentree.engine.opengl.InternalTextureLoader;
 import com.greentree.engine.opengl.rendener.Renderer;
 import com.greentree.engine.opengl.rendener.SGL;
 import com.greentree.engine.system.ColliderSystem;
-import com.greentree.xml.XMLElement;
-import com.greentree.xml.XMLParser;
+import com.greentree.engine.system.RenderSystem;
 
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class Game {
 	
+	private static Builder builer = new BasicXMlBuilder();
 	private static Scene currentScene;
 	private static ClassLoader gameLoader;
 	private static SGL GL;
@@ -97,9 +98,10 @@ public final class Game {
 		return Game.globalCock;
 	}
 	
-	public static XMLElement getResurse(final String name) {
-		return currentScene.getResurse(name);
+	public static Camera getMainCamera() {
+		return getCurrentScene().getSystem(RenderSystem.class).getMainCamera();
 	}
+	
 	public static File getRoot() {
 		return Game.root;
 	}
@@ -123,12 +125,10 @@ public final class Game {
 	}
 	
 	public static void loadScene(final String name) {
-		final XMLElement in = XMLParser.parse(Game.getAssets(), name + ".scene");
-		final Scene scene = new Scene();
+		final InputStream in = ResourceLoader.getResourceAsStream(Game.getAssets().getName() + "." + name + ".scene");
 		Log.info("Scene load : " + name);
 		synchronized(Game.globalCock) {
-			Game.currentScene = scene;
-			scene.start(in);
+			Game.currentScene = builer.createScene(in);
 			Game.reset();
 		}
 	}
@@ -140,7 +140,6 @@ public final class Game {
 						ColliderComponent.class.getPackageName(),
 						Button.class.getPackageName()});
 	}
-	
 	private static void setDisplayMode(final int width, final int height, final boolean fullscreen) {
 		if((Game.width == width) && (Game.height == height) && (Game.isFullscreen() == fullscreen)) return;
 		try {
@@ -211,6 +210,7 @@ public final class Game {
 		Renderer.get().enterOrtho(Game.width, Game.height);
 		Graphics.init(Game.width, Game.height);
 	}
+	
 	public static void start(final String file) {
 		root = new File(file);
 		assets = new File(root, "Assets");

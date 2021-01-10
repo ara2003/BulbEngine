@@ -1,4 +1,4 @@
-package com.greentree.engine.object;
+package com.greentree.engine;
 
 import com.greentree.engine.event.Event;
 

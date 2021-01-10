@@ -1,28 +1,23 @@
 package com.greentree.engine.component.collider;
 
+import com.greentree.engine.necessarily;
 import com.greentree.engine.component.Transform;
-import com.greentree.engine.component.util.EditorData;
-import com.greentree.engine.component.util.GameComponent;
-import com.greentree.engine.object.RequireComponent;
-import com.greentree.engine.object.necessarily;
+import com.greentree.engine.component.util.offsetGameComponent;
 import com.greentree.engine.system.ColliderSystem;
 import com.greentree.geom.Shape;
 
 @necessarily({ColliderSystem.class})
-@RequireComponent({Transform.class})
-public abstract class ColliderComponent extends GameComponent {
+public abstract class ColliderComponent extends offsetGameComponent {
 	
 	private static final long serialVersionUID = 1L;
 	protected Transform position;
 	protected Shape shape;
-	@EditorData(reserve = "0")
-	private float x, y;
 	
 	public float getPenetrationDepth(ColliderComponent other) {
 		return shape.getPenetrationDepth(other.getShape());
 	}
 	
-	public Shape getShape() {
+	public final Shape getShape() {
 		return shape;
 	}
 	
@@ -32,7 +27,8 @@ public abstract class ColliderComponent extends GameComponent {
 	
 	@Override
 	public final void update() {
-		shape.moveTo(position.x + x, position.y + y);
+		shape.moveTo(getX(), getY());
+		
 	}
 	
 }

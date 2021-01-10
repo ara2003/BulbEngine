@@ -5,13 +5,11 @@ package com.greentree.geom;
  */
 public class AABB {
 	
-	private float2 min, max;
+	private final float2 min, max;
 	
-	public AABB(int x, int y, int w, int h) {
-		min.x = x;
-		min.y = y;
-		max.x = w + x;
-		max.y = h + y;
+	public AABB(float x, float y, float w, float h) {
+		min = new float2(x, y);
+		max = new float2(x + w, y + h);
 		
 	}
 	public AABB(Shape shape) {
@@ -75,5 +73,14 @@ public class AABB {
  * @author Arseny Latyshev
  */
 class float2 {
+	
 	float x, y;
+	
+	public float2() {
+	}
+	
+	public float2(float x, float y) {
+		this.x = x;
+		this.y = y;
+	}
 }

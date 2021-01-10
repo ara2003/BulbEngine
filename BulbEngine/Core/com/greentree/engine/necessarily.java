@@ -1,4 +1,4 @@
-package com.greentree.engine.object;
+package com.greentree.engine;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -6,12 +6,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import com.greentree.engine.component.util.GameComponent;
-
+/** @author Arseny Latyshev
+ * @see BasicClassLoader */
 @Retention(RUNTIME)
 @Target(TYPE)
-/** @author Arseny Latyshev */
-public @interface RequireComponent{
+public @interface necessarily{
 	
-	Class<? extends GameComponent>[] value();
+	Class<?>[] value();
 }

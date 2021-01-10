@@ -20,7 +20,7 @@ public class RotationTest {
 			new Pair<>(new Pair<>(new Point(0, 0), new Point(0, 2)), new Pair<>(new Point(0, 1), PI)));
 	
 	@Test
-	void line() {
+	public void line() {
 		final Line line1 = new Line(1, 0, -1, 0), line2 = new Line(1, 0, -1, 0);
 		line1.rotate(new Point(0, 0), PI / 2);
 		assertTrue(line1.getVector().scalarMultiply(line2.getVector()) < 1E-9);
@@ -29,7 +29,7 @@ public class RotationTest {
 	}
 	
 	@Test
-	void point() {
+	public void point() {
 		for(final Pair<Pair<Point, Point>, Pair<Point, Double>> pair : points) {
 			final Point test = pair.first.first, res = pair.first.second, center = pair.second.first;
 			final double ang = pair.second.second;

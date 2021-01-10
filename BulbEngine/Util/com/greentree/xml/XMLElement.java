@@ -1,16 +1,22 @@
 package com.greentree.xml;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+import org.xml.sax.SAXException;
 
 public class XMLElement implements Serializable {
 	
@@ -24,12 +30,12 @@ public class XMLElement implements Serializable {
 		name = dom.getTagName();
 	}
 	
-	public XMLElement(final File root, final String xmlElement) {
-		this(XMLParser.parse(root, xmlElement));
+	public XMLElement(final File root, final String file) {
+		this(XMLParser.parse(root, file));
 	}
 	
-	public XMLElement(final String xmlElement) {
-		this(XMLParser.parse(xmlElement));
+	public XMLElement(final String file) {
+		this(XMLParser.parse(file));
 	}
 	
 	XMLElement(final XMLElement xmlElement) {
@@ -37,6 +43,11 @@ public class XMLElement implements Serializable {
 		name = xmlElement.name;
 	}
 	
+	public XMLElement(InputStream data) throws ParserConfigurationException, SAXException, IOException {
+		this(XMLParser.parse(data));
+		
+	}
+
 	public String getAttribute(final String name) {
 		return dom.getAttribute(name);
 	}
@@ -147,7 +158,7 @@ public class XMLElement implements Serializable {
 		String res = "<" + name;
 		final String[] na = getAttributeNames();
 		for(final String n : na) res += " " + n + "=\"" + getAttribute(n) + "\"";
-		if(getChildren().isEmpty() && getContent().equals("")) res += "\\>" + getContent() + "\n";
+		if(getChildren().isEmpty() && getContent().equals("")) res += ">" + getContent() + "</" + name + ">\n";
 		else {
 			res += ">" + getContent();
 			if(!getChildren().isEmpty()) {
@@ -158,5 +169,9 @@ public class XMLElement implements Serializable {
 			res += "</" + name + ">\n";
 		}
 		return res;
+	}
+
+	public InputStream getIputStream() {
+		return new ByteArrayInputStream(("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+toString()).getBytes());
 	}
 }

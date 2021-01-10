@@ -1,7 +1,7 @@
 package com.greentree.engine.component;
 
+import com.greentree.engine.GameComponent;
 import com.greentree.engine.component.util.EditorData;
-import com.greentree.engine.component.util.GameComponent;
 import com.greentree.engine.gui.Animation;
 
 public class Animator extends GameComponent {
