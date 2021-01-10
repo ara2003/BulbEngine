@@ -6,11 +6,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.greentree.engine.Game;
+
 public class ResourceLoader {
 	
 	private final static List<ResourceLocation> locations = new ArrayList<>();
 	static {
 		ResourceLoader.locations.add(new FileSystemLocation(new File(".")));
+		ResourceLoader.locations.add(new FileSystemLocation(Game.getAssets()));
+		ResourceLoader.locations.add(new FileSystemLocation(Game.getRoot()));
 	}
 	
 	private ResourceLoader() {

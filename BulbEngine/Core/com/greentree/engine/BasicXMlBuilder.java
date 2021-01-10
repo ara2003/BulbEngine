@@ -1,11 +1,8 @@
 package com.greentree.engine;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.LinkedList;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -15,7 +12,6 @@ import com.greentree.engine.component.util.EditorData;
 import com.greentree.engine.system.util.GameSystem;
 import com.greentree.serialize.ClassUtil;
 import com.greentree.serialize.GsonFileParser;
-import com.greentree.util.ClassList;
 import com.greentree.xml.XMLElement;
 import com.greentree.xml.XMLParser;
 
@@ -105,35 +101,29 @@ public class BasicXMlBuilder implements Builder {
 	}
 
 	private GameObject createObject(XMLElement in) {
-		GameObject object = new GameObject();
 		
 		if(!in.getAttribute("file").equals("")) {
 			final String file = in.getAttribute("file");
-			name = new File(file).getName().replaceFirst(".obj", "");
 			in = XMLParser.parse(Game.getAssets(), file, "obj");
-		}else {
-			name = in.getAttribute("name");
 		}
-		corutines = new LinkedList<>();
+		GameObject object = new GameObject(in.getAttribute("name"));
 		
-		components = new ClassList<>();
 		for(final XMLElement element : in.getChildrens("component")) {
-			final GameComponent component = GameComponent.createComponent(element.getIputStream());
+			final GameComponent component = createComponent(element.getIputStream());
 			if(component == null)continue;
-			components.add(component);
+			object.addComponent(component);
 		}
 
-		objects = new ClassList<>();
 		for(final XMLElement element : in.getChildrens("object")) {
-			objects.add(new GameObject(element));
+			object.addObject(createObject(element));
 		}
 		
-		tags = new HashSet<>();
 		for(final XMLElement element : in.getChildrens("tags")) {
 			for(final XMLElement element1 : element.getChildrens("tag")) {
-				tags.add(element1.getAttribute("name"));
+				object.addTag(element1.getAttribute("name"));
 			}
 		}
+		return object;
 	}
 
 }

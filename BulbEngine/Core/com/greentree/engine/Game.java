@@ -125,7 +125,7 @@ public final class Game {
 	}
 	
 	public static void loadScene(final String name) {
-		final InputStream in = ResourceLoader.getResourceAsStream(Game.getAssets().getName() + "." + name + ".scene");
+		final InputStream in = ResourceLoader.getResourceAsStream(Game.getAssets().getName() + "\\" + name + ".scene");
 		Log.info("Scene load : " + name);
 		synchronized(Game.globalCock) {
 			Game.currentScene = builer.createScene(in);

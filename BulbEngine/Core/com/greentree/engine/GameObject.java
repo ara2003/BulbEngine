@@ -21,16 +21,17 @@ public final class GameObject implements Serializable {
 	private final ClassList<GameComponent> components;
 	private final List<GameObject> objects;
 	private transient boolean start, awake;
-	private String name;
+	private final String name;
 	private final Set<String> tags;
 	private final List<Corutine> corutines;
 	private final Timer timer = new Timer();
 	
-	public GameObject() {
+	public GameObject(String name) {
 		components = new ClassList<>();
 		objects = new ArrayList<>(0);
 		tags = new HashSet<>();
 		corutines = new LinkedList<>();
+		this.name = name;
 		Game.eventNoQueue(new GameObjectEvent(create, this));
 	}
 	
@@ -123,6 +124,18 @@ public final class GameObject implements Serializable {
 			return null;
 		}
 		return list.get(0);
+	}
+
+	public void addComponent(GameComponent component) {
+		components.add(component);
+	}
+
+	public void addTag(String tag) {
+		tags.add(tag);
+	}
+
+	public void addObject(GameObject object) {
+		objects.add(object);
 	}
 	
 }
