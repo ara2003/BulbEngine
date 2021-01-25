@@ -1,11 +1,11 @@
 package com.greentree.engine.component;
 
 import com.greentree.engine.GameComponent;
-import com.greentree.engine.RequireComponent;
 import com.greentree.engine.Time;
 import com.greentree.engine.necessarily;
 import com.greentree.engine.component.collider.ColliderComponent;
 import com.greentree.engine.component.util.EditorData;
+import com.greentree.engine.component.util.RequireComponent;
 import com.greentree.engine.phisic.Matirial;
 import com.greentree.engine.system.PhisicSystem;
 import com.greentree.geom.GeomUtil;
@@ -66,14 +66,10 @@ public class Phisic extends GameComponent {
 	
 	@Override
 	public void start() {
+		position = getComponent(Transform.class);
 		if((matirial.getElasticity() < 0) || (matirial.getElasticity() >= 1)) {
 			throw new IllegalArgumentException("elasticity value " + matirial.getElasticity() + " not corect");
 		}
-	}
-	
-	@Override
-	public String toString() {
-		return "[Phisic [position=" + position + ", mass=" + getMass() + ", matirial=" + matirial + ", type=" + type + ", velosity=" + getVelosity() + "]]";
 	}
 	
 	@Override

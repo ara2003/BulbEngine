@@ -7,8 +7,8 @@ import java.io.InputStream;
  */
 public interface Builder {
 	
-	GameComponent createComponent(final InputStream data);
-	GameObject createObject(final InputStream data);
-	Scene createScene(final InputStream data);
+	GameNode createNode(final String prefab);
+	GameNode createNode(final InputStream in);
+	
 	
 }

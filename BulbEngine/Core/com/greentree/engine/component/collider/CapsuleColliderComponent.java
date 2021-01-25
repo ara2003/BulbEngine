@@ -13,6 +13,7 @@ public final class CapsuleColliderComponent extends ColliderComponent {
 	@Override
 	public void start() {
 		shape = new Capsule(0, 0, height, radius);
+		super.start();
 	}
 	
 }

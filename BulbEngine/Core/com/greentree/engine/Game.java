@@ -1,10 +1,12 @@
 package com.greentree.engine;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -17,7 +19,9 @@ import com.greentree.engine.component.Camera;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.component.collider.ColliderComponent;
 import com.greentree.engine.event.Event;
+import com.greentree.engine.event.EventSystem;
 import com.greentree.engine.event.Listener;
+import com.greentree.engine.event.ListenerManager;
 import com.greentree.engine.gui.Color;
 import com.greentree.engine.gui.Graphics;
 import com.greentree.engine.gui.ui.Button;
@@ -35,9 +39,10 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public final class Game {
 	
-	private static Builder builer = new BasicXMlBuilder();
-	private static Scene currentScene;
-	private static ClassLoader gameLoader;
+	
+	private static Builder builder = new BasicXMlBuilder();
+	private static GameNode mainNode;
+	private static GameClassLoader gameLoader;
 	private static SGL GL;
 	private static final Object globalCock = new Object();
 	private static Thread mianGameLoop;
@@ -46,29 +51,36 @@ public final class Game {
 	private static boolean running;
 	private static DisplayMode targetDisplayMode;
 	private static int width, height;
+	private static List<Class<?>> necessarilyQuery = new CopyOnWriteArrayList<>();
+	private static EventSystem eventSystem;
 	
 	private Game() {
 	}
 	
+	public static EventSystem getEventSystem() {
+		return eventSystem;
+	}
+	
 	public static void addListener(Listener listener) {
-		currentScene.tryAddNecessarily(listener.getClass());
-		currentScene.getEventSystem().addListener(listener);
+		tryAddNecessarily(listener.getClass());
+		getEventSystem().addListener(listener);
 	}
 	
 	public static void event(Event event) {
-		currentScene.getEventSystem().event(event);
+		tryAddNecessarily(event.getClass());
+		getEventSystem().event(event);
 	}
 	
 	public static void eventNoQueue(Event event) {
-		currentScene.getEventSystem().eventNoQueue(event);
+		tryAddNecessarily(event.getClass());
+		getEventSystem().eventNoQueue(event);
 	}
 	
 	public static void exit() {
 		Game.running = false;
 	}
-	
+
 	private static void gameLoop() {
-		Input.poll(Game.width, Game.height);
 		Game.GL.glClear(16640);
 		Game.GL.glLoadIdentity();
 		Graphics.resetTransform();
@@ -77,7 +89,10 @@ public final class Game {
 		Graphics.setColor(Color.white);
 		Graphics.drawString("FPS: " + Time.getFps(), 10, 10);
 		Time.updata();
-		Game.currentScene.update();
+		for(Class<?> clazz : necessarilyQuery)tryAddNecessarily(clazz);
+		Input.poll(Game.width, Game.height);
+		eventSystem.update();
+		Game.mainNode.update();
 		Game.GL.flush();
 		Graphics.resetTransform();
 		Display.update(true);
@@ -90,8 +105,16 @@ public final class Game {
 		return Game.assets;
 	}
 	
-	public static Scene getCurrentScene() {
-		return currentScene;
+	public static Builder getBuilder() {
+		return builder;
+	}
+	
+	public static GameClassLoader getClassLoader() {
+		return gameLoader;
+	}
+	
+	public static GameNode getMainNode() {
+		return mainNode;
 	}
 	
 	public static Object getGlobalCock() {
@@ -99,7 +122,7 @@ public final class Game {
 	}
 	
 	public static Camera getMainCamera() {
-		return getCurrentScene().getSystem(RenderSystem.class).getMainCamera();
+		return getMainNode().getSystem(RenderSystem.class).getMainCamera();
 	}
 	
 	public static File getRoot() {
@@ -109,37 +132,41 @@ public final class Game {
 	private static boolean isFullscreen() {
 		return Display.isFullscreen();
 	}
-	
-	public static Class<?> loadClass(final String name) {
+
+	public static Class<?> loadClass(final String name, List<String> packages) {
 		try {
-			final Class<?> clazz = Game.gameLoader.loadClass(name);
-			try {
-				Game.getCurrentScene().tryAddNecessarily(clazz);
-			}catch(final NullPointerException e) {
-			}
+			final Class<?> clazz = Game.gameLoader.loadClass(name, packages);
+			tryAddNecessarily(clazz);
 			return clazz;
 		}catch(final ClassNotFoundException e) {
-			Log.warn(e);
+			Log.error("class not found " + e.getMessage());
 		}
 		return null;
 	}
+	public static Class<?> loadClass(final String name) {
+		return loadClass(name, new ArrayList<>());
+	}
 	
 	public static void loadScene(final String name) {
-		final InputStream in = ResourceLoader.getResourceAsStream(Game.getAssets().getName() + "\\" + name + ".scene");
 		Log.info("Scene load : " + name);
+		final InputStream in = ResourceLoader.getResourceAsStream(name + ".scene");
 		synchronized(Game.globalCock) {
-			Game.currentScene = builer.createScene(in);
-			Game.reset();
+			reset();
+			mainNode = null;
+			mainNode = getBuilder().createNode(in);
+			mainNode.start();
 		}
 	}
 	
 	public static void reset() {
-		gameLoader = new BasicClassLoader(
-				new String[]{	Transform.class.getPackageName(),
-						ColliderSystem.class.getPackageName(),
-						ColliderComponent.class.getPackageName(),
-						Button.class.getPackageName()});
+		gameLoader = new BasicClassLoader();
+		eventSystem = new EventSystem();
 	}
+	
+	public static void setBuilder(Builder builder) {
+		Game.builder = builder;
+	}
+	
 	private static void setDisplayMode(final int width, final int height, final boolean fullscreen) {
 		if((Game.width == width) && (Game.height == height) && (Game.isFullscreen() == fullscreen)) return;
 		try {
@@ -178,6 +205,7 @@ public final class Game {
 			Log.error("Unable to setup mode " + width + "x" + height + " fullscreen=" + fullscreen, e);
 		}
 	}
+	
 	private static void setup() {
 		if(Game.targetDisplayMode == null) {
 			Game.setDisplayMode(640, 480, false);
@@ -215,6 +243,7 @@ public final class Game {
 		root = new File(file);
 		assets = new File(root, "Assets");
 		ResourceLoader.addResourceLocation(new FileSystemLocation(assets));
+		ResourceLoader.addResourceLocation(new FileSystemLocation(root));
 		Game.mianGameLoop = new Thread(()-> {
 			Game.GL = Renderer.get();
 			Game.reset();
@@ -223,13 +252,7 @@ public final class Game {
 				int width = 800, height = 600;
 				String firstScene = "";
 				{
-					Scanner in = null;
-					try {
-						in = new Scanner(new FileInputStream(file + "\\config.game"));
-					}catch(final FileNotFoundException e1) {
-						e1.printStackTrace();
-						return;
-					}
+					Scanner in = new Scanner(ResourceLoader.getResourceAsStream(file + "\\config.game"));
 					Display.sync(60);
 					while(in.hasNext()) {
 						final String a = in.next();
@@ -273,4 +296,15 @@ public final class Game {
 		}, "Mian Game Loop");
 		Game.mianGameLoop.start();
 	}
+	
+	private static void tryAddNecessarily(Class<?> clazz) {
+		try {
+			Game.getMainNode().tryAddNecessarily(clazz);
+			necessarilyQuery.remove(clazz);
+		}catch(final NullPointerException e) {
+			if(!necessarilyQuery.contains(clazz))
+				necessarilyQuery.add(clazz);
+		}
+	}
+	
 }

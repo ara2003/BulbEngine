@@ -1,8 +1,8 @@
-package com.greentree.engine.component.util;
+package com.greentree.engine.component;
 
 import com.greentree.engine.GameComponent;
-import com.greentree.engine.RequireComponent;
-import com.greentree.engine.component.Transform;
+import com.greentree.engine.component.util.EditorData;
+import com.greentree.engine.component.util.RequireComponent;
 import com.greentree.math.vector.float2f;
 
 
@@ -19,7 +19,11 @@ public class offsetGameComponent extends GameComponent {
 	private float offsetX;
 	@EditorData(name="y")
 	private float offsetY;
-
+	
+	public float2f getOffsetVector() {
+		return new float2f(offsetX, offsetY);
+	}
+	
 	public float getX(){
 		return position.x + offsetX;
 	}
@@ -27,8 +31,9 @@ public class offsetGameComponent extends GameComponent {
 	public float getY(){
 		return position.y + offsetY;
 	}
-
-	public float2f getOffsetVector() {
-		return new float2f(offsetX, offsetY);
+	
+	@Override
+	protected void start() {
+		position = getComponent(Transform.class);
 	}
 }

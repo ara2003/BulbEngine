@@ -1,8 +1,7 @@
 package com.greentree.engine.component.collider;
 
 import com.greentree.engine.necessarily;
-import com.greentree.engine.component.Transform;
-import com.greentree.engine.component.util.offsetGameComponent;
+import com.greentree.engine.component.offsetGameComponent;
 import com.greentree.engine.system.ColliderSystem;
 import com.greentree.geom.Shape;
 
@@ -10,8 +9,12 @@ import com.greentree.geom.Shape;
 public abstract class ColliderComponent extends offsetGameComponent {
 	
 	private static final long serialVersionUID = 1L;
-	protected Transform position;
 	protected Shape shape;
+	
+	@Override
+	protected void start() {
+		super.start();
+	}
 	
 	public float getPenetrationDepth(ColliderComponent other) {
 		return shape.getPenetrationDepth(other.getShape());

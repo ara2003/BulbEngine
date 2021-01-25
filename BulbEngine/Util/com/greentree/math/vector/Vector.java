@@ -97,4 +97,9 @@ public class Vector {
 		for(final double f : coordinates) s += f + " ";
 		return s + "]";
 	}
+	
+	public Vector subtract(Vector vector) {
+		return addition(vector.multiply(-1));
+	}
+	
 }

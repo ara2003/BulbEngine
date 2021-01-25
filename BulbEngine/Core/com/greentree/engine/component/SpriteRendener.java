@@ -14,7 +14,7 @@ public class SpriteRendener extends RendenerComponent {
 	
 	@EditorData(name="image")
 	private String ref;
-	private transient Transform t;
+	private transient Transform position;
 	@EditorData
 	private int width, height;
 	protected Texture texture;
@@ -35,6 +35,7 @@ public class SpriteRendener extends RendenerComponent {
 	
 	@Override
 	protected void start() {
+		position = getComponent(Transform.class);
 		try {
 			texture = InternalTextureLoader.get().getTexture(ref, false, 9728, null);
 		}catch(IOException e) {
@@ -47,7 +48,7 @@ public class SpriteRendener extends RendenerComponent {
 	@Override
 	public void draw(SGL gl) {
 		texture.bind();
-		gl.glTranslatef(t.x, t.y, 0.0f);
+		gl.glTranslatef(position.x, position.y, 0.0f);
 		gl.glBegin(7);
 		final float w = .5f / width, h = .5f / height;
 		gl.glTexCoord2f(w, h);
@@ -59,12 +60,12 @@ public class SpriteRendener extends RendenerComponent {
 		gl.glTexCoord2f(texture.getWidth() - w, h);
 		gl.glVertex3f(width/2, -height/2, 0);
 		gl.glEnd();
-		gl.glTranslatef(-t.x, -t.y, 0.0f);
+		gl.glTranslatef(-position.x, -position.y, 0.0f);
 	}
 
 	@Override
 	protected AABB getAABB() {
-		return new AABB(t.x-width/2, t.y-height/2, width, height);
+		return new AABB(position.x-width/2, position.y-height/2, width, height);
 	}
 
 }

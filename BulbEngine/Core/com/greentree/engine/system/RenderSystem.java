@@ -2,6 +2,7 @@ package com.greentree.engine.system;
 
 import com.greentree.engine.Log;
 import com.greentree.engine.component.Camera;
+import com.greentree.engine.component.util.ComponentList;
 import com.greentree.engine.opengl.rendener.LineStripRenderer;
 import com.greentree.engine.opengl.rendener.Renderer;
 import com.greentree.engine.opengl.rendener.SGL;
@@ -21,9 +22,10 @@ public class RenderSystem extends GameSystem {
 	
 	@Override
 	protected void start() {
-		if(getComponents(Camera.class).size() < 1) Log.error("Camera not found", new NullPointerException());
-		if(getComponents(Camera.class).size() > 1) Log.error("Found more one camera", new Exception());
-		mainCamera = getComponents(Camera.class).get(0);
+		ComponentList<Camera> cameras = getComponents(Camera.class);
+		if(cameras.size() < 1) Log.error("Camera not found", new NullPointerException());
+		if(cameras.size() > 1) Log.error("Found more one camera", new Exception());
+		mainCamera = cameras.get(0);
 	}
 	
 	@Override

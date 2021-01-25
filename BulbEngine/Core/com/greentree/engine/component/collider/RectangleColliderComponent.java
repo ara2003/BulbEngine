@@ -14,6 +14,7 @@ public final class RectangleColliderComponent extends ColliderComponent {
 	@Override
 	public void start() {
 		shape = new Rectangle(0, 0, width, height);
+		super.start();
 	}
 	
 }

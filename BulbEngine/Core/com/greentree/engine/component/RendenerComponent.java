@@ -1,7 +1,6 @@
 package com.greentree.engine.component;
 
 import com.greentree.engine.necessarily;
-import com.greentree.engine.component.util.offsetGameComponent;
 import com.greentree.engine.opengl.rendener.SGL;
 import com.greentree.engine.system.RenderSystem;
 import com.greentree.geom.AABB;

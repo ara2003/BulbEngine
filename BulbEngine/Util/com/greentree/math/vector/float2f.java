@@ -61,9 +61,14 @@ public final class float2f extends Vector {
 	public float2f scaleTo(final float size) {
 		return multiply(size / size());
 	}
+
+	public float2f subtract(float2f vector) {
+		return addition(vector.multiply(-1));
+	}
 	
 	@Override
 	public String toString() {
 		return "(" + coordinates[0] + " " + coordinates[1] + ")";
 	}
+	
 }

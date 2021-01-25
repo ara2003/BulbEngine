@@ -63,14 +63,13 @@ public final class Transform extends GameComponent {
 	}
 	
 	@Override
-	public String toString() {
-		return "[" + x + ", " + y + "]";
-	}
-	
-	@Override
 	public void update() {
 		lastx = x;
 		lasty = y;
+	}
+
+	public float2f getVector() {
+		return new float2f(x, y);
 	}
 	
 }

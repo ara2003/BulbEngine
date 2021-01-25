@@ -10,6 +10,11 @@ public class FileSystemLocation implements ResourceLocation {
 	
 	private final File root;
 	
+	@Override
+	public String toString() {
+		return "FileSystemLocation [file=" + root + "]";
+	}
+
 	public FileSystemLocation(final File root) {
 		this.root = root;
 	}

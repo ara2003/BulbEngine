@@ -6,15 +6,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.greentree.engine.Game;
+import com.greentree.engine.Log;
 
 public class ResourceLoader {
 	
 	private final static List<ResourceLocation> locations = new ArrayList<>();
 	static {
 		ResourceLoader.locations.add(new FileSystemLocation(new File(".")));
-		ResourceLoader.locations.add(new FileSystemLocation(Game.getAssets()));
-		ResourceLoader.locations.add(new FileSystemLocation(Game.getRoot()));
 	}
 	
 	private ResourceLoader() {
@@ -40,7 +38,7 @@ public class ResourceLoader {
 			in = location.getResourceAsStream(ref);
 			if(in != null) break;
 		}
-		if(in == null) throw new RuntimeException("Resource not found: " + ref);
+		if(in == null)Log.warn("Resource not found: " + ref + " in " + locations);
 		return in;
 	}
 	

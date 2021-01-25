@@ -1,11 +1,15 @@
 package com.greentree.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import com.greentree.engine.GameComponent;
+import com.greentree.engine.component.util.ComponentList;
 
 /**
  * @author Arseny Latyshev
@@ -14,9 +18,14 @@ import java.util.Objects;
 public class ClassList<E> implements Iterable<E> {
 	
 	private final Map<Class<?>, List<?>> map;
-	
+
 	public ClassList(){
 		map = new HashMap<>();
+	}
+
+	public ClassList(Collection<? extends E> collection){
+		this();
+		addAll(collection);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -27,11 +36,12 @@ public class ClassList<E> implements Iterable<E> {
 		add(clazz.getSuperclass(), e);
 	}
 	
-	public void add(E object) {
+	public boolean add(E object) {
 		add(object.getClass(), object);
+		return true;
 	}
 	
-	public void addAll(List<? extends E> list) {
+	public void addAll(Collection<? extends E> list) {
 		for(E e : list)add(e);
 	}
 	
@@ -46,7 +56,8 @@ public class ClassList<E> implements Iterable<E> {
 	
 	@SuppressWarnings({"hiding","unchecked"})
 	public <E> List<E> get(Class<E> c) {
-		List<E> list = (List<E>) map.get(Objects.requireNonNull(c));
+		if(c == null)return (List<E>) get(Object.class);
+		List<E> list = (List<E>) map.get(c);
 		if(list == null) {
 			map.put(c, new ArrayList<>());
 			return get(c);
@@ -91,7 +102,15 @@ public class ClassList<E> implements Iterable<E> {
 	
 	@Override
 	public String toString() {
-		return "ClassList [map=" + map + "]";
+		return "ClassList " + get(Object.class);
+	}
+
+	public boolean isEmpty() {
+		return get(Object.class).isEmpty();
+	}
+
+	public void removeAll(Collection<E> collection) {
+		collection.forEach(e->remove(e));
 	}
 	
 }

@@ -13,6 +13,7 @@ public final class CircleColliderComponent extends ColliderComponent {
 	@Override
 	public void start() {
 		shape = new Circle(0, 0, radius);
+		super.start();
 	}
 	
 }

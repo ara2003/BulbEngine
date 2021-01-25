@@ -5,13 +5,14 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 
+import com.greentree.engine.Constants;
 import com.greentree.engine.Game;
 import com.greentree.engine.GameComponent;
 import com.greentree.engine.Log;
 import com.greentree.engine.component.util.ComponentList;
 import com.greentree.engine.event.Listener;
 
-public abstract class GameSystem implements Serializable {
+public abstract class GameSystem extends Constants implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	protected static final Random random = new Random();
@@ -37,7 +38,7 @@ public abstract class GameSystem implements Serializable {
 	}
 	
 	protected <T extends GameComponent> ComponentList<T> getComponents(final Class<T> clazz) {
-		return Game.getCurrentScene().getComponents(clazz);
+		return Game.getMainNode().getComponents(clazz);
 	}
 	
 	public final void init() {

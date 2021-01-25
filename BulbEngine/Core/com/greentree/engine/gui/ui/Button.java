@@ -9,28 +9,28 @@ import com.greentree.engine.gui.Graphics;
 import com.greentree.engine.input.MouseAdapter;
 import com.greentree.engine.input.MouseListenerManager;
 
-@necessarily(MouseListenerManager.class)
 public class Button extends GameComponent {
 	
 	private static final long serialVersionUID = 1L;
 	@EditorData(def = "2")
 	private int border;
-	private Transform t;
+	private Transform position;
 	@EditorData
 	String text;
 	private float width, height;
 	
 	private boolean click0(final int button, final int x, final int y) {
-		return (boolean) (button == 0
-				? (x > (t.x - (width / 2) - border)) && (x < (t.x + (width / 2) + border)) && (y > (t.y - (height / 2) - border))
-						&& (y < (t.y + (height / 2) + border))
-						: 0);
+		if(button != 0)return false;
+		return (x > (position.x - (width / 2) - border)) && (x < (position.x + (width / 2) + border)) && (y > (position.y - (height / 2) - border)) && (y < (position.y + (height / 2) + border));
 	}
 	
 	@Override
 	public void start() {
 		width = Graphics.getFont().getWidth(text);
 		height = Graphics.getFont().getHeight(text);
+		
+		position = getComponent(Transform.class);
+		
 		Game.addListener(new MouseAdapter() {
 			
 			private static final long serialVersionUID = 1L;
@@ -44,6 +44,6 @@ public class Button extends GameComponent {
 	
 	@Override
 	public final void update() {
-		Graphics.drawString(text, t.x - (width / 2), t.y - (height / 2));
+		Graphics.drawString(text, position.x - (width / 2), position.y - (height / 2));
 	}
 }

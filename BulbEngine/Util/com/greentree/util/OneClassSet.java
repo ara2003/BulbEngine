@@ -2,6 +2,7 @@ package com.greentree.util;
 
 import java.io.Serializable;
 import java.util.AbstractSet;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -19,9 +20,13 @@ public class OneClassSet<E> extends AbstractSet<E> implements Serializable {
 	public OneClassSet(final int initialCapacity) {
 		map = new HashMap<>(initialCapacity);
 	}
-	
+
 	public OneClassSet(final Map<Class<?>, E> m) {
 		map = new HashMap<>(m);
+	}
+	public OneClassSet(Collection<E> collection) {
+		this(collection.size());
+		addAll(collection);
 	}
 	
 	public OneClassSet(OneClassSet<E> cs) {
