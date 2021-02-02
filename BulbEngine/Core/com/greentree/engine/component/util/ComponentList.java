@@ -155,4 +155,9 @@ public class ComponentList<E extends GameComponent> implements List<E> {
 		return list.toArray(a);
 	}
 	
+	@Override
+	public String toString() {
+		return list.toString();
+	}
+	
 }

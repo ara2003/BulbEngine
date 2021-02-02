@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,6 +19,7 @@ import com.greentree.engine.Log;
 public class XMLParser {
 	
 	private static DocumentBuilderFactory factory;
+	private static Map<InputStream, XMLElement> map = new HashMap<>();
 	
 	private XMLParser() {
 	}
@@ -44,10 +47,14 @@ public class XMLParser {
 	
 	public static XMLElement parse(final InputStream in)
 			throws ParserConfigurationException, SAXException, IOException {
+		XMLElement element = map.get(in);
+		if(element != null)return element;
 		if(XMLParser.factory == null) XMLParser.factory = DocumentBuilderFactory.newInstance();
 		final DocumentBuilder builder = XMLParser.factory.newDocumentBuilder();
 		final Document doc = builder.parse(in);
-		return new XMLElement(doc.getDocumentElement());
+		element = new XMLElement(doc.getDocumentElement());
+		map.put(in, element);
+		return element;
 	}
 	
 	public static XMLElement parse(final String file) {

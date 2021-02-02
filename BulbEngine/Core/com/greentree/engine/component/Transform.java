@@ -4,6 +4,8 @@ import com.greentree.engine.GameComponent;
 import com.greentree.engine.component.util.EditorData;
 import com.greentree.math.vector.float2f;
 
+import lombok.ToString;
+
 public final class Transform extends GameComponent {
 	
 	private static final long serialVersionUID = 1L;
@@ -67,7 +69,7 @@ public final class Transform extends GameComponent {
 		lastx = x;
 		lasty = y;
 	}
-
+	
 	public float2f getVector() {
 		return new float2f(x, y);
 	}

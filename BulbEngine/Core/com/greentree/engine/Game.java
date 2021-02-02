@@ -3,7 +3,6 @@ package com.greentree.engine;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -16,22 +15,17 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.PixelFormat;
 
 import com.greentree.engine.component.Camera;
-import com.greentree.engine.component.Transform;
-import com.greentree.engine.component.collider.ColliderComponent;
 import com.greentree.engine.event.Event;
 import com.greentree.engine.event.EventSystem;
 import com.greentree.engine.event.Listener;
-import com.greentree.engine.event.ListenerManager;
 import com.greentree.engine.gui.Color;
 import com.greentree.engine.gui.Graphics;
-import com.greentree.engine.gui.ui.Button;
 import com.greentree.engine.input.Input;
 import com.greentree.engine.loading.FileSystemLocation;
 import com.greentree.engine.loading.ResourceLoader;
 import com.greentree.engine.opengl.InternalTextureLoader;
 import com.greentree.engine.opengl.rendener.Renderer;
 import com.greentree.engine.opengl.rendener.SGL;
-import com.greentree.engine.system.ColliderSystem;
 import com.greentree.engine.system.RenderSystem;
 
 import lombok.experimental.UtilityClass;
@@ -40,11 +34,11 @@ import lombok.experimental.UtilityClass;
 public final class Game {
 	
 	
-	private static Builder builder = new BasicXMlBuilder();
+	private static Builder<?> builder = new BasicXMlBuilder();
 	private static GameNode mainNode;
 	private static GameClassLoader gameLoader;
 	private static SGL GL;
-	private static final Object globalCock = new Object();
+	private static final Object globalLock = new Object();
 	private static Thread mianGameLoop;
 	private static DisplayMode originalDisplayMode;
 	private static File root, assets;
@@ -105,7 +99,7 @@ public final class Game {
 		return Game.assets;
 	}
 	
-	public static Builder getBuilder() {
+	public static Builder<?> getBuilder() {
 		return builder;
 	}
 	
@@ -117,8 +111,8 @@ public final class Game {
 		return mainNode;
 	}
 	
-	public static Object getGlobalCock() {
-		return Game.globalCock;
+	public static Object getGlobalLock() {
+		return Game.globalLock;
 	}
 	
 	public static Camera getMainCamera() {
@@ -149,13 +143,11 @@ public final class Game {
 	
 	public static void loadScene(final String name) {
 		Log.info("Scene load : " + name);
-		final InputStream in = ResourceLoader.getResourceAsStream(name + ".scene");
-		synchronized(Game.globalCock) {
-			reset();
-			mainNode = null;
-			mainNode = getBuilder().createNode(in);
-			mainNode.start();
-		}
+		final InputStream inputStream = ResourceLoader.getResourceAsStream(name + ".scene");
+		reset();
+		mainNode = new GameNode(getBuilder().getNodeName(inputStream));
+		getBuilder().createNode(mainNode, inputStream);
+		mainNode.start();
 	}
 	
 	public static void reset() {
@@ -163,7 +155,7 @@ public final class Game {
 		eventSystem = new EventSystem();
 	}
 	
-	public static void setBuilder(Builder builder) {
+	public static void setBuilder(Builder<?> builder) {
 		Game.builder = builder;
 	}
 	
@@ -286,7 +278,7 @@ public final class Game {
 				loadScene(firstScene);
 			}
 			while(Game.running) {
-				synchronized(Game.globalCock) {
+				synchronized(Game.globalLock) {
 					Game.gameLoop();
 				}
 			}

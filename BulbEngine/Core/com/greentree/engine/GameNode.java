@@ -23,23 +23,61 @@ public final class GameNode implements Serializable {
 	private final List<GameNode> nodes;
 	private GameNode parent;
 	
-	protected GameNode(String name, GameNode parent, List<String> tags, List<GameComponent> component, List<GameNode> nodes, List<GameSystem> systems) {
-		this.systems = new OneClassSet<>(systems);
-		myComponents = new ClassList<>(component);
-		allTreeComponents = new ClassList<>(component);
-		this.nodes = nodes;
-		this.tags = tags;
+	public GameNode(String name) {
+		this.systems = new OneClassSet<>();
+		myComponents = new ClassList<>();
+		allTreeComponents = new ClassList<>();
+		this.nodes = new ArrayList<>();
+		this.tags = new ArrayList<>();
 		this.name = name;
-		this.parent = parent;
-		for(GameNode node : nodes) {
-			addNode(node);
-		}
+	}
+
+	public void addComponent(GameComponent component) {
+		allTreeComponents.add(component);
+		myComponents.add(component);
+		if(parent != null)parent.updateAllTreeComponents();
 	}
 	
+	private void updateAllTreeComponents() {
+		allTreeComponents.clear();
+		for(GameNode node : nodes) {
+			allTreeComponents.addAll(node.getComponents(GameComponent.class));
+		}
+		if(parent != null)parent.updateAllTreeComponents();
+	}
+
+	public void removeComponent(GameComponent component) {
+		allTreeComponents.add(component);
+		myComponents.add(component);
+		if(parent != null)parent.updateAllTreeComponents();
+	}
 	
-	private void addNode(GameNode node) {
+	public void addSystem(GameSystem system) {
+		systems.add(system);
+	}
+	public void removeSystem(GameSystem system) {
+		systems.remove(system);
+	}
+	
+	public void addTag(String tag) {
+		tags.add(tag);
+	}
+	public void removeTag(String tag) {
+		tags.remove(tag);
+	}
+	
+	public void addChildren(GameNode node) {
 		allTreeComponents.addAll(node.getComponents(null));
+		if(node.parent != null)Log.error("seconde perant of node " + node);
 		node.parent = this;
+		nodes.add(node);
+		if(parent != null)parent.updateAllTreeComponents();
+	}
+	public void removeChildren(GameNode node) {
+		allTreeComponents.removeAll(node.getComponents(null));
+		node.parent = null;
+		nodes.remove(node);
+		if(parent != null)parent.updateAllTreeComponents();
 	}
 
 	private boolean contains(GameNode node) {
@@ -48,8 +86,7 @@ public final class GameNode implements Serializable {
 	
 	public GameNode createNode(String prefab) {
 		GameNode node = Game.getBuilder().createNode(prefab);
-		nodes.add(node);
-		addNode(node);
+		addChildren(node);
 		node.start();
 		return node;
 	}
@@ -93,7 +130,6 @@ public final class GameNode implements Serializable {
 	}
 	
 	public <T extends GameComponent> ComponentList<T> getComponents(final Class<T> clazz) {
-		if(clazz == null)return new ComponentList<T>(myComponents.get(null));
 		return new ComponentList<>(allTreeComponents.get(clazz));
 	}
 	
@@ -129,6 +165,7 @@ public final class GameNode implements Serializable {
 	void start() {
 		for(final GameComponent gc : myComponents)gc.start(this);
 		for(final GameNode node : nodes)node.start();
+		for(final GameSystem system : systems)system.init();
 	}
 	
 	@Override
@@ -158,7 +195,6 @@ public final class GameNode implements Serializable {
 				if(GameSystem.class.isAssignableFrom(cl)) {
 					GameSystem system = GameSystem.createSystem(cl);
 					systems.add(system);
-					system.init();
 				}
 				if(ListenerManager.class.isAssignableFrom(cl)) {
 					try {

@@ -21,6 +21,7 @@ import com.greentree.engine.input.Input;
 import com.greentree.engine.loading.ResourceLoader;
 import com.greentree.engine.system.util.GameSystem;
 import com.greentree.serialize.ClassUtil;
+import com.greentree.util.Pair;
 import com.greentree.xml.XMLElement;
 
 
@@ -28,16 +29,15 @@ import com.greentree.xml.XMLElement;
  * @author Arseny Latyshev
  *
  */
-public class BasicXMlBuilder implements Builder {
+public class BasicXMlBuilder extends Builder<XMLElement> {
 	
 	private final List<String> packages = new ArrayList<>(List.of("", Transform.class.getPackageName()+".", Button.class.getPackageName()+".", ColliderComponent.class.getPackageName()+".", Button.class.getPackageName()+"."));
 	private final Map<String, String> prefab = new HashMap<>();
 	
 	public BasicXMlBuilder(){
 	}
-	
 	@SuppressWarnings("unchecked")
-	public static Object getValue(String xmlValue, Class<?> clazz) throws IllegalArgumentException, IllegalAccessException {
+	protected static Object getValue(String xmlValue, Class<?> clazz) throws IllegalArgumentException, IllegalAccessException {
 		if(clazz.equals(String.class)) return xmlValue;
 		if(clazz.equals(int.class)) return parseInt(xmlValue);
 		if(clazz.equals(float.class)) return Float.parseFloat(xmlValue);
@@ -54,16 +54,12 @@ public class BasicXMlBuilder implements Builder {
 		}
 		
 		if(GameComponent.class.isAssignableFrom(clazz)) {
-			//			List<GameNode> list = parent.findNodes(node -> {
-			//				return true;//node.hasComponent(clazz)&&(node.getName().equals(xmlValue));
-			//			});
-			//			System.out.println(list);
-			//			if(!list.isEmpty())return list.get(0);
+			List<GameNode> list = Game.getMainNode().findNodesWithName(xmlValue);
+			if(!list.isEmpty())return list.get(0).getComponent(clazz.asSubclass(GameComponent.class));
 		}
 		return null;
 	}
-	
-	public static boolean parse(Object obj, Field f, String xmlValue) throws IllegalArgumentException, IllegalAccessException {
+	protected static boolean parse(Object obj, Field f, String xmlValue) throws IllegalArgumentException, IllegalAccessException {
 		if(!xmlValue.isEmpty()) {
 			f.setAccessible(true);
 			
@@ -77,13 +73,12 @@ public class BasicXMlBuilder implements Builder {
 		}
 		return true;
 	}
-	public static int parseInt(String value) {
+	protected static int parseInt(String value) {
 		if(value.startsWith("key::"))return Input.getKeyIndex(value.substring(5));
 		return Integer.parseInt(value);
 	}
-	
 	@SuppressWarnings("unchecked")
-	private GameComponent createComponent(GameNodeBuilder parent, XMLElement xmlElement) {
+	private GameComponent createComponent(XMLElement xmlElement) {
 		Class<? extends GameComponent>	clazz = (Class<? extends GameComponent>) Game.loadClass(xmlElement.getAttribute("type"), packages);
 		try {
 			GameComponent component = clazz.getConstructor().newInstance();
@@ -112,8 +107,8 @@ public class BasicXMlBuilder implements Builder {
 		}
 	}
 	
-	private GameNode createNode(GameNodeBuilder parent, XMLElement in) {
-		GameNodeBuilder builder = new  GameNodeBuilder(in.getAttribute("name", "object"));
+	@Override
+	protected void createNode(GameNode node, XMLElement in) {
 		for(final XMLElement element : in.getChildrens("package"))
 			packages.add(element.getContent()+".");
 		
@@ -122,24 +117,34 @@ public class BasicXMlBuilder implements Builder {
 		
 		for(final XMLElement element : in.getChildrens("tags"))
 			for(final XMLElement element1 : element.getChildrens("tag"))
-				builder.addTag(element1.getAttribute("name"));
+				node.addTag(element1.getAttribute("name"));
 		
 		for(final XMLElement e : in.getChildrens("system"))
-			builder.addSystem((GameSystem.createSystem(Game.loadClass(e.getContent(), packages))));
-		
-		for(final XMLElement e : in.getChildrens("object"))builder.addNode(createNode(builder, e));
+			node.addSystem((GameSystem.createSystem(Game.loadClass(e.getContent(), packages))));
+
+		List<Pair<GameNode, XMLElement>> bufer = new ArrayList<>();
+		for(final XMLElement element : in.getChildrens("object")) {
+			GameNode сhildren = new GameNode(getNodeName(element));
+			bufer.add(new Pair<>(сhildren, element));
+			node.addChildren(сhildren);
+		}
+		for(Pair<GameNode, XMLElement> pair : bufer) {
+			createNode(pair.first, pair.second);
+		}
 		
 		for(final XMLElement element : in.getChildrens("component")) {
-			final GameComponent component = createComponent(builder, element);
+			final GameComponent component = createComponent(element);
 			if(component == null)continue;
-			builder.addComponent(component);
+			node.addComponent(component);
 		}
-		return builder.get();
+		
 	}
 	
-	@Override
-	public GameNode createNode(InputStream data) {
-		return createNode(null, parse(data));
+	private GameNode createNode(InputStream in) {
+		XMLElement data = parse(in);
+		GameNode node = new GameNode(getNodeName(data));
+		createNode(node, data);
+		return node;
 	}
 	
 	@Override
@@ -149,12 +154,23 @@ public class BasicXMlBuilder implements Builder {
 		return createNode(ResourceLoader.getResourceAsStream(prefab+".obj"));
 	}
 	
-	private XMLElement parse(InputStream input) {
+	
+	@Override
+	public String getNodeName(XMLElement xmlElement) {
+		return xmlElement.getAttribute("name", "name");
+	}
+	
+	/*
+	 * closes the stream
+	 */
+	@Override
+	public XMLElement parse(InputStream inputStream) {
 		try {
-			return new XMLElement(input);
+			return new XMLElement(inputStream);
 		}catch(ParserConfigurationException | SAXException | IOException e) {
 			Log.warn(e);
 			return null;
 		}
 	}
+	
 }

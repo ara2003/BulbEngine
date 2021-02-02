@@ -112,5 +112,9 @@ public class ClassList<E> implements Iterable<E> {
 	public void removeAll(Collection<E> collection) {
 		collection.forEach(e->remove(e));
 	}
+
+	public void clear() {
+		map.clear();
+	}
 	
 }
