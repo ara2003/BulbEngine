@@ -22,13 +22,9 @@ public class InternalTextureLoader {
 	
 	protected static SGL GL = Renderer.get();
 	private static final InternalTextureLoader loader = new InternalTextureLoader();
-	
 	private int dstPixelFormat = 6408;
-	
 	private boolean holdTextureData;
-	
 	private final HashMap<String, TextureImpl> texturesLinear = new HashMap<>();
-	
 	private final HashMap<String, TextureImpl> texturesNearest = new HashMap<>();
 	
 	public static IntBuffer createIntBuffer(final int size) {
@@ -36,14 +32,17 @@ public class InternalTextureLoader {
 		temp.order(ByteOrder.nativeOrder());
 		return temp.asIntBuffer();
 	}
+	
 	public static int createTextureID() {
 		final IntBuffer tmp = InternalTextureLoader.createIntBuffer(1);
 		InternalTextureLoader.GL.glGenTextures(tmp);
 		return tmp.get(0);
 	}
+	
 	public static InternalTextureLoader get() {
 		return InternalTextureLoader.loader;
 	}
+	
 	public static int get2Fold(final int fold) {
 		int ret = 2;
 		while(ret < fold) ret *= 2;
@@ -102,10 +101,8 @@ public class InternalTextureLoader {
 		texture.setWidth(width);
 		texture.setHeight(height);
 		texture.setAlpha(hasAlpha);
-		final IntBuffer temp = BufferUtils.createIntBuffer(16);
-		InternalTextureLoader.GL.glGetInteger(3379, temp);
-		final int max = temp.get(0);
-		if((texWidth > max) || (texHeight > max))
+		final int max = InternalTextureLoader.GL.glGetInteger(SGL.GL_MAX_TEXTURE_SIZE);
+		if(texWidth > max || texHeight > max)
 			throw new IOException("Attempt to allocate a texture to big for the current hardware");
 		if(holdTextureData) texture.setTextureData(srcPixelFormat, componentCount, minFilter, magFilter, textureBuffer);
 		InternalTextureLoader.GL.glTexParameteri(target, 10241, minFilter);
@@ -153,7 +150,7 @@ public class InternalTextureLoader {
 	
 	private TextureImpl getTexture(final InputStream in, final String resourceName, final int target,
 			final int magFilter, final int minFilter, final boolean flipped, final int[] transparent)
-					throws IOException {
+			throws IOException {
 		final LoadableImageData imageData = ImageDataFactory.getImageDataFor(resourceName);
 		final ByteBuffer textureBuffer = imageData.loadImage(new BufferedInputStream(in), flipped, transparent);
 		final int textureID = InternalTextureLoader.createTextureID();
@@ -166,10 +163,8 @@ public class InternalTextureLoader {
 		texture.setTextureHeight(imageData.getTexHeight());
 		final int texWidth = texture.getTextureWidth();
 		final int texHeight = texture.getTextureHeight();
-		final IntBuffer temp = BufferUtils.createIntBuffer(16);
-		InternalTextureLoader.GL.glGetInteger(3379, temp);
-		final int max = temp.get(0);
-		if((texWidth > max) || (texHeight > max))
+		final int max = InternalTextureLoader.GL.glGetInteger(SGL.GL_MAX_TEXTURE_SIZE);
+		if(texWidth > max || texHeight > max)
 			throw new IOException("Attempt to allocate a texture to big for the current hardware");
 		final int srcPixelFormat = hasAlpha ? 6408 : 6407;
 		final int componentCount = hasAlpha ? 4 : 3;

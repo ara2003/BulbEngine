@@ -1,9 +1,10 @@
 package com.greentree.engine.component;
 
+import org.joml.Vector2f;
+
 import com.greentree.engine.GameComponent;
 import com.greentree.engine.component.util.EditorData;
 import com.greentree.engine.component.util.RequireComponent;
-import com.greentree.math.vector.float2f;
 
 
 /**
@@ -20,8 +21,8 @@ public class offsetGameComponent extends GameComponent {
 	@EditorData(name="y")
 	private float offsetY;
 	
-	public float2f getOffsetVector() {
-		return new float2f(offsetX, offsetY);
+	public Vector2f getOffsetVector() {
+		return new Vector2f(offsetX, offsetY);
 	}
 	
 	public float getX(){

@@ -1,6 +1,3 @@
-//
-// Decompiled by Procyon v0.5.36
-//
 package com.greentree.engine.opengl;
 
 public interface Texture {

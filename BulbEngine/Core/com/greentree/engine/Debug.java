@@ -1,17 +1,20 @@
 package com.greentree.engine;
 
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 
+@Deprecated
 public final class Debug {
 	
-	private static FileWriter file, event;
+	private static FileWriter time, event;
 	static {
 		FileManager.getDirectory("Debug");
 		try {
-			file = new FileWriter(FileManager.getFile("Debug\\time.txt"));
+			time = new FileWriter(FileManager.getFile("Debug\\time.txt"));
 		}catch(final IOException e) {
-			file = null;
+			time = null;
 			Log.error(e);
 		}
 		try {
@@ -35,9 +38,19 @@ public final class Debug {
 	
 	public static void addTime(final String name, final String data) {
 		try {
-			file.write(Time.getTime() + "~" + name + "~" + data + "\n");
+			time.write(Time.getTime() + "~" + name + "~" + data + "\n");
 		}catch(final IOException e) {
 			Log.error(e);
 		}
 	}
+
+	public static PrintStream getLogFile() {
+		try {
+			return new PrintStream(FileManager.getFile("Debug\\Log.txt"));
+		}catch(FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 }

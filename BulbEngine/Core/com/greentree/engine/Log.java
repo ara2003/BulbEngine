@@ -10,12 +10,9 @@ import java.util.Date;
 
 public final class Log {
 	
-	private static boolean forcedVerbose;
-	private static PrintStream out, err;
+	private static PrintStream file;
 	static {
-		Log.out = System.out;
-		Log.err = System.err;
-		Log.forcedVerbose = false;
+		Log.file = Debug.getLogFile();
 	}
 	
 	private Log() {
@@ -33,37 +30,30 @@ public final class Log {
 	}
 	
 	public static void debug(final String message) {
-		Log.out.println(new Date() + " DEBUG:" + message);
+		Log.file.println(new Date() + " DEBUG:" + message);
 	}
 	
 	public static void error(final String message) {
-		Log.err.println(new Date() + " ERROR:" + message);
-		Game.exit();
+		Log.file.println(new Date() + " ERROR:" + message);
 	}
 	
 	public static void error(final String message, final Throwable e) {
-		Log.error(message);
+		Log.file.println(new Date() + " ERROR:" + message);
 		Log.error(e);
-		Game.exit();
 	}
 	
 	public static void error(final Throwable e) {
-		Log.err.println(new Date() + " ERROR:" + e.getMessage());
-		e.printStackTrace(Log.err);
-		Game.exit();
+		Log.file.println(new Date() + " ERROR:" + e.getMessage());
+		e.printStackTrace(Log.file);
 	}
 	
 	public static void info(final String message) {
-		Log.out.println(new Date() + " INFO:" + message);
+		Log.file.println(new Date() + " INFO:" + message);
 	}
 	
 	public static void setForcedVerboseOn() {
-		Log.forcedVerbose = true;
 	}
 	
-	public static void setVerbose(final boolean v) {
-		if(Log.forcedVerbose) return;
-	}
 	
 	public static void warn(final Object message) {
 		Log.warn(message.toString());
@@ -74,7 +64,7 @@ public final class Log {
 	}
 	
 	public static void warn(final String message) {
-		Log.err.println(new Date() + " WARN:" + message);
+		Log.file.println(new Date() + " WARN:" + message);
 	}
 	public static void warn(final String message, final Throwable e) {
 		Log.warn(message);
@@ -82,6 +72,22 @@ public final class Log {
 	}
 	
 	public static void warn(final Throwable e) {
-		e.printStackTrace(Log.err);
+		e.printStackTrace(Log.file);
+	}
+	/**
+	 * @deprecated use warn
+	 */
+	@Deprecated
+	public static void superWarn(String message) {
+		Log.file.println(new Date() + " WARN:" + message);
+	}
+
+    /**
+     * @deprecated use warn
+     */
+	@Deprecated
+	public static void superWarn(Exception e) {
+		Log.file.println(new Date() + " WARN:" + e);
+		e.printStackTrace(Log.file);
 	}
 }

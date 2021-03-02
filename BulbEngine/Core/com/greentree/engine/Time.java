@@ -2,10 +2,10 @@ package com.greentree.engine;
 
 public final class Time {
 	
-	private static float delta;
-	private static int fps, fps_;
-	private static long lastFream, lastFPS, start;
-	private static int fream;
+	private volatile static float delta;
+	private volatile static int fps, fps_;
+	private volatile static long lastFream, lastFPS, start;
+	private volatile static int fream;
 	public static final long TimePerSecond = 1_000_000_000;
 	static {
 		Time.start = System.nanoTime();
@@ -13,7 +13,6 @@ public final class Time {
 	
 	private Time() {
 	}
-	
 	
 	public static float getDelta() {
 		return Time.delta;
@@ -34,10 +33,10 @@ public final class Time {
 	static void updata() {
 		fream++;
 		final long time = Time.getTime();
-		Time.delta = ((time - Time.lastFream) * 1000f) / TimePerSecond;
+		Time.delta = (time - Time.lastFream) * 1000f / TimePerSecond;
 		Time.lastFream = time;
 		Time.fps_++;
-		if((Time.lastFPS + TimePerSecond) <= time) {
+		if(Time.lastFPS + TimePerSecond <= time) {
 			Time.fps = Time.fps_;
 			Time.fps_ = 0;
 			Time.lastFPS = time;

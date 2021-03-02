@@ -1,11 +1,12 @@
 package com.greentree.loading;
 
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.greentree.serialize.FileParser;
 import com.greentree.serialize.GsonFileParser;

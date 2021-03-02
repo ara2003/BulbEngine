@@ -12,11 +12,10 @@ public class SpriteRendener extends RendenerComponent {
 	
 	private static final long serialVersionUID = 1L;
 	
-	@EditorData(name="image")
-	private String ref;
 	private transient Transform position;
 	@EditorData
 	private int width, height;
+	@EditorData(name="image")
 	protected Texture texture;
 	
 	
@@ -36,11 +35,6 @@ public class SpriteRendener extends RendenerComponent {
 	@Override
 	protected void start() {
 		position = getComponent(Transform.class);
-		try {
-			texture = InternalTextureLoader.get().getTexture(ref, false, 9728, null);
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
 		if(width == 0)width = texture.getImageWidth();
 		if(height == 0)height = texture.getImageHeight();
 	}

@@ -1,10 +1,9 @@
 package com.greentree.engine.component;
 
+import org.joml.Vector2f;
+
 import com.greentree.engine.GameComponent;
 import com.greentree.engine.component.util.EditorData;
-import com.greentree.math.vector.float2f;
-
-import lombok.ToString;
 
 public final class Transform extends GameComponent {
 	
@@ -20,9 +19,9 @@ public final class Transform extends GameComponent {
 		lasty = y;
 	}
 	
-	public void addition(float2f vec) {
-		x += vec.getX();
-		y += vec.getY();
+	public void add(Vector2f vec) {
+		x += vec.x;
+		y += vec.y;
 	}
 	
 	public float distanse(final Transform t) {
@@ -70,8 +69,8 @@ public final class Transform extends GameComponent {
 		lasty = y;
 	}
 	
-	public float2f getVector() {
-		return new float2f(x, y);
+	public Vector2f getVector() {
+		return new Vector2f(x, y);
 	}
 	
 }

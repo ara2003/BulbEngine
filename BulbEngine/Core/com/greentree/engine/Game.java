@@ -1,10 +1,12 @@
 package com.greentree.engine;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Properties;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.lwjgl.LWJGLException;
@@ -15,6 +17,7 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.PixelFormat;
 
 import com.greentree.engine.component.Camera;
+import com.greentree.engine.editor.xml.BasicXMlBuilder;
 import com.greentree.engine.event.Event;
 import com.greentree.engine.event.EventSystem;
 import com.greentree.engine.event.Listener;
@@ -239,44 +242,23 @@ public final class Game {
 		Game.mianGameLoop = new Thread(()-> {
 			Game.GL = Renderer.get();
 			Game.reset();
-			{
-				boolean fullscreen = false;
-				int width = 800, height = 600;
-				String firstScene = "";
-				{
-					Scanner in = new Scanner(ResourceLoader.getResourceAsStream(file + "\\config.game"));
-					Display.sync(60);
-					while(in.hasNext()) {
-						final String a = in.next();
-						final String[] words = a.replace(' ', '=').split("=");
-						if(words[0].equals("firstScene")) {
-							firstScene = words[1];
-						}
-						if(words[0].equals("width")) {
-							width = Integer.parseInt(words[1]);
-						}
-						if(words[0].equals("height")) {
-							height = Integer.parseInt(words[1]);
-						}
-						if(words[0].equals("fullscreen")) {
-							fullscreen = Boolean.parseBoolean(words[1]);
-						}
-						if(words[0].equals("targetFPS")) {
-							Display.sync(Integer.parseInt(words[1]));
-						}
-						if(words[0].equals("title")) {
-							Display.setTitle(words[1]);
-						}
-					}
-					in.close();
-					Game.running = true;
-				}
-				Log.checkVerboseLogSetting();
-				Game.originalDisplayMode = Display.getDisplayMode();
-				Game.setDisplayMode(width, height, fullscreen);
-				Game.setup();
-				loadScene(firstScene);
+			Properties properties = new Properties();
+			try {
+				properties.load(new FileInputStream(new File(root, "config.game")));
+			}catch(IOException e) {
+				e.printStackTrace();
+				return;
 			}
+			Display.setTitle(properties.getProperty("window.title", "blub window"));
+			int width = Integer.parseInt(properties.getProperty("window.width"));
+			int height = Integer.parseInt(properties.getProperty("window.height"));
+			boolean fullscreen = Boolean.parseBoolean(properties.getProperty("window.fullscreen"));
+			Game.running = true;
+			Log.checkVerboseLogSetting();
+			Game.originalDisplayMode = Display.getDisplayMode();
+			Game.setDisplayMode(width, height, fullscreen);
+			Game.setup();
+			loadScene(properties.getProperty("scene.first"));
 			while(Game.running) {
 				synchronized(Game.globalLock) {
 					Game.gameLoop();

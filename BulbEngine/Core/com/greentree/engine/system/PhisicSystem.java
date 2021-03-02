@@ -1,5 +1,7 @@
 package com.greentree.engine.system;
 
+import org.joml.Vector2f;
+
 import com.greentree.engine.Game;
 import com.greentree.engine.Time;
 import com.greentree.engine.necessarily;
@@ -7,7 +9,6 @@ import com.greentree.engine.component.Phisic;
 import com.greentree.engine.component.collider.ColliderComponent;
 import com.greentree.engine.phisic.ColliderListener;
 import com.greentree.engine.system.util.GameSystem;
-import com.greentree.math.vector.float2f;
 
 /**
  *  @author Arseny Latyshev
@@ -24,12 +25,12 @@ public class PhisicSystem extends GameSystem {
 		if(p1 == null) return;
 		if(p2 == null) return;
 		
-		final float2f rv = p2.getVelosity().addition(p1.getVelosity().multiply(-1));
+		final Vector2f rv = p2.getVelosity().sub(p1.getVelosity());
 		
-		final float2f normal = c2.getShape().getCenter().getRadiusVector().addition(c1.getShape().minPoint(c2.getShape().getCenter()).getRadiusVector().multiply(-1)).scaleTo(1);
+		final Vector2f normal = c2.getShape().getCenter().getRadiusVector().sub(c1.getShape().minPoint(c2.getShape().getCenter()).getRadiusVector()).normalize();
 		
 		
-		float velAlongNormal = (float) rv.scalarMultiply(normal);
+		float velAlongNormal = (float) rv.dot(normal);
 		
 		if(velAlongNormal > 0)
 			return;
@@ -38,16 +39,16 @@ public class PhisicSystem extends GameSystem {
 		
 		float j = ((-(1 + e) * velAlongNormal) / ((1 / p1.getMass()) + (1 / p2.getMass())));
 		
-		float2f impulse = normal.multiply(j);
+		Vector2f impulse = normal.mul(j);
 		
-		p1.additionVelosity(impulse.multiply(-1 / p1.getMass()));
-		p2.additionVelosity(impulse.multiply( 1 / p2.getMass()));
+		p1.additionVelosity(impulse.mul(-1 / p1.getMass()));
+		p2.additionVelosity(impulse.mul( 1 / p2.getMass()));
 	}
 	
 	@Override
 	public void execute() {
 		for(Phisic phisic : getComponents(Phisic.class)) {
-			phisic.additionVelosity(new float2f(0, 0.001f * Time.getDelta()));
+			phisic.additionVelosity(new Vector2f(0, 0.001f * Time.getDelta()));
 		}
 	}
 	

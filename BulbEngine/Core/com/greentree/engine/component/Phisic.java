@@ -1,5 +1,7 @@
 package com.greentree.engine.component;
 
+import org.joml.Vector2f;
+
 import com.greentree.engine.GameComponent;
 import com.greentree.engine.Time;
 import com.greentree.engine.necessarily;
@@ -10,7 +12,6 @@ import com.greentree.engine.phisic.Matirial;
 import com.greentree.engine.system.PhisicSystem;
 import com.greentree.geom.GeomUtil;
 import com.greentree.geom.Point;
-import com.greentree.math.vector.float2f;
 
 @RequireComponent({Transform.class,ColliderComponent.class})
 @necessarily({PhisicSystem.class})
@@ -26,17 +27,17 @@ public class Phisic extends GameComponent {
 	private Matirial matirial;
 	@EditorData(def = "DINAMIC", name = "typeCollizion")
 	private Type type;
-	private float2f velosity = new float2f();
+	private Vector2f velosity = new Vector2f();
 	private float rotationVelosity = 0f;
 	
-	public void additionVelosity(float2f float2f) {
-		setVelosity(float2f.addition(velosity));
+	public void additionVelosity(Vector2f float2f) {
+		setVelosity(float2f.add(velosity));
 	}
 	
-	public void additionVelosity(Point p, float2f float2f) {
-		rotationVelosity += float2f.scalarMultiply(normalTo(p));
+	public void additionVelosity(Point p, Vector2f float2f) {
+		rotationVelosity += float2f.dot(normalTo(p));
 		
-		setVelosity(float2f.addition(velosity));
+		setVelosity(float2f.add(velosity));
 	}
 	
 	public float getElasticity() {
@@ -51,15 +52,15 @@ public class Phisic extends GameComponent {
 		return type;
 	}
 	
-	public float2f getVelosity() {
+	public Vector2f getVelosity() {
 		return velosity;
 	}
 	
-	private float2f normalTo(Point point) {
-		return massCenter.getRadiusVector().multiply(-1).addition(point.getRadiusVector());
+	private Vector2f normalTo(Point point) {
+		return massCenter.getRadiusVector().sub(point.getRadiusVector());
 	}
 	
-	public void setVelosity(float2f velosity) {
+	public void setVelosity(Vector2f velosity) {
 		if(type != Type.STATIC)
 			this.velosity = velosity;
 	}
@@ -76,7 +77,7 @@ public class Phisic extends GameComponent {
 	public void update() {
 		massCenter = GeomUtil.getMassCenter(getComponent(ColliderComponent.class).getShape());
 		if(type == Type.DINAMIC) {
-			position.addition(getVelosity().multiply(Time.getDelta()));
+			position.add(getVelosity().mul(Time.getDelta()));
 			getComponent(ColliderComponent.class).getShape().rotate(massCenter, rotationVelosity);
 		}
 	}
