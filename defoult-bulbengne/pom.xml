@@ -1,27 +1,34 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
- 
-	<groupId>com.greentree.bulbengine</groupId>
-	<artifactId>bulbengine</artifactId>
-	<version>0.1-SNAPSHOT</version>
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.greentree.bulbengine</groupId>
+  <artifactId>defoult-bulbengine</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  
+  <packaging>pom</packaging>
 	
-	<packaging>jar</packaging>
+	<organization>
+		<name>Green Tree</name>
+	</organization>
 	
-	<name>BulbEngine</name>
+	<developers>
+        <developer>
+            <name>Arseny Latyshev</name>
+            <email>arseny.latyshev@gmail.com</email>
+        </developer>
+    </developers>
 	
 	<properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>5.5.2</junit.version>
-		<java.version>14</java.version>
-		
+		   
 		<joml.version>1.9.24</joml.version>
-		<lwjgl.version>3.2.3</lwjgl.version>
-	</properties> 
-	
-	 <profiles>
+		
+		<java.version>14</java.version>
+	</properties>
+
+	<profiles>
 		<profile>
 			<id>linux_profile</id>
 			<activation>
@@ -57,20 +64,18 @@
 		</profile>
 	</profiles>
 	
-	 <dependencyManagement>
+	<dependencyManagement>
 		<dependencies>
+			<!--math-->
 			<dependency>
-				<groupId>org.lwjgl</groupId>
-				<artifactId>lwjgl-bom</artifactId>
-				<version>${lwjgl.version}</version>
-				<scope>import</scope>
-				<type>pom</type>
+				<groupId>org.joml</groupId>
+				<artifactId>joml</artifactId>
+				<version>${joml.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
-	  
-	<dependencies>
+
+  <dependencies>
 		<!--test-->
         <dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -78,55 +83,10 @@
 		    <version>${junit.version}</version>
 		    <scope>test</scope>
         </dependency>
-		<!-- math -->
-		<dependency>
-			<groupId>org.joml</groupId>
-			<artifactId>joml</artifactId>
-			<version>${joml.version}</version>
-		</dependency>
-		<!-- bulb engine -->
-		<dependency>
-			<groupId>com.greentree.bulbengine</groupId>
-			<artifactId>geometry</artifactId>
-			<version>0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.greentree.bulbengine</groupId>
-			<artifactId>util</artifactId>
-			<version>0.1-SNAPSHOT</version>
-		</dependency>
-		<!-- basic -->
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl</artifactId>
-			<version>${lwjgl.version}</version>
-			<classifier>natives-${os.family}</classifier>
-		</dependency>
-		<!-- OpenGL -->
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-opengl</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-opengl</artifactId>
-			<version>${lwjgl.version}</version>
-			<classifier>natives-${os.family}</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-glfw</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-glfw</artifactId>
-			<version>${lwjgl.version}</version>
-			<classifier>natives-${os.family}</classifier>
-		</dependency>
-	</dependencies>
+  </dependencies>
   
   
- 	<build>
+	<build>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -170,5 +130,10 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+	<modules>
+		<module>bulbengine</module>
+		<module>geometry</module>
+		<module>util</module>
+		<module>event</module>
+	</modules>
 </project>
