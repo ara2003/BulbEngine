@@ -37,7 +37,7 @@ public class Capsule extends Shape2D {
 	
 	@Override
 	public Point2D getCenter() {
-		return GeomUtil.getCenter(Arrays.asList(focus1, focus2));
+		return GeomUtil2D.getCenter(Arrays.asList(focus1, focus2));
 	}
 	
 	public Point2D getFocus1() {
@@ -70,8 +70,14 @@ public class Capsule extends Shape2D {
 	}
 	
 	@Override
-	public void rotate(final Point2D point, final double ang) {
+	public Shape2D rotate(final Point2D point, final double ang) {
 		focus1.rotate(point, ang);
 		focus2.rotate(point, ang);
+		return this;
+	}
+
+	@Override
+	public Shape2D add(float x, float y) {
+		return add(new Vector2f(x, y));
 	}
 }

@@ -1,11 +1,11 @@
 package com.greentree.engine.component.collider;
 
-import com.greentree.engine.necessarily;
+import com.greentree.engine.necessarilySystems;
 import com.greentree.engine.component.offsetGameComponent;
 import com.greentree.engine.geom2d.Shape2D;
 import com.greentree.engine.system.ColliderSystem;
 
-@necessarily({ColliderSystem.class})
+@necessarilySystems({ColliderSystem.class})
 public abstract class ColliderComponent extends offsetGameComponent {
 	
 	private static final long serialVersionUID = 1L;

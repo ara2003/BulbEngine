@@ -1,5 +1,5 @@
 
-module bulbengine {
+module bulbengine.geometry {
 
 	requires bulbengine.util;
 	requires org.joml;

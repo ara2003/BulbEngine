@@ -3,6 +3,9 @@ package com.greentree.engine;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.greentree.util.Log;
+import com.greentree.util.Time;
+
 /** @author Arseny Latyshev */
 public class Timer {
 	

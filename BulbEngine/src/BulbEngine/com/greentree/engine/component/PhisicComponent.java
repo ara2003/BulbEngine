@@ -3,16 +3,16 @@ package com.greentree.engine.component;
 import org.joml.Vector2f;
 
 import com.greentree.engine.GameComponent;
-import com.greentree.engine.Time;
-import com.greentree.engine.necessarily;
+import com.greentree.engine.necessarilySystems;
 import com.greentree.engine.component.collider.ColliderComponent;
 import com.greentree.engine.geom2d.GeomUtil2D;
 import com.greentree.engine.geom2d.Point2D;
 import com.greentree.engine.phisic.Matirial;
 import com.greentree.engine.system.PhisicSystem;
+import com.greentree.util.Time;
 
 @RequireComponent({Transform.class,ColliderComponent.class})
-@necessarily({PhisicSystem.class})
+@necessarilySystems({PhisicSystem.class})
 @Deprecated
 public class PhisicComponent extends GameComponent {
 	
@@ -28,8 +28,8 @@ public class PhisicComponent extends GameComponent {
 	private Vector2f velosity = new Vector2f();
 	private float rotationVelosity = 0f;
 	
-	public void additionVelosity(Vector2f float2f) {
-		setVelosity(float2f.add(velosity));
+	public void additionVelosity(Vector2f vec) {
+		velosity.add(vec);
 	}
 	
 	public void additionVelosity(Point2D p, Vector2f float2f) {

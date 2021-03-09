@@ -3,7 +3,7 @@ package com.greentree.engine.mesh;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.greentree.engine.Log;
+import com.greentree.util.Log;
 
 /**
  * @author Arseny Latyshev
@@ -26,7 +26,7 @@ public class MeshLoader {
 			try {
 				mesh = loader.load(resource);
 			}catch(Exception e) {
-				Log.superWarn(e);
+				Log.warn(e);
 			}
 			if(mesh != null)break;
 		}

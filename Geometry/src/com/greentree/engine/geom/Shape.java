@@ -3,54 +3,23 @@ package com.greentree.engine.geom;
 import java.util.List;
 import java.util.function.Consumer;
 
-/**
- * @author Arseny Latyshev
- */
-public interface Shape<P extends Point<P, S>, S extends Shape<P, S>> {
+/** @author Arseny Latyshev */
+public interface Shape<A extends AABB<A>, P extends Point<A, P, S>, S extends Shape<A, P, S>> {
 	
-	@SuppressWarnings("unchecked")
-	default S add(P step) {
-		final List<P> points = getPoints();
-		for(final P point : points) {
-			point.add(step);
-		}
-		if(!points.contains(getCenter())) {
-			getCenter().add(step);
-		}
-		return (S) this;
-	}
-	default S add(S s) {
-		return add(s.getCenter());
-	}
+	float distanseSqr(P p);
 	
-	float distanse(P p);
+	default float distanse(P p) {
+		return (float) Math.sqrt(distanseSqr(p));
+	}
 	
 	default void forEach(Consumer<P> consumer) {
-		for(P a : getPoints())consumer.accept(a);
+		for(P a : getPoints()) consumer.accept(a);
 	}
 	
-	AABB<P> getAABB();
+	A getAABB();
 	P getCenter();
 	List<P> getPoints();
 	float getRadius();
-	boolean isTouch(S other);
-	
-	default void moveTo(P p) {
-		sub(getCenter());
-		add(p);
-	}
-	@SuppressWarnings("unchecked")
-	default S mul(float f) {
-		final List<P> points = getPoints();
-		for(final P point : points) {
-			point.mul(f);
-		}
-		if(!points.contains(getCenter())) {
-			getCenter().mul(f);
-		}
-		return (S) this;
-	}
-	default S sub(P p){
-		return add(p.mul(-1));
-	}
+	boolean isIntersect(S other);
+	void moveTo(P p);
 }

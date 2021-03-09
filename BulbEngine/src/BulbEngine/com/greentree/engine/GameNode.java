@@ -1,16 +1,15 @@
 package com.greentree.engine;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
 import com.greentree.engine.component.ComponentList;
-import com.greentree.engine.event.ListenerManager;
 import com.greentree.engine.system.GameSystem;
 import com.greentree.util.ClassList;
 import com.greentree.util.ClassUtil;
+import com.greentree.util.Log;
 import com.greentree.util.OneClassSet;
 
 public final class GameNode implements Serializable {
@@ -186,19 +185,9 @@ public final class GameNode implements Serializable {
 	}
 	
 	public void tryAddNecessarily(Class<?> clazz) {
-		for(necessarily an : ClassUtil.getAnnotations(clazz, necessarily.class)) for(Class<?> cl : an.value()) {
-			if(GameSystem.class.isAssignableFrom(cl)) {
-				GameSystem system = GameSystem.createSystem(cl);
-				systems.add(system);
-			}
-			if(ListenerManager.class.isAssignableFrom(cl)) {
-				try {
-					Game.getEventSystem().addListenerManager((ListenerManager) cl.getConstructor().newInstance());
-				}catch(InstantiationException | IllegalAccessException | IllegalArgumentException
-						| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-					e.printStackTrace();
-				}
-			}
+		for(necessarilySystems an : ClassUtil.getAnnotations(clazz, necessarilySystems.class)) for(Class<?> cl : an.value()) {
+			GameSystem system = GameSystem.createSystem(cl);
+			systems.add(system);
 		}
 	}
 	

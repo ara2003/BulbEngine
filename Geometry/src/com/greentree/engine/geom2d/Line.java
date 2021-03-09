@@ -112,12 +112,18 @@ public class Line extends Shape2D {
 	}
 	
 	@Override
-	public void rotate(final Point2D p, final double ang) {
+	public Shape2D rotate(final Point2D p, final double ang) {
 		p1.rotate(p, ang);
 		p2.rotate(p, ang);
+		return this;
 	}
 	@Override
 	public String toString() {
 		return (int) p1.getX() + " " + (int) p1.getY() + " " + (int) p2.getX() + " " + (int) p2.getY();
+	}
+
+	@Override
+	public Shape2D add(float x, float y) {
+		return null;
 	}
 }

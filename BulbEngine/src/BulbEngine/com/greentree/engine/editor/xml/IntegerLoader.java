@@ -1,6 +1,6 @@
 package com.greentree.engine.editor.xml;
 
-import com.greentree.engine.input.Input;
+import com.greentree.engine.input.listeners.Input;
 
 /**
  * @author Arseny Latyshev

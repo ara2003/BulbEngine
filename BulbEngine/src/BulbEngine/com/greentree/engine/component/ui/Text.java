@@ -1,10 +1,10 @@
 package com.greentree.engine.component.ui;
 
 import com.greentree.engine.GameComponent;
+import com.greentree.engine.bulbgl.Color;
+import com.greentree.engine.bulbgl.Graphics;
 import com.greentree.engine.component.EditorData;
 import com.greentree.engine.component.Transform;
-import com.greentree.engine.gui.Color;
-import com.greentree.engine.gui.Graphics;
 
 public final class Text extends GameComponent {
 	

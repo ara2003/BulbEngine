@@ -8,6 +8,7 @@ import java.util.Random;
 import com.greentree.engine.component.collider.ColliderComponent;
 import com.greentree.engine.corutine.Corutine;
 import com.greentree.engine.phisic.ColliderListener;
+import com.greentree.util.Log;
 
 public abstract class GameComponent extends Constants implements Serializable {
 	

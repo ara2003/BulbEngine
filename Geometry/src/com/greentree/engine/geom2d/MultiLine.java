@@ -22,7 +22,14 @@ public class MultiLine extends Shape2D {
 		return points;
 	}
 	@Override
-	public void rotate(final Point2D point, final double ang) {
+	public Shape2D rotate(final Point2D point, final double ang) {
 		for(final Point2D p : points) p.rotate(point, ang);
+		return this;
+	}
+
+	@Override
+	public Shape2D add(float x, float y) {
+		for(final Point2D p : points) p.add(x, y);
+		return this;
 	}
 }

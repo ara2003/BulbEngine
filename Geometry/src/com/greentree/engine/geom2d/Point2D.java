@@ -1,8 +1,6 @@
 package com.greentree.engine.geom2d;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
+import static java.lang.Math.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,18 +10,11 @@ import org.joml.Vector2f;
 
 import com.greentree.engine.geom.Point;
 
-public class Point2D extends Shape2D implements Point<Point2D, Shape2D> {
+public class Point2D extends Shape2D implements Point<AABB, Point2D, Shape2D> {
 	
 	public float x, y;
 	
 	public Point2D() {
-	}
-
-	@Override
-	public Point2D add(final Point2D step) {
-		x += step.x;
-		y += step.y;
-		return this;
 	}
 	
 	public Point2D(final float x, final float y) {
@@ -38,9 +29,9 @@ public class Point2D extends Shape2D implements Point<Point2D, Shape2D> {
 	}
 	
 	@Override
-	public Point2D add(@SuppressWarnings("exports") final Vector2f step) {
-		x += step.x;
-		y += step.y;
+	public Shape2D add(float x, float y) {
+		this.x += x;
+		this.y += y;
 		return this;
 	}
 	
@@ -50,8 +41,10 @@ public class Point2D extends Shape2D implements Point<Point2D, Shape2D> {
 	}
 	
 	@Override
-	public float distanse(final Point2D p) {
-		return (float) Math.sqrt(((p.getX() - x)*(p.getX() - x)) + ((p.getY() - y)*(p.getY() - y)));
+	public float distanseSqr(final Point2D p) {
+		float dx = p.getX() - x;
+		float dy = p.getY() - y;
+		return dx*dx + dy*dy;
 	}
 	
 	@Override
@@ -83,6 +76,7 @@ public class Point2D extends Shape2D implements Point<Point2D, Shape2D> {
 	public float getRadius() {
 		return 0;
 	}
+	
 	@SuppressWarnings("exports")
 	public Vector2f getRadiusVector() {
 		return new Vector2f(x, y);
@@ -102,15 +96,16 @@ public class Point2D extends Shape2D implements Point<Point2D, Shape2D> {
 	}
 	
 	@Override
-	public void rotate(final Point2D c, final double ang) {
-		if(equals(c))return;
+	public Shape2D rotate(final Point2D c, final double ang) {
+		if(equals(c)) return this;
 		x -= c.getX();
 		y -= c.getY();
 		final float x_ = x, y_ = y;
-		x = (float) ((x_ * cos(ang)) + (y_ * -sin(ang)));
-		y = (float) ((x_ * sin(ang)) + (y_ * cos(ang)));
+		x = (float) (x_ * cos(ang) + y_ * -sin(ang));
+		y = (float) (x_ * sin(ang) + y_ * cos(ang));
 		x += c.getX();
 		y += c.getY();
+		return this;
 	}
 	
 	@Override
@@ -129,8 +124,7 @@ public class Point2D extends Shape2D implements Point<Point2D, Shape2D> {
 	}
 	
 	@Override
-	protected void trim(){
+	protected void trim() {
 		super.center = this;
 	}
-
 }

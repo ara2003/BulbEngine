@@ -31,7 +31,7 @@ public class ShapeList {
 	 * @return
 	 */
 	public Point2D getCenter() {
-		return GeomUtil.getCenter(list);
+		return GeomUtil2D.getCenter(list);
 	}
 	
 	public Point2D rayCast(Point2D start, @SuppressWarnings("exports") Vector2f vector, float maxDistanse){
@@ -46,7 +46,7 @@ public class ShapeList {
 		float dis = 0;
 		int t = 50;
 		while((t-- > 0) && (maxDistanse > 0)) {
-			dis = GeomUtil.distanse(p, list) * 0.99f;
+			dis = GeomUtil2D.distanse(p, list) * 0.99f;
 			maxDistanse -= dis;
 			p.add(vector.mul(dis));
 			if(dis < delta) return p;

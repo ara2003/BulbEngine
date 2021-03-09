@@ -24,6 +24,16 @@ public class Circle extends Shape2D {
 	}
 	
 	@Override
+	public boolean isIntersect(Shape2D other) {
+		if(other instanceof Circle) {
+			Circle circle = (Circle) other;
+			float r = radius + circle.radius;
+			return circle.center.distanseSqr(center) < r*r;
+		}
+		return super.isIntersect(other);
+	}
+	
+	@Override
 	public float distanse(final Point2D p) {
 		return Math.abs(p.distanse(center) - radius);
 	}
@@ -49,12 +59,19 @@ public class Circle extends Shape2D {
 	}
 	
 	@Override
-	public void rotate(final Point2D point, final double ang) {
+	public Shape2D rotate(final Point2D point, final double ang) {
 		center.rotate(point, ang);
+		return this;
 	}
 	
 	@Override
 	public String toString() {
 		return "Circle [radius=" + radius + ", center=" + center + "]";
+	}
+
+	@Override
+	public Shape2D add(float x, float y) {
+		center.add(x, y);
+		return this;
 	}
 }

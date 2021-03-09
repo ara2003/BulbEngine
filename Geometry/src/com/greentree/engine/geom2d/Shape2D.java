@@ -11,7 +11,7 @@ import com.greentree.util.Util;
 /**
  * @author Arseny Latyshev
  */
-public abstract class Shape2D implements Shape<Point2D, Shape2D> {
+public abstract class Shape2D implements Shape<AABB, Point2D, Shape2D> {
 	
 	protected Point2D center;
 	
@@ -19,9 +19,11 @@ public abstract class Shape2D implements Shape<Point2D, Shape2D> {
 	}
 
 	public Shape2D add(@SuppressWarnings("exports") final Vector2f step) {
-		return add(new Point2D(step.x, step.y));
+		return add(step.x, step.y);
 	}
 	
+	public abstract Shape2D add(float x, float y);
+
 	public final List<Point2D> contact(final Shape2D other) {
 		final List<Line> A = getLines();
 		final List<Line> B = other.getLines();
@@ -30,7 +32,7 @@ public abstract class Shape2D implements Shape<Point2D, Shape2D> {
 		final List<Point2D> res = new ArrayList<>(A.size() + B.size());
 		for(final Line element : A) {
 			for(final Line element2 : B) {
-				final Point2D c = GeomUtil.contact(element, element2, true);
+				final Point2D c = GeomUtil2D.contact(element, element2, true);
 				if(c != null) {
 					res.add(c);
 				}
@@ -43,8 +45,8 @@ public abstract class Shape2D implements Shape<Point2D, Shape2D> {
 	}
 	
 	@Override
-	public float distanse(final Point2D p) {
-		return p.distanse(minPoint(p));
+	public float distanseSqr(final Point2D p) {
+		return p.distanseSqr(minPoint(p));
 	}
 	
 	public float distanse(Shape2D other) {
@@ -62,7 +64,7 @@ public abstract class Shape2D implements Shape<Point2D, Shape2D> {
 	}
 	
 	public List<Line> getLines() {
-		return GeomUtil.toLine(getPoints());
+		return GeomUtil2D.toLine(getPoints());
 	}
 	
 	public float getPenetrationDepth(Shape2D other) {
@@ -78,8 +80,8 @@ public abstract class Shape2D implements Shape<Point2D, Shape2D> {
 	}
 	
 	@Override
-	public boolean isTouch(final Shape2D other) {
-		return new AABB(this).isTouch(new AABB(other));
+	public boolean isIntersect(final Shape2D other) {
+		return new AABB(this).isIntersect(new AABB(other));
 	}
 	
 	public Point2D minPoint(final Point2D point) {
@@ -108,11 +110,12 @@ public abstract class Shape2D implements Shape<Point2D, Shape2D> {
 		moveTo(p.getX(), p.getY());
 	}
 	
-	public void rotate(final Point2D point, final double ang) {
+	public Shape2D rotate(final Point2D point, final double ang) {
 		for(final Point2D p : getPoints()) {
 			p.rotate(point, ang);
 		}
 		if(!getPoints().contains(getCenter())) center.rotate(point, ang);
+		return this;
 	}
 	
 	public void setSize(float width, float height) {
@@ -140,7 +143,7 @@ public abstract class Shape2D implements Shape<Point2D, Shape2D> {
 	
 	protected void trim() {
 		try {
-			center = GeomUtil.getCenter(getPoints());
+			center = GeomUtil2D.getCenter(getPoints());
 		}catch (NullPointerException e) {
 		}
 	}

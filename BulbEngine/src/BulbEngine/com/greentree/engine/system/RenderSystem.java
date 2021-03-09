@@ -1,11 +1,11 @@
 package com.greentree.engine.system;
 
-import com.greentree.engine.Log;
 import com.greentree.engine.component.Camera;
 import com.greentree.engine.component.ComponentList;
 import com.greentree.engine.opengl.rendener.LineStripRenderer;
 import com.greentree.engine.opengl.rendener.Renderer;
 import com.greentree.engine.opengl.rendener.SGL;
+import com.greentree.util.Log;
 
 
 /**

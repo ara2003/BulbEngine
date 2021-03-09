@@ -3,7 +3,7 @@ package com.greentree.engine.geom3d;
 import com.greentree.engine.geom.Shape;
 
 /** @author Arseny Latyshev */
-public abstract class Shape3D implements Shape<Point3D, Shape3D> {
+public abstract class Shape3D implements Shape<AABB, Point3D, Shape3D> {
 	
 	@Override
 	public float distanse(final Point3D p) {
@@ -26,7 +26,7 @@ public abstract class Shape3D implements Shape<Point3D, Shape3D> {
 	}
 	
 	@Override
-	public boolean isTouch(final Shape3D other) {
-		return new AABB(this).isTouch(new AABB(other));
+	public boolean isIntersect(final Shape3D other) {
+		return new AABB(this).isIntersect(new AABB(other));
 	}
 }

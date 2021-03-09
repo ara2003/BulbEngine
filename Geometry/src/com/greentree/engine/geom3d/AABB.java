@@ -3,7 +3,7 @@ package com.greentree.engine.geom3d;
 /**
  * @author Arseny Latyshev
  */
-public class AABB implements com.greentree.engine.geom.AABB<Point3D> {
+public class AABB implements com.greentree.engine.geom.AABB<AABB> {
 	
 	private final float3 min, max;
 	
@@ -25,22 +25,12 @@ public class AABB implements com.greentree.engine.geom.AABB<Point3D> {
 			min.z = Math.min(min.z, p.z);
 		});
 	}
-	
+
 	@Override
-	public Point3D a() {
-		return new Point3D(max.x, max.y, max.z);
-	}
-	
-	@Override
-	public Point3D b() {
-		return new Point3D(min.x, min.y, min.z);
-	}
-	
-	@Override
-	public boolean isTouch(com.greentree.engine.geom.AABB<Point3D> other) {
-		if((a().x < other.b().x) || (b().x > other.a().x)) return false;
-		if((a().y < other.b().y) || (b().y > other.a().y)) return false;
-		if((a().z < other.b().z) || (b().z > other.a().z)) return false;
+	public boolean isIntersect(AABB other) {
+		if(max.x < other.min.x || min.x > other.max.x) return false;
+		if(max.y < other.min.y || min.y > other.max.y) return false;
+		if(max.z < other.min.z || min.z > other.max.z) return false;
 		return true;
 	}
 	

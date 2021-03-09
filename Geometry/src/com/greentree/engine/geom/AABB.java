@@ -4,9 +4,7 @@ package com.greentree.engine.geom;
  * @author Arseny Latyshev
  *
  */
-public interface AABB<P extends Point<P, ?>> {
+public interface AABB<A extends AABB<A>> {
 	
-	P a();
-	P b();
-	boolean isTouch(AABB<P> other);
+	boolean isIntersect(A other);
 }

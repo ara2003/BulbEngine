@@ -4,26 +4,28 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.greentree.engine.bulbgl.Color;
+import com.greentree.engine.bulbgl.Graphics;
+import com.greentree.engine.bulbgl.OpenGlWindow;
+import com.greentree.engine.bulbgl.Window;
 import com.greentree.engine.component.Camera;
 import com.greentree.engine.editor.xml.BasicXMlBuilder;
 import com.greentree.engine.event.Event;
 import com.greentree.engine.event.EventSystem;
 import com.greentree.engine.event.Listener;
-import com.greentree.engine.gui.Color;
-import com.greentree.engine.gui.Graphics;
-import com.greentree.engine.input.Input;
-import com.greentree.engine.loading.FileSystemLocation;
-import com.greentree.engine.loading.ResourceLoader;
-import com.greentree.engine.opengl.OpenGlWindow;
+import com.greentree.engine.input.listeners.Input;
 import com.greentree.engine.opengl.rendener.Renderer;
 import com.greentree.engine.opengl.rendener.SGL;
 import com.greentree.engine.system.RenderSystem;
+import com.greentree.loading.FileSystemLocation;
+import com.greentree.loading.ResourceLoader;
+import com.greentree.util.Log;
+import com.greentree.util.Time;
 
 public final class Game {
 	
@@ -41,17 +43,17 @@ public final class Game {
 	private Game() {
 	}
 	
-	public static void addListener(Listener listener) {
+	public static void addListener(@SuppressWarnings("exports") Listener listener) {
 		tryAddNecessarily(listener.getClass());
 		getEventSystem().addListener(listener);
 	}
 	
-	public static void event(Event event) {
+	public static void event(@SuppressWarnings("exports") Event event) {
 		tryAddNecessarily(event.getClass());
 		getEventSystem().event(event);
 	}
 	
-	public static void eventNoQueue(Event event) {
+	public static void eventNoQueue(@SuppressWarnings("exports") Event event) {
 		tryAddNecessarily(event.getClass());
 		getEventSystem().eventNoQueue(event);
 	}
@@ -93,6 +95,7 @@ public final class Game {
 		return gameLoader;
 	}
 	
+	@SuppressWarnings("exports")
 	public static EventSystem getEventSystem() {
 		return eventSystem;
 	}
@@ -140,6 +143,10 @@ public final class Game {
 	public static void reset() {
 		gameLoader = new BasicClassLoader();
 		eventSystem = new EventSystem();
+		
+		window.setEventSystem(eventSystem);
+		
+		System.gc();
 	}
 	
 	public static void setBuilder(Builder<?> builder) {
@@ -162,7 +169,6 @@ public final class Game {
 		ResourceLoader.addResourceLocation(new FileSystemLocation(assets));
 		ResourceLoader.addResourceLocation(new FileSystemLocation(root));
 		Game.GL = Renderer.get();
-		Game.reset();
 		Properties properties = new Properties();
 		try {
 			properties.load(new FileInputStream(new File(root, "config.game")));
@@ -173,7 +179,9 @@ public final class Game {
 		int width = Integer.parseInt(properties.getProperty("window.width"));
 		int height = Integer.parseInt(properties.getProperty("window.height"));
 		boolean fullscreen = Boolean.parseBoolean(properties.getProperty("window.fullscreen"));
-		window = new OpenGlWindow(properties.getProperty("window.title", "blub window"), width, height, fullscreen, Input.getInputKeyListener(), Input.getInputMouseListener());
+		window = new OpenGlWindow(properties.getProperty("window.title", "blub window"), width, height, fullscreen);
+		Input.init(window);
+		
 		Game.running = true;
 		Log.checkVerboseLogSetting();
 		Game.setup();
@@ -197,6 +205,7 @@ public final class Game {
 		}
 	}
 
+	@SuppressWarnings("exports")
 	public static Window getWindow() {
 		return window;
 	}

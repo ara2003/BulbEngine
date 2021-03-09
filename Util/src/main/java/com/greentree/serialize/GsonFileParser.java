@@ -6,6 +6,7 @@ import com.google.gson.Gson;
  * @author Arseny Latyshev
  *
  */
+@Deprecated
 public class GsonFileParser extends FileParser {
 
 	private final static Gson gson = new Gson();

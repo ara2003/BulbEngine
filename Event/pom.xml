@@ -19,6 +19,11 @@
 		    <version>${junit.version}</version>
 		    <scope>test</scope>
         </dependency>
+        <dependency>
+			<groupId>com.greentree.bulbengine</groupId>
+			<artifactId>util</artifactId>
+		   	<version>0.1-SNAPSHOT</version>
+        </dependency>
 	</dependencies>
 	
 	

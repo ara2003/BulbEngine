@@ -1,16 +1,11 @@
 package com.greentree.engine.component.ui;
 
-import java.io.IOException;
-import java.nio.CharBuffer;
-
 import com.greentree.engine.Game;
-import com.greentree.engine.GameComponent;
+import com.greentree.engine.bulbgl.Graphics;
 import com.greentree.engine.component.EditorData;
 import com.greentree.engine.component.RendenerComponent;
 import com.greentree.engine.component.Transform;
-import com.greentree.engine.gui.Graphics;
-import com.greentree.engine.input.MouseAdapter;
-import com.greentree.engine.opengl.rendener.SGL;
+import com.greentree.engine.input.listeners.MouseAdapter;
 
 public class Button extends RendenerComponent {
 	

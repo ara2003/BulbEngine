@@ -18,8 +18,11 @@ public class ColliderListenerManager extends ListenerManager {
 	}
 	
 	@Override
-	public void addListener(final Listener listener) {
-		if(listener instanceof ColliderListener) listeners.add((ColliderListener) listener);
+	public boolean addListener(final Listener listener) {
+		if(listener instanceof ColliderListener)
+			return listeners.add((ColliderListener) listener);
+		else
+			return false;
 	}
 	
 	@Override

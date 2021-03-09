@@ -17,11 +17,16 @@ public class ButtonListenerManager extends ListenerManager {
 		super(ButtonEvent.class);
 	}
 	
+	@SuppressWarnings("exports")
 	@Override
-	public void addListener(final Listener listener) {
-		if(listener instanceof ButtonAdapter) listeners.add((ButtonAdapter) listener);
+	public boolean addListener(final Listener listener) {
+		if(listener instanceof ButtonAdapter) 
+			return listeners.add((ButtonAdapter) listener);
+		else 
+			return false;
 	}
 	
+	@SuppressWarnings("exports")
 	@Override
 	public void event(final Event event) {
 		if(event instanceof ButtonEvent) {

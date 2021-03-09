@@ -1,13 +1,13 @@
 package com.greentree.engine.component;
 
 import com.greentree.engine.Game;
-import com.greentree.engine.necessarily;
+import com.greentree.engine.necessarilySystems;
 import com.greentree.engine.opengl.rendener.LineStripRenderer;
 import com.greentree.engine.opengl.rendener.SGL;
 import com.greentree.engine.system.RenderSystem;
 
 /** @author Arseny Latyshev */
-@necessarily({RenderSystem.class})
+@necessarilySystems({RenderSystem.class})
 public class Camera extends offsetGameComponent {
 	
 	private static final long serialVersionUID = 1L;

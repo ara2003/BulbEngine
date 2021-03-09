@@ -3,16 +3,16 @@ package com.greentree.engine.system;
 import org.joml.Vector2f;
 
 import com.greentree.engine.Game;
-import com.greentree.engine.Time;
-import com.greentree.engine.necessarily;
+import com.greentree.engine.necessarilySystems;
 import com.greentree.engine.component.PhisicComponent;
 import com.greentree.engine.component.collider.ColliderComponent;
 import com.greentree.engine.phisic.ColliderListener;
+import com.greentree.util.Time;
 
 /**
  *  @author Arseny Latyshev
  */
-@necessarily({ColliderSystem.class})
+@necessarilySystems({ColliderSystem.class})
 @Deprecated
 public class PhisicSystem extends GameSystem {
 	

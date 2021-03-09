@@ -8,8 +8,8 @@ import java.util.Random;
 import com.greentree.engine.Constants;
 import com.greentree.engine.Game;
 import com.greentree.engine.GameComponent;
-import com.greentree.engine.Log;
 import com.greentree.engine.component.ComponentList;
+import com.greentree.util.Log;
 
 public abstract class GameSystem extends Constants implements Serializable {
 	

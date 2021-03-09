@@ -3,7 +3,7 @@ package com.greentree.engine.geom2d;
 /**
  * @author Arseny Latyshev
  */
-public class AABB implements com.greentree.engine.geom.AABB<Point2D> {
+public class AABB implements com.greentree.engine.geom.AABB<AABB> {
 	
 	private final float3 min, max;
 	
@@ -64,18 +64,10 @@ public class AABB implements com.greentree.engine.geom.AABB<Point2D> {
 		return min.y;
 	}
 	@Override
-	public boolean isTouch(com.greentree.engine.geom.AABB<Point2D> other) {
-		if((a().x < other.b().x) || (b().x > other.a().x)) return false;
-		if((a().y < other.b().y) || (b().y > other.a().y)) return false;
+	public boolean isIntersect(AABB other) {
+		if(max.x < other.min.x || min.x > other.max.x) return false;
+		if(max.y < other.min.y || min.y > other.max.y) return false;
 		return true;
-	}
-	@Override
-	public Point2D a() {
-		return new Point2D(min.x, min.y);
-	}
-	@Override
-	public Point2D b() {
-		return new Point2D(max.x, max.y);
 	}
 }
 /**

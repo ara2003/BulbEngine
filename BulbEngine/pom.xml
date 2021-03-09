@@ -18,57 +18,7 @@
 		<java.version>14</java.version>
 		
 		<joml.version>1.9.24</joml.version>
-		<lwjgl.version>3.2.3</lwjgl.version>
 	</properties> 
-	
-	 <profiles>
-		<profile>
-			<id>linux_profile</id>
-			<activation>
-				<os>
-					<family>unix</family>
-				</os>
-			</activation>
-			<properties>
-				<os.family>linux</os.family>
-			</properties>
-		</profile>
-		<profile>
-			<id>windows_profile</id>
-			<activation>
-				<os>
-					<family>windows</family>
-				</os>
-			</activation>
-			<properties>
-				<os.family>windows</os.family>
-			</properties>
-		</profile>
-		<profile>
-			<id>osx_profile</id>
-			<activation>
-				<os>
-					<family>mac</family>
-				</os>
-			</activation>
-			<properties>
-				<os.family>mac</os.family>
-			</properties>
-		</profile>
-	</profiles>
-	
-	 <dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.lwjgl</groupId>
-				<artifactId>lwjgl-bom</artifactId>
-				<version>${lwjgl.version}</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-	
 	  
 	<dependencies>
 		<!--test-->
@@ -87,7 +37,7 @@
 		<!-- bulb engine -->
 		<dependency>
 			<groupId>com.greentree.bulbengine</groupId>
-			<artifactId>geometry</artifactId>
+			 <artifactId>geometry</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -95,33 +45,20 @@
 			<artifactId>util</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
-		<!-- basic -->
 		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl</artifactId>
-			<version>${lwjgl.version}</version>
-			<classifier>natives-${os.family}</classifier>
-		</dependency>
-		<!-- OpenGL -->
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-opengl</artifactId>
+			<groupId>com.greentree.bulbengine</groupId>
+			<artifactId>event</artifactId>
+			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-opengl</artifactId>
-			<version>${lwjgl.version}</version>
-			<classifier>natives-${os.family}</classifier>
+			<groupId>com.greentree.bulbengine</groupId>
+			<artifactId>graphic</artifactId>
+			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-glfw</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-glfw</artifactId>
-			<version>${lwjgl.version}</version>
-			<classifier>natives-${os.family}</classifier>
+			<groupId>com.greentree.bulbengine</groupId>
+			<artifactId>corutine</artifactId>
+			<version>0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
   

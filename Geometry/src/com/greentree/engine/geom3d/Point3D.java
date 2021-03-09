@@ -11,7 +11,7 @@ import com.greentree.engine.geom.Point;
  * @author Arseny Latyshev
  *
  */
-public class Point3D extends Shape3D implements Point<Point3D, Shape3D> {
+public class Point3D extends Shape3D implements Point<AABB, Point3D, Shape3D> {
 	
 	public float x, y, z;
 	
@@ -33,11 +33,11 @@ public class Point3D extends Shape3D implements Point<Point3D, Shape3D> {
 	}
 	
 	@Override
-	public float distanse(Point3D p) {
+	public float distanseSqr(Point3D p) {
 		float dx = p.x - x;
 		float dy = p.y - y;
 		float dz = p.z - z;
-		return (float) Math.sqrt((dx * dx) + (dy * dy) + (dz * dz));
+		return (dx * dx) + (dy * dy) + (dz * dz);
 	}
 	
 	
@@ -56,7 +56,11 @@ public class Point3D extends Shape3D implements Point<Point3D, Shape3D> {
 	}
 	
 	@Override
-	public boolean isTouch(Shape3D other) {
+	public boolean isIntersect(Shape3D other) {
 		return false;
+	}
+
+	@Override
+	public void moveTo(Point3D p) {
 	}
 }

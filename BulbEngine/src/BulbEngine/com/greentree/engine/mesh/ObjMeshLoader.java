@@ -5,8 +5,8 @@ import java.util.Scanner;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import com.greentree.engine.Log;
-import com.greentree.engine.loading.ResourceLoader;
+import com.greentree.loading.ResourceLoader;
+import com.greentree.util.Log;
 
 /**
  * @author Arseny Latyshev
@@ -77,7 +77,7 @@ public class ObjMeshLoader implements MeshLoaderI {
 					case "mtllib":
 					break;
 					default:
-						Log.superWarn(ObjMeshLoader.class + " Unknown Line: " + ln);
+						Log.warn(ObjMeshLoader.class + " Unknown Line: " + ln);
 						return null;
 				}
 			}

@@ -75,12 +75,13 @@ public class Rectangle extends Shape2D {
 	}
 	
 	@Override
-	public void rotate(Point2D point, double ang) {
+	public Shape2D rotate(Point2D point, double ang) {
 		rotation -= ang;
 		Point2D p = new Point2D(x, y);
 		p.rotate(point, ang);
 		x = p.getX();
 		y = p.getY();
+		return this;
 	}
 	
 	
@@ -103,5 +104,12 @@ public class Rectangle extends Shape2D {
 	@Override
 	public void transleteY(Translete t) {
 		y = t.translete(y);
+	}
+
+	@Override
+	public Shape2D add(float x, float y) {
+		this.x += x;
+		this.y += y;
+		return this;
 	}
 }
