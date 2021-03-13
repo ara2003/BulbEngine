@@ -12,7 +12,7 @@ import java.util.Map;
 import com.greentree.engine.Builder;
 import com.greentree.engine.Game;
 import com.greentree.engine.GameComponent;
-import com.greentree.engine.GameNode;
+import com.greentree.engine.GameObject;
 import com.greentree.engine.component.EditorData;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.component.collider.ColliderComponent;
@@ -70,7 +70,7 @@ public class BasicXMlBuilder extends Builder<XMLElement> {
 	}
 	
 	@Override
-	protected void createNode(GameNode node, XMLElement in) {
+	protected void createNode(GameObject node, XMLElement in) {
 		for(final XMLElement element : in.getChildrens("package")) packages.add(element.getContent() + ".");
 		for(final XMLElement element : in.getChildrens("object_prefab")) prefab
 				.put(element.getContent().substring(element.getContent().lastIndexOf('\\') + 1), element.getContent());
@@ -78,13 +78,13 @@ public class BasicXMlBuilder extends Builder<XMLElement> {
 			for(final XMLElement element1 : element.getChildrens("tag")) node.addTag(element1.getAttribute("name"));
 		for(final XMLElement el : in.getChildrens("system"))
 			node.addSystem(GameSystem.createSystem(Game.loadClass(el.getContent(), packages)));
-		List<Pair<GameNode, XMLElement>> bufer = new ArrayList<>();
+		List<Pair<GameObject, XMLElement>> bufer = new ArrayList<>();
 		for(final XMLElement element : in.getChildrens("object")) {
-			GameNode сhildren = new GameNode(getNodeName(element));
+			GameObject сhildren = new GameObject(getNodeName(element));
 			bufer.add(new Pair<>(сhildren, element));
 			node.addChildren(сhildren);
 		}
-		for(Pair<GameNode, XMLElement> pair : bufer) {
+		for(Pair<GameObject, XMLElement> pair : bufer) {
 			createNode(pair.first, pair.second);
 		}
 		for(final XMLElement element : in.getChildrens("component")) {
@@ -94,15 +94,15 @@ public class BasicXMlBuilder extends Builder<XMLElement> {
 		}
 	}
 	
-	private GameNode createNode(InputStream in) {
+	private GameObject createNode(InputStream in) {
 		XMLElement data = parse(in);
-		GameNode node = new GameNode(getNodeName(data));
+		GameObject node = new GameObject(getNodeName(data));
 		createNode(node, data);
 		return node;
 	}
 	
 	@Override
-	public GameNode createNode(String prefab) {
+	public GameObject createNode(String prefab) {
 		String get = this.prefab.get(prefab);
 		if(get != null) prefab = get;
 		return createNode(ResourceLoader.getResourceAsStream(prefab + ".node"));
@@ -136,7 +136,7 @@ public class BasicXMlBuilder extends Builder<XMLElement> {
 			e.printStackTrace();
 		}
 		if(GameComponent.class.isAssignableFrom(clazz)) {
-			List<GameNode> list = Game.getMainNode().findNodesWithName(xmlValue);
+			List<GameObject> list = Game.getMainNode().findNodesWithName(xmlValue);
 			if(!list.isEmpty()) return list.get(0).getComponent(clazz.asSubclass(GameComponent.class));
 		}
 		return null;

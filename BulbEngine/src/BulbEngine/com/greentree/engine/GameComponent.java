@@ -3,7 +3,6 @@ package com.greentree.engine;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import com.greentree.engine.component.collider.ColliderComponent;
 import com.greentree.engine.corutine.Corutine;
@@ -12,10 +11,9 @@ import com.greentree.util.Log;
 
 public abstract class GameComponent extends Constants implements Serializable {
 	
-	protected static final Random random = new Random();
 	private static final long serialVersionUID = 1L;
 	private transient boolean awake, start;
-	private GameNode node;
+	private GameObject node;
 	private transient final List<Corutine> corutines;
 	
 	protected GameComponent() {
@@ -42,7 +40,7 @@ public abstract class GameComponent extends Constants implements Serializable {
 	protected void awake() {
 	}
 	
-	final void awake(final GameNode object) {
+	final void awake(final GameObject object) {
 		if(awake) {
 			Log.error("second awake component " + object + ":" + this);
 			return;
@@ -56,14 +54,14 @@ public abstract class GameComponent extends Constants implements Serializable {
 		return getNode().getComponent(clazz);
 	}
 	
-	public GameNode getNode() {
+	public GameObject getNode() {
 		return node;
 	}
 	
 	protected void start() {
 	}
 	
-	final void start(final GameNode node) {
+	final void start(final GameObject node) {
 		if(start) {
 			Log.error("second start component " + this.node + ":" + this);
 			return;
@@ -92,6 +90,6 @@ public abstract class GameComponent extends Constants implements Serializable {
 	
 	public interface ColliderListenerFun {
 		
-		void event(GameNode object);
+		void event(GameObject object);
 	}
 }

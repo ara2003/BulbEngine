@@ -30,7 +30,7 @@ import com.greentree.util.Time;
 public final class Game {
 	
 	private static Builder<?> builder = new BasicXMlBuilder();
-	private static GameNode mainNode;
+	private static GameObject mainNode;
 	private static GameClassLoader gameLoader;
 	private static SGL GL;
 	private static final Object globalLock = new Object();
@@ -103,7 +103,7 @@ public final class Game {
 		return getMainNode().getSystem(RenderSystem.class).getMainCamera();
 	}
 	
-	public static GameNode getMainNode() {
+	public static GameObject getMainNode() {
 		return mainNode;
 	}
 	
@@ -135,7 +135,7 @@ public final class Game {
 		Log.info("Scene load : " + name);
 		final InputStream inputStream = ResourceLoader.getResourceAsStream(name + ".scene");
 		reset();
-		mainNode = new GameNode(getBuilder().getNodeName(inputStream));
+		mainNode = new GameObject(getBuilder().getNodeName(inputStream));
 		getBuilder().createNode(mainNode, inputStream);
 		mainNode.start();
 	}

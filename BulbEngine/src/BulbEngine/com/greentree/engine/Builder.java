@@ -5,12 +5,12 @@ import java.io.InputStream;
 /** @author Arseny Latyshev */
 public abstract class Builder<T> {
 	
-	public final void createNode(GameNode node, InputStream in) {
+	public final void createNode(GameObject node, InputStream in) {
 		createNode(node, parse(in));
 	}
 	
-	protected abstract void createNode(GameNode node, T in);
-	public abstract GameNode createNode(String prefab);
+	protected abstract void createNode(GameObject node, T in);
+	public abstract GameObject createNode(String prefab);
 	
 	public final String getNodeName(InputStream in) {
 		return getNodeName(parse(in));

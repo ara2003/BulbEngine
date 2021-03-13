@@ -20,7 +20,13 @@ public abstract class ColliderComponent extends offsetGameComponent {
 	}
 	
 	@Override
-	protected void start() {
+	protected void awake() {
+		super.awake();
+		shape.moveTo(getX(), getY());
+	}
+	
+	@Override
+	protected final void start() {
 		super.start();
 	}
 	

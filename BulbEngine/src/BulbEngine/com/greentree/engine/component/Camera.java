@@ -1,6 +1,7 @@
 package com.greentree.engine.component;
 
 import com.greentree.engine.Game;
+import com.greentree.engine.opengl.Renderable;
 import com.greentree.engine.opengl.rendener.Renderer;
 import com.greentree.engine.opengl.rendener.SGL;
 import com.greentree.engine.system.RenderSystem;
@@ -18,7 +19,7 @@ public class Camera extends offsetGameComponent {
 	
 	public void draw() {
 		translate();
-		Game.getMainNode().getAllComponents(RendenerComponent.class).forEach(RendenerComponent::render);
+		Game.getMainNode().getAllComponents(Renderable.class).forEach(e->((Renderable) e).render());
 		untranslate();
 	}
 	

@@ -1,17 +1,17 @@
 package com.greentree.util;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Set;
 
 /** @author Arseny Latyshev */
 public class ClassList<E> implements Collection<E> {
 	
-	private final Map<Class<?>, List<?>> map;
+	private final Map<Class<?>, Set<?>> map;
 	
 	public ClassList() {
 		map = new HashMap<>();
@@ -23,16 +23,17 @@ public class ClassList<E> implements Collection<E> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private boolean add(Class<?> clazz, E e) {
-		if(clazz == null) return false;
-		List<Object> list = (List<Object>) get(clazz);
-		list.add(e);
-		return add(clazz.getSuperclass(), e);
+	private void add(Class<?> clazz, Object e) {
+		if(clazz == null) return;
+		((Set<Object>)get(clazz)).add(e);
+		add(clazz.getSuperclass(), e);
+		for(Class<?> interfase : clazz.getInterfaces())add(interfase, e);
 	}
 	
 	@Override
 	public boolean add(E object) {
-		return add(object.getClass(), object);
+		add(object.getClass(), object);
+		return true;
 	}
 	
 	@Override
@@ -64,15 +65,15 @@ public class ClassList<E> implements Collection<E> {
 		return map.containsKey(clazz);
 	}
 	
-	@SuppressWarnings({"hiding","unchecked"})
-	public <E> List<E> get(Class<E> c) {
-		if(c == null) return (List<E>) get(Object.class);
-		List<E> list = (List<E>) map.get(c);
-		if(list == null) {
-			map.put(c, new ArrayList<>());
+	@SuppressWarnings("unchecked")
+	public <T> Set<? extends T> get(Class<T> c) {
+		if(c == null) return (Set<T>) get(Object.class);
+		Set<T> set = (Set<T>) map.get(c);
+		if(set == null) {
+			map.put(c, new HashSet<>());
 			return get(c);
 		}
-		return list;
+		return set;
 	}
 	
 	@Override
@@ -83,33 +84,22 @@ public class ClassList<E> implements Collection<E> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Iterator<E> iterator() {
-		return ((List<E>) get(Object.class)).iterator();
-	}
-	
-	public List<?> remove(Class<?> c) {
-		List<?> list = map.remove(Objects.requireNonNull(c));
-		remove(c, c);
-		return list;
-	}
-	
-	private void remove(Class<?> node, Class<?> clazz) {
-		if(node == null) return;
-		List<?> list = get(node);
-		list.removeIf(c->c.getClass().equals(clazz));
-		remove(node.getSuperclass(), clazz);
+		return ((Set<E>) get(Object.class)).iterator();
 	}
 	
 	@Override
 	public boolean remove(Object obj) {
-		return remove(obj, obj.getClass());
+		boolean res = contains(obj);
+		remove(obj.getClass(), obj);
+		return res;
 	}
 	
-	private boolean remove(Object obj, Class<?> clazz) {
-		List<?> list = get(clazz);
-		if(!list.contains(obj)) return false;
-		list.remove(obj);
-		if(clazz.getSuperclass() != null) remove(obj, clazz.getSuperclass());
-		return true;
+	@SuppressWarnings("unchecked")
+	private void remove(Class<?> clazz, Object obj) {
+		if(clazz == null)return;
+		((Set<Object>)get(clazz)).remove(obj);
+		remove(clazz.getSuperclass(), obj);
+		for(Class<?> interfase : clazz.getInterfaces())remove(interfase, obj);
 	}
 	
 	@SuppressWarnings("unchecked")
