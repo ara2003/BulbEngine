@@ -125,6 +125,10 @@ public class GLFWWindow extends Window {
 			case "ESCAPE" -> GLFW.GLFW_KEY_ESCAPE;
 			case "ESC" -> GLFW.GLFW_KEY_ESCAPE;
 			case "SPACE" -> GLFW.GLFW_KEY_SPACE;
+			case "UP" -> GLFW.GLFW_KEY_UP;
+			case "DOWN" -> GLFW.GLFW_KEY_DOWN;
+			case "LEFT" -> GLFW.GLFW_KEY_LEFT;
+			case "RIGHT" -> GLFW.GLFW_KEY_RIGHT;
 			default -> -1;
 		};
 	}
