@@ -26,7 +26,7 @@ public final class Transform extends GameComponent {
 	public float distanse(final Transform t) {
 		final float x = this.x - t.x;
 		final float y = this.y - t.y;
-		return (float) Math.sqrt((x * x) + (y * y));
+		return (float) Math.sqrt(x * x + y * y);
 	}
 	
 	@Override
@@ -34,7 +34,7 @@ public final class Transform extends GameComponent {
 		if(obj instanceof Transform) {
 			if(obj == this) return true;
 			final Transform t = (Transform) obj;
-			return (x == t.x) && (y == t.y);
+			return x == t.x && y == t.y;
 		}
 		return false;
 	}
@@ -47,8 +47,12 @@ public final class Transform extends GameComponent {
 		return y - lasty;
 	}
 	
+	public Vector2f getVector() {
+		return new Vector2f(x, y);
+	}
+	
 	public void setLocation(double x, double y) {
-		setLocation((float)x, (float)y);
+		setLocation((float) x, (float) y);
 	}
 	
 	public void setLocation(final float x, final float y) {
@@ -67,9 +71,4 @@ public final class Transform extends GameComponent {
 		lastx = x;
 		lasty = y;
 	}
-	
-	public Vector2f getVector() {
-		return new Vector2f(x, y);
-	}
-	
 }

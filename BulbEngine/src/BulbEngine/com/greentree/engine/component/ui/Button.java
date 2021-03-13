@@ -18,17 +18,21 @@ public class Button extends RendenerComponent {
 	private float width, height;
 	
 	private boolean click0(final int button, final int x, final int y) {
-		if(button != 0)return false;
-		return (x > (position.x - (width / 2) - border)) && (x < (position.x + (width / 2) + border)) && (y > (position.y - (height / 2) - border)) && (y < (position.y + (height / 2) + border));
+		if(button != 0) return false;
+		return x > position.x - width / 2 - border && x < position.x + width / 2 + border
+				&& y > position.y - height / 2 - border && y < position.y + height / 2 + border;
+	}
+	
+	@Override
+	public void render() {
+		Graphics.drawString(text, position.x - width / 2, position.y - height / 2);
 	}
 	
 	@Override
 	public void start() {
 		width = Graphics.getFont().getWidth(text);
 		height = Graphics.getFont().getHeight(text);
-		
 		position = getComponent(Transform.class);
-		
 		Game.addListener(new MouseAdapter() {
 			
 			private static final long serialVersionUID = 1L;
@@ -38,11 +42,5 @@ public class Button extends RendenerComponent {
 				if(click0(button, x, y)) Game.event(new ButtonEvent(Button.this, button));
 			}
 		});
-	}
-
-	@Override
-	public void render() {
-		Graphics.drawString(text, position.x - (width / 2), position.y - (height / 2));
-		
 	}
 }

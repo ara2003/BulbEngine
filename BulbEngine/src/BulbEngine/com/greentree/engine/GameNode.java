@@ -2,11 +2,13 @@ package com.greentree.engine;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 
 import com.greentree.engine.component.ComponentList;
 import com.greentree.engine.system.GameSystem;
+import com.greentree.engine.system.necessarilySystems;
 import com.greentree.util.ClassList;
 import com.greentree.util.ClassUtil;
 import com.greentree.util.Log;
@@ -20,6 +22,7 @@ public final class GameNode implements Serializable {
 	private final String name;
 	private final List<String> tags;
 	private final List<GameNode> nodes;
+	private final List<GameNode> nodeToDeletes;
 	private GameNode parent;
 	
 	public GameNode(String name) {
@@ -27,6 +30,7 @@ public final class GameNode implements Serializable {
 		myComponents = new ClassList<>();
 		allTreeComponents = new ClassList<>();
 		nodes = new ArrayList<>();
+		nodeToDeletes = new ArrayList<>();
 		tags = new ArrayList<>();
 		this.name = name;
 	}
@@ -69,8 +73,7 @@ public final class GameNode implements Serializable {
 	}
 	
 	public void destroy(GameNode node) {
-		nodes.remove(node);
-		allTreeComponents.removeAll(node.getAllComponents(null));
+		nodeToDeletes.add(node);
 	}
 	
 	public List<GameNode> findNodes(Predicate<GameNode> predicate) {
@@ -157,41 +160,49 @@ public final class GameNode implements Serializable {
 	}
 	
 	void start() {
-		for(final GameComponent gc : myComponents) gc.start(this);
 		for(final GameComponent gc : myComponents) gc.awake(this);
-		for(final GameNode node : nodes) node.start();
 		for(final GameSystem system : systems) system.init();
+		if(!Validator.checkRequireComponent(myComponents)) Log.error("component "
+				+ Validator.getBrokRequireComponentClass(myComponents) + " require is not fulfilled \n" + this);
+		for(final GameComponent gc : myComponents) gc.start(this);
+		for(final GameNode node : nodes) node.start();
 	}
 	
 	@Override
 	public String toString() {
 		StringBuilder res = new StringBuilder("[object(").append(name).append(")@").append(hashCode());
 		if(!myComponents.isEmpty()) {
-			String r = "\ncomponents:";
-			for(Object obj : myComponents) r += "\n" + obj.toString();
-			res.append(r.replace("\n", "\n\t"));
+			StringBuilder r = new StringBuilder("\ncomponents:");
+			for(Object obj : myComponents) r.append("\n").append(obj.toString());
+			res.append(r.toString().replace("\n", "\n\t"));
 		}
 		if(!systems.isEmpty()) {
-			String r = "\nsystems:";
-			for(Object obj : systems) r += "\n" + obj.toString();
-			res.append(r.replace("\n", "\n\t"));
+			StringBuilder r = new StringBuilder("\nsystems:");
+			for(Object obj : systems) r.append("\n").append(obj.toString());
+			res.append(r.toString().replace("\n", "\n\t"));
 		}
 		if(!nodes.isEmpty()) {
-			String r = "\nnodes:";
-			for(Object obj : nodes) r += "\n" + obj.toString();
-			res.append(r.replace("\n", "\n\t"));
+			StringBuilder r = new StringBuilder("\nnodes:");
+			for(Object obj : nodes) r.append("\n").append(obj.toString());
+			res.append(r.toString().replace("\n", "\n\t"));
 		}
 		return res.toString();
 	}
 	
 	public void tryAddNecessarily(Class<?> clazz) {
-		for(necessarilySystems an : ClassUtil.getAnnotations(clazz, necessarilySystems.class)) for(Class<?> cl : an.value()) {
-			GameSystem system = GameSystem.createSystem(cl);
-			systems.add(system);
-		}
+		for(necessarilySystems an : ClassUtil.getAllAnnotations(clazz, necessarilySystems.class))
+			for(Class<?> cl : an.value()) {
+				GameSystem system = GameSystem.createSystem(cl);
+				systems.add(system);
+			}
 	}
 	
 	public void update() {
+		for(final GameNode nodeToDelete : nodeToDeletes) {
+			nodes.remove(nodeToDelete);
+			allTreeComponents.removeAll(nodeToDelete.getAllComponents(null));
+			updateAllTreeComponents();
+		}
 		for(final GameSystem system : systems) system.execute();
 		for(final GameNode node : nodes) node.update();
 		for(final GameComponent c : myComponents) c.update0();

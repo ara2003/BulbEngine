@@ -1,9 +1,9 @@
 package com.greentree.engine.component.collider;
 
-import com.greentree.engine.necessarilySystems;
 import com.greentree.engine.component.offsetGameComponent;
 import com.greentree.engine.geom2d.Shape2D;
 import com.greentree.engine.system.ColliderSystem;
+import com.greentree.engine.system.necessarilySystems;
 
 @necessarilySystems({ColliderSystem.class})
 public abstract class ColliderComponent extends offsetGameComponent {

@@ -46,13 +46,11 @@ public class Capsule extends Shape2D {
 	
 	@Override
 	public List<Point2D> getPoints() {
-		Vector2f focus_vec = focus2.getRadiusVector().add(focus1.getRadiusVector().mul(-1));
-		focus_vec.normalize(radius);
+		Vector2f focus_vec = focus2.getRadiusVector().sub(focus1.getRadiusVector()).normalize(radius);
 		focus_vec.mul(new Matrix2f().rotate((float) (Math.PI / 2)));
 		final List<Point2D> p = new ArrayList<>(PointInCapsule);
 		p.add(new Point2D(focus1, focus_vec));
-		Matrix2f mat = new Matrix2f();
-		mat.rotate((float) (Math.PI / 2));
+		Matrix2f mat = new Matrix2f().rotate((float) (2 * Math.PI / PointInCapsule));
 		for(int i = 0; i < (PointInCapsule / 2); i++) {
 			focus_vec.mul(mat);
 			p.add(new Point2D(focus1, focus_vec));

@@ -165,8 +165,8 @@ public class TextureImpl implements Texture {
 	@Override
 	public void setTextureFilter(final int textureFilter) {
 		bind();
-		TextureImpl.GL.glTexParameteri(target, 10241, textureFilter);
-		TextureImpl.GL.glTexParameteri(target, 10240, textureFilter);
+		TextureImpl.GL.glTexParameteri(target, SGL.GL_TEXTURE_MIN_FILTER, textureFilter);
+		TextureImpl.GL.glTexParameteri(target, SGL.GL_TEXTURE_MAG_FILTER, textureFilter);
 	}
 	
 	public void setTextureHeight(final int texHeight) {

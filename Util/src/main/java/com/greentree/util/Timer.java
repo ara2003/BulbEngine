@@ -1,22 +1,19 @@
-package com.greentree.engine;
+package com.greentree.util;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.greentree.util.Log;
-import com.greentree.util.Time;
-
 /** @author Arseny Latyshev */
 public class Timer {
 	
-	private final Map<Integer, Long> timers;
+	private final Map<Integer, Float> timers;
 	
 	public Timer() {
 		timers = new HashMap<>();
 	}
 	
-	public long finish(final int id) {
-		final Long l = timers.remove(id);
+	public float finish(final int id) {
+		final Float l = timers.remove(id);
 		if(l == null) {
 			Log.warn("Timer " + id + " alive Timers are not found");
 			return 0;

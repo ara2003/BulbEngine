@@ -1,4 +1,4 @@
-package com.greentree.engine;
+package com.greentree.engine.system;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
@@ -6,7 +6,7 @@ import static java.lang.annotation.RetentionPolicy.*;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import com.greentree.engine.system.GameSystem;
+import com.greentree.engine.BasicClassLoader;
 
 /** @author Arseny Latyshev
  * @see BasicClassLoader */

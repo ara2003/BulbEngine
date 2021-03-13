@@ -23,6 +23,6 @@ public final class Text extends GameComponent {
 	@Override
 	public void update() {
 		Graphics.setColor(Color.darkGray);
-		Graphics.drawString(text, t.x - (w / 2), t.y - (h / 2));
+		Graphics.drawString(text, t.x - w / 2, t.y - h / 2);
 	}
 }

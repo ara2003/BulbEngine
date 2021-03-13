@@ -12,5 +12,4 @@ public final class Matirial {
 	public String toString() {
 		return "[Matirial [elasticity=" + elasticity + "]]";
 	}
-	
 }

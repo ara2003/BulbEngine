@@ -4,11 +4,11 @@ import com.greentree.util.Time;
 
 public final class WaitForSeconds implements CustomResemInstruction {
 	
-	private final long seconds;
-	private long time = 0;
+	private final float seconds;
+	private float time = 0;
 	
 	public WaitForSeconds(final float seconds) {
-		this.seconds = (long) (seconds * Time.TimePerSecond);
+		this.seconds = seconds;
 	}
 	
 	@Override
@@ -16,6 +16,7 @@ public final class WaitForSeconds implements CustomResemInstruction {
 		if(time == 0) time = Time.getTime() + seconds;
 		if(time < Time.getTime()) {
 			time = Time.getTime() + seconds;
+			time = 0;
 			return false;
 		}
 		return true;
@@ -23,6 +24,6 @@ public final class WaitForSeconds implements CustomResemInstruction {
 	
 	@Override
 	public String toString() {
-		return "WaitForSeconds [seconds=" + (seconds*1f / Time.TimePerSecond) + "]";
+		return "WaitForSeconds [seconds=" + (seconds) + "]";
 	}
 }

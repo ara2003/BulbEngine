@@ -4,9 +4,8 @@ public final class Time {
 	
 	private volatile static float delta;
 	private volatile static int fps, fps_;
-	private volatile static long lastFream, lastFPS, start;
-	private volatile static int fream;
-	public static final long TimePerSecond = 1_000_000_000;
+	private volatile static float lastFream, lastFPS, start;
+	private static final long TimePerSecond = 1_000_000_000;
 	static {
 		Time.start = System.nanoTime();
 	}
@@ -22,21 +21,16 @@ public final class Time {
 		return Time.fps;
 	}
 	
-	public static int getFream() {
-		return fream;
-	}
-	
-	public static long getTime() {
-		return System.nanoTime() - Time.start;
+	public static float getTime() {
+		return (System.nanoTime() - Time.start) / TimePerSecond;
 	}
 	
 	public static void updata() {
-		fream++;
-		final long time = Time.getTime();
-		Time.delta = (time - Time.lastFream) * 1000f / TimePerSecond;
+		final float time = Time.getTime();
+		Time.delta = time - Time.lastFream;
 		Time.lastFream = time;
 		Time.fps_++;
-		if(Time.lastFPS + TimePerSecond <= time) {
+		if(Time.lastFPS + 1 <= time) {
 			Time.fps = Time.fps_;
 			Time.fps_ = 0;
 			Time.lastFPS = time;

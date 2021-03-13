@@ -19,12 +19,12 @@ public final class Log {
 	}
 	
 	public static void init(File folder) {
-		if(!folder.isDirectory())throw new IllegalArgumentException("folder is not directory");
 		if(!folder.exists())throw new IllegalArgumentException("folder is not exists");
+		if(!folder.isDirectory())throw new IllegalArgumentException("folder is not directory");
 		try {
 			log = new PrintStream(new File(folder, "Log.txt"));
 			bedug = new PrintStream(new File(folder, "Debug.txt"));
-			err = new PrintStream(new File(folder, "Error.txt"));
+			err = System.err;
 		}catch(FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -50,16 +50,17 @@ public final class Log {
 	
 	public static void error(final String message) {
 		Log.err.println(new Date() + " ERROR:" + message);
+		System.exit(-1);
 	}
 	
 	public static void error(final String message, final Throwable e) {
 		Log.err.println(new Date() + " ERROR:" + message);
-		Log.error(e);
+		e.printStackTrace(Log.err);
+		System.exit(-1);
 	}
 	
 	public static void error(final Throwable e) {
-		Log.log.println(new Date() + " ERROR:" + e.getMessage());
-		e.printStackTrace(Log.err);
+		error(e.getMessage(), e);
 	}
 	
 	public static void info(final String message) {

@@ -44,7 +44,7 @@ public class BasicXMlBuilder extends Builder<XMLElement> {
 				.loadClass(xmlElement.getAttribute("type"), packages);
 		try {
 			GameComponent component = clazz.getConstructor().newInstance();
-			for(final Field field : ClassUtil.getAllFields(component.getClass()))
+			for(final Field field : ClassUtil.getAllFields(component.getClass())) {
 				if(field.getAnnotation(EditorData.class) != null) try {
 					String xmlValue = null;
 					{
@@ -61,6 +61,7 @@ public class BasicXMlBuilder extends Builder<XMLElement> {
 				}catch(IllegalArgumentException | IllegalAccessException e) {
 					e.printStackTrace();
 				}
+			}
 			return component;
 		}catch(final Exception e) {
 			Log.warn("not create component " + xmlElement.getAttribute("type"), e);
@@ -75,8 +76,8 @@ public class BasicXMlBuilder extends Builder<XMLElement> {
 				.put(element.getContent().substring(element.getContent().lastIndexOf('\\') + 1), element.getContent());
 		for(final XMLElement element : in.getChildrens("tags"))
 			for(final XMLElement element1 : element.getChildrens("tag")) node.addTag(element1.getAttribute("name"));
-		for(final XMLElement e : in.getChildrens("system"))
-			node.addSystem(GameSystem.createSystem(Game.loadClass(e.getContent(), packages)));
+		for(final XMLElement el : in.getChildrens("system"))
+			node.addSystem(GameSystem.createSystem(Game.loadClass(el.getContent(), packages)));
 		List<Pair<GameNode, XMLElement>> bufer = new ArrayList<>();
 		for(final XMLElement element : in.getChildrens("object")) {
 			GameNode сhildren = new GameNode(getNodeName(element));
@@ -104,7 +105,7 @@ public class BasicXMlBuilder extends Builder<XMLElement> {
 	public GameNode createNode(String prefab) {
 		String get = this.prefab.get(prefab);
 		if(get != null) prefab = get;
-		return createNode(ResourceLoader.getResourceAsStream(prefab + ".obj"));
+		return createNode(ResourceLoader.getResourceAsStream(prefab + ".node"));
 	}
 	
 	@Override

@@ -10,8 +10,8 @@ import java.util.Properties;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.greentree.engine.bulbgl.Color;
+import com.greentree.engine.bulbgl.GLFWWindow;
 import com.greentree.engine.bulbgl.Graphics;
-import com.greentree.engine.bulbgl.OpenGlWindow;
 import com.greentree.engine.bulbgl.Window;
 import com.greentree.engine.component.Camera;
 import com.greentree.engine.editor.xml.BasicXMlBuilder;
@@ -51,11 +51,6 @@ public final class Game {
 	public static void event(@SuppressWarnings("exports") Event event) {
 		tryAddNecessarily(event.getClass());
 		getEventSystem().event(event);
-	}
-	
-	public static void eventNoQueue(@SuppressWarnings("exports") Event event) {
-		tryAddNecessarily(event.getClass());
-		getEventSystem().eventNoQueue(event);
 	}
 	
 	public static void exit() {
@@ -116,6 +111,11 @@ public final class Game {
 		return Game.root;
 	}
 	
+	@SuppressWarnings("exports")
+	public static Window getWindow() {
+		return window;
+	}
+	
 	public static Class<?> loadClass(final String name) {
 		return loadClass(name, new ArrayList<>());
 	}
@@ -126,7 +126,7 @@ public final class Game {
 			tryAddNecessarily(clazz);
 			return clazz;
 		}catch(final ClassNotFoundException e) {
-			Log.error("class not found " + e.getMessage());
+			Log.error("class not found " + name, e);
 		}
 		return null;
 	}
@@ -143,9 +143,7 @@ public final class Game {
 	public static void reset() {
 		gameLoader = new BasicClassLoader();
 		eventSystem = new EventSystem();
-		
 		window.setEventSystem(eventSystem);
-		
 		System.gc();
 	}
 	
@@ -179,14 +177,12 @@ public final class Game {
 		int width = Integer.parseInt(properties.getProperty("window.width"));
 		int height = Integer.parseInt(properties.getProperty("window.height"));
 		boolean fullscreen = Boolean.parseBoolean(properties.getProperty("window.fullscreen"));
-		window = new OpenGlWindow(properties.getProperty("window.title", "blub window"), width, height, fullscreen);
+		window = new GLFWWindow(properties.getProperty("window.title", "blub window"), width, height, fullscreen);
 		Input.init(window);
-		
 		Game.running = true;
 		Log.checkVerboseLogSetting();
 		Game.setup();
 		loadScene(properties.getProperty("scene.first"));
-		
 		while(Game.running) {
 			synchronized(Game.globalLock) {
 				Game.gameLoop();
@@ -203,10 +199,5 @@ public final class Game {
 		}catch(final NullPointerException e) {
 			if(!necessarilyQuery.contains(clazz)) necessarilyQuery.add(clazz);
 		}
-	}
-
-	@SuppressWarnings("exports")
-	public static Window getWindow() {
-		return window;
 	}
 }

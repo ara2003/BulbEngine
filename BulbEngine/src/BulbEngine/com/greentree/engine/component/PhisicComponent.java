@@ -3,12 +3,12 @@ package com.greentree.engine.component;
 import org.joml.Vector2f;
 
 import com.greentree.engine.GameComponent;
-import com.greentree.engine.necessarilySystems;
 import com.greentree.engine.component.collider.ColliderComponent;
 import com.greentree.engine.geom2d.GeomUtil2D;
 import com.greentree.engine.geom2d.Point2D;
 import com.greentree.engine.phisic.Matirial;
 import com.greentree.engine.system.PhisicSystem;
+import com.greentree.engine.system.necessarilySystems;
 import com.greentree.util.Time;
 
 @RequireComponent({Transform.class,ColliderComponent.class})
@@ -28,14 +28,13 @@ public class PhisicComponent extends GameComponent {
 	private Vector2f velosity = new Vector2f();
 	private float rotationVelosity = 0f;
 	
-	public void additionVelosity(Vector2f vec) {
-		velosity.add(vec);
-	}
-	
 	public void additionVelosity(Point2D p, Vector2f float2f) {
 		rotationVelosity += float2f.dot(normalTo(p));
-		
 		setVelosity(float2f.add(velosity));
+	}
+	
+	public void additionVelosity(Vector2f vec) {
+		velosity.add(vec);
 	}
 	
 	public float getElasticity() {
@@ -59,14 +58,13 @@ public class PhisicComponent extends GameComponent {
 	}
 	
 	public void setVelosity(Vector2f velosity) {
-		if(type != Type.STATIC)
-			this.velosity = velosity;
+		if(type != Type.STATIC) this.velosity = velosity;
 	}
 	
 	@Override
 	public void start() {
 		position = getComponent(Transform.class);
-		if((matirial.getElasticity() < 0) || (matirial.getElasticity() >= 1)) {
+		if(matirial.getElasticity() < 0 || matirial.getElasticity() >= 1) {
 			throw new IllegalArgumentException("elasticity value " + matirial.getElasticity() + " not corect");
 		}
 	}

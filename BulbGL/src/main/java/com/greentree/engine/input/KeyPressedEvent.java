@@ -1,14 +1,14 @@
 package com.greentree.engine.input;
 
 import com.greentree.engine.event.Event;
+import com.greentree.engine.event.EventSystem;
 
 
 /**
  * @author Arseny Latyshev
  *
  */
-public class KeyPressedEvent implements Event {
-	
+public final class KeyPressedEvent implements Event {
 	private static final long serialVersionUID = 1L;
 	private int key = 0;
 	
@@ -16,13 +16,17 @@ public class KeyPressedEvent implements Event {
 		this.key = key;
 	}
 	
-	public int getCode() {
+	public int getKey() {
 		return key;
 	}
-
-	public KeyPressedEvent reset(int key) {
-		this.key = key;
-		return this;
+	
+	public static KeyPressedEvent getInstanse(EventSystem eventSystem, final int key) {
+		KeyPressedEvent event = eventSystem.get(KeyPressedEvent.class);
+		if(event == null)
+			event = new KeyPressedEvent(key);
+		else 
+			event.key = key;
+		return event;
 	}
 	
 }

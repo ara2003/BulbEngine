@@ -19,7 +19,7 @@ public class ColliderSystem extends GameSystem {
 		final Collection<ColliderComponent> colliderComponent = getComponents(ColliderComponent.class);
 		for(final ColliderComponent a : colliderComponent) {
 			for(final ColliderComponent b : colliderComponent) {
-				if(a == b)break;//break to process one pair once
+				if(a == b) break;//break to process one pair once
 				if(a.getShape().isIntersect(b.getShape())) {//collision
 					if(!historyLastFream.remove(a, b) && !historyLastFream.remove(b, a))
 						Game.event(new ColliderEvent(EventType.enter, a, b));

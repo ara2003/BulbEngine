@@ -1,47 +1,33 @@
 package com.greentree.engine.phisic;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.greentree.engine.event.Event;
-import com.greentree.engine.event.Listener;
-import com.greentree.engine.event.ListenerManager;
+import com.greentree.engine.event.OneListenerMutiEventListenerManager;
 
-public class ColliderListenerManager extends ListenerManager {
+public class ColliderListenerManager extends OneListenerMutiEventListenerManager<ColliderListener> {
 	
 	private static final long serialVersionUID = 1L;
-	private final List<ColliderListener> listeners = new ArrayList<>();
 	
-	@SuppressWarnings("unchecked")
 	public ColliderListenerManager() {
-		super(ColliderEvent.class);
+		super(ColliderListener.class, ColliderEvent.class);
 	}
 	
 	@Override
-	public boolean addListener(final Listener listener) {
-		if(listener instanceof ColliderListener)
-			return listeners.add((ColliderListener) listener);
-		else
-			return false;
-	}
-	
-	@Override
-	public void event(final Event event) {
+	public void event0(final Event event) {
 		if(event instanceof ColliderEvent) {
 			final ColliderEvent colliderEvent = (ColliderEvent) event;
 			switch(colliderEvent.getEventType()) {
 				case enter:
 					for(final ColliderListener lis : listeners)
 						lis.CollisionEnter(colliderEvent.getObject1(), colliderEvent.getObject2());
-					break;
+				break;
 				case exit:
 					for(final ColliderListener lis : listeners)
 						lis.CollisionExit(colliderEvent.getObject1(), colliderEvent.getObject2());
-					break;
+				break;
 				case stay:
 					for(final ColliderListener lis : listeners)
 						lis.CollisionStay(colliderEvent.getObject1(), colliderEvent.getObject2());
-					break;
+				break;
 			}
 		}
 	}

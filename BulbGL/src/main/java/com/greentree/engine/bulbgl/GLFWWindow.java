@@ -16,17 +16,18 @@ import org.lwjgl.system.MemoryUtil;
 import com.greentree.engine.event.EventSystem;
 import com.greentree.engine.input.KeyPressedEvent;
 import com.greentree.engine.input.KeyRepaeasedEvent;
-import com.greentree.engine.input.MouseEvent;
+import com.greentree.engine.input.MouseClickEvent;
+import com.greentree.engine.input.MovedMouseEvent;
 
 /** @author Arseny Latyshev */
-public class OpenGlWindow extends Window {
+public class GLFWWindow extends Window {
 	
 	private final long id;
 	private int mouseY, mouseX;
 	private boolean mousePress;
 	private EventSystem eventSystem;
 	
-	public OpenGlWindow(String title, int width, int height, boolean fullscreen) {
+	public GLFWWindow(String title, int width, int height, boolean fullscreen) {
 		GLFW.glfwInit();
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
@@ -68,6 +69,8 @@ public class OpenGlWindow extends Window {
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 		glClearColor(.1f, .1f, .2f, 1);
 		glfwShowWindow(id);
+		
+		glfwFocusWindow(id);
 	}
 	
 	@Override
@@ -120,6 +123,7 @@ public class OpenGlWindow extends Window {
 			case "N" -> GLFW.GLFW_KEY_N;
 			case "M" -> GLFW.GLFW_KEY_M;
 			case "ESCAPE" -> GLFW.GLFW_KEY_ESCAPE;
+			case "ESC" -> GLFW.GLFW_KEY_ESCAPE;
 			case "SPACE" -> GLFW.GLFW_KEY_SPACE;
 			default -> -1;
 		};
@@ -155,63 +159,32 @@ public class OpenGlWindow extends Window {
 	}
 	
 	private void setInput() {
-		glfwSetKeyCallback(id, new GLFWKeyCallback() {
-			
+		GLFW.glfwSetKeyCallback(id, new GLFWKeyCallback() {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
-				if(action != 0) {
-					KeyPressedEvent event = eventSystem.get(KeyPressedEvent.class);
-					if(event == null) eventSystem.event(new KeyPressedEvent(key));
-					else {
-						eventSystem.event(event.reset(key));
-					}
+				if(action != GLFW.GLFW_RELEASE) {
+					eventSystem.event(KeyPressedEvent.getInstanse(eventSystem, key));
 				}else {
-					KeyRepaeasedEvent event = eventSystem.get(KeyRepaeasedEvent.class);
-					if(event == null) eventSystem.event(new KeyRepaeasedEvent(key));
-					else {
-						eventSystem.event(event.reset(key));
-					}
+					eventSystem.event(KeyRepaeasedEvent.getInstanse(eventSystem, key));
 				}
 			}
 		});
 		GLFW.glfwSetCursorPosCallback(id, (window, xpos, ypos)-> {
 			int x = (int) xpos;
 			int y = (int) ypos;
-			if(mousePress) {
-				MouseEvent event = eventSystem.get(MouseEvent.class);
-				if(event == null)
-					eventSystem.event(new MouseEvent(MouseEvent.EventType.mouseDragged, x, y, mouseX, mouseY));
-				else {
-					eventSystem.event(event.reset(MouseEvent.EventType.mouseDragged, x, y, mouseX, mouseY));
-				}
-			}else {
-				MouseEvent event = eventSystem.get(MouseEvent.class);
-				if(event == null)
-					eventSystem.event(new MouseEvent(MouseEvent.EventType.mouseMoved, x, y, mouseX, mouseY));
-				else {
-					eventSystem.event(event.reset(MouseEvent.EventType.mouseMoved, x, y, mouseX, mouseY));
-				}
-			}
+			if(mousePress) 
+				eventSystem.event(MovedMouseEvent.getInstanse(eventSystem, MovedMouseEvent.EventType.mouseDragged, x, y, mouseX, mouseY));
+			else
+				eventSystem.event(MovedMouseEvent.getInstanse(eventSystem, MovedMouseEvent.EventType.mouseMoved, x, y, mouseX, mouseY));
 			mouseX = x;
 			mouseY = y;
 		});
 		GLFW.glfwSetMouseButtonCallback(id, (window, button, action, mods)-> {
 			mousePress = action == GLFW.GLFW_PRESS;
-			if(mousePress) {
-				MouseEvent event = eventSystem.get(MouseEvent.class);
-				if(event == null)
-					eventSystem.event(new MouseEvent(MouseEvent.EventType.mousePressed, button, mouseX, mouseY));
-				else {
-					eventSystem.event(event.reset(MouseEvent.EventType.mousePressed, button, mouseX, mouseY));
-				}
-			}else {
-				MouseEvent event = eventSystem.get(MouseEvent.class);
-				if(event == null)
-					eventSystem.event(new MouseEvent(MouseEvent.EventType.mouseReleased, button, mouseX, mouseY));
-				else {
-					eventSystem.event(event.reset(MouseEvent.EventType.mouseReleased, button, mouseX, mouseY));
-				}
-			}
+			if(mousePress)
+				eventSystem.event(MouseClickEvent.getInstanse(eventSystem, MouseClickEvent.EventType.mousePressed, button, mouseX, mouseY));
+			else
+				eventSystem.event(MouseClickEvent.getInstanse(eventSystem, MouseClickEvent.EventType.mouseReleased, button, mouseX, mouseY));
 		});
 	}
 	

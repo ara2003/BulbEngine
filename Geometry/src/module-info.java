@@ -6,5 +6,6 @@ module bulbengine.geometry {
 
 	exports com.greentree.engine.geom2d;
 	exports com.greentree.engine.geom3d;
+	exports com.greentree.engine.mesh;
 
 }

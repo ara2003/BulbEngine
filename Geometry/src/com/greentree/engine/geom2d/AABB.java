@@ -1,8 +1,6 @@
 package com.greentree.engine.geom2d;
 
-/**
- * @author Arseny Latyshev
- */
+/** @author Arseny Latyshev */
 public class AABB implements com.greentree.engine.geom.AABB<AABB> {
 	
 	private final float3 min, max;
@@ -10,33 +8,20 @@ public class AABB implements com.greentree.engine.geom.AABB<AABB> {
 	public AABB(float x, float y, float w, float h) {
 		min = new float3(x, y);
 		max = new float3(x + w, y + h);
-		
-	}
-	public AABB(Shape2D shape) {
-		this(shape, false);
 	}
 	
-	public AABB(Shape2D shape, boolean fast) {
+	public AABB(Shape2D shape) {
 		min = new float3();
 		max = new float3();
-		if(fast) {
-			Point2D c = shape.getCenter();
-			float r = shape.getRadius();
-			min.x = c.getX() - r;
-			min.y = c.getY() - r;
-			max.x = c.getX() + r;
-			max.y = c.getY() + r;
-		}else {
-			max.x = -Float.MAX_VALUE;
-			max.y = -Float.MAX_VALUE;
-			min.x = Float.MAX_VALUE;
-			min.y = Float.MAX_VALUE;
-			for(Point2D p : shape.getPoints()) {
-				max.x = Math.max(max.x, p.getX());
-				max.y = Math.max(max.y, p.getY());
-				min.x = Math.min(min.x, p.getX());
-				min.y = Math.min(min.y, p.getY());
-			}
+		max.x = -Float.MAX_VALUE;
+		max.y = -Float.MAX_VALUE;
+		min.x = Float.MAX_VALUE;
+		min.y = Float.MAX_VALUE;
+		for(Point2D p : shape.getPoints()) {
+			max.x = Math.max(max.x, p.getX());
+			max.y = Math.max(max.y, p.getY());
+			min.x = Math.min(min.x, p.getX());
+			min.y = Math.min(min.y, p.getY());
 		}
 	}
 	
@@ -63,6 +48,7 @@ public class AABB implements com.greentree.engine.geom.AABB<AABB> {
 	public float getMinY() {
 		return min.y;
 	}
+	
 	@Override
 	public boolean isIntersect(AABB other) {
 		if(max.x < other.min.x || min.x > other.max.x) return false;
@@ -70,9 +56,8 @@ public class AABB implements com.greentree.engine.geom.AABB<AABB> {
 		return true;
 	}
 }
-/**
- * @author Arseny Latyshev
- */
+
+/** @author Arseny Latyshev */
 class float3 {
 	
 	float x, y;

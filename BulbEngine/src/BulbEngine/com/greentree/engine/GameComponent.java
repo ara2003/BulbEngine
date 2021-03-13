@@ -22,7 +22,7 @@ public abstract class GameComponent extends Constants implements Serializable {
 		corutines = new ArrayList<>(0);
 	}
 	
-	protected void addComponentListener(ColliderListenerFun collider) {
+	protected void addColliderListener(ColliderListenerFun collider) {
 		Game.addListener(new ColliderListener() {
 			
 			private static final long serialVersionUID = 1L;
@@ -30,10 +30,10 @@ public abstract class GameComponent extends Constants implements Serializable {
 			@Override
 			public void CollisionStay(final ColliderComponent object1, final ColliderComponent object2) {
 				if(node.hasComponent(object1)) {
-					collider.event(object2.getObject());
+					collider.event(object2.getNode());
 				}
 				if(node.hasComponent(object2)) {
-					collider.event(object1.getObject());
+					collider.event(object1.getNode());
 				}
 			}
 		});
@@ -53,10 +53,10 @@ public abstract class GameComponent extends Constants implements Serializable {
 	}
 	
 	public final <T extends GameComponent> T getComponent(final Class<T> clazz) {
-		return getObject().getComponent(clazz);
+		return getNode().getComponent(clazz);
 	}
 	
-	public GameNode getObject() {
+	public GameNode getNode() {
 		return node;
 	}
 	

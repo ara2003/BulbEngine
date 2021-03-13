@@ -17,6 +17,10 @@ public class OneClassSet<E> extends AbstractSet<E> implements Serializable {
 		map = new HashMap<>();
 	}
 	
+	public boolean containsClass(Class<?> o) {
+		return map.containsKey(o);
+	}
+	
 	public OneClassSet(final int initialCapacity) {
 		map = new HashMap<>(initialCapacity);
 	}
@@ -35,7 +39,8 @@ public class OneClassSet<E> extends AbstractSet<E> implements Serializable {
 	
 	@Override
 	public boolean add(E e) {
-		if(map.get(e.getClass()) == null) {
+		if(e == null)return false;
+		if(!containsClass(e.getClass())) {
 			map.put(e.getClass(), e);
 			return true;
 		}

@@ -2,10 +2,7 @@ package com.greentree.engine.editor.xml;
 
 import com.greentree.engine.mesh.Mesh;
 
-/**
- * @author Arseny Latyshev
- *
- */
+/** @author Arseny Latyshev */
 public class MeshLoader extends ClassLoader<Mesh> {
 	
 	@Override

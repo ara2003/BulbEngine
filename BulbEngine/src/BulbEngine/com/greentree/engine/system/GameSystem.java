@@ -16,9 +16,10 @@ public abstract class GameSystem extends Constants implements Serializable {
 	private static final long serialVersionUID = 1L;
 	protected static final Random random = new Random();
 	
-	public static GameSystem createSystem(final Class<?> c) {
+	public static GameSystem createSystem(final Class<?> clazz) {
+		if(clazz == null) throw new NullPointerException("clazz is null");
 		try {
-			final Constructor<?> constructor = c.getConstructor();
+			final Constructor<?> constructor = clazz.getConstructor();
 			constructor.setAccessible(true);
 			final GameSystem gs = (GameSystem) constructor.newInstance();
 			return gs;

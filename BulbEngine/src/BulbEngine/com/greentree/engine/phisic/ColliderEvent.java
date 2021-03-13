@@ -29,7 +29,7 @@ public class ColliderEvent implements Event {
 	
 	@Override
 	public String toString() {
-		return "[Collider " +type + " " + object1 + " " + object2 + "]";
+		return "[Collider " + type + " " + object1 + " " + object2 + "]";
 	}
 	
 	public enum EventType{

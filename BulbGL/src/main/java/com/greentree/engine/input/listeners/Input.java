@@ -14,12 +14,6 @@ public class Input {
 		Input.window = window;
 	}
 	
-	/** @deprecated requires reassignment */
-	@Deprecated
-	public static Integer getKeyIndex(String substring) {
-		return null;
-	}
-	
 	public static String getKeyName(int key) {
 		return window.getKeyName(key);
 	}
