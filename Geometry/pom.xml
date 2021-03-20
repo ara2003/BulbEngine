@@ -9,21 +9,27 @@
 	<properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>5.5.2</junit.version>
-		<java.version>14</java.version>
+		<java.version>15</java.version>
 	
-		<joml.version>1.9.24</joml.version>
 	</properties>
 
 	<dependencies>
+		<!--test-->
+        <dependency>
+			<groupId>org.junit.jupiter</groupId>
+		    <artifactId>junit-jupiter</artifactId>
+		    <version>${junit.version}</version>
+		    <scope>test</scope>
+        </dependency>
 		<!-- math -->
 		<dependency>
-			<groupId>org.joml</groupId>
-			<artifactId>joml</artifactId>
-			<version>${joml.version}</version>
+	    	<groupId>com.greentree.common</groupId>
+		   	<artifactId>math</artifactId>
+	    	<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<!-- util -->
 		<dependency>
-	    	<groupId>com.greentree.bulbengine</groupId>
+	    	<groupId>com.greentree.common</groupId>
 		   	<artifactId>util</artifactId>
 	    	<version>0.1-SNAPSHOT</version>
 	    	<optional>true</optional>
@@ -48,6 +54,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version> 3.8.1 </version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>

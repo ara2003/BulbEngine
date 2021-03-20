@@ -4,12 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Graph<E> implements Serializable {
+public class Graph<E> implements Collection<E>, Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -22,10 +23,11 @@ public class Graph<E> implements Serializable {
 		addAll(t);
 	}
 	
-	public void add(final E t) {
-		if(t == null) return;
-		this.joint.add(new HashSet<>());
-		this.point.add(t);
+	public boolean add(final E t) {
+		if(t == null) return false;
+		boolean flag = this.point.add(t);
+		if(flag)this.joint.add(new HashSet<>());
+		return flag;
 	}
 	
 	public final void add(final E i, final E j) {
@@ -36,16 +38,16 @@ public class Graph<E> implements Serializable {
 		this.joint.get(i).add(j);
 		//this.joint.get(j).add(i);
 	}
-	
-	public void addAll(final Collection<E> t) {
-		for(int i = 0; i < t.size(); i++) this.joint.add(new HashSet<>());
-		this.point.addAll(t);
-	}
-	
-	public boolean contains(final E e) {
-		return this.point.contains(e);
-	}
-	
+//	
+//	public void addAll(final Collection<E> t) {
+//		for(int i = 0; i < t.size(); i++) this.joint.add(new HashSet<>());
+//		this.point.addAll(t);
+//	}
+//	
+//	public boolean contains(final E e) {
+//		return this.point.contains(e);
+//	}
+//	
 	@Override
 	public boolean equals(final Object obj) {
 		if(!(obj instanceof Graph)) return false;
@@ -92,11 +94,7 @@ public class Graph<E> implements Serializable {
 		return n / 2;
 	}
 	
-	public int howPoint() {
-		return this.point.size();
-	}
-	
-	private boolean isEmpty() {
+	public boolean isEmpty() {
 		return this.point.isEmpty();
 	}
 	
@@ -131,7 +129,7 @@ public class Graph<E> implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "p = " + howPoint() + " j = " + howJoint() + " " + point + "\n" + joint;
+		return "ppoints = " + size() + " j = " + howJoint() + " " + point + "\n" + joint;
 	}
 	
 	public Tree<E> toTree(final E root) {
@@ -165,6 +163,55 @@ public class Graph<E> implements Serializable {
 	public interface Writer<T> {
 		
 		void print(T data);
+	}
+
+	@Override
+	public boolean contains(Object o) {
+		return point.contains(o);
+	}
+
+	@Override
+	public Iterator<E> iterator() {
+		return point.iterator();
+	}
+
+	@Override
+	public Object[] toArray() {
+		return null;
+	}
+
+	@Override
+	public <T> T[] toArray(T[] a) {
+		return null;
+	}
+
+	@Override
+	public boolean remove(Object o) {
+		return false;
+	}
+
+	@Override
+	public boolean containsAll(Collection<?> c) {
+		return false;
+	}
+
+	@Override
+	public boolean addAll(Collection<? extends E> c) {
+		return false;
+	}
+
+	@Override
+	public boolean removeAll(Collection<?> c) {
+		return false;
+	}
+
+	@Override
+	public boolean retainAll(Collection<?> c) {
+		return false;
+	}
+
+	@Override
+	public void clear() {
 	}
 }
 

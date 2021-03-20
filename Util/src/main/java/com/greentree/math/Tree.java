@@ -16,9 +16,9 @@ public class Tree<E> extends Graph<E> {
 	}
 	
 	@Override
-	public void add(final E i) {
-		super.add(i);
+	public boolean add(final E i) {
 		this.perent.add(-1);
+		return super.add(i);
 	}
 	
 	@Override
@@ -41,7 +41,7 @@ public class Tree<E> extends Graph<E> {
 	
 	@Override
 	public boolean isTree() {
-		boolean f = howPoint() == (howJoint() + 1);
+		boolean f = size() == (howJoint() + 1);
 		for(final Integer l : this.perent) if(f) if(l == -1) f = false;
 		return f;
 	}

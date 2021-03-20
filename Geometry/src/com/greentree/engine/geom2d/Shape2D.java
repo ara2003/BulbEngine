@@ -6,7 +6,7 @@ import java.util.List;
 import org.joml.Vector2f;
 
 import com.greentree.engine.geom.Shape;
-import com.greentree.util.Util;
+import com.greentree.math.Mathf;
 
 /**
  * @author Arseny Latyshev
@@ -50,7 +50,7 @@ public abstract class Shape2D implements Shape<AABB, Point2D, Shape2D> {
 	}
 	
 	public float distanse(Shape2D other) {
-		return Util.min(other.getLines(), this::distanse);
+		return Mathf.min(other.getLines(), this::distanse);
 	}
 	
 	@Override
@@ -121,7 +121,7 @@ public abstract class Shape2D implements Shape<AABB, Point2D, Shape2D> {
 	public void setSize(float width, float height) {
 		AABB aabb = new AABB(this);
 		transleteX(x->(((x - aabb.getMinX() - (aabb.getDeltaX() / 2)) * width)  / aabb.getDeltaX()) + aabb.getMinX() + (aabb.getDeltaX() / 2));
-		transleteX(y->(((y - aabb.getMinY() - (aabb.getDeltaY() / 2)) * height) / aabb.getDeltaY()) + aabb.getMinY() + (aabb.getDeltaY() / 2));
+		transleteY(y->(((y - aabb.getMinY() - (aabb.getDeltaY() / 2)) * height) / aabb.getDeltaY()) + aabb.getMinY() + (aabb.getDeltaY() / 2));
 	}
 	
 	public final void translete(Translete translete) {

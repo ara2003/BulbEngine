@@ -13,7 +13,7 @@
   <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>5.5.2</junit.version>
-		<java.version>14</java.version>
+		<java.version>15</java.version>
 		
 		<lwjgl.version>3.2.3</lwjgl.version>
 	</properties> 
@@ -69,7 +69,7 @@
   <dependencies>
   		<!-- bulbegine -->
   		<dependency>
-			<groupId>com.greentree.bulbengine</groupId>
+			<groupId>com.greentree.common</groupId>
 		    <artifactId>util</artifactId>
 		    <version>0.1-SNAPSHOT</version>
         </dependency>

@@ -26,7 +26,7 @@ public class FileParser {
 	
 	private static <T> String getSuffix(final Class<T> clazz) {
 		Objects.requireNonNull(clazz);
-		fileSufix s = clazz.getAnnotation(fileSufix.class);
+		FileSufix s = clazz.getAnnotation(FileSufix.class);
 		if(s == null) {
 			return clazz.getSimpleName().toLowerCase();
 		}else {

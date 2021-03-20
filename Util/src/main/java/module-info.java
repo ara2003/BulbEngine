@@ -1,5 +1,5 @@
 
-module bulbengine.util {
+open module bulbengine.util {
 	
 	requires java.xml;
 	requires com.google.gson;
@@ -8,5 +8,6 @@ module bulbengine.util {
 	exports com.greentree.util;
 	exports com.greentree.xml;
 	exports com.greentree.math;
+	exports com.greentree.collection;
 	
 }

@@ -3,6 +3,7 @@ package com.greentree.util;
 import java.io.Serializable;
 import java.util.AbstractSet;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -14,7 +15,7 @@ public class OneClassSet<E> extends AbstractSet<E> implements Serializable {
 	private final Map<Class<?>, E> map;
 	
 	public OneClassSet() {
-		map = new HashMap<>();
+		map = Collections.synchronizedMap(new HashMap<>());
 	}
 	
 	public boolean containsClass(Class<?> o) {

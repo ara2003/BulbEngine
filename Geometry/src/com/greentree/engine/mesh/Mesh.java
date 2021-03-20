@@ -7,6 +7,7 @@ import java.util.List;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+@SuppressWarnings("exports")
 public class Mesh extends Object {
 	
 	private final List<Vector3f> vertices;
@@ -19,8 +20,7 @@ public class Mesh extends Object {
 		this(new ArrayList<Vector3f>(), new ArrayList<Vector2f>(), new ArrayList<Vector3f>(), new ArrayList<Face>(),
 				true);
 	}
-	
-	public Mesh(List<Vector3f> vertices, List<Vector2f> textureCoords, List<Vector3f> normals, List<Face> faces,
+	public Mesh(List<Vector3f> vertices,List<Vector2f> textureCoords, List<Vector3f> normals, List<Face> faces,
 			boolean enableSmoothShading) {
 		this.vertices = vertices;
 		this.textureCoords = textureCoords;

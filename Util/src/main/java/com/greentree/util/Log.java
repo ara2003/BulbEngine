@@ -6,8 +6,6 @@ package com.greentree.util;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.Date;
 
 public final class Log {
@@ -32,20 +30,12 @@ public final class Log {
 
 	private Log() {
 	}
-	
-	public static void checkVerboseLogSetting() {
-		try {
-			AccessController.doPrivileged((PrivilegedAction<Object>) ()-> {
-				final String val = System.getProperty("org.newdawn.slick.forceVerboseLog");
-				if(val != null && val.equalsIgnoreCase("true")) Log.setForcedVerboseOn();
-				return null;
-			});
-		}catch(final Throwable t) {
-		}
+
+	public static void debug() {
+		Log.debug("");
 	}
-	
 	public static void debug(final String message) {
-		Log.log.println(new Date() + " DEBUG:" + message);
+		Log.bedug.print(message);
 	}
 	
 	public static void error(final String message) {

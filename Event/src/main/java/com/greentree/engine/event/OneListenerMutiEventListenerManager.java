@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 /** @author Arseny Latyshev */
+@Deprecated
 public abstract class OneListenerMutiEventListenerManager<L extends Listener> extends OneListenerListenerManager<L> {
 	
 	private static final long serialVersionUID = 1L;

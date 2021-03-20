@@ -83,7 +83,7 @@ public class XMLElement implements Serializable {
 		throw new XMLException("Value read: '" + this.getAttribute(name, "" + def) + "' is not a boolean");
 	}
 	
-	public List<XMLElement> getChildren() {
+	public List<XMLElement> getChildrens() {
 		if(children != null) return children;
 		final NodeList list = dom.getChildNodes();
 		children = new ArrayList<>();
@@ -100,7 +100,7 @@ public class XMLElement implements Serializable {
 	
 	public List<XMLElement> getChildrens(final String name) {
 		final List<XMLElement> selected = new ArrayList<>();
-		final List<XMLElement> children = getChildren();
+		final List<XMLElement> children = getChildrens();
 		for(int i = 0; i < children.size(); ++i)
 			if(children.get(i).getName().equals(name)) selected.add(children.get(i));
 		return selected;
@@ -155,12 +155,12 @@ public class XMLElement implements Serializable {
 		String res = "<" + name;
 		final String[] na = getAttributeNames();
 		for(final String n : na) res += " " + n + "=\"" + getAttribute(n) + "\"";
-		if(getChildren().isEmpty() && getContent().equals("")) res += ">" + getContent() + "</" + name + ">\n";
+		if(getChildrens().isEmpty() && getContent().equals("")) res += ">" + getContent() + "</" + name + ">\n";
 		else {
 			res += ">" + getContent();
-			if(!getChildren().isEmpty()) {
+			if(!getChildrens().isEmpty()) {
 				res += "\n\t";
-				for(final XMLElement e : getChildren()) res += e.toString().replaceAll("\n", "\n\t");
+				for(final XMLElement e : getChildrens()) res += e.toString().replaceAll("\n", "\n\t");
 				res = res.substring(0, res.lastIndexOf("\t"));
 			}
 			res += "</" + name + ">\n";

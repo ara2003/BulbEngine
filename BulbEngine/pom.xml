@@ -12,10 +12,21 @@
 	
 	<name>BulbEngine</name>
 	
+	<organization>
+		<name>Green Tree</name>
+	</organization>
+	
+	<developers>
+        <developer>
+            <name>Arseny Latyshev</name>
+            <email>arseny.latyshev@gmail.com</email>
+        </developer>
+    </developers>
+    
 	<properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>5.5.2</junit.version>
-		<java.version>14</java.version>
+		<java.version>15</java.version>
 		
 		<joml.version>1.9.24</joml.version>
 	</properties> 
@@ -41,7 +52,7 @@
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>com.greentree.bulbengine</groupId>
+			<groupId>com.greentree.common</groupId>
 			<artifactId>util</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
@@ -64,6 +75,11 @@
   
   
  	<build>
+    	<sourceDirectory>E:\программирование\Программы Java\Engines\BulbEngine\BulbRepository\BulbEngine\src\main\java</sourceDirectory>
+    	<scriptSourceDirectory>E:\программирование\Программы Java\Engines\BulbEngine\BulbRepository\BulbEngine\src\main\scripts</scriptSourceDirectory>
+	    <testSourceDirectory>E:\программирование\Программы Java\Engines\BulbEngine\BulbRepository\BulbEngine\src\test\java</testSourceDirectory>
+	    <outputDirectory>E:\программирование\Программы Java\Engines\BulbEngine\BulbRepository\BulbEngine\target\classes</outputDirectory>
+	    <testOutputDirectory>E:\программирование\Программы Java\Engines\BulbEngine\BulbRepository\BulbEngine\target\test-classes</testOutputDirectory>
 		<pluginManagement>
 			<plugins>
 				<plugin>

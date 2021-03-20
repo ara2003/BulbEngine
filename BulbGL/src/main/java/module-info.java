@@ -1,5 +1,5 @@
 
-module bulbengine.graphics {
+open module bulbengine.graphics {
 
 	requires bulbengine.util;
 	requires bulbengine.event;
@@ -11,10 +11,13 @@ module bulbengine.graphics {
 	
 	requires transitive java.desktop;
 
-	exports com.greentree.engine.bulbgl;
-	exports com.greentree.engine.opengl;
-	exports com.greentree.engine.opengl.rendener;
-	exports com.greentree.engine.input.listeners;
+	exports com.greentree.bulbgl;
+	exports com.greentree.bulbgl.image;
+	exports com.greentree.bulbgl.image.animation;
+	exports com.greentree.bulbgl.glfw;
+	exports com.greentree.bulbgl.opengl.rendener;
+	exports com.greentree.bulbgl.input;
+	exports com.greentree.bulbgl.input.listeners;
 	
 	
 }

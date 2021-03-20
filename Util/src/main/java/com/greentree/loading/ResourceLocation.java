@@ -5,6 +5,6 @@ import java.net.URL;
 
 public interface ResourceLocation {
 	
-	URL getResource(final String p0);
-	InputStream getResourceAsStream(final String p0);
+	URL getResource(final String name);
+	InputStream getResourceAsStream(final String name);
 }

@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Queue;
 
 import com.greentree.util.ClassUtil;
@@ -34,6 +35,7 @@ public class EventSystem implements Serializable {
 	
 	@SuppressWarnings("unchecked")
 	public <T extends Event> T get(Class<T> clazz){
+		Objects.requireNonNull(clazz, "clazz is null");
 		Queue<? extends Event> q = events.get(clazz);
 		if(q == null)return null;
 		if(q.isEmpty())return null;
@@ -41,6 +43,7 @@ public class EventSystem implements Serializable {
 	}
 	
 	public boolean addListener(final Listener listener) {
+		Objects.requireNonNull(listener, "listener is null");
 		if(!addListener0(listener)) {
 			tryAddNecessarily(listener.getClass());
 		}
@@ -77,6 +80,7 @@ public class EventSystem implements Serializable {
 	}
 
 	public boolean addListenerManager(final ListenerManager listenerManager) {
+		Objects.requireNonNull(listenerManager, "listenerManager is null");
 		Class<? extends ListenerManager> cl2 = listenerManager.getClass();
 		for(ListenerManager manager : listenerManagers) {
 			Class<? extends ListenerManager> cl1 = manager.getClass();
@@ -87,6 +91,7 @@ public class EventSystem implements Serializable {
 	}
 	
 	public void event(Event event) {
+		Objects.requireNonNull(event, "event is null");
 		eventQuery.add(event);
 	}
 	
