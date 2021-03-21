@@ -131,10 +131,6 @@ public final class Graphics {
 		Graphics.GL.glEnd();
 	}
 	
-	public static void drawImage(final Image image, final float x, final float y) {
-		image.draw(x, y);
-	}
-	
 	public static void drawLine(float x1, float y1, float x2, float y2) {
 		float lineWidth = Graphics.lineWidth - 1.0f;
 		if(Graphics.LSR.applyGLLineFixes()) {
@@ -353,10 +349,6 @@ public final class Graphics {
 		return Graphics.font;
 	}
 	
-	public static int getHeight() {
-		return Graphics.screenHeight;
-	}
-	
 	public static float getLineWidth() {
 		return Graphics.lineWidth;
 	}
@@ -366,10 +358,6 @@ public final class Graphics {
 				Graphics.readBuffer);
 		return new Color(Graphics.translate(Graphics.readBuffer.get(0)), Graphics.translate(Graphics.readBuffer.get(1)),
 				Graphics.translate(Graphics.readBuffer.get(2)), Graphics.translate(Graphics.readBuffer.get(3)));
-	}
-	
-	public static int getWidth() {
-		return Graphics.screenWidth;
 	}
 	
 	public static void init(final int width, final int height) {

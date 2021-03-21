@@ -1,5 +1,7 @@
 package com.greentree.engine.geom;
 
+import com.greentree.util.Sized;
+
 /**
  * @author Arseny Latyshev
  *

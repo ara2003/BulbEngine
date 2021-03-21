@@ -1,9 +1,9 @@
 package com.greentree.engine.component.ui;
 
 import com.greentree.engine.event.Listener;
-import com.greentree.engine.event.necessarilyListenerManagers;
+import com.greentree.engine.event.NecessarilyListenerManagers;
 
-@necessarilyListenerManagers(ButtonListenerManager.class)
+@NecessarilyListenerManagers(ButtonListenerManager.class)
 public interface ButtonListener extends Listener {
 	
 	void click(Button button, int mouseButton);

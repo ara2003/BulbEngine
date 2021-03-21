@@ -40,6 +40,7 @@ public final class Game {
 	private static EventSystem eventSystem;
 	private static Window window;
 	private static Properties properties;
+	private static double sleep;
 	
 	public static String getProperty(String key){
 		return properties.getProperty(key);
@@ -50,7 +51,6 @@ public final class Game {
 	
 	@SuppressWarnings("exports")
 	public static void addListener(Listener listener) {
-		getCurrentScene().tryAddNecessarilySystem(listener.getClass());
 		getEventSystem().addListener(listener);
 	}
 	
@@ -73,6 +73,7 @@ public final class Game {
 		Time.updata();
 		eventSystem.update();
 		getCurrentScene().update();
+//		sync(60);
 		Graphics.setColor(Color.white);
 		Graphics.drawString("FPS: " + Time.getFps(), 10, 10);
 		window.finishRender();
@@ -83,6 +84,19 @@ public final class Game {
 		}
 	}
 	
+	private static void sync(int i) {
+		sleep += 1000.0 / i - Time.getDelta();
+		try {
+			long d = (long) Math.floor(sleep);
+			System.out.println(sleep + " " + d);
+			sleep -= d;
+			Thread.sleep(d);
+		}catch(InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
 	public static File getAssets() {
 		return Game.assets;
 	}
@@ -140,6 +154,7 @@ public final class Game {
 		currentScene = scene;
 		eventSystem = new EventSystem();
 		window.setEventSystem(eventSystem);
+		Input.setEventSystem(eventSystem);
 		System.gc();
 	}
 	
@@ -176,10 +191,11 @@ public final class Game {
 			boolean fullscreen = Boolean.parseBoolean(properties.getProperty("window.fullscreen"));
 			window = new GLFWWindow(properties.getProperty("window.title", "blub window"), width, height, fullscreen);
 		}
-		Input.init(window);
+		Input.setWindow(window);
 		Game.running = true;
 		Game.setup();
 		loadScene(properties.getProperty("scene.first"));
+		Input.setEventSystem(eventSystem);
 		while(Game.running) {
 			Game.gameLoop();
 		}

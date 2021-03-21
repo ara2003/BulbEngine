@@ -120,8 +120,8 @@ public abstract class Shape2D implements Shape<AABB, Point2D, Shape2D> {
 	
 	public void setSize(float width, float height) {
 		AABB aabb = new AABB(this);
-		transleteX(x->(((x - aabb.getMinX() - (aabb.getDeltaX() / 2)) * width)  / aabb.getDeltaX()) + aabb.getMinX() + (aabb.getDeltaX() / 2));
-		transleteY(y->(((y - aabb.getMinY() - (aabb.getDeltaY() / 2)) * height) / aabb.getDeltaY()) + aabb.getMinY() + (aabb.getDeltaY() / 2));
+		transleteX(x->(((x - aabb.getMinX() - (aabb.getWidth() / 2)) * width)  / aabb.getWidth()) + aabb.getMinX() + (aabb.getWidth() / 2));
+		transleteY(y->(((y - aabb.getMinY() - (aabb.getHeight() / 2)) * height) / aabb.getHeight()) + aabb.getMinY() + (aabb.getHeight() / 2));
 	}
 	
 	public final void translete(Translete translete) {

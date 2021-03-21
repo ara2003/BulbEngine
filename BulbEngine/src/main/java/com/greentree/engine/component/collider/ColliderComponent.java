@@ -6,14 +6,26 @@ import com.greentree.engine.component.Transform;
 import com.greentree.engine.geom2d.Shape2D;
 import com.greentree.engine.system.ColliderSystem;
 import com.greentree.engine.system.NecessarilySystems;
+import com.greentree.util.Sized;
 
 @NecessarilySystems({ColliderSystem.class})
 @RequireComponent({Transform.class})
-public abstract class ColliderComponent extends GameComponent {
+public abstract class ColliderComponent extends GameComponent implements Sized {
 	
 	private static final long serialVersionUID = 1L;
 	private Shape2D shape;
 	private Transform position;
+	
+	@Override
+	public float getHeight() {
+		return shape.getAABB().getHeight();
+	}
+	
+	@Override
+	public float getWidth() {
+		return shape.getAABB().getWidth();
+	}
+
 	
 	@Override
 	protected final void awake() {

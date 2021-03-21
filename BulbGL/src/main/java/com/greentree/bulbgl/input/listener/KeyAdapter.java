@@ -1,4 +1,4 @@
-package com.greentree.bulbgl.input.listeners;
+package com.greentree.bulbgl.input.listener;
 
 public abstract class KeyAdapter implements KeyListener {
 	

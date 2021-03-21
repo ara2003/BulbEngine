@@ -6,6 +6,7 @@ import com.greentree.engine.system.NecessarilySystems;
 
 /** @author Arseny Latyshev */
 @NecessarilySystems({RenderSystem.class})
+@RequireComponent({Transform.class})
 public abstract class RendenerComponent extends GameComponent implements Renderable {
 	
 	private static final long serialVersionUID = 1L;

@@ -4,8 +4,8 @@ import com.greentree.util.Time;
 
 public final class WaitForSeconds implements CustomResemInstruction {
 	
-	private final float seconds;
-	private float time = 0;
+	private final double seconds;
+	private double time = 0;
 	
 	public WaitForSeconds(final float seconds) {
 		this.seconds = seconds;

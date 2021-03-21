@@ -44,7 +44,7 @@ public final class GameScene extends GameNode {
 	}
 	
 	@Override
-	public void tryAddNecessarilySystem(final Class<?> clazz) {
+	public void tryAddNecessarilySystem(final Class<? extends GameElement> clazz) {
 		for(final NecessarilySystems an : ClassUtil.getAllAnnotations(clazz, NecessarilySystems.class))
 			for(final Class<?> cl : an.value()) this.addSystem(GameSystem.createSystem(cl));
 	}

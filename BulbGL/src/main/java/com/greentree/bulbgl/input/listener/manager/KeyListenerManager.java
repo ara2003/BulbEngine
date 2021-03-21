@@ -1,6 +1,9 @@
-package com.greentree.bulbgl.input.util;
+package com.greentree.bulbgl.input.listener.manager;
 
-import com.greentree.bulbgl.input.listeners.KeyListener;
+import com.greentree.bulbgl.input.event.KeyPressedEvent;
+import com.greentree.bulbgl.input.event.KeyRepaeasedEvent;
+import com.greentree.bulbgl.input.event.KeyRepeatedEvent;
+import com.greentree.bulbgl.input.listener.KeyListener;
 import com.greentree.engine.event.Event;
 import com.greentree.engine.event.OneListenerListenerManager;
 

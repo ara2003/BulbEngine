@@ -105,7 +105,7 @@ public final class GameObject extends GameNode implements Serializable {
 	}
 	
 	@Override
-	public void tryAddNecessarilySystem(final Class<?> clazz) {
+	public void tryAddNecessarilySystem(final Class<? extends GameElement> clazz) {
 		this.getScene().tryAddNecessarilySystem(clazz);
 	}
 	

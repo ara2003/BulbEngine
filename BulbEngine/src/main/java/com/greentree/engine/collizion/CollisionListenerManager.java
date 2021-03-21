@@ -16,19 +16,17 @@ public class CollisionListenerManager extends MutiListenerListenerManager {
 	public void event(final Event event) {
 		if(event instanceof CollisionEvent) {
 			final CollisionEvent collisionEvent = (CollisionEvent) event;
-			for(final Listener lis : this.listeners)
-				if(lis instanceof SimpleCollisionListener) switch(collisionEvent.getEventType()) {
+			for(final Listener lis : this.listeners) if(lis instanceof CollisionListener) switch(collisionEvent.getEventType()) {
 				case enter:
-				((SimpleCollisionListener) lis).CollisionEnter(collisionEvent.getObject1(),
-						collisionEvent.getObject2());
+					((CollisionListener) lis).CollisionEnter(collisionEvent.getObject1(), collisionEvent.getObject2());
 				break;
 				case exit:
-				((SimpleCollisionListener) lis).CollisionExit(collisionEvent.getObject1(), collisionEvent.getObject2());
+					((CollisionListener) lis).CollisionExit(collisionEvent.getObject1(), collisionEvent.getObject2());
 				break;
 				case stay:
-				((SimpleCollisionListener) lis).CollisionStay(collisionEvent.getObject1(), collisionEvent.getObject2());
+					((CollisionListener) lis).CollisionStay(collisionEvent.getObject1(), collisionEvent.getObject2());
 				break;
-				}
+			}
 		}
 	}
 }

@@ -14,11 +14,11 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import com.greentree.bulbgl.Window;
-import com.greentree.bulbgl.input.util.KeyPressedEvent;
-import com.greentree.bulbgl.input.util.KeyRepaeasedEvent;
-import com.greentree.bulbgl.input.util.KeyRepeatedEvent;
-import com.greentree.bulbgl.input.util.MouseClickEvent;
-import com.greentree.bulbgl.input.util.MouseMovedEvent;
+import com.greentree.bulbgl.input.event.KeyPressedEvent;
+import com.greentree.bulbgl.input.event.KeyRepaeasedEvent;
+import com.greentree.bulbgl.input.event.KeyRepeatedEvent;
+import com.greentree.bulbgl.input.event.MouseClickEvent;
+import com.greentree.bulbgl.input.event.MouseMovedEvent;
 import com.greentree.engine.event.EventSystem;
 
 /** @author Arseny Latyshev */

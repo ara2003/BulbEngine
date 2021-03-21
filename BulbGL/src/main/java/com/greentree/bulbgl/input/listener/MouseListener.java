@@ -1,10 +1,10 @@
-package com.greentree.bulbgl.input.listeners;
+package com.greentree.bulbgl.input.listener;
 
-import com.greentree.bulbgl.input.util.MouseListenerManager;
+import com.greentree.bulbgl.input.listener.manager.MouseListenerManager;
 import com.greentree.engine.event.Listener;
-import com.greentree.engine.event.necessarilyListenerManagers;
+import com.greentree.engine.event.NecessarilyListenerManagers;
 
-@necessarilyListenerManagers({MouseListenerManager.class})
+@NecessarilyListenerManagers({MouseListenerManager.class})
 public interface MouseListener extends Listener {
 	
 	void mouseDragged(int x1, int y1, int x2, int y2);

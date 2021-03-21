@@ -1,15 +1,16 @@
 package com.greentree.engine.component;
 
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 public final class Transform extends GameComponent {
 	
 	private static final long serialVersionUID = 1L;
-	private float lastx, lasty;
+	private float lastx, lasty, lastz;
 	@EditorData(def = "0")
-	public float scaleX, scaleY;
+	public float scaleX, scaleY, scaleZ;
 	@EditorData(def = "0")
-	public float x, y;
+	public float x, y, z;
 	
 	public Transform() {
 		lastx = x;
@@ -20,11 +21,17 @@ public final class Transform extends GameComponent {
 		x += vec.x;
 		y += vec.y;
 	}
-	
-	public float distanse(final Transform t) {
+
+	public float distanseXY(final Transform t) {
 		final float x = this.x - t.x;
 		final float y = this.y - t.y;
 		return (float) Math.sqrt(x * x + y * y);
+	}
+	public float distanse(final Transform t) {
+		final float dx = this.x - t.x;
+		final float dy = this.y - t.y;
+		final float dz = this.z - t.z;
+		return (float) Math.sqrt(dx * dx + dy * dy + dz*dz);
 	}
 	
 	@Override
@@ -32,7 +39,7 @@ public final class Transform extends GameComponent {
 		if(obj instanceof Transform) {
 			if(obj == this) return true;
 			final Transform t = (Transform) obj;
-			return x == t.x && y == t.y;
+			return x == t.x && y == t.y && z == t.z;
 		}
 		return false;
 	}
@@ -45,8 +52,16 @@ public final class Transform extends GameComponent {
 		return y - lasty;
 	}
 	
+	public double getDeltaZ() {
+		return z - lastz;
+	}
+	
 	public Vector2f getXY() {
 		return new Vector2f(x, y);
+	}
+	
+	public Vector3f getVector() {
+		return new Vector3f(x, y, z);
 	}
 	
 	public void setLocation(final double x, final double y) {
@@ -68,5 +83,6 @@ public final class Transform extends GameComponent {
 	public void update() {
 		lastx = x;
 		lasty = y;
+		lastz = z;
 	}
 }

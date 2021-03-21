@@ -10,7 +10,8 @@ import java.lang.annotation.Target;
  * @see BasicClassLoader */
 @Retention(RUNTIME)
 @Target(TYPE)
-public @interface necessarilyListenerManagers{
+public @interface NecessarilyListenerManagers{
 	
 	Class<? extends ListenerManager>[] value();
+	
 }

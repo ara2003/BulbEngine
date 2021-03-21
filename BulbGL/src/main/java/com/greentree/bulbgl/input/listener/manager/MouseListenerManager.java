@@ -1,6 +1,8 @@
-package com.greentree.bulbgl.input.util;
+package com.greentree.bulbgl.input.listener.manager;
 
-import com.greentree.bulbgl.input.listeners.MouseListener;
+import com.greentree.bulbgl.input.event.MouseClickEvent;
+import com.greentree.bulbgl.input.event.MouseMovedEvent;
+import com.greentree.bulbgl.input.listener.MouseListener;
 import com.greentree.engine.event.Event;
 import com.greentree.engine.event.OneListenerListenerManager;
 

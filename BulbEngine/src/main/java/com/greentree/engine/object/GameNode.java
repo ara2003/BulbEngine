@@ -81,7 +81,7 @@ public abstract class GameNode extends GameElement implements Serializable {
 		updateUpTreeComponents();
 	}
 	
-	public abstract void tryAddNecessarilySystem(Class<?> clazz);
+	public abstract void tryAddNecessarilySystem(Class<? extends GameElement> clazz);
 	
 	@Override
 	public void update() {

@@ -1,4 +1,4 @@
-package com.greentree.bulbgl.input.util;
+package com.greentree.bulbgl.input.event;
 
 import com.greentree.engine.event.Event;
 

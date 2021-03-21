@@ -23,6 +23,4 @@ public abstract class AbstractListenerManager<L extends Listener> implements Lis
 	
 	protected abstract boolean isUse(Listener listener);
 	
-	@Override
-	public abstract void event(Event event);
 }

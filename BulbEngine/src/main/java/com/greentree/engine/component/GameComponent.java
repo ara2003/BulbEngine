@@ -39,6 +39,7 @@ public abstract class GameComponent extends GameElement implements Serializable 
 	}
 	
 	public final <T extends GameComponent> T getComponent(final Class<T> clazz) {
+		//TODO
 		return this.getObject().getComponent(clazz);
 	}
 	

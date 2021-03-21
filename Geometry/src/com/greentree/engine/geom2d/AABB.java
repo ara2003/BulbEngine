@@ -1,7 +1,9 @@
 package com.greentree.engine.geom2d;
 
+import com.greentree.util.Sized;
+
 /** @author Arseny Latyshev */
-public class AABB implements com.greentree.engine.geom.AABB<AABB> {
+public class AABB implements com.greentree.engine.geom.AABB<AABB>, Sized {
 	
 	private final float3 min, max;
 	
@@ -25,11 +27,11 @@ public class AABB implements com.greentree.engine.geom.AABB<AABB> {
 		}
 	}
 	
-	public float getDeltaX() {
+	public float getWidth() {
 		return max.x - min.x;
 	}
 	
-	public float getDeltaY() {
+	public float getHeight() {
 		return max.y - min.y;
 	}
 	

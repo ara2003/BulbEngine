@@ -21,93 +21,80 @@ public class EventSystem implements Serializable {
 	private final Map<Class<? extends Event>, Queue<Event>> events;
 	
 	public EventSystem() {
-		events = new HashMap<>();
-		listenerManagers = new OneClassSet<>();
-		eventQuery = new LinkedList<>();
-	}
-
-	protected void deleteEvent(Event event) {
-		Queue<Event> q = events.remove(event.getClass());
-		if(q == null)q = new LinkedList<>();
-		q.add(event);
-		events.put(event.getClass(), q);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public <T extends Event> T get(Class<T> clazz){
-		Objects.requireNonNull(clazz, "clazz is null");
-		Queue<? extends Event> q = events.get(clazz);
-		if(q == null)return null;
-		if(q.isEmpty())return null;
-		return (T) q.remove();
+		this.events           = new HashMap<>();
+		this.listenerManagers = new OneClassSet<>();
+		this.eventQuery       = new LinkedList<>();
 	}
 	
 	public boolean addListener(final Listener listener) {
 		Objects.requireNonNull(listener, "listener is null");
-		if(!addListener0(listener)) {
-			tryAddNecessarily(listener.getClass());
-		}
-		return addListener0(listener);
-	}
-	
-	private void tryAddNecessarily(Class<? extends Listener> clazz) {
-		for(necessarilyListenerManagers an : ClassUtil.getAllAnnotations(clazz, necessarilyListenerManagers.class)) 
-			for(Class<? extends ListenerManager> cl : an.value()) if(!listenerManagers.containsClass(cl)){
-    			Constructor<? extends ListenerManager> constructor = null;
-    			try {
-    				constructor = cl.getConstructor();
-    			}catch(NoSuchMethodException | SecurityException e) {
-    				Log.warn(e);
-    			}
-    			ListenerManager lm = null;
-    			try {
-    				lm = constructor.newInstance();
-    			}catch(InstantiationException | IllegalAccessException | IllegalArgumentException
-    					| InvocationTargetException e) {
-    				Log.warn(e);
-    			}
-    			addListenerManager(lm);
-    		}
-	}
-
-	private boolean addListener0(final Listener listener) {
+		this.tryAddNecessarily(listener.getClass());
 		boolean add = false;
-		for(final ListenerManager l : listenerManagers) {
-			if(l.addListener(listener))
-			add = true;
-		}
+		for(final ListenerManager l : this.listenerManagers) if(l.addListener(listener)) add = true;
 		return add;
 	}
-
+	
 	public boolean addListenerManager(final ListenerManager listenerManager) {
 		Objects.requireNonNull(listenerManager, "listenerManager is null");
-		Class<? extends ListenerManager> cl2 = listenerManager.getClass();
-		for(ListenerManager manager : listenerManagers) {
-			Class<? extends ListenerManager> cl1 = manager.getClass();
-			if(cl1.isAssignableFrom(cl2))return false;
-			if(cl2.isAssignableFrom(cl1))return false;
+		final Class<? extends ListenerManager> cl2 = listenerManager.getClass();
+		for(final ListenerManager manager : this.listenerManagers) {
+			final Class<? extends ListenerManager> cl1 = manager.getClass();
+			if(cl1.isAssignableFrom(cl2)&&cl2.isAssignableFrom(cl1)) return false;
 		}
-		return listenerManagers.add(listenerManager);
+		return this.listenerManagers.add(listenerManager);
 	}
 	
-	public void event(Event event) {
+	protected void deleteEvent(final Event event) {
+		Queue<Event> q = this.events.remove(event.getClass());
+		if(q == null) q = new LinkedList<>();
+		q.add(event);
+		this.events.put(event.getClass(), q);
+	}
+	
+	public void event(final Event event) {
 		Objects.requireNonNull(event, "event is null");
-		eventQuery.add(event);
+		this.eventQuery.add(event);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends Event> T get(final Class<T> clazz) {
+		Objects.requireNonNull(clazz, "clazz is null");
+		final Queue<? extends Event> q = this.events.get(clazz);
+		if(q == null) return null;
+		if(q.isEmpty()) return null;
+		return (T) q.remove();
 	}
 	
 	@Override
 	public String toString() {
-		return "EventSystem [listeners=" + listenerManagers + "]";
+		return "EventSystem [listeners=" + this.listenerManagers + "]";
+	}
+	
+	private void tryAddNecessarily(final Class<? extends Listener> clazz) {
+		for(final NecessarilyListenerManagers an : ClassUtil.getAllAnnotations(clazz, NecessarilyListenerManagers.class))
+			for(final Class<? extends ListenerManager> cl : an.value()) if(!this.listenerManagers.containsClass(cl)) {
+				Constructor<? extends ListenerManager> constructor = null;
+				try {
+					constructor = cl.getConstructor();
+				}catch(NoSuchMethodException | SecurityException e) {
+					Log.warn(e);
+				}
+				ListenerManager lm = null;
+				try {
+					lm = constructor.newInstance();
+				}catch(InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					Log.warn(e);
+				}
+				this.addListenerManager(lm);
+			}
 	}
 	
 	public void update() {
-		synchronized(eventQuery) {
-			while(!eventQuery.isEmpty()) {
-				Event event = eventQuery.remove();
-				for(final ListenerManager l : listenerManagers) {
-					l.event(event);
-				}
-				deleteEvent(event);
+		synchronized(this.eventQuery) {
+			while(!this.eventQuery.isEmpty()) {
+				final Event event = this.eventQuery.remove();
+				for(final ListenerManager l : this.listenerManagers) l.event(event);
+				this.deleteEvent(event);
 			}
 		}
 	}

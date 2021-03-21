@@ -3,7 +3,7 @@ package com.greentree.engine.system;
 import org.joml.Vector2f;
 
 import com.greentree.engine.Game;
-import com.greentree.engine.collizion.SimpleCollisionListener;
+import com.greentree.engine.collizion.CollisionListener;
 import com.greentree.engine.component.PhisicComponent;
 import com.greentree.engine.component.collider.ColliderComponent;
 import com.greentree.util.Time;
@@ -41,7 +41,7 @@ public class PhisicSystem extends GameSystem {
 	
 	@Override
 	protected void start() {
-		Game.addListener(new SimpleCollisionListener() {
+		Game.addListener(new CollisionListener() {
 			
 			private static final long serialVersionUID = 1L;
 			

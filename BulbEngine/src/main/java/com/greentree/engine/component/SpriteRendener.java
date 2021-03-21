@@ -1,5 +1,6 @@
 package com.greentree.engine.component;
 
+import com.greentree.bulbgl.Color;
 import com.greentree.bulbgl.image.Texture;
 import com.greentree.bulbgl.opengl.rendener.Renderer;
 import com.greentree.bulbgl.opengl.rendener.SGL;
@@ -24,6 +25,7 @@ public class SpriteRendener extends RendenerComponent {
 	
 	@Override
 	public void render() {
+		Color.white.bind();
 		texture.bind();
 		GL.glTranslatef(position.x, position.y, 0);
 		GL.glBegin(SGL.GL_QUADS);
