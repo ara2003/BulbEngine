@@ -1,43 +1,31 @@
 package com.greentree.engine.object;
 
-import java.io.Serializable;
-import java.util.Random;
-
 import com.greentree.engine.Game;
 import com.greentree.engine.event.Listener;
-import com.greentree.util.Log;
 
 /** @author Arseny Latyshev */
-public abstract class GameElement implements Serializable {
-	
-	protected static final long serialVersionUID = 1L;
-	protected static final Random random = new Random();
-	private boolean initialize;
+public abstract class GameElement {
 	
 	protected final static void addListener(final Listener listener) {
 		Game.addListener(listener);
 	}
 	
-	protected GameObject createObject(final String prefab) {
-		return Game.getCurrentScene().createObject(prefab);
+	protected final static GameObject createFromPrefab(final String prefab) {
+		return Game.createFromPrefab(prefab);
 	}
 	
-	public final void init() {
-		if(this.initialize) Log.error(new IllegalAccessError("seconde start of " + this));
-		this.initialize = true;
-		start();
+	protected void start() {
 	}
 	
-	protected final boolean isInitialized() {
-		return this.initialize;
+	protected void update() {
 	}
 	
-	protected abstract void start();
+	private boolean isStart = false;
 	
-	@Override
-	public String toString() {
-		return "GameElement [initialize=" + this.isInitialized() + "]";
+	public void initSratr() {
+		if(this.isStart) throw new UnsupportedOperationException("reinitialization of : " + this);
+		this.isStart = true;
+		this.start();
 	}
-	
-	protected abstract void update();
+		
 }

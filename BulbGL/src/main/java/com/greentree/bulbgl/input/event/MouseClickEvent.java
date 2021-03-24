@@ -48,6 +48,7 @@ public final class MouseClickEvent implements Event {
 		return this;
 	}
 
+	@SuppressWarnings("exports")
 	public static MouseClickEvent getInstanse(EventSystem eventSystem, EventType type, int button, int x, int y) {
 		MouseClickEvent event = eventSystem.get(MouseClickEvent.class);
 		if(event == null)

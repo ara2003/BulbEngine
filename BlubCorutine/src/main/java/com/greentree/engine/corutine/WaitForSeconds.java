@@ -1,21 +1,24 @@
 package com.greentree.engine.corutine;
 
-import com.greentree.util.Time;
+import java.util.concurrent.TimeUnit;
 
 public final class WaitForSeconds implements CustomResemInstruction {
 	
-	private final double seconds;
-	private double time = 0;
-	
-	public WaitForSeconds(final float seconds) {
-		this.seconds = seconds;
+	private final long nanoSeconds;
+	private long time = 0;
+
+	public WaitForSeconds(final double time, TimeUnit type) {
+		nanoSeconds = type.toNanos((long)time);
+	}
+
+	public WaitForSeconds(final double seconds) {
+		this(seconds, TimeUnit.SECONDS);
 	}
 	
 	@Override
 	public boolean keepWaiting() {
-		if(time == 0) time = Time.getTime() + seconds;
-		if(time < Time.getTime()) {
-			time = Time.getTime() + seconds;
+		if(time == 0) time = System.nanoTime() + nanoSeconds;
+		if(System.nanoTime() > time) {
 			time = 0;
 			return false;
 		}
@@ -24,6 +27,6 @@ public final class WaitForSeconds implements CustomResemInstruction {
 	
 	@Override
 	public String toString() {
-		return "WaitForSeconds [seconds=" + (seconds) + "]";
+		return "WaitForSeconds [seconds=" + TimeUnit.NANOSECONDS.toSeconds(nanoSeconds) + "]";
 	}
 }

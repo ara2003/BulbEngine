@@ -21,9 +21,8 @@ public class Poligon extends Shape2D {
 	}
 	
 	@Override
-	public Shape2D rotate(final Point2D p, final double d) {
+	public void rotate(final Point2D p, final double d) {
 		for(final Point2D point : point) point.rotate(p, d);
-		return this;
 	}
 
 	@Override

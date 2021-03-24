@@ -3,12 +3,11 @@ package com.greentree.engine.component.ui;
 import com.greentree.bulbgl.Color;
 import com.greentree.bulbgl.Graphics;
 import com.greentree.engine.component.EditorData;
-import com.greentree.engine.component.GameComponent;
 import com.greentree.engine.component.Transform;
+import com.greentree.engine.object.GameComponent;
 
 public final class Text extends GameComponent {
 	
-	private static final long serialVersionUID = 1L;
 	Transform t;
 	@EditorData
 	String text;

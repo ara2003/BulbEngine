@@ -40,16 +40,14 @@ public final class GeomUtil2D {
 		return dis;
 	}
 	
-	public static Point2D getCenter(final List<? extends Shape2D> world) {
-		final List<Point2D> list = new ArrayList<>();
-		for(final Shape2D shape : world) list.addAll(shape.getPoints());
+	public static Point2D getCenter(final List<Point2D> world) {
 		
 		float x = 0, y = 0;
-		for(final Point2D p : list) {
+		for(final Point2D p : world) {
 			x += p.getX();
 			y += p.getY();
 		}
-		return new Point2D(x / list.size(), y / list.size());
+		return new Point2D(x / world.size(), y / world.size());
 	}
 	
 	public static Point2D getMassCenter(Shape2D shape) {

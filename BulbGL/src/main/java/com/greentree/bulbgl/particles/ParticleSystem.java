@@ -14,7 +14,7 @@ import com.greentree.bulbgl.image.Image;
 import com.greentree.bulbgl.image.TextureImpl;
 import com.greentree.bulbgl.opengl.rendener.Renderer;
 import com.greentree.bulbgl.opengl.rendener.SGL;
-import com.greentree.util.Log;
+import com.greentree.common.Log;
 
 public class ParticleSystem implements Serializable {
 	

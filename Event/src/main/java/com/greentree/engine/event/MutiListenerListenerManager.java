@@ -3,7 +3,7 @@ package com.greentree.engine.event;
 import java.util.Arrays;
 import java.util.Collection;
 
-import com.greentree.util.ClassUtil;
+import com.greentree.common.ClassUtil;
 
 /** @author Arseny Latyshev */
 public abstract class MutiListenerListenerManager extends AbstractListenerManager<Listener> {

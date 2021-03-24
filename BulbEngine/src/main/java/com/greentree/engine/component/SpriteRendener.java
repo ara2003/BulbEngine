@@ -5,7 +5,7 @@ import com.greentree.bulbgl.image.Texture;
 import com.greentree.bulbgl.opengl.rendener.Renderer;
 import com.greentree.bulbgl.opengl.rendener.SGL;
 
-public class SpriteRendener extends RendenerComponent {
+public class SpriteRendener extends AbstractRendenerComponent {
 	
 	private static final long serialVersionUID = 1L;
 	private final static SGL GL = Renderer.get();
@@ -27,6 +27,7 @@ public class SpriteRendener extends RendenerComponent {
 	public void render() {
 		Color.white.bind();
 		texture.bind();
+		texture.setTextureFilter(SGL.GL_LINEAR);
 		GL.glTranslatef(position.x, position.y, 0);
 		GL.glBegin(SGL.GL_QUADS);
 		final float w = .5f / width, h = .5f / height;

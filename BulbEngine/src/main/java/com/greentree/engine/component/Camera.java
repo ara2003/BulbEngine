@@ -6,6 +6,7 @@ import org.joml.Vector2fc;
 import com.greentree.bulbgl.opengl.rendener.Renderer;
 import com.greentree.bulbgl.opengl.rendener.SGL;
 import com.greentree.engine.Game;
+import com.greentree.engine.object.GameComponent;
 import com.greentree.engine.system.NecessarilySystems;
 import com.greentree.engine.system.RenderSystem;
 
@@ -14,7 +15,6 @@ import com.greentree.engine.system.RenderSystem;
 @RequireComponent({Transform.class})
 public class Camera extends GameComponent {
 	
-	private static final long serialVersionUID = 1L;
 	private static final SGL GL = Renderer.get();
 	@EditorData(def = "window::width")
 	private int width;

@@ -15,4 +15,5 @@ public interface Texture {
 	boolean hasAlpha();
 	void release();
 	void setTextureFilter(final int p0);
+	
 }

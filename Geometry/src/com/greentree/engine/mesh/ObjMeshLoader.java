@@ -5,8 +5,8 @@ import java.util.Scanner;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import com.greentree.loading.ResourceLoader;
-import com.greentree.util.Log;
+import com.greentree.common.Log;
+import com.greentree.common.loading.ResourceLoader;
 
 /**
  * @author Arseny Latyshev

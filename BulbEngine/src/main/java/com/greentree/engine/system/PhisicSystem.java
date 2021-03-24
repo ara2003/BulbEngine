@@ -2,18 +2,17 @@ package com.greentree.engine.system;
 
 import org.joml.Vector2f;
 
+import com.greentree.common.time.Time;
 import com.greentree.engine.Game;
 import com.greentree.engine.collizion.CollisionListener;
 import com.greentree.engine.component.PhisicComponent;
 import com.greentree.engine.component.collider.ColliderComponent;
-import com.greentree.util.Time;
+import com.greentree.engine.object.GameSystem;
 
 /** @author Arseny Latyshev */
 @NecessarilySystems({ColliderSystem.class})
 @Deprecated
 public class PhisicSystem extends GameSystem {
-	
-	private static final long serialVersionUID = 1L;
 	
 	public void collizion(final ColliderComponent c1, final ColliderComponent c2) {
 		final PhisicComponent p1 = c1.getComponent(PhisicComponent.class);
@@ -40,7 +39,7 @@ public class PhisicSystem extends GameSystem {
 	}
 	
 	@Override
-	protected void start() {
+	public void start() {
 		Game.addListener(new CollisionListener() {
 			
 			private static final long serialVersionUID = 1L;

@@ -3,9 +3,10 @@ package com.greentree.engine.component;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import com.greentree.engine.object.GameComponent;
+
 public final class Transform extends GameComponent {
 	
-	private static final long serialVersionUID = 1L;
 	private float lastx, lasty, lastz;
 	@EditorData(def = "0")
 	public float scaleX, scaleY, scaleZ;

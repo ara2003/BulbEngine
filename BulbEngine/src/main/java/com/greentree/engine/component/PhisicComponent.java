@@ -2,20 +2,20 @@ package com.greentree.engine.component;
 
 import org.joml.Vector2f;
 
+import com.greentree.common.time.Time;
 import com.greentree.engine.component.collider.ColliderComponent;
 import com.greentree.engine.geom2d.GeomUtil2D;
 import com.greentree.engine.geom2d.Point2D;
+import com.greentree.engine.object.GameComponent;
 import com.greentree.engine.phisic.Matirial;
 import com.greentree.engine.system.PhisicSystem;
 import com.greentree.engine.system.NecessarilySystems;
-import com.greentree.util.Time;
 
 @RequireComponent({Transform.class,ColliderComponent.class})
 @NecessarilySystems({PhisicSystem.class})
 @Deprecated
 public class PhisicComponent extends GameComponent {
 	
-	private static final long serialVersionUID = 1L;
 	private Transform position;
 	@EditorData(def = "1")
 	private float mass;

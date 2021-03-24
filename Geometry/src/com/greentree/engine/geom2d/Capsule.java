@@ -68,10 +68,9 @@ public class Capsule extends Shape2D {
 	}
 	
 	@Override
-	public Shape2D rotate(final Point2D point, final double ang) {
+	public void rotate(final Point2D point, final double ang) {
 		focus1.rotate(point, ang);
 		focus2.rotate(point, ang);
-		return this;
 	}
 
 	@Override

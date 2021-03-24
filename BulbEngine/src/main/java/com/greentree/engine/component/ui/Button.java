@@ -5,13 +5,13 @@ import org.joml.Vector2f;
 import com.greentree.bulbgl.Graphics;
 import com.greentree.engine.Game;
 import com.greentree.engine.component.EditorData;
-import com.greentree.engine.component.RendenerComponent;
+import com.greentree.engine.component.AbstractRendenerComponent;
 import com.greentree.engine.component.RequireComponent;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.input.CameraMouseAdapter;
 
 @RequireComponent({Transform.class})
-public class Button extends RendenerComponent {
+public class Button extends AbstractRendenerComponent {
 	
 	private static final long serialVersionUID = 1L;
 	@EditorData(def = "2")

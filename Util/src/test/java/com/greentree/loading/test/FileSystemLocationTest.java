@@ -15,8 +15,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import com.greentree.loading.FileSystemLocation;
-import com.greentree.loading.ResourceLoader;
+import com.greentree.common.loading.FileSystemLocation;
+import com.greentree.common.loading.ResourceLoader;
 
 /**
  * testing class FileSystemLocation

@@ -8,8 +8,9 @@ import java.util.List;
  *
  * @see Shape2D
  */
-public class Circle extends Shape2D {
+public final class Circle extends Shape2D {
 	
+	protected Point2D center;
 	protected static final byte PointInCircle = 30;
 	private final float radius;
 	
@@ -59,9 +60,8 @@ public class Circle extends Shape2D {
 	}
 	
 	@Override
-	public Shape2D rotate(final Point2D point, final double ang) {
+	public void rotate(final Point2D point, final double ang) {
 		center.rotate(point, ang);
-		return this;
 	}
 	
 	@Override

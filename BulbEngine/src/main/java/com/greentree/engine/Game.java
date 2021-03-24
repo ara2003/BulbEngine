@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.concurrent.Callable;
 
 import com.greentree.bulbgl.Color;
 import com.greentree.bulbgl.Graphics;
@@ -16,8 +15,12 @@ import com.greentree.bulbgl.Window;
 import com.greentree.bulbgl.glfw.GLFWWindow;
 import com.greentree.bulbgl.input.Input;
 import com.greentree.bulbgl.opengl.rendener.Renderer;
-import com.greentree.bulbgl.opengl.rendener.SGL;
+import com.greentree.common.Log;
+import com.greentree.common.loading.FileSystemLocation;
+import com.greentree.common.loading.ResourceLoader;
+import com.greentree.common.time.Time;
 import com.greentree.engine.component.Camera;
+import com.greentree.engine.editor.Builder;
 import com.greentree.engine.editor.xml.BasicXMlBuilder;
 import com.greentree.engine.event.Event;
 import com.greentree.engine.event.EventSystem;
@@ -25,22 +28,15 @@ import com.greentree.engine.event.Listener;
 import com.greentree.engine.object.GameObject;
 import com.greentree.engine.object.GameScene;
 import com.greentree.engine.system.RenderSystem;
-import com.greentree.loading.FileSystemLocation;
-import com.greentree.loading.ResourceLoader;
-import com.greentree.util.Log;
-import com.greentree.util.Time;
 
 public final class Game {
 	
 	private static Builder builder = new BasicXMlBuilder();
 	private static GameScene currentScene;
-	private static SGL GL;
 	private static File root, assets, debug;
-	private static boolean running;
 	private static EventSystem eventSystem;
 	private static Window window;
 	private static Properties properties;
-	private static double sleep;
 	
 	public static String getProperty(String key){
 		return properties.getProperty(key);
@@ -49,23 +45,15 @@ public final class Game {
 	private Game() {
 	}
 	
-	@SuppressWarnings("exports")
 	public static void addListener(Listener listener) {
 		getEventSystem().addListener(listener);
 	}
 	
-	@SuppressWarnings("exports")
 	public static void event(Event event) {
 		getEventSystem().event(event);
 	}
 	
-	public static void exit() {
-		Game.running = false;
-	}
-	
 	private static void gameLoop() {
-		Game.GL.glClear(16640);
-		Game.GL.glLoadIdentity();
 		Graphics.resetTransform();
 		Graphics.resetLineWidth();
 		Graphics.setAntiAlias(false);
@@ -73,28 +61,10 @@ public final class Game {
 		Time.updata();
 		eventSystem.update();
 		getCurrentScene().update();
-//		sync(60);
 		Graphics.setColor(Color.white);
 		Graphics.drawString("FPS: " + Time.getFps(), 10, 10);
 		window.finishRender();
-		Game.GL.flush();
 		Graphics.resetTransform();
-		if(window.isShouldClose()) {
-			Game.running = false;
-		}
-	}
-	
-	private static void sync(int i) {
-		sleep += 1000.0 / i - Time.getDelta();
-		try {
-			long d = (long) Math.floor(sleep);
-			System.out.println(sleep + " " + d);
-			sleep -= d;
-			Thread.sleep(d);
-		}catch(InterruptedException e) {
-			e.printStackTrace();
-		}
-		
 	}
 
 	public static File getAssets() {
@@ -109,7 +79,6 @@ public final class Game {
 		return Objects.requireNonNull(currentScene, "current scene is null");
 	}
 	
-	@SuppressWarnings("exports")
 	public static EventSystem getEventSystem() {
 		return eventSystem;
 	}
@@ -144,10 +113,10 @@ public final class Game {
 	public static void loadScene(final String name) {
 		Log.info("Scene load : " + name);
 		final InputStream inputStream = ResourceLoader.getResourceAsStream(name + ".scene");
-		GameScene.Builder sceneBuilder = builder.createSceneBuilder(inputStream);
-		reset(sceneBuilder.get());
-		builder.fillScene(sceneBuilder, inputStream);
-		sceneBuilder.get().init();
+		GameScene scene = builder.createScene(inputStream);
+		reset(scene);
+		builder.fillScene(scene, inputStream);
+		scene.start();
 	}
 	
 	private static void reset(GameScene scene) {
@@ -177,7 +146,6 @@ public final class Game {
 		Log.setLogFolder(debug);
 		ResourceLoader.addResourceLocation(new FileSystemLocation(assets));
 		ResourceLoader.addResourceLocation(new FileSystemLocation(root));
-		Game.GL = Renderer.get();
 		Properties properties = new Properties();
 		try {
 			properties.load(new FileInputStream(new File(root, "config.game")));
@@ -192,23 +160,21 @@ public final class Game {
 			window = new GLFWWindow(properties.getProperty("window.title", "blub window"), width, height, fullscreen);
 		}
 		Input.setWindow(window);
-		Game.running = true;
 		Game.setup();
 		loadScene(properties.getProperty("scene.first"));
 		Input.setEventSystem(eventSystem);
-		while(Game.running) {
+		while(!window.isShouldClose()) {
 			Game.gameLoop();
 		}
 		window.close();
-		System.exit(0);
 	}
 
-	public static <V> void lowTask(Callable<V> callable) {
-		
+	public static GameObject createFromPrefab(String prefab) {
+		return builder.createPrefab(prefab, getCurrentScene());
 	}
 
-	public static GameObject createObject(String prefab) {
-		return builder.createObject(prefab, getCurrentScene());
+	public static void exit() {
+		window.close();
 	}
 
 }

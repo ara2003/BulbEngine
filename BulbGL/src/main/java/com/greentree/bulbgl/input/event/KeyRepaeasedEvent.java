@@ -12,7 +12,8 @@ public final class KeyRepaeasedEvent implements Event {
 	public KeyRepaeasedEvent(final int key) {
 		this.key = key;
 	}
-	
+
+	@SuppressWarnings("exports")
 	public static KeyRepaeasedEvent getInstanse(EventSystem eventSystem, final int key) {
 		KeyRepaeasedEvent event = eventSystem.get(KeyRepaeasedEvent.class);
 		if(event == null)

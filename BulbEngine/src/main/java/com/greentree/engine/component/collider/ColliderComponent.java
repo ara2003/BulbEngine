@@ -1,18 +1,17 @@
 package com.greentree.engine.component.collider;
 
-import com.greentree.engine.component.GameComponent;
+import com.greentree.common.Sized;
 import com.greentree.engine.component.RequireComponent;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.geom2d.Shape2D;
+import com.greentree.engine.object.GameComponent;
 import com.greentree.engine.system.ColliderSystem;
 import com.greentree.engine.system.NecessarilySystems;
-import com.greentree.util.Sized;
 
 @NecessarilySystems({ColliderSystem.class})
 @RequireComponent({Transform.class})
 public abstract class ColliderComponent extends GameComponent implements Sized {
 	
-	private static final long serialVersionUID = 1L;
 	private Shape2D shape;
 	private Transform position;
 	
@@ -26,10 +25,11 @@ public abstract class ColliderComponent extends GameComponent implements Sized {
 		return shape.getAABB().getWidth();
 	}
 
-	
 	@Override
 	protected final void awake() {
-		this.shape    = this.generateShape();
+		this.shape = this.generateShape();
+		this.position = getComponent(Transform.class);
+		this.updatePosition();
 	}
 	
 	protected abstract Shape2D generateShape();
@@ -56,8 +56,6 @@ public abstract class ColliderComponent extends GameComponent implements Sized {
 	
 	@Override
 	protected final void start() {
-		this.position = getComponent(Transform.class);
-		this.updatePosition();
 	}
 	
 	@Override
@@ -68,4 +66,6 @@ public abstract class ColliderComponent extends GameComponent implements Sized {
 	public final void updatePosition() {
 		this.setPosition(this.getX(), this.getY());
 	}
+	
+	
 }

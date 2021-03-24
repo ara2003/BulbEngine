@@ -17,7 +17,7 @@ import com.greentree.bulbgl.image.util.ImageDataFactory;
 import com.greentree.bulbgl.image.util.LoadableImageData;
 import com.greentree.bulbgl.opengl.rendener.Renderer;
 import com.greentree.bulbgl.opengl.rendener.SGL;
-import com.greentree.loading.ResourceLoader;
+import com.greentree.common.loading.ResourceLoader;
 
 public class InternalTextureLoader {
 	

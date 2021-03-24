@@ -27,13 +27,6 @@ public class ShapeList {
 		return list.add(shape);
 	}
 	
-	/**
-	 * @return
-	 */
-	public Point2D getCenter() {
-		return GeomUtil2D.getCenter(list);
-	}
-	
 	public Point2D rayCast(Point2D start, @SuppressWarnings("exports") Vector2f vector, float maxDistanse){
 		return rayCast(start, vector, maxDistanse, 1);
 	}
@@ -52,6 +45,16 @@ public class ShapeList {
 			if(dis < delta) return p;
 		}
 		return null;
+	}
+
+	public Point2D getCenter() {
+		float x = 0,  y = 0;
+		for(Shape2D s : list) {
+			Point2D c = s.getCenter();
+			x += c.x;
+			y += c.y;
+		}
+		return new Point2D(x / list.size(), y / list.size());
 	}
 	
 	

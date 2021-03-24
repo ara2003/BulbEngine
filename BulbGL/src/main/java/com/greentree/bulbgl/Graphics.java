@@ -12,9 +12,9 @@ import com.greentree.bulbgl.image.TextureImpl;
 import com.greentree.bulbgl.opengl.rendener.LineStripRenderer;
 import com.greentree.bulbgl.opengl.rendener.Renderer;
 import com.greentree.bulbgl.opengl.rendener.SGL;
+import com.greentree.common.math.FastTrig;
 import com.greentree.engine.geom2d.Point2D;
 import com.greentree.engine.geom2d.Shape2D;
-import com.greentree.math.FastTrig;
 
 public final class Graphics {
 	

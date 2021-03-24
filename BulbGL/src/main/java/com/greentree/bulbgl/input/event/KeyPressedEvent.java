@@ -20,6 +20,7 @@ public final class KeyPressedEvent implements Event {
 		return key;
 	}
 	
+	@SuppressWarnings("exports")
 	public static KeyPressedEvent getInstanse(EventSystem eventSystem, final int key) {
 		KeyPressedEvent event = eventSystem.get(KeyPressedEvent.class);
 		if(event == null)

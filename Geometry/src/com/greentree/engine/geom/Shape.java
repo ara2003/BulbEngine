@@ -21,5 +21,5 @@ public interface Shape<A extends AABB<A>, P extends Point<A, P, S>, S extends Sh
 	List<P> getPoints();
 	float getRadius();
 	boolean isIntersect(S other);
-	void moveTo(P p);
+	void moveTo(P p); 
 }

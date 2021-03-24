@@ -7,8 +7,8 @@ import java.io.File;
 
 import org.junit.jupiter.api.Test;
 
-import com.greentree.loading.FileSystemLocation;
-import com.greentree.loading.ResourceLoader;
+import com.greentree.common.loading.FileSystemLocation;
+import com.greentree.common.loading.ResourceLoader;
 
 /**
  * class of testing  ResourceLoader

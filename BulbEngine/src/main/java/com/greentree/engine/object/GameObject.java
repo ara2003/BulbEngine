@@ -1,41 +1,57 @@
 package com.greentree.engine.object;
 
-import java.io.Serializable;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
-import com.greentree.collection.ClassTree;
-import com.greentree.collection.HashMapClassTree;
-import com.greentree.engine.component.GameComponent;
+import com.greentree.common.ClassUtil;
+import com.greentree.common.Log;
+import com.greentree.common.collection.ClassTree;
+import com.greentree.common.collection.HashMapClassTree;
+import com.greentree.engine.Game;
+import com.greentree.engine.component.ComponentEvent;
+import com.greentree.engine.component.ComponentEvent.EventType;
 import com.greentree.engine.component.RequireComponent;
-import com.greentree.util.ClassUtil;
-import com.greentree.util.Log;
+import com.greentree.engine.corutine.Corutine;
 
-public final class GameObject extends GameNode implements Serializable {
+public final class GameObject extends GameObjectParent {
 	
-	private static final long serialVersionUID = 1L;
 	private final ClassTree<GameComponent> components;
-	private final GameNode parent;
+	private GameObjectParent parent;
+	private String name;
+	private final Collection<Corutine> corutines;
 	
-	private GameObject(final String name, final GameNode parent) {
-		super(name);
-		if(parent == null) throw new NullPointerException("parent is null");
-		this.parent     = parent;
+	public GameObject(final String name, final GameObjectParent parent) {
+		super("object name");
 		this.components = new HashMapClassTree<>();
+		this.corutines = new LinkedList<>();
+		this.name = name;
+		this.parent = parent;
 		parent.addChildren(this);
 	}
 	
-	public static Builder builder(final String name, final GameNode parent) {
-		return new Builder(name, parent);
-	}
-	
-	private void addComponent(final GameComponent component) {
-		this.components.add(component);
+	public boolean addComponent(final GameComponent component) {
+		if(this.components.add(component)) {
+			this.updateUpTreeComponents();
+			this.tryAddNecessarilySystem(component.getClass());
+			return true;
+		}
+		return false;
 	}
 	
 	public void destroy() {
-		this.getParent().removeChildren(this);
+		if(isDestroy()) {
+//			throw new RuntimeException("destroy desroed object");
+			return;
+		}
+		getParent().removeChildren(this);
+		for(GameComponent component : components) {
+			Game.event(new ComponentEvent(EventType.destroy, component));
+		}
+		updateUpTreeComponents();
+		parent = null;
 	}
 	
 	public <T extends GameComponent> T getComponent(final Class<T> clazz) {
@@ -47,11 +63,7 @@ public final class GameObject extends GameNode implements Serializable {
 		return list.iterator().next();
 	}
 	
-	public String getName() {
-		return this.name;
-	}
-	
-	public GameNode getParent() {
+	public GameObjectParent getParent() {
 		return this.parent;
 	}
 	
@@ -69,80 +81,55 @@ public final class GameObject extends GameNode implements Serializable {
 	}
 	
 	public boolean isDestroy() {
-		return !this.getParent().contains(this);
+		return getParent() == null || !getParent().contains(this);
 	}
 	
 	@Override
 	protected void start() {
-		if(!Validator.checkRequireComponent(this.components)) Log.error("component "
-				+ Validator.getBrokRequireComponentClass(this.components) + " require is not fulfilled \n" + this);
-		for(final GameComponent gc : this.components) gc.awake0(this);
-		for(final GameComponent gc : this.components) gc.init();
-		super.start();
+		if(!Validator.checkRequireComponent(this.components)) Log.error(
+				"component " + Validator.getBrokRequireComponentClass(this.components) + " require is not fulfilled \n" + this);
+		for(GameComponent component : components)component.initAwake(this);
+		for(GameComponent component : components)component.initSratr();
+		for(GameObject component : childrens)component.start();
 	}
 	
 	@Override
 	public String toString() {
-		final StringBuilder res = new StringBuilder("[object(").append(this.name).append(")@").append(this.hashCode());
+		final StringBuilder res = new StringBuilder("[object(").append(this.getName()).append(")@").append(this.hashCode());
 		if(!this.components.isEmpty()) {
 			final StringBuilder r = new StringBuilder("\ncomponents:");
 			for(final Object obj : this.components) r.append("\n").append(obj.toString());
 			res.append(r.toString().replace("\n", "\n\t"));
 		}
-		/*
-		if(!systems.isEmpty()) {
-			StringBuilder r = new StringBuilder("\nsystems:");
-			for(Object obj : systems) r.append("\n").append(obj.toString());
-			res.append(r.toString().replace("\n", "\n\t"));
-		}
-		if(!childrens.isEmpty()) {
-			StringBuilder r = new StringBuilder("\nnodes:");
-			for(Object obj : childrens) r.append("\n").append(obj.toString());
-			res.append(r.toString().replace("\n", "\n\t"));
-		}
-		*/
 		return res.toString() + "]";
 	}
 	
 	@Override
-	public void tryAddNecessarilySystem(final Class<? extends GameElement> clazz) {
+	public void tryAddNecessarilySystem(final Class<?> clazz) {
 		this.getScene().tryAddNecessarilySystem(clazz);
 	}
 	
 	@Override
-	public void update() {
-		for(final GameComponent c : this.components) c.update0();
-		super.update();
+	protected void update() {
+		for(GameComponent component : components)component.update();
+		for(GameObject component : childrens)component.update();
+		this.corutines.removeIf(Corutine::run);
 	}
 	
 	@Override
 	public void updateUpTreeComponents() {
-		super.updateUpTreeComponents();
-		this.addComponentsToTree(this.components);
+		this.allTreeComponents.clear();
+		for(final GameObject object : this.childrens) this.allTreeComponents.addAll(object.getAllComponents(GameComponent.class));
+		this.allTreeComponents.addAll(this.components);
 		this.parent.updateUpTreeComponents();
 	}
-	
-	public final static class Builder {
-		
-		GameObject object;
-		
-		private Builder(final String name, final GameNode parent) {
-			this.object = new GameObject(name, parent);
-		}
-		
-		public void addComponent(final GameComponent component) {
-			object.getScene().tryAddNecessarilySystem(component.getClass());
-			this.object.addComponent(component);
-		}
-		
-		public GameObject get() {
-			if(this.object.isInitialized()) throw new IllegalAccessError("build befor start");
-			object.updateUpTreeComponents();
-			return this.object;
-		}
+
+	public void startCorutine(Corutine corutine) {
+		corutines.add(corutine);
 	}
-	
-	public void updateTreeComponents() {
+
+	public String getName() {
+		return name;
 	}
 }
 
@@ -160,16 +147,14 @@ final class Validator {
 		return true;
 	}
 	
-	public static Class<? extends GameComponent> getBrokRequireComponentClass(
-			final Iterable<GameComponent> components) {
+	public static Class<? extends GameComponent> getBrokRequireComponentClass(final Iterable<GameComponent> components) {
 		final Set<Class<? extends GameComponent>> clases = ClassUtil.getClases(components);
 		for(final Class<? extends GameComponent> clazz : Validator.getRequireComponentClases(components))
 			if(!clases.contains(clazz)) return clazz;
 		return null;
 	}
 	
-	public static Set<Class<? extends GameComponent>> getRequireComponentClases(
-			final Iterable<GameComponent> components) {
+	public static Set<Class<? extends GameComponent>> getRequireComponentClases(final Iterable<GameComponent> components) {
 		final Set<Class<? extends GameComponent>> requireComponents = new HashSet<>();
 		for(final GameComponent com : components)
 			for(final RequireComponent rcom : ClassUtil.getAllAnnotations(com.getClass(), RequireComponent.class))

@@ -7,7 +7,6 @@ import com.greentree.engine.geom2d.Shape2D;
 /** @author ara */
 public final class RectangleColliderComponent extends ColliderComponent {
 	
-	private static final long serialVersionUID = 1L;
 	@EditorData
 	private float width, height;
 

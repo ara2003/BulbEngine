@@ -26,12 +26,6 @@
 		    <version>${junit.version}</version>
 		    <scope>test</scope>
         </dependency>
-		<dependency>
-			<groupId>com.greentree.common</groupId>
-			<artifactId>util</artifactId>
-			<version>0.1-SNAPSHOT</version>
-			<optional>true</optional>
-		</dependency>
   </dependencies>
   
   

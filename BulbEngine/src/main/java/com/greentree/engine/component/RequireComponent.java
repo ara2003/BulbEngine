@@ -6,10 +6,12 @@ import static java.lang.annotation.RetentionPolicy.*;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import com.greentree.engine.object.GameComponent;
+
 @Retention(RUNTIME)
 @Target(TYPE)
 /** @author Arseny Latyshev */
-public @interface RequireComponent{
+public @interface RequireComponent {
 	
 	Class<? extends GameComponent>[] value();
 }

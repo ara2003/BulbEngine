@@ -19,7 +19,8 @@ public final class KeyRepeatedEvent implements Event {
 	public int getKey() {
 		return key;
 	}
-	
+
+	@SuppressWarnings("exports")
 	public static KeyRepeatedEvent getInstanse(EventSystem eventSystem, final int key) {
 		KeyRepeatedEvent event = eventSystem.get(KeyRepeatedEvent.class);
 		if(event == null)

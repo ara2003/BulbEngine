@@ -8,7 +8,7 @@ import com.greentree.bulbgl.Color;
 import com.greentree.bulbgl.image.util.ImageBuffer;
 import com.greentree.bulbgl.opengl.rendener.Renderer;
 import com.greentree.bulbgl.opengl.rendener.SGL;
-import com.greentree.util.Log;
+import com.greentree.common.Log;
 
 public class Image implements Serializable {
 	

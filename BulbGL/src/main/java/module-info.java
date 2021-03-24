@@ -8,7 +8,7 @@ open module bulbengine.graphics {
 	requires org.lwjgl.opengl;
 	requires org.lwjgl;
 	requires org.lwjgl.glfw;
-	
+
 	requires transitive java.desktop;
 	requires org.joml;
 

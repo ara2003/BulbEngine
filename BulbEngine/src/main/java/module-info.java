@@ -14,7 +14,6 @@ module bulbengine {
 	requires java.desktop;
 	requires java.net.http;
 	
-	exports com.greentree.engine;
 	exports com.greentree.engine.component;
 	exports com.greentree.engine.component.ui;
 	exports com.greentree.engine.component.collider;

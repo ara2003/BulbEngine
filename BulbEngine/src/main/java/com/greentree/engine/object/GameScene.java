@@ -1,31 +1,23 @@
 package com.greentree.engine.object;
 
-import com.greentree.engine.system.GameSystem;
+import static com.greentree.engine.object.GameElement.*;
+
+import com.greentree.common.ClassUtil;
+import com.greentree.common.collection.OneClassSet;
 import com.greentree.engine.system.NecessarilySystems;
-import com.greentree.util.ClassUtil;
-import com.greentree.util.OneClassSet;
 
 /** @author Arseny Latyshev */
-public final class GameScene extends GameNode {
+public final class GameScene extends GameObjectParent {
 	
-	private static final long serialVersionUID = 1L;
 	private final OneClassSet<GameSystem> systems;
 	
-	private GameScene(final String name) {
+	public GameScene(final String name) {
 		super(name);
 		this.systems = new OneClassSet<>();
 	}
 	
-	public static Builder builder(final String name) {
-		return new Builder(name);
-	}
-	
-	private boolean addSystem(final GameSystem system) {
-		if(this.systems.add(system)) {
-			this.tryAddNecessarilySystem(system.getClass());
-			return true;
-		}
-		return false;
+	public boolean addSystem(final GameSystem system) {
+		return this.systems.add(system);
 	}
 	
 	public <T extends GameSystem> T getSystem(final Class<T> clazz) {
@@ -33,44 +25,31 @@ public final class GameScene extends GameNode {
 	}
 	
 	@Override
-	protected void start() {
-		super.start();
-		for(final GameSystem system : this.systems) system.init();
-	}
-	
-	@Override
 	public String toString() {
-		return "GameScene [systems=" + this.systems + "]";
+		return "GameScene [systems=" + this.systems + " children=" + childrens + "]@"+hashCode();
 	}
 	
 	@Override
-	public void tryAddNecessarilySystem(final Class<? extends GameElement> clazz) {
+	public void tryAddNecessarilySystem(final Class<?> clazz) {
 		for(final NecessarilySystems an : ClassUtil.getAllAnnotations(clazz, NecessarilySystems.class))
-			for(final Class<?> cl : an.value()) this.addSystem(GameSystem.createSystem(cl));
+			for(final Class<? extends GameSystem> cl : an.value()) this.addSystem(GameSystem.createSystem(cl));
+	}
+	
+	@Override
+	public void start() {
+		for(GameSystem system : systems)system.initSratr();
+		for(GameObject object : childrens)object.initSratr();
 	}
 	
 	@Override
 	public void update() {
-		super.update();
-		for(final GameSystem system : this.systems) system.update();
+		for(GameSystem system : systems)system.update();
+		for(GameObject object : childrens)object.update();
 	}
 	
-	public final static class Builder {
-		
-		private final GameScene scene;
-		
-		private Builder(final String name) {
-			this.scene = new GameScene(name);
-		}
-		
-		public void addSystem(final GameSystem createSystem) {
-			if(this.scene.isInitialized()) throw new IllegalAccessError("add system befor start");
-			this.scene.addSystem(createSystem);
-		}
-		
-		public GameScene get() {
-			if(this.scene.isInitialized()) throw new IllegalAccessError("build befor start");
-			return this.scene;
-		}
+	@Override
+	public void updateUpTreeComponents() {
+		this.allTreeComponents.clear();
+		for(final GameObject object : this.childrens) this.allTreeComponents.addAll(object.getAllComponents(GameComponent.class));
 	}
 }

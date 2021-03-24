@@ -159,8 +159,9 @@ public class GLFWWindow extends Window {
 		return glfwWindowShouldClose(id);
 	}
 	
+	@SuppressWarnings("exports")
 	@Override
-	public void setEventSystem(@SuppressWarnings("exports") EventSystem eventSystem) {
+	public void setEventSystem(EventSystem eventSystem) {
 		this.eventSystem = eventSystem;
 	}
 	

@@ -5,15 +5,13 @@ import java.util.List;
 
 import org.joml.Vector2f;
 
+import com.greentree.common.math.Mathf;
 import com.greentree.engine.geom.Shape;
-import com.greentree.math.Mathf;
 
 /**
  * @author Arseny Latyshev
  */
 public abstract class Shape2D implements Shape<AABB, Point2D, Shape2D> {
-	
-	protected Point2D center;
 	
 	public Shape2D() {
 	}
@@ -60,7 +58,7 @@ public abstract class Shape2D implements Shape<AABB, Point2D, Shape2D> {
 	
 	@Override
 	public Point2D getCenter() {
-		return center;
+		return GeomUtil2D.getCenter(getPoints());
 	}
 	
 	public List<Line> getLines() {
@@ -74,14 +72,16 @@ public abstract class Shape2D implements Shape<AABB, Point2D, Shape2D> {
 	public float getRadius() {
 		float dis = 0;
 		for(final Point2D p : getPoints()) {
-			dis = Math.max(dis, center.distanse(p));
+			dis = Math.max(dis, getCenter().distanse(p));
 		}
 		return dis;
 	}
 	
 	@Override
 	public boolean isIntersect(final Shape2D other) {
-		return new AABB(this).isIntersect(new AABB(other));
+		if(!new AABB(this).isIntersect(new AABB(other)))return false;
+		
+		return true;
 	}
 	
 	public Point2D minPoint(final Point2D point) {
@@ -109,14 +109,8 @@ public abstract class Shape2D implements Shape<AABB, Point2D, Shape2D> {
 	public final void moveTo(Point2D p) {
 		moveTo(p.getX(), p.getY());
 	}
-	
-	public Shape2D rotate(final Point2D point, final double ang) {
-		for(final Point2D p : getPoints()) {
-			p.rotate(point, ang);
-		}
-		if(!getPoints().contains(getCenter())) center.rotate(point, ang);
-		return this;
-	}
+
+	public abstract void rotate(final Point2D point, final double ang);
 	
 	public void setSize(float width, float height) {
 		AABB aabb = new AABB(this);
@@ -138,13 +132,6 @@ public abstract class Shape2D implements Shape<AABB, Point2D, Shape2D> {
 	public void transleteY(final Translete t) {
 		for(final Point2D p : getPoints()) {
 			p.transleteY(t);
-		}
-	}
-	
-	protected void trim() {
-		try {
-			center = GeomUtil2D.getCenter(getPoints());
-		}catch (NullPointerException e) {
 		}
 	}
 	

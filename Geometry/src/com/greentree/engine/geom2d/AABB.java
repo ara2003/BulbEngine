@@ -1,6 +1,6 @@
 package com.greentree.engine.geom2d;
 
-import com.greentree.util.Sized;
+import com.greentree.common.Sized;
 
 /** @author Arseny Latyshev */
 public class AABB implements com.greentree.engine.geom.AABB<AABB>, Sized {

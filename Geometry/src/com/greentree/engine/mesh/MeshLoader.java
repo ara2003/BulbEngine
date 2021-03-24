@@ -3,7 +3,7 @@ package com.greentree.engine.mesh;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.greentree.util.Log;
+import com.greentree.common.Log;
 
 /**
  * @author Arseny Latyshev

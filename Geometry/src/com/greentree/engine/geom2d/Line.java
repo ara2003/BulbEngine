@@ -17,7 +17,6 @@ public class Line extends Shape2D {
 	public Line(final Point2D p1, final Point2D p2) {
 		this.p1 = p1;
 		this.p2 = p2;
-		trim();
 	}
 	
 	@Override
@@ -112,10 +111,9 @@ public class Line extends Shape2D {
 	}
 	
 	@Override
-	public Shape2D rotate(final Point2D p, final double ang) {
+	public void rotate(final Point2D p, final double ang) {
 		p1.rotate(p, ang);
 		p2.rotate(p, ang);
-		return this;
 	}
 	@Override
 	public String toString() {

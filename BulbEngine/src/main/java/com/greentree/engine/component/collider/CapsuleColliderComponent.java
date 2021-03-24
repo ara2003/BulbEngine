@@ -7,7 +7,6 @@ import com.greentree.engine.geom2d.Shape2D;
 /** @author ara */
 public final class CapsuleColliderComponent extends ColliderComponent {
 	
-	private static final long serialVersionUID = 1L;
 	@EditorData
 	public float radius, height, x, y;
 	

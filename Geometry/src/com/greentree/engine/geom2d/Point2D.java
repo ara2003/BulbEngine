@@ -12,6 +12,11 @@ import com.greentree.engine.geom.Point;
 
 public class Point2D extends Shape2D implements Point<AABB, Point2D, Shape2D> {
 	
+	@Override
+	public AABB getAABB() {
+		return new AABB(x, y, 0, 0);
+	}
+	
 	public float x, y;
 	
 	public Point2D() {
@@ -20,7 +25,6 @@ public class Point2D extends Shape2D implements Point<AABB, Point2D, Shape2D> {
 	public Point2D(final float x, final float y) {
 		this.x = x;
 		this.y = y;
-		trim();
 	}
 	
 	public Point2D(Point2D center, @SuppressWarnings("exports") Vector2f vector) {
@@ -96,8 +100,8 @@ public class Point2D extends Shape2D implements Point<AABB, Point2D, Shape2D> {
 	}
 	
 	@Override
-	public Shape2D rotate(final Point2D c, final double ang) {
-		if(equals(c)) return this;
+	public void rotate(final Point2D c, final double ang) {
+		if(equals(c)) return;
 		x -= c.getX();
 		y -= c.getY();
 		final float x_ = x, y_ = y;
@@ -105,7 +109,6 @@ public class Point2D extends Shape2D implements Point<AABB, Point2D, Shape2D> {
 		y = (float) (x_ * sin(ang) + y_ * cos(ang));
 		x += c.getX();
 		y += c.getY();
-		return this;
 	}
 	
 	@Override
@@ -121,10 +124,5 @@ public class Point2D extends Shape2D implements Point<AABB, Point2D, Shape2D> {
 	@Override
 	public void transleteY(final Translete t) {
 		y = t.translete(y);
-	}
-	
-	@Override
-	protected void trim() {
-		super.center = this;
 	}
 }

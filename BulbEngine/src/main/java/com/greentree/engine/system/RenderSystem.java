@@ -2,17 +2,17 @@ package com.greentree.engine.system;
 
 import java.util.stream.Collectors;
 
+import com.greentree.common.Log;
 import com.greentree.engine.Game;
 import com.greentree.engine.component.Camera;
 import com.greentree.engine.component.ComponentList;
-import com.greentree.engine.component.RendenerComponent;
+import com.greentree.engine.component.AbstractRendenerComponent;
 import com.greentree.engine.component.Transform;
-import com.greentree.util.Log;
+import com.greentree.engine.object.GameSystem;
 
 /** @author Arseny Latyshev */
 public class RenderSystem extends GameSystem {
 	
-	private static final long serialVersionUID = 1L;
 	private Camera mainCamera;
 	
 	public Camera getMainCamera() {
@@ -20,7 +20,7 @@ public class RenderSystem extends GameSystem {
 	}
 	
 	@Override
-	public void start() {
+	protected void start() {
 		final ComponentList<Camera> cameras = this.getAllComponentsAsComponentList(Camera.class);
 		if(cameras.size() < 1) Log.error("Camera not found " + Game.getCurrentScene(), new NullPointerException());
 		if(cameras.size() > 1) Log.error("Found more one camera", new Exception());
@@ -28,9 +28,9 @@ public class RenderSystem extends GameSystem {
 	}
 	
 	@Override
-	public void update() {
+	protected void update() {
 		this.mainCamera.translate();
-		for(final RendenerComponent renderable : getAllComponents(RendenerComponent.class).parallelStream()
+		for(final AbstractRendenerComponent renderable : getAllComponents(AbstractRendenerComponent.class).parallelStream()
 				.sorted((a, b)->(int) (a.getComponent(Transform.class).z - b.getComponent(Transform.class).z))
 				.collect(Collectors.toList())) {
 			renderable.render();
