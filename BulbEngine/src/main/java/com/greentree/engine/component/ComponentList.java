@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.greentree.engine.GameComponent;
-import com.greentree.engine.GameNode;
+import com.greentree.engine.object.GameComponent;
+import com.greentree.engine.object.GameObject;
 
 /** @author Arseny Latyshev */
 public class ComponentList<E extends GameComponent> implements List<E> {
@@ -22,8 +22,8 @@ public class ComponentList<E extends GameComponent> implements List<E> {
 		this.list = new ArrayList<>(n);
 	}
 	
-	public ComponentList(List<E> list) {
-		this.list = list;
+	public ComponentList(Collection<E> list) {
+		this.list = new ArrayList<>(list);
 	}
 	
 	@Override
@@ -70,9 +70,9 @@ public class ComponentList<E extends GameComponent> implements List<E> {
 		return list;
 	}
 	
-	public Collection<GameNode> getObjects() {
-		Collection<GameNode> listObjects = new ArrayList<>();
-		for(E e : list) listObjects.add(e.getNode());
+	public Collection<GameObject> getObjects() {
+		Collection<GameObject> listObjects = new ArrayList<>();
+		for(E e : list) listObjects.add(e.getObject());
 		return listObjects;
 	}
 	

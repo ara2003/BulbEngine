@@ -1,17 +1,16 @@
-package com.greentree.engine.system;
+package com.greentree.engine.object;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
+import java.util.Set;
 
-import com.greentree.engine.Constants;
+import com.greentree.common.Log;
 import com.greentree.engine.Game;
-import com.greentree.engine.GameComponent;
 import com.greentree.engine.component.ComponentList;
-import com.greentree.util.Log;
 
-public abstract class GameSystem extends Constants implements Serializable {
+public abstract class GameSystem extends GameElement implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	protected static final Random random = new Random();
@@ -32,9 +31,12 @@ public abstract class GameSystem extends Constants implements Serializable {
 	
 	public void execute() {
 	}
-	
-	protected <T extends GameComponent> ComponentList<T> getComponents(final Class<T> clazz) {
-		return Game.getMainNode().getAllComponents(clazz);
+
+	protected <T extends GameComponent> Set<T> getAllComponents(final Class<T> clazz) {
+		return Game.getCurrentScene().getAllComponents(clazz);
+	}
+	protected <T extends GameComponent> ComponentList<T> getAllComponentsAsComponentList(final Class<T> clazz) {
+		return Game.getCurrentScene().getAllComponentsAsComponentList(clazz);
 	}
 	
 	public final void init() {
