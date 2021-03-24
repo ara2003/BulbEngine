@@ -39,13 +39,12 @@
 		    <version>${junit.version}</version>
 		    <scope>test</scope>
         </dependency>
-		<!-- math -->
-		<dependency>
-			<groupId>org.joml</groupId>
-			<artifactId>joml</artifactId>
-			<version>${joml.version}</version>
-		</dependency>
 		<!-- bulb engine -->
+		<dependency>
+			<groupId>com.greentree.bulbengine</groupId>
+			 <artifactId>math</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>com.greentree.bulbengine</groupId>
 			 <artifactId>geometry</artifactId>
