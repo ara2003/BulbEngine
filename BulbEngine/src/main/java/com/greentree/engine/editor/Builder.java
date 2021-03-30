@@ -9,15 +9,12 @@ import com.greentree.engine.object.GameScene;
 /** @author Arseny Latyshev */
 public interface Builder {
 	
-	//create Scene
-	GameScene createScene(InputStream in);
-	void fillScene(GameScene emptyScene, InputStream in);
-	
 	//create Object
 	GameObject createObject(InputStream in, GameObjectParent parent);
-	void fillObject(GameObject emptyObjectBuilder, InputStream in);
-	
 	//create prefab
 	GameObject createPrefab(String prefabName, GameObjectParent parent);
-	
+	//create Scene
+	GameScene createScene(InputStream in);
+	void fillObject(GameObject emptyObjectBuilder, InputStream in);
+	void fillScene(GameScene emptyScene, InputStream in);
 }

@@ -19,7 +19,7 @@ import com.greentree.bulbgl.input.event.KeyRepaeasedEvent;
 import com.greentree.bulbgl.input.event.KeyRepeatedEvent;
 import com.greentree.bulbgl.input.event.MouseClickEvent;
 import com.greentree.bulbgl.input.event.MouseMovedEvent;
-import com.greentree.engine.event.EventSystem;
+import com.greentree.event.EventSystem;
 
 /** @author Arseny Latyshev */
 public class GLFWWindow extends Window {
@@ -77,7 +77,8 @@ public class GLFWWindow extends Window {
 	
 	@Override
 	public void close() throws IllegalStateException {
-		glfwDestroyWindow(id);
+		finishRender();
+		glfwSetWindowShouldClose(id, true);
 	}
 	
 	@Override

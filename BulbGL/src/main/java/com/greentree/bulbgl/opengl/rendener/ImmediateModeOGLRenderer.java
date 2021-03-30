@@ -300,4 +300,5 @@ public class ImmediateModeOGLRenderer implements SGL {
 	public void setGlobalAlphaScale(final float alphaScale) {
 		this.alphaScale = alphaScale;
 	}
+
 }

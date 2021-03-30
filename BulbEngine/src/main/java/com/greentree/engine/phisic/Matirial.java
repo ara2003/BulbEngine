@@ -5,11 +5,11 @@ public final class Matirial {
 	private float elasticity;
 	
 	public float getElasticity() {
-		return elasticity;
+		return this.elasticity;
 	}
 	
 	@Override
 	public String toString() {
-		return "[Matirial [elasticity=" + elasticity + "]]";
+		return "[Matirial [elasticity=" + this.elasticity + "]]";
 	}
 }

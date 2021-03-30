@@ -1,13 +1,9 @@
 package com.greentree.bulbgl.input.event;
 
-import com.greentree.engine.event.Event;
-import com.greentree.engine.event.EventSystem;
+import com.greentree.event.EventSystem;
 
-/**
- * @author Arseny Latyshev
- *
- */
-public final class MouseMovedEvent implements Event {
+/** @author Arseny Latyshev */
+public final class MouseMovedEvent implements MouseEvent {
 	
 	private static final long serialVersionUID = 1L;
 	private int button, x1, y1, x2, y2;
@@ -15,57 +11,55 @@ public final class MouseMovedEvent implements Event {
 	
 	private MouseMovedEvent(final EventType type, final int x1, final int y1, final int x2, final int y2) {
 		this.type = type;
-		this.x1 = x1;
-		this.y1 = y1;
-		this.x2 = x2;
-		this.y2 = y2;
+		this.x1   = x1;
+		this.y1   = y1;
+		this.x2   = x2;
+		this.y2   = y2;
+	}
+	
+	@SuppressWarnings("exports")
+	public static MouseMovedEvent getInstanse(final EventSystem eventSystem, final EventType type, final int x1, final int y1,
+			final int x2, final int y2) {
+		MouseMovedEvent event = eventSystem.get(MouseMovedEvent.class);
+		if(event == null) event = new MouseMovedEvent(type, x1, y1, x2, y2);
+		else event.reset(type, x1, y1, x2, y2);
+		return event;
 	}
 	
 	public int getButton() {
-		return button;
+		return this.button;
 	}
 	
 	public EventType getEventType() {
-		return type;
+		return this.type;
 	}
 	
 	public int getX1() {
-		return x1;
+		return this.x1;
 	}
 	
 	public int getX2() {
-		return x2;
+		return this.x2;
 	}
 	
 	public int getY1() {
-		return y1;
+		return this.y1;
 	}
 	
 	public int getY2() {
-		return y2;
+		return this.y2;
+	}
+	
+	public MouseMovedEvent reset(final EventType eventType, final int x1, final int y1, final int x2, final int y2) {
+		this.type = eventType;
+		this.x1   = x1;
+		this.x2   = x2;
+		this.y1   = y1;
+		this.y2   = y2;
+		return this;
 	}
 	
 	public enum EventType{
 		mouseDragged,mouseMoved;
 	}
-
-	public MouseMovedEvent reset(EventType eventType, int x1, int y1, int x2, int y2) {
-		this.type = eventType;
-		this.x1 = x1;
-		this.x2 = x2;
-		this.y1 = y1;
-		this.y2 = y2;
-		return this;
-	}
-
-	@SuppressWarnings("exports")
-	public static MouseMovedEvent getInstanse(EventSystem eventSystem, EventType type, int x1, int y1, int x2, int y2) {
-		MouseMovedEvent event = eventSystem.get(MouseMovedEvent.class);
-		if(event == null)
-			event = new MouseMovedEvent(type, x1, y1, x2, y2);
-		else
-			event.reset(type, x1, y1, x2, y2);
-		return event;
-	}
-	
 }

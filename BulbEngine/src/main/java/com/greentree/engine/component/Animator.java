@@ -12,6 +12,6 @@ public class Animator extends GameComponent {
 	
 	@Override
 	public void update() {
-		anim.draw(t.x, t.y);
+		this.anim.draw(this.t.x(), this.t.y());
 	}
 }

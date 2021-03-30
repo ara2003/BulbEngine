@@ -1,30 +1,27 @@
 package com.greentree.engine.input;
 
-
-/**
- * @author Arseny Latyshev
- *
- */
+/** @author Arseny Latyshev */
 public abstract class CameraMouseAdapter implements CameraMouseListener {
+	
 	private static final long serialVersionUID = 1L;
-
+	
 	@Override
-	public void mouseDragged(int x1, int y1, int x2, int y2) {
+	public void mouseDragged(final int x1, final int y1, final int x2, final int y2) {
 	}
 	
 	@Override
-	public void mouseMoved(int x1, int y1, int x2, int y2) {
+	public void mouseMoved(final int x1, final int y1, final int x2, final int y2) {
 	}
 	
 	@Override
-	public void mousePress(int button, int x, int y) {
+	public void mousePress(final int button, final int x, final int y) {
 	}
 	
 	@Override
-	public void mouseRelease(int button, int x, int y) {
+	public void mouseRelease(final int button, final int x, final int y) {
 	}
 	
 	@Override
-	public void mouseRepeat(int button, int x, int y) {
+	public void mouseRepeat(final int button, final int x, final int y) {
 	}
 }

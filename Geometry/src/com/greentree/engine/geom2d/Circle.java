@@ -41,12 +41,12 @@ public final class Circle extends Shape2D {
 	
 	@Override
 	public List<Point2D> getPoints() {
-		final List<Point2D> p = new ArrayList<>(Circle.PointInCircle+2);
+		final List<Point2D> points = new ArrayList<>(Circle.PointInCircle+2);
 		for(int i = 0; i < (Circle.PointInCircle+2); i++) {
-			p.add(new Point2D((float) (center.getX() + (radius * Math.cos((2 * Math.PI * i)/ Circle.PointInCircle))),
+			points.add(new Point2D((float) (center.getX() + (radius * Math.cos((2 * Math.PI * i)/ Circle.PointInCircle))),
 					(float) (center.getY() + (radius * Math.sin((2 * Math.PI *i)/ Circle.PointInCircle)))));
 		}
-		return p;
+		return points;
 	}
 	
 	@Override

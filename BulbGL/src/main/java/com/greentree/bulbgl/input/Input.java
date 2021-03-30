@@ -7,7 +7,7 @@ import org.joml.Vector2ic;
 
 import com.greentree.bulbgl.Window;
 import com.greentree.bulbgl.input.listener.MouseListener;
-import com.greentree.engine.event.EventSystem;
+import com.greentree.event.EventSystem;
 
 public class Input {
 	

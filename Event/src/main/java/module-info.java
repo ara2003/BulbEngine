@@ -1,8 +1,9 @@
 
-module bulbengine.event {
+open module bulbengine.event {
 
 	requires bulbengine.util;
-	
-	exports com.greentree.engine.event;
+
+	exports com.greentree.event;
+	exports com.greentree.action;
 
 }

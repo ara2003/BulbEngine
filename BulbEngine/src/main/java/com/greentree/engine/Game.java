@@ -22,12 +22,12 @@ import com.greentree.common.time.Time;
 import com.greentree.engine.component.Camera;
 import com.greentree.engine.editor.Builder;
 import com.greentree.engine.editor.xml.BasicXMlBuilder;
-import com.greentree.engine.event.Event;
-import com.greentree.engine.event.EventSystem;
-import com.greentree.engine.event.Listener;
 import com.greentree.engine.object.GameObject;
 import com.greentree.engine.object.GameScene;
 import com.greentree.engine.system.RenderSystem;
+import com.greentree.event.Event;
+import com.greentree.event.EventSystem;
+import com.greentree.event.Listener;
 
 public final class Game {
 	
@@ -38,53 +38,61 @@ public final class Game {
 	private static Window window;
 	private static Properties properties;
 	
-	public static String getProperty(String key){
-		return properties.getProperty(key);
-	}
-	
 	private Game() {
 	}
 	
-	public static void addListener(Listener listener) {
-		getEventSystem().addListener(listener);
+	public static void addListener(final Listener listener) {
+		Game.getEventSystem().addListener(listener);
 	}
 	
-	public static void event(Event event) {
-		getEventSystem().event(event);
+	public static GameObject createFromPrefab(final String prefab) {
+		return Game.builder.createPrefab(prefab, Game.getCurrentScene());
+	}
+	
+	public static void event(final Event event) {
+		Game.getEventSystem().event(event);
+	}
+	
+	public static void exit() {
+		Game.window.close();
 	}
 	
 	private static void gameLoop() {
 		Graphics.resetTransform();
 		Graphics.resetLineWidth();
 		Graphics.setAntiAlias(false);
-		window.startRender();
+		Game.window.startRender();
 		Time.updata();
-		eventSystem.update();
-		getCurrentScene().update();
+		Game.eventSystem.update();
+		Game.getCurrentScene().update();
 		Graphics.setColor(Color.white);
 		Graphics.drawString("FPS: " + Time.getFps(), 10, 10);
-		window.finishRender();
+		Game.window.finishRender();
 		Graphics.resetTransform();
 	}
-
+	
 	public static File getAssets() {
 		return Game.assets;
 	}
 	
 	public static Builder getBuilder() {
-		return builder;
+		return Game.builder;
 	}
 	
 	public static GameScene getCurrentScene() {
-		return Objects.requireNonNull(currentScene, "current scene is null");
+		return Objects.requireNonNull(Game.currentScene, "current scene is null");
 	}
 	
 	public static EventSystem getEventSystem() {
-		return eventSystem;
+		return Game.eventSystem;
 	}
 	
 	public static Camera getMainCamera() {
-		return currentScene.getSystem(RenderSystem.class).getMainCamera();
+		return Game.currentScene.getSystem(RenderSystem.class).getMainCamera();
+	}
+	
+	public static String getProperty(final String key) {
+		return Game.properties.getProperty(key);
 	}
 	
 	public static File getRoot() {
@@ -92,14 +100,14 @@ public final class Game {
 	}
 	
 	public static Window getWindow() {
-		return window;
+		return Game.window;
 	}
 	
 	public static Class<?> loadClass(final String name) {
-		return loadClass(name, new ArrayList<>());
+		return Game.loadClass(name, new ArrayList<>());
 	}
 	
-	public static Class<?> loadClass(final String className, List<String> packageNames) {
+	public static Class<?> loadClass(final String className, final List<String> packageNames) {
 		if(packageNames == null) throw new NullPointerException("packages is null");
 		if(className == null) throw new NullPointerException("name is null");
 		for(final String packageName : packageNames) try {
@@ -113,26 +121,26 @@ public final class Game {
 	public static void loadScene(final String name) {
 		Log.info("Scene load : " + name);
 		final InputStream inputStream = ResourceLoader.getResourceAsStream(name + ".scene");
-		GameScene scene = builder.createScene(inputStream);
-		reset(scene);
-		builder.fillScene(scene, inputStream);
+		final GameScene   scene       = Game.builder.createScene(inputStream);
+		Game.reset(scene);
+		Game.builder.fillScene(scene, inputStream);
 		scene.start();
 	}
 	
-	private static void reset(GameScene scene) {
-		currentScene = scene;
-		eventSystem = new EventSystem();
-		window.setEventSystem(eventSystem);
-		Input.setEventSystem(eventSystem);
+	private static void reset(final GameScene scene) {
+		Game.currentScene = scene;
+		Game.eventSystem  = new EventSystem();
+		Game.window.setEventSystem(Game.eventSystem);
+		Input.setEventSystem(Game.eventSystem);
 		System.gc();
 	}
 	
-	public static void setBuilder(Builder builder) {
+	public static void setBuilder(final Builder builder) {
 		Game.builder = builder;
 	}
 	
 	private static void setup() {
-		int width = window.getWidth(), height = window.getHeight();
+		final int width = Game.window.getWidth(), height = Game.window.getHeight();
 		Log.info("Starting display " + width + "x" + height);
 		Renderer.get().initDisplay(width, height);
 		Renderer.get().enterOrtho(width, height);
@@ -140,41 +148,28 @@ public final class Game {
 	}
 	
 	public static void start(final String file) {
-		root = new File(file);
-		assets = new File(root, "Assets");
-		debug = new File(root, "Debug");
-		Log.setLogFolder(debug);
-		ResourceLoader.addResourceLocation(new FileSystemLocation(assets));
-		ResourceLoader.addResourceLocation(new FileSystemLocation(root));
-		Properties properties = new Properties();
+		Game.root   = new File(file);
+		Game.assets = new File(Game.root, "Assets");
+		Game.debug  = new File(Game.root, "Debug");
+		Log.setLogFolder(Game.debug);
+		ResourceLoader.addResourceLocation(new FileSystemLocation(Game.assets));
+		ResourceLoader.addResourceLocation(new FileSystemLocation(Game.root));
+		final Properties properties = new Properties();
 		try {
-			properties.load(new FileInputStream(new File(root, "config.game")));
-		}catch(IOException e) {
+			properties.load(new FileInputStream(new File(Game.root, "config.game")));
+		}catch(final IOException e) {
 			Log.error(e);
 		}
 		Game.properties = properties;
-		{
-			int width = Integer.parseInt(properties.getProperty("window.width"));
-			int height = Integer.parseInt(properties.getProperty("window.height"));
-			boolean fullscreen = Boolean.parseBoolean(properties.getProperty("window.fullscreen"));
-			window = new GLFWWindow(properties.getProperty("window.title", "blub window"), width, height, fullscreen);
-		}
-		Input.setWindow(window);
+		final int     width      = Integer.parseInt(properties.getProperty("window.width"));
+		final int     height     = Integer.parseInt(properties.getProperty("window.height"));
+		final boolean fullscreen = Boolean.parseBoolean(properties.getProperty("window.fullscreen"));
+		Game.window = new GLFWWindow(properties.getProperty("window.title", "blub window"), width, height, fullscreen);
+		Input.setWindow(Game.window);
 		Game.setup();
-		loadScene(properties.getProperty("scene.first"));
-		Input.setEventSystem(eventSystem);
-		while(!window.isShouldClose()) {
-			Game.gameLoop();
-		}
-		window.close();
+		Game.loadScene(properties.getProperty("scene.first"));
+		Input.setEventSystem(Game.eventSystem);
+		while(!Game.window.isShouldClose()) Game.gameLoop();
+		Game.window.close();
 	}
-
-	public static GameObject createFromPrefab(String prefab) {
-		return builder.createPrefab(prefab, getCurrentScene());
-	}
-
-	public static void exit() {
-		window.close();
-	}
-
 }

@@ -14,55 +14,55 @@ public class SpriteRendener extends AbstractRendenerComponent {
 	private int width, height;
 	@EditorData(name = "image")
 	protected Texture texture;
-
+	
 	public int getHeight() {
-		return height;
+		return this.height;
 	}
 	
 	public int getWidth() {
-		return width;
+		return this.width;
 	}
 	
 	@Override
 	public void render() {
 		Color.white.bind();
-		texture.bind();
-		texture.setTextureFilter(SGL.GL_LINEAR);
-		GL.glTranslatef(position.x, position.y, 0);
-		GL.glBegin(SGL.GL_QUADS);
-		final float w = .5f / width, h = .5f / height;
-		GL.glTexCoord2f(w, h);
-		GL.glVertex3f(-width / 2, -height / 2, 0);
-		GL.glTexCoord2f(w, texture.getHeight() - h);
-		GL.glVertex3f(-width / 2, height / 2, 0);
-		GL.glTexCoord2f(texture.getWidth() - w, texture.getHeight() - h);
-		GL.glVertex3f(width / 2, height / 2, 0);
-		GL.glTexCoord2f(texture.getWidth() - w, h);
-		GL.glVertex3f(width / 2, -height / 2, 0);
-		GL.glEnd();
-		GL.glTranslatef(-position.x, -position.y, 0);
+		this.texture.bind();
+		this.texture.setTextureFilter(SGL.GL_LINEAR);
+		SpriteRendener.GL.glTranslatef(this.position.x(), this.position.y(), 0);
+		SpriteRendener.GL.glBegin(SGL.GL_QUADS);
+		final float w = .5f / this.width, h = .5f / this.height;
+		SpriteRendener.GL.glTexCoord2f(w, h);
+		SpriteRendener.GL.glVertex3f(-this.width / 2, -this.height / 2, 0);
+		SpriteRendener.GL.glTexCoord2f(w, this.texture.getHeight() - h);
+		SpriteRendener.GL.glVertex3f(-this.width / 2, this.height / 2, 0);
+		SpriteRendener.GL.glTexCoord2f(this.texture.getWidth() - w, this.texture.getHeight() - h);
+		SpriteRendener.GL.glVertex3f(this.width / 2, this.height / 2, 0);
+		SpriteRendener.GL.glTexCoord2f(this.texture.getWidth() - w, h);
+		SpriteRendener.GL.glVertex3f(this.width / 2, -this.height / 2, 0);
+		SpriteRendener.GL.glEnd();
+		SpriteRendener.GL.glTranslatef(-this.position.x(), -this.position.y(), 0);
 	}
 	
-	public void setHeight(int height) {
-		if(height <= 0) this.height = texture.getImageHeight();
+	public void setHeight(final int height) {
+		if(height <= 0) this.height = this.texture.getImageHeight();
 		else this.height = height;
 	}
 	
-	public void setSize(int width, int height) {
-		this.width = width;
+	public void setSize(final int width, final int height) {
+		this.width  = width;
 		this.height = height;
 	}
 	
-	public void setWidth(int width) {
-		if(width <= 0) this.width = texture.getImageWidth();
+	public void setWidth(final int width) {
+		if(width <= 0) this.width = this.texture.getImageWidth();
 		else this.width = width;
 	}
 	
 	@Override
 	protected void start() {
-		position = getComponent(Transform.class);
-		if(texture == null) throw new NullPointerException("Texture " + texture.getTextureRef() + " don\'t load");
-		if(width == 0) width = texture.getImageWidth();
-		if(height == 0) height = texture.getImageHeight();
+		this.position = this.getComponent(Transform.class);
+		if(this.texture == null) throw new NullPointerException("Texture " + this.texture.getTextureRef() + " don\'t load");
+		if(this.width == 0) this.width = this.texture.getImageWidth();
+		if(this.height == 0) this.height = this.texture.getImageHeight();
 	}
 }

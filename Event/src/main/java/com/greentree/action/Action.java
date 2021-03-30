@@ -2,26 +2,28 @@ package com.greentree.action;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Consumer;
 
-/** @author Arseny Latyshev */
-public abstract class Action<E, L> {
+/**
+ * @author Arseny Latyshev
+ *
+ */
+public class Action<L> {
 	
-	protected Collection<L> listeners;
+	private Collection<L> listeners;
 	
 	public Action() {
 		listeners = new ArrayList<>();
 	}
 	
-	public final void addListener(L l) {
-		listeners.add(l);
+	public final boolean addListener(L l) {
+		return listeners.add(l);
 	}
 	
-	public final void action(E e){
+	public void action(Consumer<L> consumer){
 		for(L l : listeners) {
-			event(l, e);
+			consumer.accept(l);
 		}
 	}
-	
-	protected abstract void event(L l, E e);
 	
 }

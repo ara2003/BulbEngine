@@ -12,7 +12,6 @@ public @interface EditorData{
 	
 	public final static String NULL = "";
 	
-	public String def() default NULL;
+	public String name() default EditorData.NULL;
 	
-	public String name() default NULL;
 }

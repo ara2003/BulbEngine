@@ -3,7 +3,6 @@ package com.greentree.engine.collizion;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.greentree.engine.component.collider.ColliderComponent;
 import com.greentree.engine.geom2d.Point2D;
 import com.greentree.engine.geom2d.ShapeList;
 

@@ -3,6 +3,7 @@ open module bulbengine.util {
 	
 	requires java.xml;
 	requires com.google.gson;
+	requires transitive com.google.common;
 	
 	exports com.greentree.common;
 	exports com.greentree.common.time;

@@ -1,6 +1,7 @@
 package com.greentree.engine.object;
 
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -14,6 +15,7 @@ import com.greentree.engine.component.ComponentList;
 /** @author Arseny Latyshev */
 public abstract class GameObjectParent extends GameElement {
 	
+	protected static final Random random = new Random();
 	protected final Set<GameObject> childrens;
 	protected final ClassTree<GameComponent> allTreeComponents;
 	protected final String name;
@@ -23,7 +25,6 @@ public abstract class GameObjectParent extends GameElement {
 		this.allTreeComponents = new HashMapClassTree<>();
 		this.childrens         = new CopyOnWriteArraySet<>();
 	}
-	protected static final Random random = new Random();
 	
 	public final boolean addChildren(final GameObject object) {
 		if(this.childrens.add(object)) {
@@ -55,7 +56,7 @@ public abstract class GameObjectParent extends GameElement {
 		return this.findObjects(obj->obj.getName().startsWith(name));
 	}
 	
-	public final <T> Set<T> getAllComponents(final Class<T> clazz) {
+	public final <T> Queue<T> getAllComponents(final Class<T> clazz) {
 		return this.allTreeComponents.get(clazz);
 	}
 	
@@ -73,9 +74,5 @@ public abstract class GameObjectParent extends GameElement {
 	}
 	
 	public abstract void tryAddNecessarilySystem(Class<?> clazz);
-
 	public abstract void updateUpTreeComponents();
-	
-	
-	
 }

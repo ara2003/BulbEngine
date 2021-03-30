@@ -1,8 +1,8 @@
 package com.greentree.bulbgl.input.listener;
 
 import com.greentree.bulbgl.input.listener.manager.KeyListenerManager;
-import com.greentree.engine.event.Listener;
-import com.greentree.engine.event.NecessarilyListenerManagers;
+import com.greentree.event.Listener;
+import com.greentree.event.NecessarilyListenerManagers;
 
 @NecessarilyListenerManagers({KeyListenerManager.class})
 public interface KeyListener extends Listener {

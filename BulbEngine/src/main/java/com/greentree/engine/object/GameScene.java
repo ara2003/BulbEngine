@@ -1,7 +1,5 @@
 package com.greentree.engine.object;
 
-import static com.greentree.engine.object.GameElement.*;
-
 import com.greentree.common.ClassUtil;
 import com.greentree.common.collection.OneClassSet;
 import com.greentree.engine.system.NecessarilySystems;
@@ -25,8 +23,14 @@ public final class GameScene extends GameObjectParent {
 	}
 	
 	@Override
+	public void start() {
+		for(final GameSystem system : this.systems) system.initSratr();
+		for(final GameObject object : this.childrens) object.initSratr();
+	}
+	
+	@Override
 	public String toString() {
-		return "GameScene [systems=" + this.systems + " children=" + childrens + "]@"+hashCode();
+		return "GameScene [systems=" + this.systems + " children=" + this.childrens + "]@" + this.hashCode();
 	}
 	
 	@Override
@@ -36,15 +40,9 @@ public final class GameScene extends GameObjectParent {
 	}
 	
 	@Override
-	public void start() {
-		for(GameSystem system : systems)system.initSratr();
-		for(GameObject object : childrens)object.initSratr();
-	}
-	
-	@Override
 	public void update() {
-		for(GameSystem system : systems)system.update();
-		for(GameObject object : childrens)object.update();
+		for(final GameSystem system : this.systems) system.update();
+		for(final GameObject object : this.childrens) object.update();
 	}
 	
 	@Override

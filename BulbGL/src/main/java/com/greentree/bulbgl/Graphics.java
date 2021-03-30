@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
 
 import com.greentree.bulbgl.image.Image;
 import com.greentree.bulbgl.image.TextureImpl;
@@ -284,15 +285,15 @@ public final class Graphics {
 		Graphics.fillOval(c.getX(), c.getY(), f, g);
 	}
 	
-	public static void fillRect(final float x1, final float y1, final float width, final float height) {
+	public static void fillRect(final double x1, final double y1, final double width, final double height) {
 		TextureImpl.bindNone();
 		Graphics.currentColor.bind();
-		Graphics.GL.glBegin(7);
-		Graphics.GL.glVertex2f(x1, y1);
-		Graphics.GL.glVertex2f(x1 + width, y1);
-		Graphics.GL.glVertex2f(x1 + width, y1 + height);
-		Graphics.GL.glVertex2f(x1, y1 + height);
-		Graphics.GL.glEnd();
+		GL11.glBegin(7);
+		GL11.glVertex2d(x1, y1);
+		GL11.glVertex2d(x1 + width, y1);
+		GL11.glVertex2d(x1 + width, y1 + height);
+		GL11.glVertex2d(x1, y1 + height);
+		GL11.glEnd();
 	}
 	
 	public static void fillRect(final float x, final float y, final float width, final float height,

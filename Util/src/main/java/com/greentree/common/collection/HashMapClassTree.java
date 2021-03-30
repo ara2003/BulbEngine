@@ -1,25 +1,23 @@
 package com.greentree.common.collection;
 
-import java.util.AbstractSet;
+import java.util.ArrayDeque;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 
 /** @author Arseny Latyshev */
-public class HashMapClassTree<E> extends AbstractSet<E> implements ClassTree<E> {
+public class HashMapClassTree<E> implements ClassTree<E> {
 	
 	private static final long serialVersionUID = 1L;
-	private final Map<Class<?>, Set<?>> map;
+	private final ConcurrentHashMap<Class<?>, Queue<?>> map;
 	
 	public HashMapClassTree() {
-		this.map = new HashMap<>();
+		this.map = new ConcurrentHashMap<>();
 	}
 	
 	public HashMapClassTree(final HashMapClassTree<? extends E> classTree) {
-		this.map = new HashMap<>(classTree.map);
+		this.map = new ConcurrentHashMap<>(classTree.map);
 	}
 	
 	public HashMapClassTree(final Iterable<E> collection) {
@@ -29,19 +27,23 @@ public class HashMapClassTree<E> extends AbstractSet<E> implements ClassTree<E> 
 	
 	@SuppressWarnings("unchecked")
 	private void add(final Class<?> clazz, final Object e) {
-		if(clazz == null) return;
-		((Set<Object>) this.get(clazz)).add(e);
-		this.add(clazz.getSuperclass(), e);
+		if(clazz == null) throw new NullPointerException("clazz is null");
+		((Queue<Object>) this.get(clazz)).add(e);
+		final Class<?> superClazz = clazz.getSuperclass();
+		if(superClazz != null) this.add(superClazz, e);
 		for(final Class<?> interfase : clazz.getInterfaces()) this.add(interfase, e);
 	}
 	
+	@Override
 	public boolean add(final E object) {
+		if(object == null) throw new NullPointerException("object is null");
 		this.add(object.getClass(), object);
 		return true;
 	}
 	
+	@Override
 	@SuppressWarnings("unchecked")
-	public boolean addAll(final Iterable<?> iterable) {
+	public boolean addAll(final Iterable<E> iterable) {
 		if(iterable == null) throw new NullPointerException("iterable is null");
 		boolean t = false;
 		for(final Object e : iterable) try {
@@ -52,10 +54,12 @@ public class HashMapClassTree<E> extends AbstractSet<E> implements ClassTree<E> 
 		return t;
 	}
 	
+	@Override
 	public void clear() {
 		this.map.clear();
 	}
 	
+	@Override
 	public boolean contains(final Object obj) {
 		return this.get(Object.class).contains(obj);
 	}
@@ -65,21 +69,29 @@ public class HashMapClassTree<E> extends AbstractSet<E> implements ClassTree<E> 
 		return true;
 	}
 	
+	@Override
 	public boolean containsClass(final Class<? extends E> clazz) {
 		return this.map.containsKey(clazz);
 	}
 	
+	@Override
 	@SuppressWarnings("unchecked")
-	public <T> Set<T> get(final Class<T> c) {
+	public <T> Queue<T> get(final Class<T> c) {
 		if(c == null) throw new NullPointerException("class is null");
-		final Set<T> set = (Set<T>) this.map.get(c);
+		final Queue<T> set = (Queue<T>) this.map.get(c);
 		if(set == null) {
-			this.map.put(c, new HashSet<>());
+			this.map.put(c, new ArrayDeque<>());
 			return this.get(c);
 		}
 		return set;
 	}
 	
+	@Override
+	public <T> T getOne(final Class<T> c) {
+		return this.get(c).element();
+	}
+	
+	@Override
 	public boolean isEmpty() {
 		return this.get(Object.class).isEmpty();
 	}
@@ -93,7 +105,7 @@ public class HashMapClassTree<E> extends AbstractSet<E> implements ClassTree<E> 
 	@SuppressWarnings("unchecked")
 	private void remove(final Class<?> clazz, final Object obj) {
 		if(clazz == null) return;
-		((Set<Object>) this.get(clazz)).remove(obj);
+		((Queue<Object>) this.get(clazz)).remove(obj);
 		this.remove(clazz.getSuperclass(), obj);
 		for(final Class<?> interfase : clazz.getInterfaces()) this.remove(interfase, obj);
 	}
@@ -113,6 +125,13 @@ public class HashMapClassTree<E> extends AbstractSet<E> implements ClassTree<E> 
 		boolean t = false;
 		for(final E e : collection) if(this.remove(e)) t = true;
 		return t;
+	}
+	
+	@Override
+	public <T> T removeOne(final Class<T> c) {
+		final T a = this.getOne(c);
+		this.remove(a);
+		return a;
 	}
 	
 	public int size() {

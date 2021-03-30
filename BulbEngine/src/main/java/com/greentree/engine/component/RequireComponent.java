@@ -11,7 +11,7 @@ import com.greentree.engine.object.GameComponent;
 @Retention(RUNTIME)
 @Target(TYPE)
 /** @author Arseny Latyshev */
-public @interface RequireComponent {
+public @interface RequireComponent{
 	
 	Class<? extends GameComponent>[] value();
 }

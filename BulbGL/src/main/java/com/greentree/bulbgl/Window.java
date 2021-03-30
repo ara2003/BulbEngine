@@ -1,6 +1,6 @@
 package com.greentree.bulbgl;
 
-import com.greentree.engine.event.EventSystem;
+import com.greentree.event.EventSystem;
 
 /**
  * @author Arseny Latyshev

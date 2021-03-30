@@ -3,13 +3,13 @@ package com.greentree.engine.component;
 import org.joml.Vector2f;
 
 import com.greentree.common.time.Time;
-import com.greentree.engine.component.collider.ColliderComponent;
+import com.greentree.engine.collizion.ColliderComponent;
 import com.greentree.engine.geom2d.GeomUtil2D;
 import com.greentree.engine.geom2d.Point2D;
 import com.greentree.engine.object.GameComponent;
 import com.greentree.engine.phisic.Matirial;
-import com.greentree.engine.system.PhisicSystem;
 import com.greentree.engine.system.NecessarilySystems;
+import com.greentree.engine.system.PhisicSystem;
 
 @RequireComponent({Transform.class,ColliderComponent.class})
 @NecessarilySystems({PhisicSystem.class})
@@ -17,63 +17,63 @@ import com.greentree.engine.system.NecessarilySystems;
 public class PhisicComponent extends GameComponent {
 	
 	private Transform position;
-	@EditorData(def = "1")
-	private float mass;
+	@EditorData
+	private float mass = 1;
 	private Point2D massCenter;
-	@EditorData(def = "Assets\\iron")
+	@DefoultValue("Assets\\iron")
+	@EditorData()
 	private Matirial matirial;
-	@EditorData(def = "DINAMIC", name = "typeCollizion")
-	private Type type;
+	@EditorData(name = "typeCollizion")
+	private Type type = Type.DINAMIC;
 	private Vector2f velosity = new Vector2f();
 	private float rotationVelosity = 0f;
 	
-	public void additionVelosity(Point2D p, Vector2f float2f) {
-		rotationVelosity += float2f.dot(normalTo(p));
-		setVelosity(float2f.add(velosity));
+	public void additionVelosity(final Point2D p, final Vector2f float2f) {
+		this.rotationVelosity += float2f.dot(this.normalTo(p));
+		this.setVelosity(float2f.add(this.velosity));
 	}
 	
-	public void additionVelosity(Vector2f vec) {
-		velosity.add(vec);
+	public void additionVelosity(final Vector2f vec) {
+		this.velosity.add(vec);
 	}
 	
 	public float getElasticity() {
-		return matirial.getElasticity();
+		return this.matirial.getElasticity();
 	}
 	
 	public float getMass() {
-		return mass;
+		return this.mass;
 	}
 	
 	public Type getType() {
-		return type;
+		return this.type;
 	}
 	
 	public Vector2f getVelosity() {
-		return velosity;
+		return this.velosity;
 	}
 	
-	private Vector2f normalTo(Point2D point) {
-		return massCenter.getRadiusVector().sub(point.getRadiusVector());
+	private Vector2f normalTo(final Point2D point) {
+		return this.massCenter.getRadiusVector().sub(point.getRadiusVector());
 	}
 	
-	public void setVelosity(Vector2f velosity) {
-		if(type != Type.STATIC) this.velosity = velosity;
+	public void setVelosity(final Vector2f velosity) {
+		if(this.type != Type.STATIC) this.velosity = velosity;
 	}
 	
 	@Override
 	public void start() {
-		position = getComponent(Transform.class);
-		if(matirial.getElasticity() < 0 || matirial.getElasticity() >= 1) {
-			throw new IllegalArgumentException("elasticity value " + matirial.getElasticity() + " not corect");
-		}
+		this.position = this.getComponent(Transform.class);
+		if(this.matirial.getElasticity() < 0 || this.matirial.getElasticity() >= 1)
+			throw new IllegalArgumentException("elasticity value " + this.matirial.getElasticity() + " not corect");
 	}
 	
 	@Override
 	public void update() {
-		massCenter = GeomUtil2D.getMassCenter(getComponent(ColliderComponent.class).getShape());
-		if(type == Type.DINAMIC) {
-			position.add(getVelosity().mul(Time.getDelta()));
-			getComponent(ColliderComponent.class).getShape().rotate(massCenter, rotationVelosity);
+		this.massCenter = GeomUtil2D.getMassCenter(this.getComponent(ColliderComponent.class).getShape());
+		if(this.type == Type.DINAMIC) {
+			this.position.addXY(this.getVelosity().mul(Time.getDelta()));
+			this.getComponent(ColliderComponent.class).getShape().rotate(this.massCenter, this.rotationVelosity);
 		}
 	}
 	

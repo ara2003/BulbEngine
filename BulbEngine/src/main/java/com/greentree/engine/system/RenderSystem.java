@@ -1,12 +1,13 @@
 package com.greentree.engine.system;
 
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 import com.greentree.common.Log;
 import com.greentree.engine.Game;
+import com.greentree.engine.component.AbstractRendenerComponent;
 import com.greentree.engine.component.Camera;
 import com.greentree.engine.component.ComponentList;
-import com.greentree.engine.component.AbstractRendenerComponent;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.object.GameSystem;
 
@@ -30,11 +31,10 @@ public class RenderSystem extends GameSystem {
 	@Override
 	protected void update() {
 		this.mainCamera.translate();
-		for(final AbstractRendenerComponent renderable : getAllComponents(AbstractRendenerComponent.class).parallelStream()
-				.sorted((a, b)->(int) (a.getComponent(Transform.class).z - b.getComponent(Transform.class).z))
-				.collect(Collectors.toList())) {
+		for(final AbstractRendenerComponent renderable : this.getAllComponents(AbstractRendenerComponent.class).parallelStream()
+				.sorted(Comparator.comparing(a -> a.getComponent(Transform.class).z()))
+				.collect(Collectors.toList()))
 			renderable.render();
-		}
 		this.mainCamera.untranslate();
 	}
 }

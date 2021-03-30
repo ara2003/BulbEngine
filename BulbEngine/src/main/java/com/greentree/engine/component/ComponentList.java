@@ -18,141 +18,141 @@ public class ComponentList<E extends GameComponent> implements List<E> {
 		this.list = new ArrayList<>();
 	}
 	
-	public ComponentList(int n) {
-		this.list = new ArrayList<>(n);
-	}
-	
-	public ComponentList(Collection<E> list) {
+	public ComponentList(final Collection<E> list) {
 		this.list = new ArrayList<>(list);
 	}
 	
-	@Override
-	public boolean add(E e) {
-		return list.add(e);
+	public ComponentList(final int n) {
+		this.list = new ArrayList<>(n);
 	}
 	
 	@Override
-	public void add(int index, E element) {
-		list.add(index, element);
+	public boolean add(final E e) {
+		return this.list.add(e);
 	}
 	
 	@Override
-	public boolean addAll(Collection<? extends E> c) {
-		return list.addAll(c);
+	public void add(final int index, final E element) {
+		this.list.add(index, element);
 	}
 	
 	@Override
-	public boolean addAll(int index, Collection<? extends E> c) {
-		return list.addAll(index, c);
+	public boolean addAll(final Collection<? extends E> c) {
+		return this.list.addAll(c);
+	}
+	
+	@Override
+	public boolean addAll(final int index, final Collection<? extends E> c) {
+		return this.list.addAll(index, c);
 	}
 	
 	@Override
 	public void clear() {
-		list.clear();
+		this.list.clear();
 	}
 	
 	@Override
-	public boolean contains(Object o) {
-		return list.contains(o);
+	public boolean contains(final Object o) {
+		return this.list.contains(o);
 	}
 	
 	@Override
-	public boolean containsAll(Collection<?> c) {
-		return list.containsAll(c);
+	public boolean containsAll(final Collection<?> c) {
+		return this.list.containsAll(c);
 	}
 	
 	@Override
-	public E get(int index) {
-		return list.get(index);
+	public E get(final int index) {
+		return this.list.get(index);
 	}
 	
 	public List<? extends GameComponent> getList() {
-		return list;
+		return this.list;
 	}
 	
 	public Collection<GameObject> getObjects() {
-		Collection<GameObject> listObjects = new ArrayList<>();
-		for(E e : list) listObjects.add(e.getObject());
+		final Collection<GameObject> listObjects = new ArrayList<>();
+		for(final E e : this.list) listObjects.add(e.getObject());
 		return listObjects;
 	}
 	
 	@Override
-	public int indexOf(Object o) {
-		return list.indexOf(o);
+	public int indexOf(final Object o) {
+		return this.list.indexOf(o);
 	}
 	
 	@Override
 	public boolean isEmpty() {
-		return list.isEmpty();
+		return this.list.isEmpty();
 	}
 	
 	@Override
 	public Iterator<E> iterator() {
-		return list.iterator();
+		return this.list.iterator();
 	}
 	
 	@Override
-	public int lastIndexOf(Object o) {
-		return list.lastIndexOf(o);
+	public int lastIndexOf(final Object o) {
+		return this.list.lastIndexOf(o);
 	}
 	
 	@Override
 	public ListIterator<E> listIterator() {
-		return list.listIterator();
+		return this.list.listIterator();
 	}
 	
 	@Override
-	public ListIterator<E> listIterator(int index) {
-		return list.listIterator(index);
+	public ListIterator<E> listIterator(final int index) {
+		return this.list.listIterator(index);
 	}
 	
 	@Override
-	public E remove(int index) {
-		return list.remove(index);
+	public E remove(final int index) {
+		return this.list.remove(index);
 	}
 	
 	@Override
-	public boolean remove(Object o) {
-		return list.remove(o);
+	public boolean remove(final Object o) {
+		return this.list.remove(o);
 	}
 	
 	@Override
-	public boolean removeAll(Collection<?> c) {
-		return list.removeAll(c);
+	public boolean removeAll(final Collection<?> c) {
+		return this.list.removeAll(c);
 	}
 	
 	@Override
-	public boolean retainAll(Collection<?> c) {
-		return list.retainAll(c);
+	public boolean retainAll(final Collection<?> c) {
+		return this.list.retainAll(c);
 	}
 	
 	@Override
-	public E set(int index, E element) {
-		return list.set(index, element);
+	public E set(final int index, final E element) {
+		return this.list.set(index, element);
 	}
 	
 	@Override
 	public int size() {
-		return list.size();
+		return this.list.size();
 	}
 	
 	@Override
-	public List<E> subList(int fromIndex, int toIndex) {
-		return list.subList(fromIndex, toIndex);
+	public List<E> subList(final int fromIndex, final int toIndex) {
+		return this.list.subList(fromIndex, toIndex);
 	}
 	
 	@Override
 	public Object[] toArray() {
-		return list.toArray();
+		return this.list.toArray();
 	}
 	
 	@Override
-	public <T> T[] toArray(T[] a) {
-		return list.toArray(a);
+	public <T> T[] toArray(final T[] a) {
+		return this.list.toArray(a);
 	}
 	
 	@Override
 	public String toString() {
-		return list.toString();
+		return this.list.toString();
 	}
 }

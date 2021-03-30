@@ -4,32 +4,30 @@ import com.greentree.bulbgl.Color;
 import com.greentree.bulbgl.opengl.rendener.Renderer;
 import com.greentree.bulbgl.opengl.rendener.SGL;
 
-/**
- * @author Arseny Latyshev
- *
- */
+/** @author Arseny Latyshev */
 public class RectangleRenderer extends AbstractRendenerComponent {
+	
 	private static final long serialVersionUID = 1L;
-	@EditorData(def = "black")
+	private final static SGL GL = Renderer.get();
+	@DefoultValue("black")
+	@EditorData()
 	private Color color;
 	@EditorData
 	private float width, height;
-	private final static SGL GL = Renderer.get();
 	private transient Transform position;
 	
 	@Override
 	public void render() {
-		color.bind();
-		GL.glTranslatef(position.x, position.y, 0);
-		GL.glBegin(SGL.GL_QUADS);
-		final float w = .5f / width, h = .5f / height;
-		GL.glTexCoord2f(w, h);
-		GL.glVertex3f(-width / 2, -height / 2, 0);
-		GL.glVertex3f(-width / 2, height / 2, 0);
-		GL.glVertex3f(width / 2, height / 2, 0);
-		GL.glVertex3f(width / 2, -height / 2, 0);
-		GL.glEnd();
-		GL.glTranslatef(-position.x, -position.y, 0);
+		this.color.bind();
+		RectangleRenderer.GL.glTranslatef(this.position.x(), this.position.y(), 0);
+		RectangleRenderer.GL.glBegin(SGL.GL_QUADS);
+		final float w = .5f / this.width, h = .5f / this.height;
+		RectangleRenderer.GL.glTexCoord2f(w, h);
+		RectangleRenderer.GL.glVertex3f(-this.width / 2, -this.height / 2, 0);
+		RectangleRenderer.GL.glVertex3f(-this.width / 2, this.height / 2, 0);
+		RectangleRenderer.GL.glVertex3f(this.width / 2, this.height / 2, 0);
+		RectangleRenderer.GL.glVertex3f(this.width / 2, -this.height / 2, 0);
+		RectangleRenderer.GL.glEnd();
+		RectangleRenderer.GL.glTranslatef(-this.position.x(), -this.position.y(), 0);
 	}
-
 }

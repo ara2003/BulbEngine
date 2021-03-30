@@ -12,6 +12,11 @@ public class AABB implements com.greentree.engine.geom.AABB<AABB>, Sized {
 		max = new float3(x + w, y + h);
 	}
 	
+	@Override
+	public String toString() {
+		return "AABB [min=" + min + ", max=" + max + "]";
+	}
+	
 	public AABB(Shape2D shape) {
 		min = new float3();
 		max = new float3();
@@ -64,6 +69,11 @@ class float3 {
 	
 	float x, y;
 	
+	@Override
+	public String toString() {
+		return "[x " + x + " y " + y + "]";
+	}
+
 	public float3() {
 	}
 	

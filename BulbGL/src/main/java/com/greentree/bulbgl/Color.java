@@ -245,4 +245,9 @@ public class Color implements Serializable {
 	public String toString() {
 		return "Color (" + r + "," + g + "," + b + "," + a + ")";
 	}
+
+	public static Color getRandom(int i, int j) {
+		Random rand = new Random();
+		return new Color(rand.nextInt(j - i) + i, rand.nextInt(j - i) + i, rand.nextInt(j - i) + i);
+	}
 }

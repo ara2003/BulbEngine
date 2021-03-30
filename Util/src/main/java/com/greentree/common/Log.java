@@ -11,31 +11,18 @@ import java.util.Date;
 public final class Log {
 	
 	private static PrintStream log, err, bedug;
-
-	public static void setLogFolder(File folder) {
-		init(folder);
-	}
 	
-	public static void init(File folder) {
-		if(!folder.exists())throw new IllegalArgumentException("folder is not exists");
-		if(!folder.isDirectory())throw new IllegalArgumentException("folder is not directory");
-		try {
-			log = new PrintStream(new File(folder, "Log.txt"));
-			bedug = new PrintStream(new File(folder, "Debug.txt"));
-			err = System.err;
-		}catch(FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-
 	private Log() {
 	}
-
+	
 	public static void debug() {
 		Log.debug("");
 	}
+	
 	public static void debug(final String message) {
-		Log.bedug.print(message);
+		synchronized(Log.bedug) {
+			Log.bedug.println(message);
+		}
 	}
 	
 	public static void error(final String message) {
@@ -50,31 +37,34 @@ public final class Log {
 	}
 	
 	public static void error(final Throwable e) {
-		error(e.getMessage(), e);
+		Log.error(e.getMessage(), e);
 	}
 	
 	public static void info(final String message) {
 		Log.log.println(new Date() + " INFO:" + message);
 	}
 	
-	public static void info(Throwable e) {
+	public static void info(final Throwable e) {
 		e.printStackTrace(Log.log);
+	}
+	
+	public static void init(final File folder) {
+		if(!folder.exists()) throw new IllegalArgumentException("folder is not exists");
+		if(!folder.isDirectory()) throw new IllegalArgumentException("folder is not directory");
+		try {
+			Log.log   = new PrintStream(new File(folder, "Log.txt"));
+			Log.bedug = new PrintStream(new File(folder, "Debug.txt"));
+			Log.err   = System.err;
+		}catch(final FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void setForcedVerboseOn() {
 	}
 	
-	/** @deprecated use warn */
-	@Deprecated
-	public static void superWarn(String message) {
-		Log.log.println(new Date() + " WARN:" + message);
-	}
-	
-	/** @deprecated use warn */
-	@Deprecated
-	public static void superWarn(Throwable e) {
-		Log.log.println(new Date() + " WARN:" + e);
-		e.printStackTrace(Log.log);
+	public static void setLogFolder(final File folder) {
+		Log.init(folder);
 	}
 	
 	public static void warn(final Object message) {
@@ -98,5 +88,4 @@ public final class Log {
 	public static void warn(final Throwable e) {
 		e.printStackTrace(Log.err);
 	}
-
 }

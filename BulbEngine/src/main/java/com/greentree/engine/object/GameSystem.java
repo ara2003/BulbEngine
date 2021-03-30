@@ -1,19 +1,23 @@
 package com.greentree.engine.object;
 
-import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Random;
-import java.util.Set;
+import java.util.Queue;
 
 import com.greentree.common.Log;
 import com.greentree.engine.Game;
 import com.greentree.engine.component.ComponentList;
+import com.greentree.event.Listener;
 
-public abstract class GameSystem extends GameElement implements Serializable {
+public abstract class GameSystem extends GameElement {
 	
-	private static final long serialVersionUID = 1L;
-	protected static final Random random = new Random();
+	protected final static void addListener(final Listener listener) {
+		Game.addListener(listener);
+	}
+	
+	protected final static GameObject createFromPrefab(final String prefab) {
+		return Game.createFromPrefab(prefab);
+	}
 	
 	public static GameSystem createSystem(final Class<?> clazz) {
 		if(clazz == null) throw new NullPointerException("clazz is null");
@@ -29,20 +33,11 @@ public abstract class GameSystem extends GameElement implements Serializable {
 		return null;
 	}
 	
-	public void execute() {
-	}
-
-	protected <T extends GameComponent> Set<T> getAllComponents(final Class<T> clazz) {
+	protected <T extends GameComponent> Queue<T> getAllComponents(final Class<T> clazz) {
 		return Game.getCurrentScene().getAllComponents(clazz);
 	}
+	
 	protected <T extends GameComponent> ComponentList<T> getAllComponentsAsComponentList(final Class<T> clazz) {
 		return Game.getCurrentScene().getAllComponentsAsComponentList(clazz);
-	}
-	
-	public final void init() {
-		start();
-	}
-	
-	protected void start() {
 	}
 }

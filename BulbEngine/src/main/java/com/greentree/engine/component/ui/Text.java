@@ -2,26 +2,44 @@ package com.greentree.engine.component.ui;
 
 import com.greentree.bulbgl.Color;
 import com.greentree.bulbgl.Graphics;
+import com.greentree.engine.component.AbstractRendenerComponent;
 import com.greentree.engine.component.EditorData;
 import com.greentree.engine.component.Transform;
-import com.greentree.engine.object.GameComponent;
 
-public final class Text extends GameComponent {
+public final class Text extends AbstractRendenerComponent {
+
 	
-	Transform t;
+	private static final long serialVersionUID = 1L;
+	private Transform position;
 	@EditorData
-	String text;
+	private Color color = Color.darkGray;
+	@EditorData
+	private String text;
 	private float w, h;
 	
+	public String getText() {
+		return this.text;
+	}
+	
 	@Override
-	public void start() {
-		w = Graphics.getFont().getWidth(text);
-		h = Graphics.getFont().getHeight(text);
+	protected void start() {
+		super.start();
+		position = getComponent(Transform.class);
+	}
+	
+	public void setText(final String text) {
+		this.text = text;
 	}
 	
 	@Override
 	public void update() {
-		Graphics.setColor(Color.darkGray);
-		Graphics.drawString(text, t.x - w / 2, t.y - h / 2);
+		this.w = Graphics.getFont().getWidth(this.text);
+		this.h = Graphics.getFont().getHeight(this.text);
+	}
+
+	@Override
+	public void render() {
+		Graphics.setColor(color);
+		Graphics.drawString(this.text, this.position.x() - this.w / 2, this.position.y() - this.h / 2);
 	}
 }
