@@ -20,4 +20,5 @@ module bulbengine {
 	exports com.greentree.engine.collizion.collider;
 	exports com.greentree.engine.system;
 	exports com.greentree.engine.object;
+	exports com.greentree.engine;
 }

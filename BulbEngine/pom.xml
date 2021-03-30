@@ -8,7 +8,7 @@
 	<artifactId>bulbengine</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	
-	<packaging>pom</packaging>
+	<packaging>jar</packaging>
 	
 	<name>BulbEngine</name>
 	
@@ -75,11 +75,6 @@
   
   
  	<build>
-    	<sourceDirectory>E:\программирование\Программы Java\Engines\BulbEngine\BulbRepository\BulbEngine\src\main\java</sourceDirectory>
-    	<scriptSourceDirectory>E:\программирование\Программы Java\Engines\BulbEngine\BulbRepository\BulbEngine\src\main\scripts</scriptSourceDirectory>
-	    <testSourceDirectory>E:\программирование\Программы Java\Engines\BulbEngine\BulbRepository\BulbEngine\src\test\java</testSourceDirectory>
-	    <outputDirectory>E:\программирование\Программы Java\Engines\BulbEngine\BulbRepository\BulbEngine\target\classes</outputDirectory>
-	    <testOutputDirectory>E:\программирование\Программы Java\Engines\BulbEngine\BulbRepository\BulbEngine\target\test-classes</testOutputDirectory>
 		<pluginManagement>
 			<plugins>
 				<plugin>
