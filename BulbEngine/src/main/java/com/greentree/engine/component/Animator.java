@@ -1,10 +1,10 @@
 package com.greentree.engine.component;
 
 import com.greentree.bulbgl.image.animation.Animation;
-import com.greentree.engine.core.GameComponent;
 import com.greentree.engine.core.component.EditorData;
+import com.greentree.engine.core.component.UpdatingGameComponent;
 
-public class Animator extends GameComponent {
+public class Animator extends UpdatingGameComponent {
 	
 	Animation anim;
 	@EditorData(name = "file")

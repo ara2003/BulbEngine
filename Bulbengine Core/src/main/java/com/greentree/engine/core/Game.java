@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Properties;
 
 import com.greentree.bulbgl.Color;
 import com.greentree.bulbgl.Graphics;
@@ -19,6 +18,7 @@ import com.greentree.common.loading.FileSystemLocation;
 import com.greentree.common.loading.ResourceLoader;
 import com.greentree.common.time.Time;
 import com.greentree.engine.core.editor.Builder;
+import com.greentree.engine.core.util.GameProperties;
 import com.greentree.event.Event;
 import com.greentree.event.EventSystem;
 import com.greentree.event.Listener;
@@ -30,7 +30,7 @@ public final class Game {
 	private static File root, assets, debug;
 	private static EventSystem eventSystem;
 	private static Window window;
-	private static Properties properties;
+	private static GameProperties properties;
 	
 	private Game() {
 	}
@@ -145,13 +145,12 @@ public final class Game {
 		Log.setLogFolder(Game.debug);
 		ResourceLoader.addResourceLocation(new FileSystemLocation(Game.assets));
 		ResourceLoader.addResourceLocation(new FileSystemLocation(Game.root));
-		final Properties properties = new Properties();
+		properties = new GameProperties();
 		try {
 			properties.load(new FileInputStream(new File(Game.root, "config.game")));
 		}catch(final IOException e) {
 			Log.error(e);
 		}
-		Game.properties = properties;
 		final int     width      = Integer.parseInt(properties.getProperty("window.width"));
 		final int     height     = Integer.parseInt(properties.getProperty("window.height"));
 		final boolean fullscreen = Boolean.parseBoolean(properties.getProperty("window.fullscreen"));
@@ -163,4 +162,9 @@ public final class Game {
 		while(!Game.window.isShouldClose()) Game.gameLoop();
 		Game.window.close();
 	}
+
+	public static <S extends GameSystem> boolean addSystem(S system) {
+		return getCurrentScene().addSystem(system);
+	}
+	
 }

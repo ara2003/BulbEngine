@@ -5,15 +5,15 @@ import java.util.function.Consumer;
 import com.greentree.action.EventAction;
 import com.greentree.common.Sized;
 import com.greentree.engine.component.Transform;
-import com.greentree.engine.core.GameComponent;
 import com.greentree.engine.core.GameObject;
 import com.greentree.engine.core.component.RequireComponent;
+import com.greentree.engine.core.component.UpdatingGameComponent;
 import com.greentree.engine.core.system.NecessarilySystems;
 import com.greentree.engine.geom2d.Shape2D;
 
 @NecessarilySystems({ColliderSystem.class})
 @RequireComponent({Transform.class})
-public abstract class ColliderComponent extends GameComponent implements Sized {
+public abstract class ColliderComponent extends UpdatingGameComponent implements Sized {
 	
 	private Shape2D shape;
 	private final CollisionAction action;

@@ -32,7 +32,7 @@ public abstract class GameSystem extends GameElement {
 		return null;
 	}
 	
-	protected <T extends GameComponent> Queue<T> getAllComponents(final Class<T> clazz) {
+	protected <T> Queue<T> getAllComponents(final Class<T> clazz) {
 		return Game.getCurrentScene().getAllComponents(clazz);
 	}
 	

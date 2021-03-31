@@ -116,7 +116,6 @@ public final class GameObject extends GameObjectParent {
 	
 	@Override
 	protected void update() {
-		for(final GameComponent component : this.components) component.update();
 		for(final GameObject component : this.childrens) component.update();
 		this.corutines.removeIf(Corutine::run);
 	}
