@@ -4,12 +4,13 @@ import org.joml.Vector2f;
 
 import com.greentree.action.Action;
 import com.greentree.bulbgl.Graphics;
-import com.greentree.engine.Game;
+import com.greentree.engine.Cameras;
 import com.greentree.engine.component.AbstractRendenerComponent;
-import com.greentree.engine.component.DefoultValue;
-import com.greentree.engine.component.EditorData;
-import com.greentree.engine.component.RequireComponent;
 import com.greentree.engine.component.Transform;
+import com.greentree.engine.core.Game;
+import com.greentree.engine.core.component.DefoultValue;
+import com.greentree.engine.core.component.EditorData;
+import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.input.CameraMouseAdapter;
 
 @RequireComponent({Transform.class})
@@ -26,7 +27,7 @@ public class Button extends AbstractRendenerComponent {
 	private final Action<ButtonListener> action = new Action<>();
 	
 	private boolean click0(final int button, final int x, final int y) {
-		final Vector2f vec = Game.getMainCamera().WorldToCamera(this.position.xy());
+		final Vector2f vec = Cameras.getMainCamera().WorldToCamera(this.position.xy());
 		if(x < vec.x - this.width / 2 - this.border) return false;
 		if(x > vec.x + this.width / 2 + this.border) return false;
 		if(y < vec.y - this.height / 2 - this.border) return false;

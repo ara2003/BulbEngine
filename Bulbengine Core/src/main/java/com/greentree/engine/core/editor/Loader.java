@@ -1,4 +1,4 @@
-package com.greentree.engine.editor;
+package com.greentree.engine.core.editor;
 
 /** @author Arseny Latyshev */
 public interface Loader {

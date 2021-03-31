@@ -2,7 +2,7 @@ package com.greentree.engine.input;
 
 import com.greentree.bulbgl.input.event.MouseClickEvent;
 import com.greentree.bulbgl.input.event.MouseMovedEvent;
-import com.greentree.engine.Game;
+import com.greentree.engine.Cameras;
 import com.greentree.event.Event;
 import com.greentree.event.OneListenerListenerManager;
 
@@ -47,10 +47,10 @@ public class CameraMouseListenerManager extends OneListenerListenerManager<Event
 	}
 	
 	private int getX(final int x) {
-		return Game.getMainCamera().WindowToCameraX(x);
+		return Cameras.getMainCamera().WindowToCameraX(x);
 	}
 	
 	private int getY(final int y) {
-		return Game.getMainCamera().WindowToCameraY(y);
+		return Cameras.getMainCamera().WindowToCameraY(y);
 	}
 }

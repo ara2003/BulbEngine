@@ -1,4 +1,4 @@
-package com.greentree.engine.editor;
+package com.greentree.engine.core.editor;
 
 import java.util.concurrent.ExecutionException;
 

@@ -3,6 +3,8 @@ package com.greentree.engine.component;
 import com.greentree.bulbgl.Color;
 import com.greentree.bulbgl.opengl.rendener.Renderer;
 import com.greentree.bulbgl.opengl.rendener.SGL;
+import com.greentree.engine.core.component.DefoultValue;
+import com.greentree.engine.core.component.EditorData;
 
 /** @author Arseny Latyshev */
 public class RectangleRenderer extends AbstractRendenerComponent {

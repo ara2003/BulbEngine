@@ -1,8 +1,8 @@
-package com.greentree.engine.object;
+package com.greentree.engine.core;
 
 import com.greentree.common.ClassUtil;
 import com.greentree.common.collection.OneClassSet;
-import com.greentree.engine.system.NecessarilySystems;
+import com.greentree.engine.core.system.NecessarilySystems;
 
 /** @author Arseny Latyshev */
 public final class GameScene extends GameObjectParent {

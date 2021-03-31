@@ -5,11 +5,11 @@ import java.util.Comparator;
 
 import com.greentree.common.collection.DoubleSet;
 import com.greentree.common.pair.UnOrentetPair;
-import com.greentree.engine.Game;
 import com.greentree.engine.collizion.event.CollisionEvent;
 import com.greentree.engine.collizion.event.CollisionEvent.EventType;
-import com.greentree.engine.component.ComponentList;
-import com.greentree.engine.object.GameSystem;
+import com.greentree.engine.core.Game;
+import com.greentree.engine.core.GameSystem;
+import com.greentree.engine.core.component.ComponentList;
 
 public class ColliderSystem extends GameSystem {
 	

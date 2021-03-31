@@ -4,7 +4,8 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import com.greentree.action.EventAction;
-import com.greentree.engine.object.GameComponent;
+import com.greentree.engine.core.GameComponent;
+import com.greentree.engine.core.component.EditorData;
 
 public final class Transform extends GameComponent {
 	

@@ -2,11 +2,15 @@ package com.greentree.engine.component;
 
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
-import org.lwjgl.opengl.GL11;
 
-import com.greentree.engine.Game;
-import com.greentree.engine.object.GameComponent;
-import com.greentree.engine.system.NecessarilySystems;
+import com.greentree.bulbgl.opengl.rendener.Renderer;
+import com.greentree.bulbgl.opengl.rendener.SGL;
+import com.greentree.engine.core.Game;
+import com.greentree.engine.core.GameComponent;
+import com.greentree.engine.core.component.DefoultValue;
+import com.greentree.engine.core.component.EditorData;
+import com.greentree.engine.core.component.RequireComponent;
+import com.greentree.engine.core.system.NecessarilySystems;
 import com.greentree.engine.system.RenderSystem;
 
 /** @author Arseny Latyshev */
@@ -14,6 +18,7 @@ import com.greentree.engine.system.RenderSystem;
 @RequireComponent({Transform.class})
 public class Camera extends GameComponent {
 	
+	private final static SGL GL = Renderer.get();
 	@DefoultValue("window::width")
 	@EditorData()
 	private int width;
@@ -57,16 +62,13 @@ public class Camera extends GameComponent {
 	}
 	
 	public void translate() {
-		GL11.glScalef(1f * Game.getWindow().getWidth() / this.width, 1f * Game.getWindow().getHeight() / this.height, 1);
-		GL11.glTranslatef(this.width / 2 - this.getX(), this.height / 2 - this.getY(), 0);
+		GL.glScalef(1f * Game.getWindow().getWidth() / this.width, 1f * Game.getWindow().getHeight() / this.height, 1);
+		GL.glTranslatef(this.width / 2 - this.getX(), this.height / 2 - this.getY(), 0);
 	}
 	
 	public void untranslate() {
-		GL11.glTranslatef(-this.width / 2 + this.getX(), -this.height / 2 + this.getY(), 0);
-		GL11.glScalef(1f * this.width / Game.getWindow().getWidth(), 1f * this.height / Game.getWindow().getHeight(), 1);
-	}
-	public void translate(double x, double y){
-		GL11.glTranslated(x, y, 0);
+		GL.glTranslatef(-this.width / 2 + this.getX(), -this.height / 2 + this.getY(), 0);
+		GL.glScalef(1f * this.width / Game.getWindow().getWidth(), 1f * this.height / Game.getWindow().getHeight(), 1);
 	}
 	public int WindowToCameraX(final int x) {
 		return x - this.width / 2;
@@ -85,8 +87,5 @@ public class Camera extends GameComponent {
 		return vec;
 	}
 	
-	public void scale(double width, double height) {
-		GL11.glScaled(width, height, 1);
-	}
 	
 }

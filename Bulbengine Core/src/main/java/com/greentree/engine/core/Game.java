@@ -1,11 +1,10 @@
-package com.greentree.engine;
+package com.greentree.engine.core;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -19,19 +18,14 @@ import com.greentree.common.Log;
 import com.greentree.common.loading.FileSystemLocation;
 import com.greentree.common.loading.ResourceLoader;
 import com.greentree.common.time.Time;
-import com.greentree.engine.component.Camera;
-import com.greentree.engine.editor.Builder;
-import com.greentree.engine.editor.xml.BasicXMlBuilder;
-import com.greentree.engine.object.GameObject;
-import com.greentree.engine.object.GameScene;
-import com.greentree.engine.system.RenderSystem;
+import com.greentree.engine.core.editor.Builder;
 import com.greentree.event.Event;
 import com.greentree.event.EventSystem;
 import com.greentree.event.Listener;
 
 public final class Game {
 	
-	private static Builder builder = new BasicXMlBuilder();
+	private static Builder builder;
 	private static GameScene currentScene;
 	private static File root, assets, debug;
 	private static EventSystem eventSystem;
@@ -87,10 +81,6 @@ public final class Game {
 		return Game.eventSystem;
 	}
 	
-	public static Camera getMainCamera() {
-		return Game.currentScene.getSystem(RenderSystem.class).getMainCamera();
-	}
-	
 	public static String getProperty(final String key) {
 		return Game.properties.getProperty(key);
 	}
@@ -107,7 +97,7 @@ public final class Game {
 		return Game.loadClass(name, new ArrayList<>());
 	}
 	
-	public static Class<?> loadClass(final String className, final List<String> packageNames) {
+	public static Class<?> loadClass(final String className, final Iterable<String> packageNames) {
 		if(packageNames == null) throw new NullPointerException("packages is null");
 		if(className == null) throw new NullPointerException("name is null");
 		for(final String packageName : packageNames) try {
@@ -147,7 +137,8 @@ public final class Game {
 		Graphics.init(width, height);
 	}
 	
-	public static void start(final String file) {
+	public static void start(final String file, Builder builder) {
+		Game.builder = builder;
 		Game.root   = new File(file);
 		Game.assets = new File(Game.root, "Assets");
 		Game.debug  = new File(Game.root, "Debug");

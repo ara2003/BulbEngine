@@ -1,8 +1,8 @@
 package com.greentree.engine.editor.loaders;
 
 import com.greentree.bulbgl.input.Input;
-import com.greentree.engine.Game;
-import com.greentree.engine.editor.PrimitiveLoader;
+import com.greentree.engine.core.Game;
+import com.greentree.engine.core.editor.PrimitiveLoader;
 
 /** @author Arseny Latyshev */
 public class IntegerLoader extends PrimitiveLoader<Integer> {

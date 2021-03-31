@@ -1,4 +1,4 @@
-package com.greentree.engine.object;
+package com.greentree.engine.core;
 
 import java.util.List;
 import java.util.Queue;
@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import com.greentree.common.collection.ClassTree;
 import com.greentree.common.collection.HashMapClassTree;
-import com.greentree.engine.component.ComponentList;
+import com.greentree.engine.core.component.ComponentList;
 
 /** @author Arseny Latyshev */
 public abstract class GameObjectParent extends GameElement {

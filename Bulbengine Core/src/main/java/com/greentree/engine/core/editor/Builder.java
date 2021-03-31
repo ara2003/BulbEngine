@@ -1,10 +1,10 @@
-package com.greentree.engine.editor;
+package com.greentree.engine.core.editor;
 
 import java.io.InputStream;
 
-import com.greentree.engine.object.GameObject;
-import com.greentree.engine.object.GameObjectParent;
-import com.greentree.engine.object.GameScene;
+import com.greentree.engine.core.GameObject;
+import com.greentree.engine.core.GameObjectParent;
+import com.greentree.engine.core.GameScene;
 
 /** @author Arseny Latyshev */
 public interface Builder {

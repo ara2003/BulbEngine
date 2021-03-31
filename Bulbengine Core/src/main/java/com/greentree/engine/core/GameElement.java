@@ -1,4 +1,4 @@
-package com.greentree.engine.object;
+package com.greentree.engine.core;
 
 /** @author Arseny Latyshev */
 public abstract class GameElement {

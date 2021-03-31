@@ -1,8 +1,7 @@
-package com.greentree.engine.object;
+package com.greentree.engine.core;
 
 import java.util.Random;
 
-import com.greentree.engine.Game;
 import com.greentree.engine.corutine.Corutine;
 import com.greentree.event.Listener;
 

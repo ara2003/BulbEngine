@@ -14,9 +14,8 @@ import java.util.Set;
 
 public final class ClassUtil {
 	
-	public static <A extends Annotation> Collection<A> getAllAnnotations(final Class<?> clazz,
-			final Class<A> annotationClass) {
-		Collection<A> res = new ArrayList<>();
+	public static <A extends Annotation> Collection<A> getAllAnnotations(final Class<?> clazz, final Class<A> annotationClass) {
+		final Collection<A> res = new ArrayList<>();
 		if(clazz == null) return res;
 		if(clazz.equals(Object.class)) return res;
 		if(annotationClass == null) return res;
@@ -26,19 +25,19 @@ public final class ClassUtil {
 		}
 		final A annotation = clazz.getAnnotation(annotationClass);
 		if(annotation != null) res.add(annotation);
-		res.addAll(getAllAnnotations(clazz.getSuperclass(), annotationClass));
+		res.addAll(ClassUtil.getAllAnnotations(clazz.getSuperclass(), annotationClass));
 		return res;
 	}
 	
 	public static List<Field> getAllFields(final Class<?> clazz) {
 		final List<Field> list = new LinkedList<>();
-		for(final Class<?> c : getAllPerant(clazz)) Collections.addAll(list, c.getDeclaredFields());
+		for(final Class<?> c : ClassUtil.getAllPerant(clazz)) Collections.addAll(list, c.getDeclaredFields());
 		return list;
 	}
 	
-	public static <A extends Annotation> List<Field> getAllFieldsWithAnnotation(Class<?> clazz, Class<A> annotation) {
-		List<Field> list = getAllFields(clazz);
-		list.removeIf(a -> a.getAnnotation(annotation) == null);
+	public static <A extends Annotation> List<Field> getAllFieldsWithAnnotation(final Class<?> clazz, final Class<A> annotation) {
+		final List<Field> list = ClassUtil.getAllFields(clazz);
+		list.removeIf(a->a.getAnnotation(annotation) == null);
 		return list;
 	}
 	
@@ -52,14 +51,14 @@ public final class ClassUtil {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> Set<Class<? extends T>> getClases(Iterable<T> object) {
+	public static <T> Set<Class<? extends T>> getClases(final Iterable<T> object) {
 		final Set<Class<? extends T>> res = new HashSet<>();
 		if(object == null) return res;
-		for(T t : object) if(t != null) res.add((Class<? extends T>) t.getClass());
+		for(final T t : object) if(t != null) res.add((Class<? extends T>) t.getClass());
 		return res;
 	}
-
-	public static <T> T newInstance(Class<T> clazz) {
+	
+	public static <T> T newInstance(final Class<T> clazz) {
 		if(clazz == null) throw new NullPointerException("clazz is null");
 		try {
 			final Constructor<T> constructor = clazz.getConstructor();

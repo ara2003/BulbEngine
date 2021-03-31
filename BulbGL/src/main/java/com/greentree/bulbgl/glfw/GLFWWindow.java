@@ -73,6 +73,8 @@ public class GLFWWindow extends Window {
 		glfwShowWindow(id);
 		
 		glfwFocusWindow(id);
+		
+		glfwSwapInterval(1);
 	}
 	
 	@Override

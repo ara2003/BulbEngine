@@ -3,8 +3,8 @@ package com.greentree.engine.component.ui;
 import com.greentree.bulbgl.Color;
 import com.greentree.bulbgl.Graphics;
 import com.greentree.engine.component.AbstractRendenerComponent;
-import com.greentree.engine.component.EditorData;
 import com.greentree.engine.component.Transform;
+import com.greentree.engine.core.component.EditorData;
 
 public final class Text extends AbstractRendenerComponent {
 

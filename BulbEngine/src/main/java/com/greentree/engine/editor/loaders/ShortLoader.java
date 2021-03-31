@@ -1,6 +1,6 @@
 package com.greentree.engine.editor.loaders;
 
-import com.greentree.engine.editor.PrimitiveLoader;
+import com.greentree.engine.core.editor.PrimitiveLoader;
 
 /** @author Arseny Latyshev */
 public class ShortLoader extends PrimitiveLoader<Short> {

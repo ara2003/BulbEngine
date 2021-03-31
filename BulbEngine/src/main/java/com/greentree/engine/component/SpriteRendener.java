@@ -4,6 +4,7 @@ import com.greentree.bulbgl.Color;
 import com.greentree.bulbgl.image.Texture;
 import com.greentree.bulbgl.opengl.rendener.Renderer;
 import com.greentree.bulbgl.opengl.rendener.SGL;
+import com.greentree.engine.core.component.EditorData;
 
 public class SpriteRendener extends AbstractRendenerComponent {
 	

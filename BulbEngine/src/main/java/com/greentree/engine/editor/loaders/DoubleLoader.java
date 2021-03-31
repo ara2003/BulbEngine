@@ -1,7 +1,7 @@
 package com.greentree.engine.editor.loaders;
 
 /** @author Arseny Latyshev */
-public class DoubleLoader extends com.greentree.engine.editor.PrimitiveLoader<Double> {
+public class DoubleLoader extends com.greentree.engine.core.editor.PrimitiveLoader<Double> {
 	
 	public DoubleLoader() {
 		super(double.class);

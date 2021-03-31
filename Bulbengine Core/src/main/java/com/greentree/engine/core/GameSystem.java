@@ -1,12 +1,11 @@
-package com.greentree.engine.object;
+package com.greentree.engine.core;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Queue;
 
 import com.greentree.common.Log;
-import com.greentree.engine.Game;
-import com.greentree.engine.component.ComponentList;
+import com.greentree.engine.core.component.ComponentList;
 import com.greentree.event.Listener;
 
 public abstract class GameSystem extends GameElement {

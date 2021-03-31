@@ -4,24 +4,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.greentree.common.ClassUtil;
 import com.greentree.common.Log;
 import com.greentree.common.loading.ResourceLoader;
 import com.greentree.common.pair.Pair;
 import com.greentree.common.xml.XMLElement;
-import com.greentree.engine.Game;
-import com.greentree.engine.collizion.collider.CircleColliderComponent;
-import com.greentree.engine.component.DefoultValue;
-import com.greentree.engine.component.EditorData;
-import com.greentree.engine.component.Transform;
-import com.greentree.engine.component.ui.Button;
-import com.greentree.engine.editor.AbstractBuilder;
-import com.greentree.engine.editor.LoaderList;
+import com.greentree.engine.core.Game;
+import com.greentree.engine.core.GameComponent;
+import com.greentree.engine.core.GameObject;
+import com.greentree.engine.core.GameObjectParent;
+import com.greentree.engine.core.GameScene;
+import com.greentree.engine.core.GameSystem;
+import com.greentree.engine.core.component.DefoultValue;
+import com.greentree.engine.core.component.EditorData;
+import com.greentree.engine.core.editor.AbstractBuilder;
+import com.greentree.engine.core.editor.LoaderList;
 import com.greentree.engine.editor.loaders.BooleanLoader;
 import com.greentree.engine.editor.loaders.ByteLoader;
 import com.greentree.engine.editor.loaders.CharLoader;
@@ -35,22 +39,20 @@ import com.greentree.engine.editor.loaders.ShortLoader;
 import com.greentree.engine.editor.loaders.StaticFieldLoader;
 import com.greentree.engine.editor.loaders.StringLoader;
 import com.greentree.engine.editor.loaders.TextureLoader;
-import com.greentree.engine.object.GameComponent;
-import com.greentree.engine.object.GameObject;
-import com.greentree.engine.object.GameObjectParent;
-import com.greentree.engine.object.GameScene;
-import com.greentree.engine.object.GameSystem;
 
 /** @author Arseny Latyshev */
 public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 	
-	private final List<String> packages = new ArrayList<>(List.of("", Transform.class.getPackageName() + ".",
-			Button.class.getPackageName() + ".", CircleColliderComponent.class.getPackageName() + ".",
-			Button.class.getPackageName() + ".", GameSystem.class.getPackageName() + "."));
-	
+	private final Collection<String> packages;
 	private final LoaderList loaders = new LoaderList();
 	
-	public BasicXMlBuilder() {
+	public BasicXMlBuilder(String...namePackage) {
+		this(List.of(namePackage));
+	}
+	
+	public BasicXMlBuilder(Collection<String> packages) {
+		this.packages = packages.parallelStream().map(str -> str + ".").collect(Collectors.toList());
+		this.packages.add("");
 		loaders.addLoader(new FloatLoader());
 		loaders.addLoader(new IntegerLoader());
 		loaders.addLoader(new TextureLoader());
@@ -179,11 +181,14 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 	
 	private void setFields(final Object component, final Map<String, String> attributes) {
 		final List<Field> allEditorDataFields = ClassUtil.getAllFieldsWithAnnotation(component.getClass(), EditorData.class);
+		{
 		final Set<String> xmlNamesToFind = new HashSet<>(allEditorDataFields.size());
 		for(final Field field : allEditorDataFields) xmlNamesToFind.add(this.getXmlName(field));
 		for(final String attribute : attributes.keySet())
-			if(xmlNamesToFind.contains(attribute) == false)
-				Log.warn("xml element " + component + " has value " + attribute + " and it is not used. ");//не часть алгоритма
+			if(!xmlNamesToFind.contains(attribute)) {
+				Log.warn("xml element " + component + " has value " + attribute + " and it is not used. [xmlNamesToFind="+xmlNamesToFind+" attributes="+attributes+"]");//не часть алгоритма
+			}
+		}
 		for(final Field field : allEditorDataFields) {
 			String value =  this.getXmlValue(field, attributes);
 			if(value == null)value = getDefoultValue(field);

@@ -1,8 +1,9 @@
 package com.greentree.engine.component;
 
 import com.greentree.bulbgl.Renderable;
-import com.greentree.engine.object.GameComponent;
-import com.greentree.engine.system.NecessarilySystems;
+import com.greentree.engine.core.GameComponent;
+import com.greentree.engine.core.component.RequireComponent;
+import com.greentree.engine.core.system.NecessarilySystems;
 import com.greentree.engine.system.RenderSystem;
 
 /** @author Arseny Latyshev */

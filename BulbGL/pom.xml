@@ -60,6 +60,7 @@
 				<groupId>org.lwjgl</groupId>
 				<artifactId>lwjgl-bom</artifactId>
 				<version>${lwjgl.version}</version>
+				<optional>true</optional>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
@@ -107,6 +108,7 @@
 			<artifactId>lwjgl-opengl</artifactId>
 			<version>${lwjgl.version}</version>
 			<classifier>natives-${os.family}</classifier>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.lwjgl</groupId>
@@ -117,6 +119,7 @@
 			<artifactId>lwjgl-glfw</artifactId>
 			<version>${lwjgl.version}</version>
 			<classifier>natives-${os.family}</classifier>
+			<optional>true</optional>
 		</dependency>
   </dependencies>
 

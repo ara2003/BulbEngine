@@ -1,8 +1,9 @@
 package com.greentree.engine.component;
 
 import com.greentree.engine.collizion.ColliderComponent;
-import com.greentree.engine.object.GameComponent;
-import com.greentree.engine.object.GameObject;
+import com.greentree.engine.core.GameComponent;
+import com.greentree.engine.core.GameObject;
+import com.greentree.engine.core.component.RequireComponent;
 
 /** @author Arseny Latyshev */
 @RequireComponent({ColliderComponent.class})

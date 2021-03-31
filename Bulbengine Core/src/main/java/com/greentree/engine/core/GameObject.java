@@ -1,4 +1,4 @@
-package com.greentree.engine.object;
+package com.greentree.engine.core;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -11,7 +11,7 @@ import com.greentree.common.ClassUtil;
 import com.greentree.common.Log;
 import com.greentree.common.collection.ClassTree;
 import com.greentree.common.collection.HashMapClassTree;
-import com.greentree.engine.component.RequireComponent;
+import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.corutine.Corutine;
 
 public final class GameObject extends GameObjectParent {

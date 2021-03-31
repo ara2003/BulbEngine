@@ -1,4 +1,4 @@
-package com.greentree.engine.component;
+package com.greentree.engine.core.component;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
@@ -6,12 +6,16 @@ import static java.lang.annotation.RetentionPolicy.*;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+
+
+/**
+ * @author Arseny Latyshev
+ *
+ */
 @Retention(RUNTIME)
 @Target(FIELD)
-public @interface EditorData{
+public @interface DefoultValue {
 	
-	public final static String NULL = "";
-	
-	public String name() default EditorData.NULL;
+	String value();
 	
 }

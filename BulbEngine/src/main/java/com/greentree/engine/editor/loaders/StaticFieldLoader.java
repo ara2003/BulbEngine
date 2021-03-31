@@ -2,7 +2,7 @@ package com.greentree.engine.editor.loaders;
 
 import java.lang.reflect.Field;
 
-import com.greentree.engine.editor.Loader;
+import com.greentree.engine.core.editor.Loader;
 
 /** @author Arseny Latyshev */
 public class StaticFieldLoader implements Loader {

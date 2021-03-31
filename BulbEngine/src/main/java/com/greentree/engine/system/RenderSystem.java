@@ -4,12 +4,12 @@ import java.util.Comparator;
 import java.util.stream.Collectors;
 
 import com.greentree.common.Log;
-import com.greentree.engine.Game;
 import com.greentree.engine.component.AbstractRendenerComponent;
 import com.greentree.engine.component.Camera;
-import com.greentree.engine.component.ComponentList;
 import com.greentree.engine.component.Transform;
-import com.greentree.engine.object.GameSystem;
+import com.greentree.engine.core.Game;
+import com.greentree.engine.core.GameSystem;
+import com.greentree.engine.core.component.ComponentList;
 
 /** @author Arseny Latyshev */
 public class RenderSystem extends GameSystem {
