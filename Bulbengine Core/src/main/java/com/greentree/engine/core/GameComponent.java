@@ -41,10 +41,9 @@ public abstract class GameComponent {
 	
 	/** @deprecated use start */
 	@Deprecated
-	public final void initAwake(final GameObject object) {
+	public final void initAwake() {
 		if(this.isAwake) throw new UnsupportedOperationException("reinitialization of : " + this);
 		this.isAwake = true;
-		this.object  = object;
 		this.awake();
 	}
 	

@@ -18,7 +18,8 @@ public class GameComponentLoader implements Loader {
 	@Override
 	public Object load(final Class<?> fieldClass, final String value) {
 		final List<GameObject> list = Game.getCurrentScene().findObjectsWithName(value);
-		if(!list.isEmpty()) return list.get(0).getComponent(fieldClass.asSubclass(GameComponent.class));
+		if(!list.isEmpty())
+			return list.get(0).getComponent(fieldClass.asSubclass(GameComponent.class));
 		return null;
 	}
 	

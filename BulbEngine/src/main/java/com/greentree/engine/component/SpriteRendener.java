@@ -62,7 +62,7 @@ public class SpriteRendener extends AbstractRendenerComponent {
 	@Override
 	protected void start() {
 		this.position = this.getComponent(Transform.class);
-		if(this.texture == null) throw new NullPointerException("Texture " + this.texture.getTextureRef() + " don\'t load");
+		if(texture == null)System.out.println(getObject());
 		if(this.width == 0) this.width = this.texture.getImageWidth();
 		if(this.height == 0) this.height = this.texture.getImageHeight();
 	}

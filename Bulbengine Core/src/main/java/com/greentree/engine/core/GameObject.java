@@ -31,6 +31,7 @@ public final class GameObject extends GameObjectParent {
 	
 	public boolean addComponent(final GameComponent component) {
 		if(this.components.add(component)) {
+			component.setObject(this);
 			this.updateUpTreeComponents();
 			this.tryAddNecessarilySystem(component.getClass());
 			return true;
@@ -89,7 +90,7 @@ public final class GameObject extends GameObjectParent {
 	protected void start() {
 		if(!Validator.checkRequireComponent(this.components)) Log.error(
 				"component " + Validator.getBrokRequireComponentClass(this.components) + " require is not fulfilled \n" + this);
-		for(final GameComponent component : this.components) component.initAwake(this);
+		for(final GameComponent component : this.components) component.initAwake();
 		for(final GameComponent component : this.components) component.initSratr();
 		for(final GameObject component : this.childrens) component.start();
 	}

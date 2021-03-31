@@ -45,27 +45,28 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 	
 	private final Collection<String> packages;
 	private final LoaderList loaders = new LoaderList();
+	final List<Pair<GameComponent, XMLElement>> contextComponent = new ArrayList<>();
 	
-	public BasicXMlBuilder(String...namePackage) {
-		this(List.of(namePackage));
+	public BasicXMlBuilder(final Collection<String> packages) {
+		this.packages = packages.parallelStream().map(str->str + ".").collect(Collectors.toList());
+		this.packages.add("");
+		this.loaders.addLoader(new FloatLoader());
+		this.loaders.addLoader(new IntegerLoader());
+		this.loaders.addLoader(new TextureLoader());
+		this.loaders.addLoader(new StaticFieldLoader());
+		this.loaders.addLoader(new StringLoader());
+		this.loaders.addLoader(new MeshLoader());
+		this.loaders.addLoader(new BooleanLoader());
+		this.loaders.addLoader(new EnumLoader());
+		this.loaders.addLoader(new GameComponentLoader());
+		this.loaders.addLoader(new DoubleLoader());
+		this.loaders.addLoader(new ShortLoader());
+		this.loaders.addLoader(new ByteLoader());
+		this.loaders.addLoader(new CharLoader());
 	}
 	
-	public BasicXMlBuilder(Collection<String> packages) {
-		this.packages = packages.parallelStream().map(str -> str + ".").collect(Collectors.toList());
-		this.packages.add("");
-		loaders.addLoader(new FloatLoader());
-		loaders.addLoader(new IntegerLoader());
-		loaders.addLoader(new TextureLoader());
-		loaders.addLoader(new StaticFieldLoader());
-		loaders.addLoader(new StringLoader());
-		loaders.addLoader(new MeshLoader());
-		loaders.addLoader(new BooleanLoader());
-		loaders.addLoader(new EnumLoader());
-		loaders.addLoader(new GameComponentLoader());
-		loaders.addLoader(new DoubleLoader());
-		loaders.addLoader(new ShortLoader());
-		loaders.addLoader(new ByteLoader());
-		loaders.addLoader(new CharLoader());
+	public BasicXMlBuilder(final String... namePackage) {
+		this(List.of(namePackage));
 	}
 	
 	/** @return can xmlName be the name of the parameter */
@@ -74,24 +75,13 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		return xmlName.isEmpty() == false;
 	}
 	
-	private void createChildrens(final GameObjectParent scene, final XMLElement in) {
-		final List<Pair<GameObject, XMLElement>> bufer = new ArrayList<>();
-		for(final XMLElement element : in.getChildrens("object")) {
-			final GameObject сhildren = this.createObject(element, scene);
-			bufer.add(new Pair<>(сhildren, element));
-			scene.addChildren(сhildren);
-		}
-		for(final Pair<GameObject, XMLElement> pair : bufer) this.fillObject(pair.first, pair.second);
-	}
 	
 	@SuppressWarnings("unchecked")
 	private GameComponent createComponent(final XMLElement xmlElement) {
-		final Map<String, String>            map   = xmlElement.getAttributes();
-		final Class<? extends GameComponent> clazz = (Class<? extends GameComponent>) Game.loadClass(map.remove("type"),
-				this.packages);
+		final Class<? extends GameComponent> clazz = (Class<? extends GameComponent>) Game.loadClass(xmlElement.getAttribute("type"),
+			this.packages);
 		try {
 			final GameComponent component = ClassUtil.newInstance(clazz);
-			this.setFields(component, map);
 			return component;
 		}catch(final Exception e) {
 			Log.warn("not create component " + xmlElement.getAttribute("type"), e);
@@ -104,6 +94,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		final InputStream in     = ResourceLoader.getResourceAsStream(prefabPath + ".object");
 		final GameObject  object = this.createObject(in, parent);
 		this.fillObject(object, in);
+		fillComponents();
 		object.initSratr();
 		return object;
 	}
@@ -111,7 +102,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 	@SuppressWarnings("unchecked")
 	private GameSystem createSystem(final XMLElement xmlElement) {
 		final Class<? extends GameSystem> clazz = (Class<? extends GameSystem>) Game.loadClass(xmlElement.getContent(),
-				this.packages);
+			this.packages);
 		try {
 			return ClassUtil.newInstance(clazz);
 		}catch(final Exception e) {
@@ -120,30 +111,70 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		}
 	}
 	
+	private void fillComponent(final GameComponent component, final XMLElement in) {
+		final Map<String, String> map = in.getAttributes();
+		map.remove("type");
+		try {
+			this.setFields(component, map);
+		}catch(final Exception e) {
+			Log.warn("not create component " + in.getAttribute("type"), e);
+		}
+	}
+	
 	@Override
 	protected void fillObject(final GameObject object, final XMLElement in) {
 		for(final XMLElement element : in.getChildrens("package")) this.packages.add(element.getContent() + ".");
+		
+		final List<Pair<GameObject, XMLElement>> contextObject = new ArrayList<>();
+		for(final XMLElement element : in.getChildrens("object")) {
+			final GameObject сhildren = this.createObject(element, object);
+			contextObject.add(new Pair<>(сhildren, element));
+			object.addChildren(сhildren);
+		}
+
 		for(final XMLElement element : in.getChildrens("component")) {
 			final GameComponent component = this.createComponent(element);
 			if(component == null) continue;
+			contextComponent.add(new Pair<>(component, element));
 			object.addComponent(component);
 		}
-		this.createChildrens(object, in);
+
+		for(final Pair<GameObject, XMLElement> element : contextObject) fillObject(element.first, element.second);
+		
 		for(final XMLElement element : in.getChildrens("package")) this.packages.remove(element.getContent() + ".");
 	}
 	
 	@Override
 	protected void fillScene(final GameScene scene, final XMLElement in) {
-		//		final long startTime = System.nanoTime();//debug
 		for(final XMLElement element : in.getChildrens("package")) this.packages.add(element.getContent() + ".");
+		
 		for(final XMLElement el : in.getChildrens("system")) {
 			final GameSystem component = this.createSystem(el);
 			if(component == null) continue;
 			scene.addSystem(component);
 		}
-		this.createChildrens(scene, in);
+		
+		for(final XMLElement element : in.getChildrens("object")) {
+			final GameObject сhildren = this.createObject(element, scene);
+			if(сhildren == null)continue;
+			fillObject(сhildren, element);
+			scene.addChildren(сhildren);
+		}
+		
+		fillComponents();
+		
 		for(final XMLElement element : in.getChildrens("package")) this.packages.remove(element.getContent() + ".");
-		//		Log.debug(String.format("fill scene %f", (System.nanoTime() - startTime) / 1_000_000_000d));//debug
+	}
+	
+	private void fillComponents() {
+		for(final Pair<GameComponent, XMLElement> element : contextComponent) fillComponent(element.first, element.second);
+		contextComponent.clear();
+	}
+
+	private String getDefoultValue(final Field field) {
+		final DefoultValue value = field.getAnnotation(DefoultValue.class);
+		if(value == null) return null;
+		return value.value();
 	}
 	
 	@Override
@@ -158,15 +189,10 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		if(this.checkXmlNameFormat(xmlName)) return xmlName;
 		throw new IllegalArgumentException("could not find a suitable name of " + field);
 	}
-
+	
 	private String getXmlValue(final Field field, final Map<String, String> attributes) {
-		String xmlValue = attributes.get(this.getXmlName(field));
+		final String xmlValue = attributes.get(this.getXmlName(field));
 		return xmlValue;
-	}
-	private String getDefoultValue(final Field field) {
-		final DefoultValue value = field.getAnnotation(DefoultValue.class);
-		if(value == null)return null;
-		return value.value();
 	}
 	
 	@Override
@@ -182,16 +208,15 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 	private void setFields(final Object component, final Map<String, String> attributes) {
 		final List<Field> allEditorDataFields = ClassUtil.getAllFieldsWithAnnotation(component.getClass(), EditorData.class);
 		{
-		final Set<String> xmlNamesToFind = new HashSet<>(allEditorDataFields.size());
-		for(final Field field : allEditorDataFields) xmlNamesToFind.add(this.getXmlName(field));
-		for(final String attribute : attributes.keySet())
-			if(!xmlNamesToFind.contains(attribute)) {
-				Log.warn("xml element " + component + " has value " + attribute + " and it is not used. [xmlNamesToFind="+xmlNamesToFind+" attributes="+attributes+"]");//не часть алгоритма
-			}
+			final Set<String> xmlNamesToFind = new HashSet<>(allEditorDataFields.size());
+			for(final Field field : allEditorDataFields) xmlNamesToFind.add(this.getXmlName(field));
+			for(final String attribute : attributes.keySet())
+				if(!xmlNamesToFind.contains(attribute))
+					Log.warn("xml element " + component + " has value " + attribute + " and it is not used. [xmlNamesToFind=" + xmlNamesToFind + " attributes=" + attributes + "]");//не часть алгоритма
 		}
 		for(final Field field : allEditorDataFields) {
-			String value =  this.getXmlValue(field, attributes);
-			if(value == null)value = getDefoultValue(field);
+			String value = this.getXmlValue(field, attributes);
+			if(value == null) value = this.getDefoultValue(field);
 			this.setValue(component, field, value);
 		}
 	}
@@ -199,7 +224,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 	protected void setValue(final Object obj, final Field f, final String xmlValue) throws NullPointerException {
 		final boolean flag = f.canAccess(obj);
 		f.setAccessible(true);
-		final Object value = loaders.load(f.getType(), xmlValue);
+		final Object value = this.loaders.load(f.getType(), xmlValue);
 		if(value == null) {
 			if(!f.getType().isPrimitive())
 				throw new NullPointerException(obj + "." + f.getName() + " is not initialize");
@@ -212,4 +237,5 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 				f.setAccessible(flag);
 			}
 	}
+	
 }
