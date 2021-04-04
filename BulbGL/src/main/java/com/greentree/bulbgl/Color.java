@@ -4,16 +4,13 @@ import java.io.Serializable;
 import java.nio.FloatBuffer;
 import java.util.Random;
 
-import com.greentree.bulbgl.opengl.rendener.Renderer;
-import com.greentree.bulbgl.opengl.rendener.SGL;
-
 public class Color implements Serializable {
 	
 	public static final Color black = new Color(0.0f, 0.0f, 0.0f, 1.0f);
 	public static final Color blue = new Color(0.0f, 0.0f, 1.0f, 1.0f);
 	public static final Color cyan = new Color(0.0f, 1.0f, 1.0f, 1.0f);
 	public static final Color darkGray = new Color(0.3f, 0.3f, 0.3f, 1.0f);
-	private static final SGL GL = Renderer.get();
+	private static final GraphicsI GL = BulbGL.getGraphics();
 	public static final Color gray = new Color(0.5f, 0.5f, 0.5f, 1.0f);
 	public static final Color green = new Color(0.0f, 1.0f, 0.0f, 1.0f);
 	public static final Color lightGray = new Color(0.7f, 0.7f, 0.7f, 1.0f);

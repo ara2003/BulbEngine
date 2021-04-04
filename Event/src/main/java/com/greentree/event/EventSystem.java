@@ -93,4 +93,9 @@ public class EventSystem implements Serializable {
 			}
 		}
 	}
+
+	public void clear() {
+		listenerManagers.clear();
+		eventQuery.clear();
+	}
 }

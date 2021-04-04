@@ -11,7 +11,7 @@ import com.greentree.event.Listener;
 public abstract class GameSystem extends GameElement {
 	
 	protected final static void addListener(final Listener listener) {
-		Game.addListener(listener);
+		Events.addListener(listener);
 	}
 	
 	protected final static GameObject createFromPrefab(final String prefab) {
@@ -32,11 +32,11 @@ public abstract class GameSystem extends GameElement {
 		return null;
 	}
 	
-	protected <T> Queue<T> getAllComponents(final Class<T> clazz) {
+	protected  final <T> Queue<T> getAllComponents(final Class<T> clazz) {
 		return Game.getCurrentScene().getAllComponents(clazz);
 	}
 	
-	protected <T extends GameComponent> ComponentList<T> getAllComponentsAsComponentList(final Class<T> clazz) {
+	protected  final <T extends GameComponent> ComponentList<T> getAllComponentsAsComponentList(final Class<T> clazz) {
 		return Game.getCurrentScene().getAllComponentsAsComponentList(clazz);
 	}
 }

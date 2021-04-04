@@ -26,13 +26,14 @@
 	    	<groupId>com.greentree.common</groupId>
 		   	<artifactId>math</artifactId>
 	    	<version>0.1-SNAPSHOT</version>
+	    	<optional>import</optional>
 		</dependency>
 		<!-- util -->
 		<dependency>
 	    	<groupId>com.greentree.common</groupId>
 		   	<artifactId>util</artifactId>
 	    	<version>0.1-SNAPSHOT</version>
-	    	<optional>true</optional>
+	    	<optional>import</optional>
 		</dependency>
 	</dependencies>
 

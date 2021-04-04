@@ -10,6 +10,13 @@ public final class Mathf {
 
 	private Mathf() {
 	}
+
+	public static int get2Fold(final float fold) {
+		int ret = 2;
+		while(ret < fold) ret *= 2;
+		return ret;
+	}
+	
 	/**
 	 * @return element in collection with min cast
 	 */

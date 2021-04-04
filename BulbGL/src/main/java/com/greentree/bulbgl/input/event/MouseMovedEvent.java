@@ -17,7 +17,6 @@ public final class MouseMovedEvent implements MouseEvent {
 		this.y2   = y2;
 	}
 	
-	@SuppressWarnings("exports")
 	public static MouseMovedEvent getInstanse(final EventSystem eventSystem, final EventType type, final int x1, final int y1,
 			final int x2, final int y2) {
 		MouseMovedEvent event = eventSystem.get(MouseMovedEvent.class);

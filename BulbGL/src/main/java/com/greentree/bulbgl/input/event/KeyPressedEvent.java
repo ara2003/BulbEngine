@@ -12,7 +12,6 @@ public final class KeyPressedEvent implements KeyEvent {
 		this.key = key;
 	}
 	
-	@SuppressWarnings("exports")
 	public static KeyPressedEvent getInstanse(final EventSystem eventSystem, final int key) {
 		KeyPressedEvent event = eventSystem.get(KeyPressedEvent.class);
 		if(event == null) event = new KeyPressedEvent(key);

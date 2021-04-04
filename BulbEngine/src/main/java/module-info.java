@@ -4,7 +4,7 @@ open module bulbengine {
 	requires transitive bulbengine.core;
 
 	requires transitive bulbengine.geometry;
-	requires transitive bulbengine.graphics;
+	requires transitive bulbgl.glfw;
 	requires transitive org.joml;
 
 	exports com.greentree.engine;
@@ -13,5 +13,6 @@ open module bulbengine {
 
 	exports com.greentree.engine.component;
 	exports com.greentree.engine.component.ui;
+	exports com.greentree.engine.component.render;
 	
 }

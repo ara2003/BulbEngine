@@ -23,15 +23,6 @@ public abstract class ColliderComponent extends UpdatingGameComponent implements
 		this.action = new CollisionAction();
 	}
 	
-	@Override
-	protected final void awake() {
-		this.shape    = this.generateShape();//не перемещать в конструктор
-		this.getComponent(Transform.class).getAction().addListener(t -> {
-			setPosition(t.x() + getDeltaX(), t.y() + getDeltaY());
-			
-		});
-	}
-	
 	protected abstract Shape2D generateShape();
 	
 	public final CollisionAction getAction() {
@@ -81,6 +72,11 @@ public abstract class ColliderComponent extends UpdatingGameComponent implements
 	
 	@Override
 	protected final void start() {
+		this.shape    = this.generateShape();//не перемещать в конструктор
+		this.getComponent(Transform.class).getAction().addListener(t -> {
+			setPosition(t.x() + getDeltaX(), t.y() + getDeltaY());
+			
+		});
 	}
 	
 	@Override

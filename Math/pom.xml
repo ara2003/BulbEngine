@@ -36,7 +36,7 @@
     		<groupId>com.greentree.common</groupId>
 	   		<artifactId>util</artifactId>
     		<version>0.1-SNAPSHOT</version>
-    		<optional>true</optional>
+		    <scope>provided</scope>
 		</dependency>
 	</dependencies>
   

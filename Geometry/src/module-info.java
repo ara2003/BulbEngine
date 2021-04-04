@@ -1,7 +1,7 @@
 
 module bulbengine.geometry {
 
-	requires bulbengine.util;
+	requires transitive bulbengine.util;
 	requires org.joml;
 
 	exports com.greentree.engine.geom2d;

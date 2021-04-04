@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.greentree.common.ClassUtil;
 import com.greentree.common.Log;
@@ -25,7 +24,6 @@ import com.greentree.engine.core.GameSystem;
 import com.greentree.engine.core.component.DefoultValue;
 import com.greentree.engine.core.component.EditorData;
 import com.greentree.engine.core.editor.AbstractBuilder;
-import com.greentree.engine.core.editor.LoaderList;
 import com.greentree.engine.editor.loaders.BooleanLoader;
 import com.greentree.engine.editor.loaders.ByteLoader;
 import com.greentree.engine.editor.loaders.CharLoader;
@@ -47,9 +45,10 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 	private final LoaderList loaders = new LoaderList();
 	final List<Pair<GameComponent, XMLElement>> contextComponent = new ArrayList<>();
 	
-	public BasicXMlBuilder(final Collection<String> packages) {
-		this.packages = packages.parallelStream().map(str->str + ".").collect(Collectors.toList());
-		this.packages.add("");
+	public BasicXMlBuilder(final String...packages) {
+		this.packages = new ArrayList<>(packages.length);
+		for(String pack : packages)this.packages.add(pack);
+		
 		this.loaders.addLoader(new FloatLoader());
 		this.loaders.addLoader(new IntegerLoader());
 		this.loaders.addLoader(new TextureLoader());
@@ -63,10 +62,6 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		this.loaders.addLoader(new ShortLoader());
 		this.loaders.addLoader(new ByteLoader());
 		this.loaders.addLoader(new CharLoader());
-	}
-	
-	public BasicXMlBuilder(final String... namePackage) {
-		this(List.of(namePackage));
 	}
 	
 	/** @return can xmlName be the name of the parameter */
@@ -146,7 +141,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 	
 	@Override
 	protected void fillScene(final GameScene scene, final XMLElement in) {
-		for(final XMLElement element : in.getChildrens("package")) this.packages.add(element.getContent() + ".");
+		for(final XMLElement element : in.getChildrens("package")) this.packages.add(element.getContent());
 		
 		for(final XMLElement el : in.getChildrens("system")) {
 			final GameSystem component = this.createSystem(el);
@@ -163,7 +158,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		
 		fillComponents();
 		
-		for(final XMLElement element : in.getChildrens("package")) this.packages.remove(element.getContent() + ".");
+		for(final XMLElement element : in.getChildrens("package")) this.packages.remove(element.getContent());
 	}
 	
 	private void fillComponents() {

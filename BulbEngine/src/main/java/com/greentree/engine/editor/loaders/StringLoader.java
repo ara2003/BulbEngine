@@ -1,6 +1,6 @@
 package com.greentree.engine.editor.loaders;
 
-import com.greentree.engine.core.editor.AbstractLoader;
+import com.greentree.engine.editor.xml.AbstractLoader;
 
 /** @author Arseny Latyshev */
 public class StringLoader extends AbstractLoader<String> {

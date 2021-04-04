@@ -2,35 +2,36 @@ package com.greentree.bulbgl.input;
 
 import java.util.Objects;
 
-import org.joml.Vector2i;
-import org.joml.Vector2ic;
-
-import com.greentree.bulbgl.Window;
+import com.greentree.bulbgl.InputI;
+import com.greentree.bulbgl.WindowI;
 import com.greentree.bulbgl.input.listener.MouseListener;
 import com.greentree.event.EventSystem;
 
 public class Input {
-	
-	private static Window window;
+
+	private static InputI input;
+	private static WindowI window;
 	private static int mouseX, mouseY;
 	
 	private Input() {
 	}
 	
 	public static int getIndexOfKey(final String name) {
-		return Input.window.getIndexOf(name);
+		return Input.input.getIndexOf(name);
 	}
 	
 	public static String getKeyName(final int key) {
-		return Input.window.getKeyName(key);
+		return Input.input.getKeyName(key);
 	}
 	
-	@SuppressWarnings("exports")
-	public static Vector2ic getMouse() {
-		return new Vector2i(Input.mouseX, Input.mouseY);
+	public static int getMouseX() {
+		return Input.mouseX;
 	}
 	
-	@SuppressWarnings("exports")
+	public static int getMouseY() {
+		return Input.mouseY;
+	}
+	
 	public static void setEventSystem(final EventSystem system) {
 		Objects.requireNonNull(system).addListener(new MouseListener() {
 			
@@ -61,8 +62,11 @@ public class Input {
 			}
 		});
 	}
-	
-	public static void setWindow(final Window window) {
+
+	public static void setWindow(final WindowI window) {
 		Input.window = Objects.requireNonNull(window);
+	}
+	public static void setBulbInput(final InputI input) {
+		Input.input = Objects.requireNonNull(input);
 	}
 }

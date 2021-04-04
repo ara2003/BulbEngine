@@ -90,7 +90,6 @@ public final class GameObject extends GameObjectParent {
 	protected void start() {
 		if(!Validator.checkRequireComponent(this.components)) Log.error(
 				"component " + Validator.getBrokRequireComponentClass(this.components) + " require is not fulfilled \n" + this);
-		for(final GameComponent component : this.components) component.initAwake();
 		for(final GameComponent component : this.components) component.initSratr();
 		for(final GameObject component : this.childrens) component.start();
 	}
@@ -128,34 +127,35 @@ public final class GameObject extends GameObjectParent {
 		this.allTreeComponents.addAll(this.components);
 		this.parent.updateUpTreeComponents();
 	}
+	
+	private final static class Validator {
+		
+		private Validator() {
+		}
+		
+		public static boolean checkRequireComponent(final Iterable<GameComponent> components) {
+			A : for(final Class<? extends GameComponent> requireClases : Validator.getRequireComponentClases(components)) {
+				for(final Class<? extends GameComponent> clazz : ClassUtil.getClases(components))
+					if(requireClases.isAssignableFrom(clazz)) continue A;
+				return false;
+			}
+			return true;
+		}
+		
+		public static Class<? extends GameComponent> getBrokRequireComponentClass(final Iterable<GameComponent> components) {
+			final Set<Class<? extends GameComponent>> clases = ClassUtil.getClases(components);
+			for(final Class<? extends GameComponent> clazz : Validator.getRequireComponentClases(components))
+				if(!clases.contains(clazz)) return clazz;
+			return null;
+		}
+		
+		public static Set<Class<? extends GameComponent>> getRequireComponentClases(final Iterable<GameComponent> components) {
+			final Set<Class<? extends GameComponent>> requireComponents = new HashSet<>();
+			for(final GameComponent com : components)
+				for(final RequireComponent rcom : ClassUtil.getAllAnnotations(com.getClass(), RequireComponent.class))
+					Collections.addAll(requireComponents, rcom.value());
+			return requireComponents;
+		}
+	}
 }
 
-final class Validator {
-	
-	private Validator() {
-	}
-	
-	public static boolean checkRequireComponent(final Iterable<GameComponent> components) {
-		A : for(final Class<? extends GameComponent> requireClases : Validator.getRequireComponentClases(components)) {
-			for(final Class<? extends GameComponent> clazz : ClassUtil.getClases(components))
-				if(requireClases.isAssignableFrom(clazz)) continue A;
-			return false;
-		}
-		return true;
-	}
-	
-	public static Class<? extends GameComponent> getBrokRequireComponentClass(final Iterable<GameComponent> components) {
-		final Set<Class<? extends GameComponent>> clases = ClassUtil.getClases(components);
-		for(final Class<? extends GameComponent> clazz : Validator.getRequireComponentClases(components))
-			if(!clases.contains(clazz)) return clazz;
-		return null;
-	}
-	
-	public static Set<Class<? extends GameComponent>> getRequireComponentClases(final Iterable<GameComponent> components) {
-		final Set<Class<? extends GameComponent>> requireComponents = new HashSet<>();
-		for(final GameComponent com : components)
-			for(final RequireComponent rcom : ClassUtil.getAllAnnotations(com.getClass(), RequireComponent.class))
-				Collections.addAll(requireComponents, rcom.value());
-		return requireComponents;
-	}
-}

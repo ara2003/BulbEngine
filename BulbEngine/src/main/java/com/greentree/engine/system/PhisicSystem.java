@@ -7,7 +7,7 @@ import com.greentree.engine.collizion.ColliderComponent;
 import com.greentree.engine.collizion.ColliderSystem;
 import com.greentree.engine.collizion.event.DoubleCollisionListener;
 import com.greentree.engine.component.PhisicComponent;
-import com.greentree.engine.core.Game;
+import com.greentree.engine.core.Events;
 import com.greentree.engine.core.GameSystem;
 import com.greentree.engine.core.system.NecessarilySystems;
 
@@ -35,7 +35,7 @@ public class PhisicSystem extends GameSystem {
 	
 	@Override
 	public void start() {
-		Game.addListener(new DoubleCollisionListener() {
+		Events.addListener(new DoubleCollisionListener() {
 			
 			private static final long serialVersionUID = 1L;
 			

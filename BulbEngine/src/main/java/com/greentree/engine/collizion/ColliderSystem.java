@@ -7,7 +7,7 @@ import com.greentree.common.collection.DoubleSet;
 import com.greentree.common.pair.UnOrentetPair;
 import com.greentree.engine.collizion.event.CollisionEvent;
 import com.greentree.engine.collizion.event.CollisionEvent.EventType;
-import com.greentree.engine.core.Game;
+import com.greentree.engine.core.Events;
 import com.greentree.engine.core.GameSystem;
 import com.greentree.engine.core.component.ComponentList;
 
@@ -34,19 +34,19 @@ public class ColliderSystem extends GameSystem {
 		for(final UnOrentetPair<ColliderComponent> p : this.nowFream) if(this.lastFream.remove(p)) {
 			p.first.getAction().collizionStay(p.second);
 			p.second.getAction().collizionStay(p.first);
-			Game.event(new CollisionEvent(EventType.STAY, p.first, p.second));
-			Game.event(new CollisionEvent(EventType.STAY, p.second, p.first));
+			Events.event(new CollisionEvent(EventType.STAY, p.first, p.second));
+			Events.event(new CollisionEvent(EventType.STAY, p.second, p.first));
 		}else {
 			p.first.getAction().collizionEnter(p.second);
 			p.second.getAction().collizionEnter(p.first);
-			Game.event(new CollisionEvent(EventType.ENTER, p.first, p.second));
-			Game.event(new CollisionEvent(EventType.ENTER, p.second, p.first));
+			Events.event(new CollisionEvent(EventType.ENTER, p.first, p.second));
+			Events.event(new CollisionEvent(EventType.ENTER, p.second, p.first));
 		}
 		for(final UnOrentetPair<ColliderComponent> p : this.lastFream) {
 			p.first.getAction().collizionExit(p.second);
 			p.second.getAction().collizionExit(p.first);
-			Game.event(new CollisionEvent(EventType.EXIT, p.first, p.second));
-			Game.event(new CollisionEvent(EventType.EXIT, p.second, p.first));
+			Events.event(new CollisionEvent(EventType.EXIT, p.first, p.second));
+			Events.event(new CollisionEvent(EventType.EXIT, p.second, p.first));
 		}
 		this.lastFream.clear();
 		this.lastFream.addAll(this.nowFream);

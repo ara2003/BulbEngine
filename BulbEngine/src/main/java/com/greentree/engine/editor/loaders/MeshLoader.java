@@ -1,6 +1,6 @@
 package com.greentree.engine.editor.loaders;
 
-import com.greentree.engine.core.editor.AbstractLoader;
+import com.greentree.engine.editor.xml.AbstractLoader;
 import com.greentree.engine.mesh.Mesh;
 
 /** @author Arseny Latyshev */
