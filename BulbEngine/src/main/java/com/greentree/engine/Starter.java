@@ -12,7 +12,7 @@ import com.greentree.engine.core.Game;
 import com.greentree.engine.core.Properties;
 import com.greentree.engine.core.RootFiles;
 import com.greentree.engine.editor.xml.BasicXMlBuilder;
-import com.greentree.engine.system.RenderSystem;
+import com.greentree.engine.system.CameraRenderSystem;
 
 /** @author Arseny Latyshev */
 public class Starter {
@@ -29,7 +29,7 @@ public class Starter {
 		Input.setEventSystem(Events.getEventsystem());
 		
 		Game.setBuilder(new BasicXMlBuilder(Transform.class.getPackageName(), CircleColliderComponent.class.getPackageName(), Button.class.getPackageName(),
-			RenderSystem.class.getPackageName(), SpriteRendener.class.getPackageName()));
+			CameraRenderSystem.class.getPackageName(), SpriteRendener.class.getPackageName()));
 		Game.loadScene(Properties.getProperty("scene.first"));
 		
 		while(!Windows.getWindow().isShouldClose()) {

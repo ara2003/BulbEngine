@@ -1,6 +1,7 @@
 
 module bulbengine.geometry {
 
+	requires transitive bulbengine.math;
 	requires transitive bulbengine.util;
 	requires org.joml;
 

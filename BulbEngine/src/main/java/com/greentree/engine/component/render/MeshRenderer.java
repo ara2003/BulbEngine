@@ -1,18 +1,17 @@
 package com.greentree.engine.component.render;
 
-import static com.greentree.bulbgl.shader.ShaderProgram.Attribute.*;
-
 import java.nio.FloatBuffer;
 
 import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
-import com.greentree.bulbgl.BulbGL;
-import com.greentree.bulbgl.DataType;
 import com.greentree.bulbgl.shader.Location;
 import com.greentree.bulbgl.shader.ShaderProgram;
-import com.greentree.bulbgl.shader.VertexArray;
+import com.greentree.bulbgl.shader.ShaderProgram.Attribute;
 import com.greentree.bulbgl.shader.VideoBuffer;
-import com.greentree.common.time.Time;
 import com.greentree.engine.Windows;
 import com.greentree.engine.component.MeshComponent;
 import com.greentree.engine.core.component.EditorData;
@@ -28,48 +27,49 @@ public class MeshRenderer extends Camera3DRendenerComponent {
 	private ShaderProgram program;
 	private Mesh mesh;
 	
-	// vertex array object id
-	private VertexArray vao;
-	
+	// normal matrix uniform location
+	private Location nmUL;
 	// model-view-projection matrix uniform location
 	private Location mvpUL;
 	
-	
 	private float x_rotation = 20;
 	private float y_rotation = 45;
+	
+	// vertex array object id
+	private int vao;
 	
 	@Override
 	protected void start() {
 		super.start();
 		mesh = getComponent(MeshComponent.class).getMesh();
-	
-			// Create vertex array buffer
-			vao = BulbGL.getShaderLoader().createVertexArray();
+		
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			vao = GL30.glGenVertexArrays();
+
+			VideoBuffer vbo = program.createVideoBuffer(stack.floats(mesh.getVertexAndNormal()), VideoBuffer.Type.ARRAY_BUFFER, VideoBuffer.Usage.STATIC_DRAW);
+//			
+			VideoBuffer vio = program.createVideoBuffer(stack.ints(mesh.getIndecies()), VideoBuffer.Type.ELEMENT_ARRAY_BUFFER, VideoBuffer.Usage.STATIC_DRAW);
 			
-			// Create vertex buffer object
-			VideoBuffer vbo = program.createVideoBuffer(mesh.getVertexAndTexCoordAndNormal(), VideoBuffer.Type.ARRAY_BUFFER, VideoBuffer.Usage.STATIC_DRAW);
-			
-			// Create vertex index buffer object
-			VideoBuffer vio = program.createVideoBuffer(mesh.getIndecies(), VideoBuffer.Type.ELEMENT_ARRAY_BUFFER, VideoBuffer.Usage.STATIC_DRAW);
-			
-			// now bind them both to vao
-			vao.bind();
+			GL30.glBindVertexArray(vao);
 			vio.bind();
-			// bind VBO to shader attributes
-			program.passVertexAttribArray(vbo, false, of("Position_VS_in", 3), of("TexCoord_VS_in", 2), of("Normal_VS_in", 3));
-			// unbind vao, state will leave as it is, vio should not be unbound
-			vao.unbind();
+
+			program.passVertexAttribArray(vbo, false, Attribute.of("vertex_coord", 3), Attribute.of("vertex_normal", 3));
+			
+			GL30.glBindVertexArray(0);
+		}
 		
 		// now we need to link a program, after that we can not build VAO
 		program.link();
-		
+
 		// now we can locate uniforms from program
-		mvpUL = program.getUniformLocation("gWorld");
+		mvpUL = program.getUniformLocation("mvp");
+		nmUL = program.getUniformLocation("nm");
+		
+		GL11.glEnable(GL30.GL_DEPTH);
 	}
 	
 	@Override
 	public void render() {
-		
 		// calculate perspective for our context
 		// those works similar to gluPerspective
 		float fovY =    (float) Windows.getWindow().getHeight() / (float) Windows.getWindow().getWidth();
@@ -84,33 +84,35 @@ public class MeshRenderer extends Camera3DRendenerComponent {
 		
 		// rotate model a little by x an y axis, to see cube in projection
 		modelView.rotateXYZ((float)((x_rotation%360) / Math.PI), (float)((y_rotation%360) / Math.PI), 0.0F);
-		x_rotation += 10 * Time.getDelta();
-		y_rotation += 20 * Time.getDelta();
-		// calculate normal matrix to be used in Phong shading
+		x_rotation += .01;
+		y_rotation += .02;
+		
+		
+		
 		final Matrix4f normal = new Matrix4f();
 		modelView.normal(normal);
 		
 		// take MVP
 		final Matrix4f modelVeiwProjection = new Matrix4f().identity().mul(projection).mul(modelView);
+		
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			program.start();
+
+			FloatBuffer nm = stack.callocFloat(16);
+			normal.get(nm);
+			FloatBuffer mvp = stack.callocFloat(16);
+			modelVeiwProjection.get(mvp);
+
+			mvpUL.glUniformMatrix4fv(false, mvp);
+			nmUL.glUniformMatrix4fv(false, nm);
 			
-		// take matrix data native pointers
-		FloatBuffer nm = FloatBuffer.allocate(16);
-		normal.get(nm);
-		FloatBuffer mvp = FloatBuffer.allocate(16);
-		modelVeiwProjection.get(mvp);
-		
-		// render
-		program.start();
-		
-		mvpUL.glUniformMatrix4fv(false, mvp);
-		
-		vao.bind();
-		BulbGL.getGraphics().glDrawTriangles(mesh.getAmountVertices(), DataType.UNSIGNED_SHORT);
-		vao.unbind();
-		
-		program.stop();
-		
+			GL30.glLineWidth(5);
+			
+			GL30.glBindVertexArray(vao);
+			GL30.nglDrawElements(GL30.GL_TRIANGLES, mesh.getAmountVertices(), GL11.GL_UNSIGNED_INT, MemoryUtil.NULL );
+			GL30.glBindVertexArray(0);
+			program.stop();
+		}
 	}
-	
 	
 }

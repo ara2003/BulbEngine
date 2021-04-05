@@ -301,5 +301,10 @@ public class GLGraphics implements GraphicsI {
 		GL30.nglDrawElements(GL30.GL_TRIANGLES, Decoder.glType(type), amountVertices, 0L);
 	}
 
+	@Override
+	public void glDrawArraysTriangles(int i, int j) {
+		GL11.glDrawArrays(GL11.GL_TRIANGLES, i, j);
+	}
+
 
 }

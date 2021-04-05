@@ -10,7 +10,6 @@ open module bulbengine.util {
 	exports com.greentree.common.pair;
 	exports com.greentree.common.loading;
 	exports com.greentree.common.xml;
-	exports com.greentree.common.math;
 	exports com.greentree.common.collection;
 	
 }

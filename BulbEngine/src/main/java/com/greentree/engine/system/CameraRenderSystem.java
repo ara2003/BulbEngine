@@ -14,7 +14,7 @@ import com.greentree.engine.core.GameSystem;
 import com.greentree.engine.core.component.ComponentList;
 
 /** @author Arseny Latyshev */
-public class RenderSystem extends GameSystem {
+public class CameraRenderSystem extends GameSystem {
 	
 	private Camera mainCamera;
 	

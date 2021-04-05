@@ -9,8 +9,8 @@ import com.greentree.bulbgl.ShaderLoaderI;
 import com.greentree.bulbgl.TextureLoaderI;
 import com.greentree.bulbgl.WindowI;
 import com.greentree.bulbgl.opengl.GLGraphics;
+import com.greentree.bulbgl.opengl.GLShaderLoader;
 import com.greentree.bulbgl.opengl.GLTextureLoader;
-import com.greentree.bulbgl.opengl.shader.GLShaderLoader;
 
 /**
  * @author Arseny Latyshev

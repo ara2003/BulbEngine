@@ -2,6 +2,8 @@ package com.greentree.common.math;
 
 import java.util.function.Function;
 
+import org.joml.Vector2f;
+
 /**
  * @author Arseny Latyshev
  *
@@ -49,6 +51,16 @@ public final class Mathf {
 	
 	public static float lerp(float a, float b, double k) {
 		return lerp(a, b, (float)k);
+	}
+
+	public static Float distanse(Vector2f a, Vector2f b) {
+		return (float) Math.sqrt(distanseSqr(a, b));
+	}
+	
+	public static Float distanseSqr(Vector2f a, Vector2f b) {
+		float dx = a.x - b.x;
+		float dy = a.y - b.y;
+		return (dx*dx)+(dy*dy);
 	}
 	
 	

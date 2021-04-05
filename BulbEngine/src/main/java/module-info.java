@@ -4,8 +4,10 @@ open module bulbengine {
 	requires transitive bulbengine.core;
 
 	requires transitive bulbengine.geometry;
+	requires transitive bulbengine.math;
 	requires transitive bulbgl.glfw;
-	requires transitive org.joml;
+	requires org.lwjgl;
+	requires org.lwjgl.opengl;
 
 	exports com.greentree.engine;
 	exports com.greentree.engine.collizion;

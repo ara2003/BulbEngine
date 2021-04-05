@@ -126,6 +126,7 @@ public class GLShaderProgram extends ShaderProgram {
 	 * @param type  - video buffer type
 	 * @param usage - vido buffer usage
 	 * @return new video buffer */
+	@Override
 	public VideoBuffer createVideoBuffer(final FloatBuffer data, final Type type, final Usage usage) {
 		final VideoBuffer result = new GLVideoBuffer(type, usage, DataType.FLOAT);
 		result.setData(data);
@@ -154,6 +155,7 @@ public class GLShaderProgram extends ShaderProgram {
 	 * @param type  - video buffer type
 	 * @param usage - vido buffer usage
 	 * @return new video buffer */
+	@Override
 	public VideoBuffer createVideoBuffer(final ShortBuffer data, final Type type, final Usage usage) {
 		final VideoBuffer result = new GLVideoBuffer(type, usage, DataType.UNSIGNED_SHORT);
 		result.setData(data);
@@ -164,6 +166,7 @@ public class GLShaderProgram extends ShaderProgram {
 	/** Deletes program object and free all associated resources. Should be
 	 * called manually to prevent video memory leaks */
 	public void delete() {
+		System.out.println("delete");
 		GL20.glDeleteProgram(this.id);
 		while(!this.buffers.isEmpty()) this.buffers.pop().delete();
 	}
@@ -173,7 +176,7 @@ public class GLShaderProgram extends ShaderProgram {
 	 * @param name - uniform name as specified in GLSL
 	 * @return uniform location or -1 if uniform is not found */
 	@Override
-	public Location getUniformLocation(final String name) {
+	public GLLocation getUniformLocation(final String name) {
 		return new GLLocation(GL20.glGetUniformLocation(this.id, name));
 	}
 	
@@ -229,6 +232,7 @@ public class GLShaderProgram extends ShaderProgram {
 	 *                   passing to program
 	 * @param layout     combination of vertex attribute name an vertex and
 	 *                   size */
+	@Override
 	public void passVertexAttribArray(final VideoBuffer vbo, final boolean normalized, final Attribute... layout) {
 		int vertexSize = 0;
 		for(int i = 0; i < layout.length; i++) {
@@ -254,10 +258,12 @@ public class GLShaderProgram extends ShaderProgram {
 		GL20.glUseProgram(0);
 	}
 	
+	
 	@Override
 	public String toString() {
 		return "Program(" + this.id + ")" + this.shaders;
 	}
+	
 	
 	private void validateParam(final int pname, final String errFormat) {
 		final int[] errc = new int[2];
@@ -267,6 +273,7 @@ public class GLShaderProgram extends ShaderProgram {
 			throw new IllegalStateException(String.format("%s %s", errFormat, GL20.glGetProgramInfoLog(this.id, errc[1])));
 		}
 	}
+	
 	
 	public static class Builder extends ShaderProgram.Builder {
 		
@@ -278,7 +285,7 @@ public class GLShaderProgram extends ShaderProgram {
 		
 		@Override
 		public Builder addShader(final Shader shader) {
-			shaders.add((GLSLShader) shader);
+			this.shaders.add((GLSLShader) shader);
 			return this;
 		}
 		
@@ -296,28 +303,5 @@ public class GLShaderProgram extends ShaderProgram {
 		}
 		
 	}
-
-
-	@Override
-	public void passVertexAttribArray(VideoBuffer vbo, boolean b, Attribute of, Attribute of2, Attribute of3) {
-	}
-
-
-	@Override
-	public VideoBuffer createVideoBuffer(float[] floats, Type type, Usage usage) {
-		final VideoBuffer result = new GLVideoBuffer(type, usage, DataType.FLOAT);
-		result.setData(floats);
-		this.buffers.push(result);
-		return result;
-	}
-
-
-	@Override
-	public VideoBuffer createVideoBuffer(short[] shorts, Type type, Usage usage) {
-		final VideoBuffer result = new GLVideoBuffer(type, usage, DataType.SHORT);
-		result.setData(shorts);
-		this.buffers.push(result);
-		return result;
-	}
-
+	
 }

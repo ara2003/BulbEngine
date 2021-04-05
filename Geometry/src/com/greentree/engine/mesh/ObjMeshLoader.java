@@ -16,14 +16,14 @@ public class ObjMeshLoader implements MeshLoaderI {
 	
 	@Override
 	public Mesh load(String resourse) {
-		if(!resourse.endsWith(".obj"))return null;
+		if(!resourse.endsWith(".obj"))throw new IllegalArgumentException(resourse);
 		Mesh mesh = new Mesh();
 		Scanner sc = new Scanner(ResourceLoader.getResourceAsStream(resourse));
 		while (sc.hasNextLine()) {
 			String ln = sc.nextLine();
 			if ((ln == null) || ln.equals("") || ln.startsWith("#")) {
 			} else {
-				String[] split = ln.split(" ");
+				String[] split = ln.replaceAll("  ", " ").split(" ");
 				switch (split[0]) {
 					case "v":
 						mesh.getVertices().add(new Vector3f(

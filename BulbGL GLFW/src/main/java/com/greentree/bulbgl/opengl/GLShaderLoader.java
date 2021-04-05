@@ -1,10 +1,12 @@
-package com.greentree.bulbgl.opengl.shader;
+package com.greentree.bulbgl.opengl;
 
 import java.io.InputStream;
 
 import org.lwjgl.opengl.GL30;
 
 import com.greentree.bulbgl.ShaderLoaderI;
+import com.greentree.bulbgl.opengl.shader.GLSLShader;
+import com.greentree.bulbgl.opengl.shader.GLShaderProgram;
 import com.greentree.bulbgl.shader.Shader;
 import com.greentree.bulbgl.shader.Shader.Type;
 import com.greentree.bulbgl.shader.ShaderProgram.Builder;

@@ -75,7 +75,7 @@ public class PhisicComponent extends UpdatingGameComponent {
 	public void update() {
 		this.massCenter = GeomUtil2D.getMassCenter(this.getComponent(ColliderComponent.class).getShape());
 		if(this.type == Type.DINAMIC) {
-			this.position.addXY(this.getVelosity().mul(Time.getDelta()));
+			this.position.xy().add(this.getVelosity().mul(Time.getDelta()));
 			this.getComponent(ColliderComponent.class).getShape().rotate(this.massCenter, this.rotationVelosity);
 		}
 	}

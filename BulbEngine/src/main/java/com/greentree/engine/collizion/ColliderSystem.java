@@ -26,11 +26,11 @@ public class ColliderSystem extends GameSystem {
 			final ColliderComponent a = (ColliderComponent) colliderComponent.toArray()[i];
 			for(int j = i + 1; j < colliderComponent.size(); j++) {
 				final ColliderComponent b = (ColliderComponent) colliderComponent.toArray()[j];
-				if(a.getShape().isIntersect(b.getShape())) this.nowFream.addPair(a, b);
+				if(a.isIntersect(b)) this.nowFream.addPair(a, b);
 				else break;
 			}
 		}
-		//
+
 		for(final UnOrentetPair<ColliderComponent> p : this.nowFream) if(this.lastFream.remove(p)) {
 			p.first.getAction().collizionStay(p.second);
 			p.second.getAction().collizionStay(p.first);

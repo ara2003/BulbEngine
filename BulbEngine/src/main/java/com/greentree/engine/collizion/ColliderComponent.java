@@ -34,10 +34,6 @@ public abstract class ColliderComponent extends UpdatingGameComponent implements
 		return this.shape.getAABB().getHeight();
 	}
 	
-	public final Shape2D getShape() {
-		return this.shape;
-	}
-	
 	@Override
 	public float getWidth() {
 		return this.shape.getAABB().getWidth();
@@ -75,7 +71,6 @@ public abstract class ColliderComponent extends UpdatingGameComponent implements
 		this.shape    = this.generateShape();//не перемещать в конструктор
 		this.getComponent(Transform.class).getAction().addListener(t -> {
 			setPosition(t.x() + getDeltaX(), t.y() + getDeltaY());
-			
 		});
 	}
 	
@@ -145,4 +140,9 @@ public abstract class ColliderComponent extends UpdatingGameComponent implements
 			this.stayActon.action(component);
 		}
 	}
+
+	public boolean isIntersect(ColliderComponent b) {
+		return shape.isIntersect(b.shape);
+	}
+	
 }

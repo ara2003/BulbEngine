@@ -35,8 +35,8 @@ public class ShaderProgramLoader extends AbstractLoader<ShaderProgram> {
 		String tessControl = properties.getProperty("shader.tess_control");
 		String tessEvaluation = properties.getProperty("shader.tess_evaluation");
 		
-		if(vertex == null) return null;
-		if(fragment == null) return null;
+		if(vertex == null) throw new IllegalArgumentException("vertex shader required");
+		if(fragment == null) throw new IllegalArgumentException("fragment shader required");
 		
 		ShaderLoaderI SL = BulbGL.getShaderLoader();
 		

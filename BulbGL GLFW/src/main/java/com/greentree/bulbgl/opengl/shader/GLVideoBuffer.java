@@ -46,18 +46,5 @@ public class GLVideoBuffer extends VideoBuffer {
 	public void unbind() {
 		GL15.glBindBuffer(Decoder.glType(this.type), 0);
 	}
-
-
-	@Override
-	public void setData(float[] floats) {
-		GL15.glBufferData(Decoder.glType(this.type), floats, Decoder.glType(this.usage));
-	}
-
-
-	@Override
-	public void setData(short[] shorts) {
-		GL15.glBufferData(Decoder.glType(this.type), shorts, Decoder.glType(this.usage));
-	}
-	
 	
 }

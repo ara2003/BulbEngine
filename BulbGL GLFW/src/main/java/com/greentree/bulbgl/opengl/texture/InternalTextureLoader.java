@@ -1,4 +1,4 @@
-package com.greentree.bulbgl.opengl;
+package com.greentree.bulbgl.opengl.texture;
 
 import java.io.BufferedInputStream;
 import java.io.File;

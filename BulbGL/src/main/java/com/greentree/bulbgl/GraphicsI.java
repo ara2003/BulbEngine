@@ -118,5 +118,6 @@ public interface GraphicsI  {
 	void unbindTexture();
 	void bindColor(float r, float g, float b, float a);
 	void glDrawTriangles(int amountVertices, DataType type);
+	void glDrawArraysTriangles(int i, int j);
 	
 }

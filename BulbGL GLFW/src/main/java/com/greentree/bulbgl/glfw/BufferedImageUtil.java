@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 import com.greentree.bulbgl.BulbGL;
 import com.greentree.bulbgl.GraphicsI;
 import com.greentree.bulbgl.TextureLoaderI;
-import com.greentree.bulbgl.opengl.ImageIOImageData;
+import com.greentree.bulbgl.opengl.texture.ImageIOImageData;
 import com.greentree.bulbgl.texture.Texture;
 import com.greentree.bulbgl.texture.Texture2D;
 

@@ -1,20 +1,18 @@
 package com.greentree.bulbgl.shader;
 
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
+
 import com.greentree.bulbgl.shader.VideoBuffer.Type;
 import com.greentree.bulbgl.shader.VideoBuffer.Usage;
 
 /** @author Arseny Latyshev */
 public abstract class ShaderProgram {
 	
-	
-	public abstract VideoBuffer createVideoBuffer(float[] vertexAndTexCoordAndNormal, Type arrayBuffer, Usage staticDraw);
-	
-	
-	public abstract VideoBuffer createVideoBuffer(short[] indecies, Type elementArrayBuffer, Usage staticDraw);
-	
 	public abstract Location getUniformLocation(String ame);
 	public abstract void link();
-	public abstract void passVertexAttribArray(VideoBuffer vbo, boolean b, Attribute of, Attribute of2, Attribute of3);
+	public abstract void passVertexAttribArray(VideoBuffer vbo, boolean b, Attribute...of);
 	public abstract void start();
 	
 	public abstract void stop();
@@ -48,5 +46,9 @@ public abstract class ShaderProgram {
 		public abstract ShaderProgram build();
 		
 	}
+
+	public abstract VideoBuffer createVideoBuffer(IntBuffer buffer, Type type, Usage usage);
+	public abstract VideoBuffer createVideoBuffer(FloatBuffer buffer, Type type, Usage usage);
+	public abstract VideoBuffer createVideoBuffer(ShortBuffer buffer, Type type, Usage usage);
 	
 }

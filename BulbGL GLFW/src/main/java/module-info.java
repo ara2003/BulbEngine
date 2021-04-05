@@ -10,6 +10,7 @@ open module bulbgl.glfw {
 
 	exports com.greentree.bulbgl.glfw;
 	exports com.greentree.bulbgl.opengl;
+	exports com.greentree.bulbgl.opengl.texture;
 	exports com.greentree.bulbgl.opengl.shader;
 	
 }

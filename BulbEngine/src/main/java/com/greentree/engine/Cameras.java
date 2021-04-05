@@ -2,7 +2,7 @@ package com.greentree.engine;
 
 import com.greentree.engine.component.render.Camera;
 import com.greentree.engine.core.Game;
-import com.greentree.engine.system.RenderSystem;
+import com.greentree.engine.system.CameraRenderSystem;
 
 /**
  * @author Arseny Latyshev
@@ -11,6 +11,6 @@ import com.greentree.engine.system.RenderSystem;
 public class Cameras {
 
 	public static Camera getMainCamera() {
-		return Game.getCurrentScene().getSystem(RenderSystem.class).getMainCamera();
+		return Game.getCurrentScene().getSystem(CameraRenderSystem.class).getMainCamera();
 	}
 }

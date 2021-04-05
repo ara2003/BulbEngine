@@ -6,6 +6,6 @@ package com.greentree.engine.mesh;
  */
 public interface MeshLoaderI {
 	
-	public Mesh load(String resourse);
+	public Mesh load(String resourse) throws Exception;
 	
 }

@@ -93,7 +93,4 @@ public abstract class VideoBuffer {
 		STREAM_READ;
 	}
 
-	public abstract void setData(float[] floats);
-	public abstract void setData(short[] shorts);
-
 }

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,7 @@ import com.greentree.engine.editor.loaders.FloatLoader;
 import com.greentree.engine.editor.loaders.GameComponentLoader;
 import com.greentree.engine.editor.loaders.IntegerLoader;
 import com.greentree.engine.editor.loaders.MeshLoader;
+import com.greentree.engine.editor.loaders.ShaderProgramLoader;
 import com.greentree.engine.editor.loaders.ShortLoader;
 import com.greentree.engine.editor.loaders.StaticFieldLoader;
 import com.greentree.engine.editor.loaders.StringLoader;
@@ -45,9 +47,9 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 	private final LoaderList loaders = new LoaderList();
 	final List<Pair<GameComponent, XMLElement>> contextComponent = new ArrayList<>();
 	
-	public BasicXMlBuilder(final String...packages) {
+	public BasicXMlBuilder(final String... packages) {
 		this.packages = new ArrayList<>(packages.length);
-		for(String pack : packages)this.packages.add(pack);
+		Collections.addAll(this.packages, packages);
 		
 		this.loaders.addLoader(new FloatLoader());
 		this.loaders.addLoader(new IntegerLoader());
@@ -62,6 +64,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		this.loaders.addLoader(new ShortLoader());
 		this.loaders.addLoader(new ByteLoader());
 		this.loaders.addLoader(new CharLoader());
+		this.loaders.addLoader(new ShaderProgramLoader());
 	}
 	
 	/** @return can xmlName be the name of the parameter */
@@ -89,7 +92,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		final InputStream in     = ResourceLoader.getResourceAsStream(prefabPath + ".object");
 		final GameObject  object = this.createObject(in, parent);
 		this.fillObject(object, in);
-		fillComponents();
+		this.fillComponents();
 		object.initSratr();
 		return object;
 	}
@@ -116,6 +119,11 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		}
 	}
 	
+	private void fillComponents() {
+		for(final Pair<GameComponent, XMLElement> element : this.contextComponent) this.fillComponent(element.first, element.second);
+		this.contextComponent.clear();
+	}
+	
 	@Override
 	protected void fillObject(final GameObject object, final XMLElement in) {
 		for(final XMLElement element : in.getChildrens("package")) this.packages.add(element.getContent() + ".");
@@ -126,15 +134,15 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 			contextObject.add(new Pair<>(сhildren, element));
 			object.addChildren(сhildren);
 		}
-
+		
 		for(final XMLElement element : in.getChildrens("component")) {
 			final GameComponent component = this.createComponent(element);
 			if(component == null) continue;
-			contextComponent.add(new Pair<>(component, element));
+			this.contextComponent.add(new Pair<>(component, element));
 			object.addComponent(component);
 		}
-
-		for(final Pair<GameObject, XMLElement> element : contextObject) fillObject(element.first, element.second);
+		
+		for(final Pair<GameObject, XMLElement> element : contextObject) this.fillObject(element.first, element.second);
 		
 		for(final XMLElement element : in.getChildrens("package")) this.packages.remove(element.getContent() + ".");
 	}
@@ -151,21 +159,16 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		
 		for(final XMLElement element : in.getChildrens("object")) {
 			final GameObject сhildren = this.createObject(element, scene);
-			if(сhildren == null)continue;
-			fillObject(сhildren, element);
+			if(сhildren == null) continue;
+			this.fillObject(сhildren, element);
 			scene.addChildren(сhildren);
 		}
 		
-		fillComponents();
+		this.fillComponents();
 		
 		for(final XMLElement element : in.getChildrens("package")) this.packages.remove(element.getContent());
 	}
 	
-	private void fillComponents() {
-		for(final Pair<GameComponent, XMLElement> element : contextComponent) fillComponent(element.first, element.second);
-		contextComponent.clear();
-	}
-
 	private String getDefoultValue(final Field field) {
 		final DefoultValue value = field.getAnnotation(DefoultValue.class);
 		if(value == null) return null;
@@ -220,10 +223,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		final boolean flag = f.canAccess(obj);
 		f.setAccessible(true);
 		final Object value = this.loaders.load(f.getType(), xmlValue);
-		if(value == null) {
-			if(!f.getType().isPrimitive())
-				throw new NullPointerException(obj + "." + f.getName() + " is not initialize");
-		}else
+		if(value != null)
 			try {
 				f.set(obj, value);
 			}catch(IllegalArgumentException | IllegalAccessException e) {

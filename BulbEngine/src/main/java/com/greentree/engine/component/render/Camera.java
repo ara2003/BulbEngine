@@ -12,10 +12,10 @@ import com.greentree.engine.core.component.DefoultValue;
 import com.greentree.engine.core.component.EditorData;
 import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.core.system.NecessarilySystems;
-import com.greentree.engine.system.RenderSystem;
+import com.greentree.engine.system.CameraRenderSystem;
 
 /** @author Arseny Latyshev */
-@NecessarilySystems({RenderSystem.class})
+@NecessarilySystems({CameraRenderSystem.class})
 @RequireComponent({Transform.class})
 public class Camera extends GameComponent {
 	

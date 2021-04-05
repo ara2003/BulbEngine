@@ -11,6 +11,8 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL14;
 
 import com.greentree.bulbgl.TextureLoaderI;
+import com.greentree.bulbgl.opengl.texture.GLTexture2D;
+import com.greentree.bulbgl.opengl.texture.InternalTextureLoader;
 import com.greentree.bulbgl.texture.Texture.Filtering;
 import com.greentree.bulbgl.texture.Texture.PixelFormat;
 import com.greentree.bulbgl.texture.Texture.Wrapping;
