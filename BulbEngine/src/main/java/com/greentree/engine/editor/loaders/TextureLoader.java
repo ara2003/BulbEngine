@@ -5,7 +5,6 @@ import java.io.IOException;
 import com.greentree.bulbgl.BulbGL;
 import com.greentree.bulbgl.TextureLoaderI;
 import com.greentree.bulbgl.texture.Texture.Filtering;
-import com.greentree.engine.editor.xml.CachingAbstractLoader;
 import com.greentree.bulbgl.texture.Texture2D;
 
 /** @author Arseny Latyshev */

@@ -8,7 +8,6 @@ import com.greentree.bulbgl.ShaderLoaderI;
 import com.greentree.bulbgl.shader.Shader;
 import com.greentree.bulbgl.shader.ShaderProgram;
 import com.greentree.common.loading.ResourceLoader;
-import com.greentree.engine.editor.xml.AbstractLoader;
 
 /**
  * @author Arseny Latyshev

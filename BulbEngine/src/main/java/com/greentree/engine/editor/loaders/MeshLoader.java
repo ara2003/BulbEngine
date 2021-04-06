@@ -2,7 +2,6 @@ package com.greentree.engine.editor.loaders;
 
 import java.util.Objects;
 
-import com.greentree.engine.editor.xml.AbstractLoader;
 import com.greentree.engine.mesh.Mesh;
 import com.greentree.engine.mesh.ObjMeshLoader;
 

@@ -2,7 +2,6 @@ package com.greentree.engine.editor.loaders;
 
 import com.greentree.bulbgl.input.Input;
 import com.greentree.engine.Windows;
-import com.greentree.engine.editor.xml.PrimitiveLoader;
 
 /** @author Arseny Latyshev */
 public class IntegerLoader extends PrimitiveLoader<Integer> {

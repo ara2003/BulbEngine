@@ -20,12 +20,24 @@ public final class GameObject extends GameObjectParent {
 	private GameObjectParent parent;
 	private final Collection<Corutine> corutines;
 	
+	private GameObject(final GameObject other) {
+		super(other.name + " clone");
+		this.components = new HashMapClassTree<>();
+		this.corutines  = new LinkedList<>();
+		if(other.parent == null) throw new IllegalArgumentException("parent dosen\'t be null");
+		this.parent = other.parent;
+		this.parent.addChildren(this);
+		for(GameComponent com : other.components) {
+			addComponent(Game.getBuilder().createComponent(com.getClass()));
+		}
+	}
+	
 	public GameObject(final String name, final GameObjectParent parent) {
 		super(name);
 		this.components = new HashMapClassTree<>();
 		this.corutines  = new LinkedList<>();
-		if(parent == null)throw new IllegalArgumentException("parent dosen\'t be null");
-		this.parent     = parent;
+		if(parent == null) throw new IllegalArgumentException("parent dosen\'t be null");
+		this.parent = parent;
 		parent.addChildren(this);
 	}
 	
@@ -39,14 +51,19 @@ public final class GameObject extends GameObjectParent {
 		return false;
 	}
 	
+	@Override
+	public GameObject clone() {
+		return new GameObject(this);
+	}
+	
 	public void destroy() {
 		if(this.isDestroy()) //			throw new RuntimeException("destroy desroed object");
 			return;
 		this.getParent().removeChildren(this);
-		for(GameComponent component : components)component.setObject(null);
-		components.clear();
-		for(GameObject object : childrens)object.destroy();
-		childrens.clear();
+		for(final GameComponent component : this.components) component.setObject(null);
+		this.components.clear();
+		for(final GameObject object : this.childrens) object.destroy();
+		this.childrens.clear();
 		this.updateUpTreeComponents();
 		this.parent = null;
 	}
@@ -89,7 +106,7 @@ public final class GameObject extends GameObjectParent {
 	@Override
 	protected void start() {
 		if(!Validator.checkRequireComponent(this.components)) Log.error(
-				"component " + Validator.getBrokRequireComponentClass(this.components) + " require is not fulfilled \n" + this);
+			"component " + Validator.getBrokRequireComponentClass(this.components) + " require is not fulfilled \n" + this);
 		for(final GameComponent component : this.components) component.initSratr();
 		for(final GameObject component : this.childrens) component.start();
 	}

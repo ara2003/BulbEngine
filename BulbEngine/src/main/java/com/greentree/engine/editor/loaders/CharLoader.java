@@ -1,7 +1,5 @@
 package com.greentree.engine.editor.loaders;
 
-import com.greentree.engine.editor.xml.PrimitiveLoader;
-
 /** @author Arseny Latyshev */
 public class CharLoader extends PrimitiveLoader<Character> {
 	

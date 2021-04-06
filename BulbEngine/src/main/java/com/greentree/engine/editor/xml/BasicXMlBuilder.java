@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,11 @@ import com.greentree.engine.editor.loaders.EnumLoader;
 import com.greentree.engine.editor.loaders.FloatLoader;
 import com.greentree.engine.editor.loaders.GameComponentLoader;
 import com.greentree.engine.editor.loaders.IntegerLoader;
+import com.greentree.engine.editor.loaders.Loader;
+import com.greentree.engine.editor.loaders.LoaderList;
+import com.greentree.engine.editor.loaders.MainLoader;
 import com.greentree.engine.editor.loaders.MeshLoader;
+import com.greentree.engine.editor.loaders.NecessarilyLoaders;
 import com.greentree.engine.editor.loaders.ShaderProgramLoader;
 import com.greentree.engine.editor.loaders.ShortLoader;
 import com.greentree.engine.editor.loaders.StaticFieldLoader;
@@ -46,6 +51,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 	private final Collection<String> packages;
 	private final LoaderList loaders = new LoaderList();
 	final List<Pair<GameComponent, XMLElement>> contextComponent = new ArrayList<>();
+	private final Map<String, GameObject> hashPrefabs = new HashMap<>();
 	
 	public BasicXMlBuilder(final String... packages) {
 		this.packages = new ArrayList<>(packages.length);
@@ -67,34 +73,58 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		this.loaders.addLoader(new ShaderProgramLoader());
 	}
 	
+	private void addNecessarilyLoaders(final NecessarilyLoaders annotation) {
+		if(annotation == null) return;
+		for(final Class<? extends Loader> cl : annotation.value()) if(!this.loaders.hasLoader(cl)) {
+			final Loader l = ClassUtil.newInstance(cl);
+			this.loaders.addLoader(l);
+		}
+	}
+	
+	
 	/** @return can xmlName be the name of the parameter */
 	private boolean checkXmlNameFormat(final String xmlName) {
 		if("type".equals(xmlName)) return false;
 		return xmlName.isEmpty() == false;
 	}
 	
-	
-	@SuppressWarnings("unchecked")
-	private GameComponent createComponent(final XMLElement xmlElement) {
-		final Class<? extends GameComponent> clazz = (Class<? extends GameComponent>) Game.loadClass(xmlElement.getAttribute("type"),
-			this.packages);
+	@Override
+	public GameComponent createComponent(final Class<? extends GameComponent> clazz) {
 		try {
 			final GameComponent component = ClassUtil.newInstance(clazz);
 			return component;
 		}catch(final Exception e) {
-			Log.warn("not create component " + xmlElement.getAttribute("type"), e);
+			Log.warn("not create component " + clazz, e);
 			return null;
 		}
 	}
 	
 	@Override
+	@SuppressWarnings("unchecked")
+	public GameComponent createComponent(final XMLElement xmlElement) {
+		final Class<? extends GameComponent> clazz = (Class<? extends GameComponent>) Game.loadClass(xmlElement.getAttribute("type"),
+			this.packages);
+		return createComponent(clazz);
+	}
+	
+	@Override
 	public GameObject createPrefab(final String prefabPath, final GameObjectParent parent) {
-		final InputStream in     = ResourceLoader.getResourceAsStream(prefabPath + ".object");
-		final GameObject  object = this.createObject(in, parent);
-		this.fillObject(object, in);
-		this.fillComponents();
-		object.initSratr();
-		return object;
+//		final GameObject a = this.hashPrefabs.get(prefabPath);
+//		if(a == null) {
+			final InputStream in     = ResourceLoader.getResourceAsStream(prefabPath + ".object");
+			final GameObject  object = this.createObject(in, parent);
+			this.fillObject(object, in);
+			this.fillComponents();
+			object.initSratr();
+			this.hashPrefabs.put(prefabPath, object);
+			return object;
+//		}else {
+//			if(a.isDestroy()) {
+//				this.hashPrefabs.remove(a);
+//				return this.createPrefab(prefabPath, parent);
+//			}
+//			return a.clone();
+//		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -109,7 +139,8 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		}
 	}
 	
-	private void fillComponent(final GameComponent component, final XMLElement in) {
+	@Override
+	public void fillComponent(final GameComponent component, final XMLElement in) {
 		final Map<String, String> map = in.getAttributes();
 		map.remove("type");
 		try {
@@ -220,9 +251,23 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 	}
 	
 	protected void setValue(final Object obj, final Field f, final String xmlValue) throws NullPointerException {
-		final boolean flag = f.canAccess(obj);
+		Object        value = null;
+		final boolean flag  = f.canAccess(obj);
 		f.setAccessible(true);
-		final Object value = this.loaders.load(f.getType(), xmlValue);
+		
+		this.addNecessarilyLoaders(f.getAnnotation(NecessarilyLoaders.class));
+		
+		final MainLoader ml = f.getAnnotation(MainLoader.class);
+		if(ml != null) {
+			final Loader l = ClassUtil.newInstance(ml.value());
+			if(l.isLoadedClass(f.getType())) try {
+				value = l.load(f.getType(), xmlValue);
+			}catch(final Exception e) {
+			}
+			else Log.warn(MainLoader.class.getName() + " of " + f + " not load his class");
+		}
+		
+		if(value == null) value = this.loaders.load(f.getType(), xmlValue);
 		if(value != null)
 			try {
 				f.set(obj, value);

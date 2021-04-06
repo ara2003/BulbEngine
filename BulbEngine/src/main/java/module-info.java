@@ -8,6 +8,7 @@ open module bulbengine {
 	requires transitive bulbgl.glfw;
 	requires org.lwjgl;
 	requires org.lwjgl.opengl;
+	requires com.google.common;
 
 	exports com.greentree.engine;
 	exports com.greentree.engine.collizion;

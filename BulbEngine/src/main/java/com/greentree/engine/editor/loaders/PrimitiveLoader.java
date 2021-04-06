@@ -1,4 +1,4 @@
-package com.greentree.engine.editor.xml;
+package com.greentree.engine.editor.loaders;
 
 import java.util.HashMap;
 import java.util.Map;

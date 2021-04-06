@@ -3,15 +3,13 @@ package com.greentree.engine.editor.loaders;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-import com.greentree.engine.editor.xml.Loader;
-
 /** @author Arseny Latyshev */
 public class StaticFieldLoader implements Loader {
 	
 	@Override
 	public boolean isLoadedClass(final Class<?> clazz) {
-//		if(clazz.isEnum())return false;
-		
+		if(clazz.isEnum())return false;
+		if(clazz.isPrimitive())return false;
 		return true;
 	}
 	

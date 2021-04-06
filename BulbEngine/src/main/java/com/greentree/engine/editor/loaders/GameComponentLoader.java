@@ -5,7 +5,6 @@ import java.util.List;
 import com.greentree.engine.core.Game;
 import com.greentree.engine.core.GameComponent;
 import com.greentree.engine.core.GameObject;
-import com.greentree.engine.editor.xml.Loader;
 
 /** @author Arseny Latyshev */
 public class GameComponentLoader implements Loader {

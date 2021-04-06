@@ -1,7 +1,5 @@
 package com.greentree.engine.editor.loaders;
 
-import com.greentree.engine.editor.xml.Loader;
-
 /** @author Arseny Latyshev */
 public class EnumLoader implements Loader {
 	

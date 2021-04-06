@@ -1,4 +1,4 @@
-package com.greentree.engine.editor.xml;
+package com.greentree.engine.editor.loaders;
 
 /** @author Arseny Latyshev */
 public abstract class AbstractLoader<C> implements Loader {

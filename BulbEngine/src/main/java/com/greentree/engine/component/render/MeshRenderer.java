@@ -13,13 +13,13 @@ import com.greentree.bulbgl.shader.ShaderProgram;
 import com.greentree.bulbgl.shader.ShaderProgram.Attribute;
 import com.greentree.bulbgl.shader.VideoBuffer;
 import com.greentree.engine.Windows;
-import com.greentree.engine.component.MeshComponent;
+import com.greentree.engine.component.AbstractMeshComponent;
 import com.greentree.engine.core.component.EditorData;
 import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.mesh.Mesh;
 
 /** @author Arseny Latyshev */
-@RequireComponent({MeshComponent.class})
+@RequireComponent({AbstractMeshComponent.class})
 public class MeshRenderer extends Camera3DRendenerComponent {
 	
 	// OpenGL program object
@@ -41,7 +41,7 @@ public class MeshRenderer extends Camera3DRendenerComponent {
 	@Override
 	protected void start() {
 		super.start();
-		mesh = getComponent(MeshComponent.class).getMesh();
+		mesh = getComponent(AbstractMeshComponent.class).getMesh();
 		
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			vao = GL30.glGenVertexArrays();
