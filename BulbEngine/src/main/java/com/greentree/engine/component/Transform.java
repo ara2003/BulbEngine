@@ -69,8 +69,8 @@ public final class Transform extends UpdatingGameComponent {
 	}
 
 	public void addXY(Vector2f vec) {
-		this.x = vec.x;
-		this.y = vec.y;
+		this.x += vec.x;
+		this.y += vec.y;
 		this.action();
 	}
 	

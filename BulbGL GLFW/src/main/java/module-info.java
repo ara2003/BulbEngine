@@ -7,6 +7,7 @@ open module bulbgl.glfw {
 	requires org.lwjgl;
 	requires org.lwjgl.opengl;
 	requires org.lwjgl.glfw;
+	requires bulbengine.math;
 
 	exports com.greentree.bulbgl.glfw;
 	exports com.greentree.bulbgl.opengl;
