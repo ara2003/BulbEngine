@@ -16,5 +16,6 @@ public abstract class WindowI implements AutoCloseable {
 	public abstract void startRender();
 	public abstract void finishRender();
 	public abstract void setEventSystem(EventSystem eventSystem);
+	public abstract void setMousePos(float x, float y);
 	
 }

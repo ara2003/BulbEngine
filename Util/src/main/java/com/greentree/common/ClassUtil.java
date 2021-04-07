@@ -66,7 +66,7 @@ public final class ClassUtil {
 			return constructor.newInstance();
 		}catch(InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {
-			Log.error(e);
+			Log.error(e + " " + clazz);
 		}
 		return null;
 	}

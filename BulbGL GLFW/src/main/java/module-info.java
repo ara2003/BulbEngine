@@ -4,7 +4,7 @@ open module bulbgl.glfw {
 	requires transitive bulbengine.graphics;
 	requires bulbengine.geometry;
 
-	requires org.lwjgl;
+	requires transitive org.lwjgl;
 	requires org.lwjgl.opengl;
 	requires org.lwjgl.glfw;
 	requires bulbengine.math;

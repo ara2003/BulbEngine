@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.greentree.common.Log;
 
 /** @author Arseny Latyshev */
 public class LoaderList implements Iterable<Loader> {
@@ -55,9 +56,9 @@ public class LoaderList implements Iterable<Loader> {
 	public Iterator<Loader> iterator() {
 		return this.list.iterator();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public <R> R load(final Class<R> clazz, final String xmlValue) {
+	private <R> R load0(final Class<R> clazz, final String xmlValue) {
 		final Collection<Exception> exception = new ArrayList<>();
 		for(final Loader loader : this.get(clazz)) try {
 			final R r = (R) loader.load(clazz, xmlValue);
@@ -68,6 +69,12 @@ public class LoaderList implements Iterable<Loader> {
 		if(clazz.isPrimitive()) return null;
 		for(final Exception e : exception) e.printStackTrace();
 		throw new UnsupportedOperationException(String.format("%s as %s in %s %s", xmlValue, clazz.getName(), this.get(clazz), exception));
-		
+	}
+	
+	public <R> R load(final Class<R> clazz, final String value) {
+		double time = System.nanoTime();
+		R r = load0(clazz, value);
+		Log.info(this + " load " + clazz + " " + value + " time(ms):" + (System.nanoTime() - time) / 1_000_000);
+		return r;
 	}
 }

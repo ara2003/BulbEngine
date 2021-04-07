@@ -1,7 +1,9 @@
 package com.greentree.engine.component.render;
 
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
+import org.joml.Vector3f;
 
 import com.greentree.bulbgl.BulbGL;
 import com.greentree.bulbgl.GraphicsI;
@@ -22,21 +24,42 @@ public class Camera extends GameComponent {
 	private final static GraphicsI GL = BulbGL.getGraphics();
 	@DefoultValue("window::width")
 	@EditorData()
-	private int width;
+	private float width;
 	@DefoultValue("window::height")
 	@EditorData()
-	private int height;
+	private float height;
 	private Transform position;
+	private final Vector3f cameraDirection = new Vector3f(0, 1, -1), cameraRight = new Vector3f();
+	private final Vector3f up = new Vector3f(0, 1, 0);
 	
-	public int getHeight() {
+	public Vector3f getCameraDirection() {
+		return this.cameraDirection;
+	}
+	
+	public Vector3f getCameraRight() {
+		return this.cameraRight;
+	}
+	
+	public Vector3f getCameraUp() {
+		return this.up;
+	}
+	
+	public float getHeight() {
 		return this.height;
+	}
+	
+	public Matrix4f getProjection() {
+		final float w = 1.0F;
+		final float h = this.getHeight() / this.getWidth() * w;
+//		return new Matrix4f().frustum(-w, w, -h, h, 1.0F, 100.0F).translate(this.position.xyz());
+		return new Matrix4f().frustum(-w, w, -h, h, 1F, 100.0F).lookAt(position.xyz(), cameraDirection.add(position.xyz(), new Vector3f()), up);
 	}
 	
 	public Vector2f getUVPosition(final Vector2fc position) {
 		return this.WorldToCamera(position).mul(2).div(this.width, this.height);
 	}
 	
-	public int getWidth() {
+	public float getWidth() {
 		return this.width;
 	}
 	
@@ -59,23 +82,25 @@ public class Camera extends GameComponent {
 	
 	@Override
 	protected void start() {
+		this.up.cross(this.cameraDirection, this.cameraRight);
 		this.position = this.getComponent(Transform.class);
 	}
 	
 	public void translate() {
-		GL.glScalef(1f * Windows.getWindow().getWidth() / this.width, 1f * Windows.getWindow().getHeight() / this.height, 1);
-		GL.glTranslatef(this.width / 2 - this.getX(), this.height / 2 - this.getY(), 0);
+		Camera.GL.glScalef(1f * Windows.getWindow().getWidth() / this.width, 1f * Windows.getWindow().getHeight() / this.height, 1);
+		Camera.GL.glTranslatef(this.width / 2 - this.getX(), this.height / 2 - this.getY(), 0);
 	}
 	
 	public void untranslate() {
-		GL.glTranslatef(-this.width / 2 + this.getX(), -this.height / 2 + this.getY(), 0);
-		GL.glScalef(1f * this.width / Windows.getWindow().getWidth(), 1f * this.height / Windows.getWindow().getHeight(), 1);
+		Camera.GL.glTranslatef(-this.width / 2 + this.getX(), -this.height / 2 + this.getY(), 0);
+		Camera.GL.glScalef(1f * this.width / Windows.getWindow().getWidth(), 1f * this.height / Windows.getWindow().getHeight(), 1);
 	}
-	public int WindowToCameraX(final int x) {
+	
+	public float WindowToCameraX(final int x) {
 		return x - this.width / 2;
 	}
 	
-	public int WindowToCameraY(final int y) {
+	public float WindowToCameraY(final int y) {
 		return this.height / 2 - y;
 	}
 	
@@ -87,6 +112,10 @@ public class Camera extends GameComponent {
 		vec.y -= this.position.y();
 		return vec;
 	}
-	
+
+	public void setFront(Vector3f res) {
+		cameraDirection.set(res);
+		this.up.cross(this.cameraDirection, this.cameraRight);
+	}
 	
 }

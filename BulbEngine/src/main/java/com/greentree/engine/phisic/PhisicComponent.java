@@ -1,9 +1,10 @@
-package com.greentree.engine.component;
+package com.greentree.engine.phisic;
 
 import org.joml.Vector2f;
 
 import com.greentree.common.time.Time;
 import com.greentree.engine.collizion.ColliderComponent;
+import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.component.DefoultValue;
 import com.greentree.engine.core.component.EditorData;
 import com.greentree.engine.core.component.RequireComponent;
@@ -11,8 +12,6 @@ import com.greentree.engine.core.component.UpdatingGameComponent;
 import com.greentree.engine.core.system.NecessarilySystems;
 import com.greentree.engine.geom2d.GeomUtil2D;
 import com.greentree.engine.geom2d.Point2D;
-import com.greentree.engine.phisic.Matirial;
-import com.greentree.engine.system.PhisicSystem;
 
 @RequireComponent({Transform.class,ColliderComponent.class})
 @NecessarilySystems({PhisicSystem.class})

@@ -30,7 +30,7 @@ public class SpriteRendener extends CameraRendenerComponent {
 	public void render() {
 		Color.white.bind();
 		this.texture.bind();
-		SpriteRendener.GL.glTranslatef(this.position.x(), this.position.y(), 0);
+		SpriteRendener.GL.glTranslatef(this.position.x(), this.position.y(), this.position.z());
 		final float w = .5f / getWidth(), h = .5f / getHeight();
 		SpriteRendener.GL.glBegin(GraphicsI.GL_QUADS);
 		SpriteRendener.GL.glTexCoord2f(w, h);
@@ -42,7 +42,7 @@ public class SpriteRendener extends CameraRendenerComponent {
 		SpriteRendener.GL.glTexCoord2f((texture.getTexWidth()) - w, h);
 		SpriteRendener.GL.glVertex3f(width, 0, 0.0f);
 		SpriteRendener.GL.glEnd();
-		SpriteRendener.GL.glTranslatef(-this.position.x(), -this.position.y(), 0);
+		SpriteRendener.GL.glTranslatef(-this.position.x(), -this.position.y(), -this.position.z());
 		BulbGL.getGraphics().unbindTexture();
 	}
 	

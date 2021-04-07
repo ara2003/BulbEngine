@@ -117,7 +117,7 @@ public interface GraphicsI  {
 	void translate(float w, float h);
 	void unbindTexture();
 	void bindColor(float r, float g, float b, float a);
-	void glDrawTriangles(int amountVertices, DataType type);
-	void glDrawArraysTriangles(int i, int j);
+	void glDrawArrays(GPrimitive p, int i, int j);
+	void glDrawElements(GPrimitive p, int amountVertices, DataType type);
 	
 }

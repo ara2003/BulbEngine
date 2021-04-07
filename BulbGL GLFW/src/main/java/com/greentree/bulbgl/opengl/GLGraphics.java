@@ -8,8 +8,10 @@ import java.nio.IntBuffer;
 import org.lwjgl.opengl.EXTSecondaryColor;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.system.MemoryUtil;
 
 import com.greentree.bulbgl.DataType;
+import com.greentree.bulbgl.GPrimitive;
 import com.greentree.bulbgl.GraphicsI;
 
 
@@ -295,15 +297,16 @@ public class GLGraphics implements GraphicsI {
 	public void bindColor(float r, float g, float b, float a) {
 		GL11.glColor4f(r, g, b, a);
 	}
-
+	
 	@Override
-	public void glDrawTriangles(int amountVertices, DataType type) {
-		GL30.nglDrawElements(GL30.GL_TRIANGLES, Decoder.glType(type), amountVertices, 0L);
+	public void glDrawElements(GPrimitive p, int amountVertices, DataType type) {
+		GL30.nglDrawElements(GL30.GL_TRIANGLES, amountVertices, Decoder.glType(type), MemoryUtil.NULL );
 	}
 
 	@Override
-	public void glDrawArraysTriangles(int i, int j) {
-		GL11.glDrawArrays(GL11.GL_TRIANGLES, i, j);
+	public void glDrawArrays(GPrimitive p, int i, int j) {
+		GL11.glDrawArrays(Decoder.glPrimitive(p), i, j);
+		
 	}
 
 

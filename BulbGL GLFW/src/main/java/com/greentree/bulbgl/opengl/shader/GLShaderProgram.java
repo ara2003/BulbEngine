@@ -32,7 +32,6 @@ import org.lwjgl.opengl.GL20;
 
 import com.greentree.bulbgl.DataType;
 import com.greentree.bulbgl.opengl.Decoder;
-import com.greentree.bulbgl.shader.Location;
 import com.greentree.bulbgl.shader.Shader;
 import com.greentree.bulbgl.shader.ShaderProgram;
 import com.greentree.bulbgl.shader.VideoBuffer;

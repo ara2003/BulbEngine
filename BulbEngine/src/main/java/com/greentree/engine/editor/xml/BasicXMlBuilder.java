@@ -37,8 +37,8 @@ import com.greentree.engine.editor.loaders.IntegerLoader;
 import com.greentree.engine.editor.loaders.Loader;
 import com.greentree.engine.editor.loaders.LoaderList;
 import com.greentree.engine.editor.loaders.MainLoader;
-import com.greentree.engine.editor.loaders.MeshLoader;
 import com.greentree.engine.editor.loaders.NecessarilyLoaders;
+import com.greentree.engine.editor.loaders.ObjMeshLoader;
 import com.greentree.engine.editor.loaders.ShaderProgramLoader;
 import com.greentree.engine.editor.loaders.ShortLoader;
 import com.greentree.engine.editor.loaders.StaticFieldLoader;
@@ -62,7 +62,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		this.loaders.addLoader(new TextureLoader());
 		this.loaders.addLoader(new StaticFieldLoader());
 		this.loaders.addLoader(new StringLoader());
-		this.loaders.addLoader(new MeshLoader());
+		this.loaders.addLoader(new ObjMeshLoader());
 		this.loaders.addLoader(new BooleanLoader());
 		this.loaders.addLoader(new EnumLoader());
 		this.loaders.addLoader(new GameComponentLoader());

@@ -2,230 +2,352 @@ package com.greentree.engine.mesh;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-@SuppressWarnings("exports")
-public class Mesh extends Object {
+import com.greentree.common.Log;
+import com.greentree.engine.mesh.Mesh.Builder.VertexIndex;
+
+public class Mesh {
 	
 	private final List<Vector3f> vertices;
 	private final List<Vector2f> textureCoords;
 	private final List<Vector3f> normals;
 	private final List<Face> faces;
-	private boolean enableSmoothShading;
 	
-	public Mesh() {
-		this(new ArrayList<Vector3f>(), new ArrayList<Vector2f>(), new ArrayList<Vector3f>(), new ArrayList<Face>(),
-			true);
+	public Mesh(final List<Vector3f> vertices, final List<Vector2f> textureCoords, final List<Vector3f> normals, final List<Face> faces) {
+		this.vertices      = vertices;
+		this.textureCoords = textureCoords;
+		this.normals       = normals;
+		this.faces         = faces;
 	}
 	
-	public Mesh(final List<Vector3f> vertices, final List<Vector2f> textureCoords, final List<Vector3f> normals, final List<Face> faces,
-		final boolean enableSmoothShading) {
-		this.vertices            = vertices;
-		this.textureCoords       = textureCoords;
-		this.normals             = normals;
-		this.faces               = faces;
-		this.enableSmoothShading = enableSmoothShading;
+	
+	public static Builder builder() {
+		return new Builder();
 	}
 	
-	public int getAmountVertices() {
-		return this.faces.size() * 3;
-	}
-	
-	public List<Face> getFaces() {
-		return this.faces;
-	}
-	
-	public int[] getIndecies() {
-		final int[] mas = new int[this.faces.size() * 3];
-//		for(short i = 0; i < this.faces.size(); i++) for(short j = 0; j < 3; j++) mas[3 * i + j] = this.faces.get(i).normalIndices[j];
-		for(short i = 0; i < mas.length; i++) mas[i] = i;
-		return mas;
-	}
-	
-	public List<Vector3f> getNormals() {
-		return this.normals;
-	}
-	
-	public List<Vector2f> getTextureCoordinates() {
-		return this.textureCoords;
-	}
-	
-	public float[] getVertex() {
-		final float[] mas = new float[this.faces.size() * 9];
-		for(int i = 0; i < this.faces.size(); i++) {
-			final int[] face = this.faces.get(i).vertexIndices;
-			mas[9 * i]     = this.vertices.get(face[0]).x;
-			mas[9 * i + 1] = this.vertices.get(face[0]).y;
-			mas[9 * i + 2] = this.vertices.get(face[0]).z;
-			mas[9 * i + 3] = this.vertices.get(face[1]).x;
-			mas[9 * i + 4] = this.vertices.get(face[1]).y;
-			mas[9 * i + 5] = this.vertices.get(face[1]).z;
-			mas[9 * i + 6] = this.vertices.get(face[2]).x;
-			mas[9 * i + 7] = this.vertices.get(face[2]).y;
-			mas[9 * i + 8] = this.vertices.get(face[2]).z;
+	public IndeciesArray get(final Type... types) {
+		final List<VertexIndex> list = new ArrayList<>();
+		for(final Face f : this.faces) {
+			list.add(f.vertexIndices[0]);
+			list.add(f.vertexIndices[1]);
+			list.add(f.vertexIndices[2]);
 		}
-		return mas;
+		return new IndeciesArray(list, types);
 	}
 	
-	public float[] getVertexAndNormal() {
-		final float[] mas = new float[this.faces.size() * 18];
-		for(int i = 0; i < this.faces.size(); i++) {
-			final Face face = this.faces.get(i);
-			mas[18 * i]      = this.vertices.get(face.vertexIndices[0]).x;
-			mas[18 * i + 1]  = this.vertices.get(face.vertexIndices[0]).y;
-			mas[18 * i + 2]  = this.vertices.get(face.vertexIndices[0]).z;
-			mas[18 * i + 3]  = this.normals.get(face.normalIndices[0]).x;
-			mas[18 * i + 4]  = this.normals.get(face.normalIndices[0]).y;
-			mas[18 * i + 5]  = this.normals.get(face.normalIndices[0]).z;
-			mas[18 * i + 6]  = this.vertices.get(face.vertexIndices[1]).x;
-			mas[18 * i + 7]  = this.vertices.get(face.vertexIndices[1]).y;
-			mas[18 * i + 8]  = this.vertices.get(face.vertexIndices[1]).z;
-			mas[18 * i + 9]  = this.normals.get(face.normalIndices[1]).x;
-			mas[18 * i + 10] = this.normals.get(face.normalIndices[1]).y;
-			mas[18 * i + 11] = this.normals.get(face.normalIndices[1]).z;
-			mas[18 * i + 12] = this.vertices.get(face.vertexIndices[2]).x;
-			mas[18 * i + 13] = this.vertices.get(face.vertexIndices[2]).y;
-			mas[18 * i + 14] = this.vertices.get(face.vertexIndices[2]).z;
-			mas[18 * i + 15] = this.normals.get(face.normalIndices[2]).x;
-			mas[18 * i + 16] = this.normals.get(face.normalIndices[2]).y;
-			mas[18 * i + 17] = this.normals.get(face.normalIndices[2]).z;
+	public static class Builder {
+		
+		private final List<Vector3f> vertices;
+		private final List<Vector2f> textureCoords;
+		private final List<Vector3f> normals;
+		private final List<Face> faces;
+		
+		public Builder() {
+			this.vertices      = new ArrayList<>();
+			this.textureCoords = new ArrayList<>();
+			this.faces         = new ArrayList<>();
+			this.normals       = new ArrayList<>();
 		}
-		return mas;
-	}
-	
-	public float[] getVertexAndTexCoordAndNormal() {
-		final float[] mas = new float[this.faces.size() * 3 * 8];
-		for(int i = 0; i < this.faces.size(); i++) {
-			final Face face = this.faces.get(i);
-			mas[24 * i]     = this.vertices.get(face.vertexIndices[0]).x;
-			mas[24 * i + 1] = this.vertices.get(face.vertexIndices[0]).x;
-			mas[24 * i + 2] = this.vertices.get(face.vertexIndices[0]).z;
-			mas[24 * i + 3] = this.textureCoords.get(face.textureCoordinateIndices[0]).x;
-			mas[24 * i + 4] = this.textureCoords.get(face.textureCoordinateIndices[0]).y;
-			mas[24 * i + 5] = this.normals.get(face.normalIndices[0]).x;
-			mas[24 * i + 6] = this.normals.get(face.normalIndices[0]).y;
-			mas[24 * i + 7] = this.normals.get(face.normalIndices[0]).z;
+		
+		public void addFaces(final Face build) {
+			this.faces.add(build);
+		}
+		
+		public void addNormals(final Vector3f normalize) {
+			this.normals.add(normalize);
+		}
+		
+		public void addTextureCoordinates(final Vector2f vector2f) {
+			this.textureCoords.add(vector2f);
+		}
+		
+		public void addVertices(final Vector3f vector3f) {
+			this.vertices.add(vector3f);
+		}
+		
+		public Mesh build() {
+			return new Mesh(this.vertices, this.textureCoords, this.normals, this.faces);
+		}
+		
+		public class VertexIndex {
 			
-			mas[24 * i + 8]  = this.vertices.get(face.vertexIndices[1]).x;
-			mas[24 * i + 9]  = this.vertices.get(face.vertexIndices[1]).x;
-			mas[24 * i + 10] = this.vertices.get(face.vertexIndices[1]).z;
-			mas[24 * i + 11] = this.textureCoords.get(face.textureCoordinateIndices[1]).x;
-			mas[24 * i + 12] = this.textureCoords.get(face.textureCoordinateIndices[1]).y;
-			mas[24 * i + 13] = this.normals.get(face.normalIndices[1]).x;
-			mas[24 * i + 14] = this.normals.get(face.normalIndices[1]).y;
-			mas[24 * i + 15] = this.normals.get(face.normalIndices[1]).z;
+			private final int vertex, normal, textureCoordinate;
 			
-			mas[24 * i + 16] = this.vertices.get(face.vertexIndices[2]).x;
-			mas[24 * i + 17] = this.vertices.get(face.vertexIndices[2]).x;
-			mas[24 * i + 18] = this.vertices.get(face.vertexIndices[2]).z;
-			mas[24 * i + 19] = this.textureCoords.get(face.textureCoordinateIndices[2]).x;
-			mas[24 * i + 20] = this.textureCoords.get(face.textureCoordinateIndices[2]).y;
-			mas[24 * i + 21] = this.normals.get(face.normalIndices[2]).x;
-			mas[24 * i + 22] = this.normals.get(face.normalIndices[2]).y;
-			mas[24 * i + 23] = this.normals.get(face.normalIndices[2]).z;
+			public VertexIndex(final int vertex, final int normal, final int textureCoordinate) {
+				this.vertex            = vertex - 1;
+				this.normal            = normal - 1;
+				this.textureCoordinate = textureCoordinate - 1;
+			}
+			
+			@Override
+			public boolean equals(final Object obj) {
+				if(this == obj) return true;
+				if(!(obj instanceof VertexIndex)) return false;
+				final VertexIndex other = (VertexIndex) obj;
+				if(this.normal != other.normal) return false;
+				if(this.textureCoordinate != other.textureCoordinate) return false;
+				if(this.vertex != other.vertex) return false;
+				return true;
+			}
+			
+			public int getNormal() {
+				return this.normal;
+			}
+			
+			public int getTextureCoordinate() {
+				return this.textureCoordinate;
+			}
+			
+			public int getVertex() {
+				return this.vertex;
+			}
+			
+			@Override
+			public int hashCode() {
+				return Objects.hash(this.normal, this.textureCoordinate, this.vertex);
+			}
+			
+			public boolean hasNormal() {
+				return this.getNormal() >= 0;
+			}
+			
+			public boolean hasTextureCoordinate() {
+				return this.getTextureCoordinate() >= 0;
+			}
+			
+			
 		}
-		return mas;
-	}
-	
-	public List<Vector3f> getVertices() {
-		return this.vertices;
-	}
-	
-	public boolean hasNormals() {
-		return !this.normals.isEmpty();
-	}
-	
-	public boolean hasTextureCoordinates() {
-		return !this.textureCoords.isEmpty();
-	}
-	
-	public boolean isSmoothShadingEnabled() {
-		return this.enableSmoothShading;
-	}
-	
-	public void setSmoothShadingEnabled(final boolean isSmoothShadingEnabled) {
-		this.enableSmoothShading = isSmoothShadingEnabled;
-	}
-	
-	@Override
-	public String toString() {
-		return "Mesh [vertices=" + this.vertices + ", textureCoords=" + this.textureCoords + ", normals=" + this.normals + ", faces="
-			+ this.faces + ", enableSmoothShading=" + this.enableSmoothShading + "]";
+		
 	}
 	
 	public static class Face {
 		
-		private final int[] vertexIndices;
-		private final int[] normalIndices;
-		private final int[] textureCoordinateIndices;
+		private final VertexIndex[] vertexIndices;
 		
-		public Face(final int[] vertexIndices, final int[] textureCoordinateIndices, final int[] normalIndices) {
-			for(int i = 0; i < vertexIndices.length; i++) vertexIndices[i]--;
-			if(textureCoordinateIndices != null)
-				for(int i = 0; i < textureCoordinateIndices.length; i++) textureCoordinateIndices[i]--;
-			if(normalIndices != null) for(int i = 0; i < normalIndices.length; i++) normalIndices[i]--;
-			this.vertexIndices            = vertexIndices;
-			this.normalIndices            = normalIndices;
-			this.textureCoordinateIndices = textureCoordinateIndices;
+		public Face(final VertexIndex[] vertexIndices) {
+			this.vertexIndices = vertexIndices;
 		}
 		
 		public static Builder builder() {
 			return new Builder();
 		}
 		
-		public int[] getNormals() {
-			return this.normalIndices;
-		}
-		
-		public int[] getTextureCoords() {
-			return this.textureCoordinateIndices;
-		}
-		
-		public int[] getVertices() {
-			return this.vertexIndices;
-		}
-		
 		public boolean hasNormals() {
-			return this.normalIndices != null;
-		}
-		
-		public boolean hasTextureCoords() {
-			return this.textureCoordinateIndices != null;
+			for(final VertexIndex v : this.vertexIndices) if(!v.hasNormal()) return false;
+			return true;
 		}
 		
 		@Override
 		public String toString() {
-			return String.format("Face[vertexIndices%s normalIndices%s textureCoordinateIndices%s]",
-				Arrays.toString(this.vertexIndices), Arrays.toString(this.normalIndices),
-				Arrays.toString(this.textureCoordinateIndices));
+			return String.format("Face[vertexIndices=%s]",
+				Arrays.toString(this.vertexIndices));
 		}
 		
 		public static class Builder {
 			
-			private int[] vertexIndices;
-			private int[] normalIndices, textureCoordinateIndices;
+			private final VertexIndex[] vertexIndices;
+			private int i;
+			
+			public Builder() {
+				this.vertexIndices = new VertexIndex[3];
+			}
+			
+			public Builder addVertex(final VertexIndex index) {
+				if(this.i >= 3) throw new UnsupportedOperationException("quantity vertex is different from 3");
+				this.vertexIndices[this.i++] = index;
+				return Builder.this;
+			}
 			
 			public Face build() {
-				return new Face(this.vertexIndices, this.textureCoordinateIndices, this.normalIndices);
-			}
-			
-			public Builder setNormal(final int[] s) {
-				this.normalIndices = s;
-				return Builder.this;
-			}
-			
-			public Builder setTextureCoordinate(final int[] s) {
-				this.textureCoordinateIndices = s;
-				return Builder.this;
-			}
-			
-			public Builder setVertex(final int[] s) {
-				this.vertexIndices = s;
-				return Builder.this;
+				if(this.i != 3) throw new UnsupportedOperationException("quantity vertex is different from 3");
+				return new Face(this.vertexIndices);
 			}
 		}
 	}
+	
+	public class IndeciesArray {
+		
+		private final float[] vertices;
+		private final int[] indecies;
+		
+		public IndeciesArray(final List<VertexIndex> list, final Type... types) {
+			this.indecies = new int[list.size()];
+
+//			for(int i = 0; i < indecies.length; i++) this.indecies[i] = i;
+//			int size = 0;
+//			for(final Type type : types) size += type.getSize();
+//			this.vertices = new float[size * list.size()];
+//			int i = 0;
+//			for(final VertexIndex index : list)
+//			for(final Type type : types) {
+//				final float[] f = type.get(Mesh.this, index);
+//				for(int k = 0; k < f.length; k++, i++) this.vertices[i] = f[k];
+//			}
+			
+			
+			final Map<VertexIndex, Integer> map = new HashMap<>(list.size());
+			{
+				int i = 0;
+				for(final VertexIndex index : list) {
+					Integer r = map.get(index);
+					if(r == null) {
+						map.put(index, i++);
+						r = i;
+					}
+				}
+			}
+			for(int i = 0; i < indecies.length; i++) this.indecies[i] = map.get(list.get(i));
+			{
+				int size = 0;
+				for(final Type type : types) size += type.getSize();
+				this.vertices = new float[size * map.size()];
+				int i = 0;
+				for(final VertexIndex index : list) if(map.containsKey(index))
+					for(final Type type : types) {
+						final float[] f = type.get(Mesh.this, index);
+						for(int k = 0; k < f.length; k++, i++) this.vertices[i] = f[k];
+						map.remove(index);
+					}
+			}
+			Log.info("load mesh IndeciesArray" + (vertices.length + indecies.length) * 4 + " bytes");
+			System.gc();
+		}
+		
+		public int[] getIndecies() {
+			return this.indecies;
+		}
+		
+		public float[] getVertex() {
+			return this.vertices;
+		}
+		
+	}
+	
+	public enum Type{
+		
+		VERTEX(3){
+			
+			@Override
+			float[] get(final Mesh mesh, final VertexIndex index) {
+				final var v = mesh.vertices.get(index.getVertex());
+				return new float[]{v.x,v.y,v.z};
+			}
+			
+		},
+		NORMAL(3){
+			
+			@Override
+			float[] get(final Mesh mesh, final VertexIndex index) {
+				final var v = mesh.normals.get(index.getNormal());
+				return new float[]{v.x,v.y,v.z};
+			}
+		},
+		TEXTURE_COORDINAT(2){
+			
+			@Override
+			float[] get(final Mesh mesh, final VertexIndex index) {
+				final var v = mesh.textureCoords.get(index.getTextureCoordinate());
+				return new float[]{v.x,v.y};
+			}
+		};
+		
+		private final int size;
+		
+		Type(final int size) {
+			this.size = size;
+		}
+		
+		abstract float[] get(Mesh mesh, VertexIndex index);
+		
+		int getSize() {
+			return this.size;
+		}
+	}
+	
 }
+/*
+
+private float[] getVertexAndTexCoordAndNormal(List<Vector3f> vertices, List<Vector2f> textureCoords, List<Vector3f> normals, List<Face> faces) {
+	final float[] mas = new float[faces.size() * 3 * 8];
+	for(int i = 0; i < faces.size(); i++) {
+		final Face face = faces.get(i);
+		mas[24 * i]     = vertices.get(face.vertexIndices[0]).x;
+		mas[24 * i + 1] = vertices.get(face.vertexIndices[0]).x;
+		mas[24 * i + 2] = vertices.get(face.vertexIndices[0]).z;
+		mas[24 * i + 3] = textureCoords.get(face.textureCoordinateIndices[0]).x;
+		mas[24 * i + 4] = textureCoords.get(face.textureCoordinateIndices[0]).y;
+		mas[24 * i + 5] = normals.get(face.normalIndices[0]).x;
+		mas[24 * i + 6] = normals.get(face.normalIndices[0]).y;
+		mas[24 * i + 7] = normals.get(face.normalIndices[0]).z;
+		
+		mas[24 * i + 8]  = vertices.get(face.vertexIndices[1]).x;
+		mas[24 * i + 9]  = vertices.get(face.vertexIndices[1]).x;
+		mas[24 * i + 10] = vertices.get(face.vertexIndices[1]).z;
+		mas[24 * i + 11] = textureCoords.get(face.textureCoordinateIndices[1]).x;
+		mas[24 * i + 12] = textureCoords.get(face.textureCoordinateIndices[1]).y;
+		mas[24 * i + 13] = normals.get(face.normalIndices[1]).x;
+		mas[24 * i + 14] = normals.get(face.normalIndices[1]).y;
+		mas[24 * i + 15] = normals.get(face.normalIndices[1]).z;
+		
+		mas[24 * i + 16] = vertices.get(face.vertexIndices[2]).x;
+		mas[24 * i + 17] = vertices.get(face.vertexIndices[2]).x;
+		mas[24 * i + 18] = vertices.get(face.vertexIndices[2]).z;
+		mas[24 * i + 19] = textureCoords.get(face.textureCoordinateIndices[2]).x;
+		mas[24 * i + 20] = textureCoords.get(face.textureCoordinateIndices[2]).y;
+		mas[24 * i + 21] = normals.get(face.normalIndices[2]).x;
+		mas[24 * i + 22] = normals.get(face.normalIndices[2]).y;
+		mas[24 * i + 23] = normals.get(face.normalIndices[2]).z;
+	}
+	return mas;
+}
+
+	private static float[] getVertex(List<Vector3f> vertices, List<Face> faces) {
+		final float[] mas = new float[faces.size() * 9];
+		for(int i = 0; i < faces.size(); i++) {
+			final VertexIndex[] face = faces.get(i).vertexIndices;
+			mas[9 * i]     = vertices.get(face[0].getVertex()).x;
+			mas[9 * i + 1] = vertices.get(face[0].getVertex()).y;
+			mas[9 * i + 2] = vertices.get(face[0].getVertex()).z;
+			mas[9 * i + 3] = vertices.get(face[1].getVertex()).x;
+			mas[9 * i + 4] = vertices.get(face[1].getVertex()).y;
+			mas[9 * i + 5] = vertices.get(face[1].getVertex()).z;
+			mas[9 * i + 6] = vertices.get(face[2].getVertex()).x;
+			mas[9 * i + 7] = vertices.get(face[2].getVertex()).y;
+			mas[9 * i + 8] = vertices.get(face[2].getVertex()).z;
+		}
+		return mas;
+	}
+	
+	private static float[] getVertexAndNormal(List<Vector3f> vertices, List<Vector3f> normals, List<Face> faces) {
+		final float[] mas = new float[faces.size() * 18];
+		for(int i = 0; i < faces.size(); i++) {
+			final VertexIndex[] face = faces.get(i).vertexIndices;
+			mas[18 * i]      = vertices.get(face[0].getVertex()).x;
+			mas[18 * i + 1]  = vertices.get(face[0].getVertex()).y;
+			mas[18 * i + 2]  = vertices.get(face[0].getVertex()).z;
+			mas[18 * i + 3]  = normals.get(face[0]).x;
+			mas[18 * i + 4]  = normals.get(face[0]).y;
+			mas[18 * i + 5]  = normals.get(face[0]).z;
+			mas[18 * i + 6]  = vertices.get(face[1].getVertex()).x;
+			mas[18 * i + 7]  = vertices.get(face[1].getVertex()).y;
+			mas[18 * i + 8]  = vertices.get(face.vertexIndices[1].getVertex()).z;
+			mas[18 * i + 9]  = normals.get(face.normalIndices[1]).x;
+			mas[18 * i + 10] = normals.get(face.normalIndices[1]).y;
+			mas[18 * i + 11] = normals.get(face.normalIndices[1]).z;
+			mas[18 * i + 12] = vertices.get(face.vertexIndices[2].getVertex()).x;
+			mas[18 * i + 13] = vertices.get(face.vertexIndices[2].getVertex()).y;
+			mas[18 * i + 14] = vertices.get(face.vertexIndices[2].getVertex()).z;
+			mas[18 * i + 15] = normals.get(face.normalIndices[2]).x;
+			mas[18 * i + 16] = normals.get(face.normalIndices[2]).y;
+			mas[18 * i + 17] = normals.get(face.normalIndices[2]).z;
+		}
+		return mas;
+	}
+*/

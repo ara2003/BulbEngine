@@ -47,10 +47,10 @@ public class CameraMouseListenerManager extends OneListenerListenerManager<Event
 	}
 	
 	private int getX(final int x) {
-		return Cameras.getMainCamera().WindowToCameraX(x);
+		return (int)Cameras.getMainCamera().WindowToCameraX(x);
 	}
 	
 	private int getY(final int y) {
-		return Cameras.getMainCamera().WindowToCameraY(y);
+		return (int)Cameras.getMainCamera().WindowToCameraY(y);
 	}
 }

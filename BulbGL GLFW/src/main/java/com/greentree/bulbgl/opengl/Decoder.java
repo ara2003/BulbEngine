@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL42;
 import org.lwjgl.opengl.GL43;
 
 import com.greentree.bulbgl.DataType;
+import com.greentree.bulbgl.GPrimitive;
 import com.greentree.bulbgl.shader.Shader;
 import com.greentree.bulbgl.shader.VideoBuffer;
 
@@ -76,6 +77,22 @@ public final class Decoder {
 			case STREAM_DRAW -> GL15.GL_STREAM_DRAW;
 			case STREAM_READ -> GL15.GL_STREAM_READ;
 			default -> throw new IllegalArgumentException("Unexpected value: " + usage);
+		};
+	}
+
+	public static int glPrimitive(GPrimitive p) {
+		return switch(p) {
+			case TRIANGLES -> GL15.GL_TRIANGLES;
+			case QUADS -> GL15.GL_QUADS;
+			case POINTS -> GL15.GL_POINTS;
+			case LINE_LOOP -> GL15.GL_LINE_LOOP;
+			case LINE_STRIP -> GL15.GL_LINE_STRIP;
+			case LINES -> GL15.GL_LINES;
+			case POLYGON -> GL15.GL_POLYGON;
+			case QUAD_STRIP -> GL15.GL_QUAD_STRIP;
+			case TRIANGLE_FAN -> GL15.GL_TRIANGLE_FAN;
+			case TRIANGLE_STRIP -> GL15.GL_TRIANGLE_STRIP;
+			default -> throw new IllegalArgumentException("Unexpected value: " + p);
 		};
 	}
 	
