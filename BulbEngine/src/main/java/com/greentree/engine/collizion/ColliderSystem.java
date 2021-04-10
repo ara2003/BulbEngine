@@ -30,7 +30,6 @@ public class ColliderSystem extends GameSystem {
 				else break;
 			}
 		}
-
 		for(final UnOrentetPair<ColliderComponent> p : this.nowFream) if(this.lastFream.remove(p)) {
 			p.first.getAction().collizionStay(p.second);
 			p.second.getAction().collizionStay(p.first);

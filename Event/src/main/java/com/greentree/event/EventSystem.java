@@ -4,21 +4,22 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
 
 import com.greentree.common.ClassUtil;
-import com.greentree.common.Log;
-import com.greentree.common.collection.ClassTree;
 import com.greentree.common.collection.HashMapClassTree;
 import com.greentree.common.collection.OneClassSet;
+import com.greentree.common.collection.WeakClassTree;
+import com.greentree.common.logger.Log;
 
 public class EventSystem implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private final Queue<Event> eventQuery;
 	private final OneClassSet<ListenerManager> listenerManagers;
-	private final ClassTree<Event> eventPool;
+	private final WeakClassTree<Event> eventPool;
 	
 	public EventSystem() {
 		this.eventPool        = new HashMapClassTree<>();
@@ -55,9 +56,9 @@ public class EventSystem implements Serializable {
 	
 	public <T extends Event> T get(final Class<T> clazz) {
 		Objects.requireNonNull(clazz, "clazz is null");
-		Queue<T> queue = this.eventPool.get(clazz);
+		List<T> queue = this.eventPool.get(clazz);
 		if(queue.isEmpty())return null;
-		return queue.remove();
+		return queue.remove(queue.size()-1);
 	}
 	
 	@Override
@@ -95,6 +96,7 @@ public class EventSystem implements Serializable {
 	}
 
 	public void clear() {
+		update();
 		listenerManagers.clear();
 		eventQuery.clear();
 	}

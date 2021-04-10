@@ -19,7 +19,7 @@ public class Rectangle extends Shape2D {
 	}
 	
 	@Override
-	public Rectangle add(@SuppressWarnings("exports") Vector2f step) {
+	public Rectangle add( Vector2f step) {
 		x += step.x();
 		y += step.y();
 		return this;

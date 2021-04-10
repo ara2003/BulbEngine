@@ -6,7 +6,7 @@ import com.greentree.event.EventSystem;
  * @author Arseny Latyshev
  *
  */
-public abstract class WindowI implements AutoCloseable {
+public abstract class WindowI {
 	
 	public abstract void close();
 	public abstract int getWidth();
@@ -17,5 +17,7 @@ public abstract class WindowI implements AutoCloseable {
 	public abstract void finishRender();
 	public abstract void setEventSystem(EventSystem eventSystem);
 	public abstract void setMousePos(float x, float y);
+	public abstract void setSize(int width, int height);
+	public abstract void setKeyCallBack(int width, int height);
 	
 }

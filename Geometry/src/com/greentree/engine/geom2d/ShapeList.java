@@ -27,11 +27,11 @@ public class ShapeList {
 		return list.add(shape);
 	}
 	
-	public Point2D rayCast(Point2D start, @SuppressWarnings("exports") Vector2f vector, float maxDistanse){
+	public Point2D rayCast(Point2D start,  Vector2f vector, float maxDistanse){
 		return rayCast(start, vector, maxDistanse, 1);
 	}
 	
-	public Point2D rayCast(Point2D start, @SuppressWarnings("exports") Vector2f vector, float maxDistanse, double delta){
+	public Point2D rayCast(Point2D start,Vector2f vector, float maxDistanse, double delta){
 		if(vector.length() == 0) return null;
 		if(delta <= 0) throw new IllegalArgumentException("delta in not pozitive: " + delta);
 		vector.mul(1f / vector.length());

@@ -50,7 +50,6 @@ public class Point3D extends Shape3D implements Point<AABB, Point3D, Shape3D> {
 	public List<Point3D> getPoints() {
 		return Arrays.asList(clone());
 	}
-	@SuppressWarnings("exports")
 	public Vector3f getRadiusVector() {
 		return new Vector3f(x, y, z);
 	}

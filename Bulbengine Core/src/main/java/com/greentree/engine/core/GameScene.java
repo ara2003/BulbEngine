@@ -36,7 +36,10 @@ public final class GameScene extends GameObjectParent {
 	@Override
 	public void tryAddNecessarilySystem(final Class<?> clazz) {
 		for(final NecessarilySystems an : ClassUtil.getAllAnnotations(clazz, NecessarilySystems.class))
-			for(final Class<? extends GameSystem> cl : an.value()) this.addSystem(GameSystem.createSystem(cl));
+			for(final Class<? extends GameSystem> cl : an.value()) {
+				if(!systems.containsClass(cl))
+				this.addSystem(GameSystem.createSystem(cl));
+			}
 	}
 	
 	@Override
@@ -49,5 +52,15 @@ public final class GameScene extends GameObjectParent {
 	public void updateUpTreeComponents() {
 		this.allTreeComponents.clear();
 		for(final GameObject object : this.childrens) this.allTreeComponents.addAll(object.getAllComponents(GameComponent.class));
+	}
+
+	public String toSimpleString() {
+		return String.format("GameScene[name=\"%s\"]@%d", name, super.hashCode());
+	}
+
+	public boolean destroy() {
+		if(super.destroy())return true;
+		systems.clear();
+		return false;
 	}
 }

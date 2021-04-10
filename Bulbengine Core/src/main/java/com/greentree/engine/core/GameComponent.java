@@ -5,22 +5,21 @@ import java.util.Random;
 import com.greentree.engine.corutine.Corutine;
 import com.greentree.event.Listener;
 
-public abstract class GameComponent {
+public abstract class GameComponent extends GameElement {
 	
 	protected static final Random random = new Random();
 	private GameObject object;
-	private boolean isStart = false;
 	
 	protected final static void addListener(final Listener listener) {
 		Events.addListener(listener);
 	}
 	
 	protected final static GameObject createFromPrefab(final String prefab) {
-		return Game.createFromPrefab(prefab);
+		return GameCore.createFromPrefab(prefab);
 	}
 	
 	public static final <S extends GameSystem> void addSystem(S system){
-		Game.addSystem(system);
+		GameCore.addSystem(system);
 	}
 	
 	public final <T extends GameComponent> T getComponent(final Class<T> clazz) {
@@ -31,18 +30,10 @@ public abstract class GameComponent {
 		return this.object;
 	}
 	
-	public final void initSratr() {
-		if(this.isStart) throw new UnsupportedOperationException("reinitialization of : " + this);
-		this.isStart = true;
-		this.start();
-	}
-	
-	public boolean isDestroy() {
-		return this.object == null;
-	}
-	
-	protected final void setObject(final GameObject object) {
-		this.object = object;
+	public final boolean destroy() {
+		if(super.destroy())return true;
+		object.removeComponent(this);
+		return false;
 	}
 	
 	protected void start() {
@@ -51,4 +42,9 @@ public abstract class GameComponent {
 	protected final void startCorutine(final Corutine corutine) {
 		this.getObject().startCorutine(corutine);
 	}
+
+	public void setObject(GameObject object) {
+		this.object = object;
+	}
+	
 }

@@ -1,15 +1,14 @@
 package com.greentree.bulbgl.glfw;
 
 
-import java.nio.IntBuffer;
-
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWCursorPosCallbackI;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL45;
 import org.lwjgl.opengl.GLCapabilities;
+import org.lwjgl.opengl.GLDebugMessageCallbackI;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
@@ -28,6 +27,8 @@ public class GLFWWindow extends WindowI {
 	private int mouseY, mouseX;
 	private boolean mouseDraget;
 	private EventSystem eventSystem;
+	boolean first = true;
+	private int width, height;
 	
 	public GLFWWindow(final String title, final int width, final int height, final boolean fullscreen) {
 		GLFW.glfwDefaultWindowHints();
@@ -36,7 +37,7 @@ public class GLFWWindow extends WindowI {
 		// the window will stay hidden after creation
 		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
 		// the window will be resizable
-		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
+		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
 		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_CREATION_API, GLFW.GLFW_NATIVE_CONTEXT_API);
 		this.id = GLFW.glfwCreateWindow(width, height, title, MemoryUtil.NULL, MemoryUtil.NULL);
 		if(this.id == MemoryUtil.NULL) throw new IllegalStateException("Failed to create the GLFW window");
@@ -54,13 +55,16 @@ public class GLFWWindow extends WindowI {
 		// load OpenGL native
 		final GLCapabilities glCapabilities = GL.createCapabilities(false);
 		if(null == glCapabilities) throw new IllegalStateException("Failed to load OpenGL native");
-		// Enable depth testing for z-culling
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		// Set the type of depth-test
-		GL11.glDepthFunc(GL11.GL_LEQUAL);
-		// Enable smooth shading
-		GL11.glShadeModel(GL11.GL_SMOOTH);
-		GL11.glCullFace(GL11.GL_FRONT);
+		
+//		GL11.glEnable(GL11.GL_DEPTH_TEST);
+//		GL11.glDepthFunc(GL11.GL_LEQUAL);
+		
+//		GL11.glEnable(GL11.GL_CULL_FACE);
+//		GL11.glCullFace(GL11.GL_BACK);
+		
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		
 		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
 		GL11.glClearColor(.1f, .1f, .2f, 1);
 		GLFW.glfwShowWindow(this.id);
@@ -68,6 +72,17 @@ public class GLFWWindow extends WindowI {
 		GLFW.glfwFocusWindow(this.id);
 		
 		GLFW.glfwSwapInterval(1);
+		GL11.glClearDepth(1.0F);
+		
+//		GL45.glEnable(GL45.GL_DEBUG_OUTPUT);
+//		GL45.glDebugMessageCallback(new GLDebugMessageCallbackI() {
+//			
+//			@Override
+//			public void invoke(int source, int type, int id, int severity, int length, long message, long userParam) {
+//				System.out.printf("%d %d %d %d %d %d %d \n", source, type, id, severity, length, message, userParam);
+//			}
+//			
+//		}, 0);
 	}
 	
 	@Override
@@ -78,26 +93,21 @@ public class GLFWWindow extends WindowI {
 	
 	@Override
 	public void finishRender() {
-		GLFW.glfwSwapBuffers(this.id);
-		GLFW.glfwPollEvents();
 	}
 	
 	@Override
 	public int getHeight() {
-		try(MemoryStack stack = MemoryStack.stackPush()) {
-			final IntBuffer pHeight = stack.mallocInt(1);
-			GLFW.glfwGetFramebufferSize(this.id, null, pHeight);
-			return pHeight.get(0);
-		}
+		return height;
 	}
 	
 	@Override
 	public int getWidth() {
-		try(MemoryStack stack = MemoryStack.stackPush()) {
-			final IntBuffer pWidth = stack.mallocInt(1);
-			GLFW.glfwGetFramebufferSize(this.id, pWidth, null);
-			return pWidth.get(0);
-		}
+		return width;
+	}
+
+	@Override
+	public void setSize(int width, int height){
+		GLFW.glfwSetWindowSize(id, width, height);
 	}
 	
 	@Override
@@ -115,10 +125,18 @@ public class GLFWWindow extends WindowI {
 		this.eventSystem = eventSystem;
 	}
 	
-			boolean first = true;
 	private void setInput() {
-		
-		
+		GLFW.glfwSetWindowSizeCallback(this.id, (window, width, height) -> {
+			GLFWWindow.this.width = width;
+			GLFWWindow.this.height = height;
+			
+			GL11.glMatrixMode(GL11.GL_PROJECTION);
+			GL11.glLoadIdentity();
+			GL11.glOrtho(0.0, width, height, 0.0, 0.0, 1.0);
+			GL11.glMatrixMode(GL11.GL_MODELVIEW);
+			
+			GL11.glViewport(0, 0, width, height);
+		});
 		GLFW.glfwSetKeyCallback(this.id, new GLFWKeyCallback() {
 			
 			@Override
@@ -130,24 +148,19 @@ public class GLFWWindow extends WindowI {
 				}
 			}
 		});
-		GLFW.glfwSetCursorPosCallback(this.id, new GLFWCursorPosCallbackI() {
-			
-			
-			@Override
-			public void invoke(final long window, final double xpos, final double ypos) {
-				final int x = (int) xpos;
-				final int y = (int) ypos;
-				if(!first)
-					if(GLFWWindow.this.mouseDraget)
-						GLFWWindow.this.eventSystem.event(
-							MouseMovedEvent.getInstanse(GLFWWindow.this.eventSystem, MouseMovedEvent.EventType.mouseDragged, x, y, GLFWWindow.this.mouseX, GLFWWindow.this.mouseY));
-				else
-						GLFWWindow.this.eventSystem.event(
-							MouseMovedEvent.getInstanse(GLFWWindow.this.eventSystem, MouseMovedEvent.EventType.mouseMoved, x, y, GLFWWindow.this.mouseX, GLFWWindow.this.mouseY));
-				GLFWWindow.this.mouseX = x;
-				GLFWWindow.this.mouseY = y;
-				first             = false;
-			}
+		GLFW.glfwSetCursorPosCallback(this.id, (window, xpos, ypos)-> {
+			final int x = (int) xpos;
+			final int y = (int) ypos;
+			if(!GLFWWindow.this.first)
+				if(GLFWWindow.this.mouseDraget)
+					GLFWWindow.this.eventSystem.event(
+						MouseMovedEvent.getInstanse(GLFWWindow.this.eventSystem, MouseMovedEvent.EventType.mouseDragged, x, y, GLFWWindow.this.mouseX, GLFWWindow.this.mouseY));
+			else
+					GLFWWindow.this.eventSystem.event(
+						MouseMovedEvent.getInstanse(GLFWWindow.this.eventSystem, MouseMovedEvent.EventType.mouseMoved, x, y, GLFWWindow.this.mouseX, GLFWWindow.this.mouseY));
+			GLFWWindow.this.mouseX = x;
+			GLFWWindow.this.mouseY = y;
+			GLFWWindow.this.first  = false;
 		});
 		GLFW.glfwSetMouseButtonCallback(this.id, (window, button, action, mods)-> {
 			this.mouseDraget = action != GLFW.GLFW_RELEASE;
@@ -163,18 +176,19 @@ public class GLFWWindow extends WindowI {
 	}
 	
 	@Override
+	public void setMousePos(final float x, final float y) {
+		this.first = true;
+		GLFW.glfwSetCursorPos(this.id, (x + 1) / 2 * this.getWidth(), (y + 1) / 2 * this.getHeight());
+	}
+	
+	@Override
 	public void startRender() {
-		GL11.glClear(GL11.GL_ACCUM_BUFFER_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
-		GL11.glClearDepth(1.0F);
-		final int w[] = {0};
-		final int h[] = {0};
-		GLFW.glfwGetFramebufferSize(this.id, w, h);
-		GL11.glViewport(0, 0, w[0], h[0]);
+		GLFW.glfwSwapBuffers(this.id);
+		GLFW.glfwPollEvents();
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 	}
 
 	@Override
-	public void setMousePos(float x, float y) {
-		first = true;
-		GLFW.glfwSetCursorPos(id, (x+1)/2 * getWidth(), (y+1)/2 * getHeight());
+	public void setKeyCallBack(int width, int height) {
 	}
 }

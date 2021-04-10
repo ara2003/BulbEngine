@@ -1,23 +1,25 @@
 package com.greentree.common.collection;
 
-import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Queue;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /** @author Arseny Latyshev */
-public class HashMapClassTree<E> implements ClassTree<E> {
+public class HashMapClassTree<E> implements WeakClassTree<E> {
 	
 	private static final long serialVersionUID = 1L;
-	private final ConcurrentHashMap<Class<?>, Queue<?>> map;
+	private final Map<Class<?>, List<?>> map;
 	
 	public HashMapClassTree() {
 		this.map = new ConcurrentHashMap<>();
 	}
 	
 	public HashMapClassTree(final HashMapClassTree<? extends E> classTree) {
-		this.map = new ConcurrentHashMap<>(classTree.map);
+		this.map = new WeakHashMap<>(classTree.map);
 	}
 	
 	public HashMapClassTree(final Iterable<E> collection) {
@@ -28,7 +30,7 @@ public class HashMapClassTree<E> implements ClassTree<E> {
 	@SuppressWarnings("unchecked")
 	private void add(final Class<?> clazz, final Object e) {
 		if(clazz == null) throw new NullPointerException("clazz is null");
-		((Queue<Object>) this.get(clazz)).add(e);
+		((List<Object>) this.get(clazz)).add(e);
 		final Class<?> superClazz = clazz.getSuperclass();
 		if(superClazz != null) this.add(superClazz, e);
 		for(final Class<?> interfase : clazz.getInterfaces()) this.add(interfase, e);
@@ -76,11 +78,12 @@ public class HashMapClassTree<E> implements ClassTree<E> {
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> Queue<T> get(final Class<T> c) {
+	public <T> List<T> get(final Class<T> c) {
 		if(c == null) throw new NullPointerException("class is null");
-		final Queue<T> set = (Queue<T>) this.map.get(c);
+		final List<T> set = (List<T>) this.map.get(c);
+		
 		if(set == null) {
-			this.map.put(c, new ArrayDeque<>());
+			this.map.put(c, new CopyOnWriteArrayList<>());
 			return this.get(c);
 		}
 		return set;
@@ -88,7 +91,7 @@ public class HashMapClassTree<E> implements ClassTree<E> {
 	
 	@Override
 	public <T> T getOne(final Class<T> c) {
-		return this.get(c).element();
+		return this.get(c).get(0);
 	}
 	
 	@Override
@@ -102,10 +105,9 @@ public class HashMapClassTree<E> implements ClassTree<E> {
 		return (Iterator<E>) this.get(Object.class).iterator();
 	}
 	
-	@SuppressWarnings("unchecked")
 	private void remove(final Class<?> clazz, final Object obj) {
 		if(clazz == null) return;
-		((Queue<Object>) this.get(clazz)).remove(obj);
+		this.get(clazz).remove(obj);
 		this.remove(clazz.getSuperclass(), obj);
 		for(final Class<?> interfase : clazz.getInterfaces()) this.remove(interfase, obj);
 	}

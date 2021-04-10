@@ -12,6 +12,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.greentree.common.logger.Log;
+
 public final class ClassUtil {
 	
 	public static <A extends Annotation> Collection<A> getAllAnnotations(final Class<?> clazz, final Class<A> annotationClass) {
@@ -69,5 +71,31 @@ public final class ClassUtil {
 			Log.error(e + " " + clazz);
 		}
 		return null;
+	}
+	
+	public static Class<?> loadClass(String className, Iterable<String> packageNames) {
+		if(packageNames == null) throw new NullPointerException("packageNames is null");
+		if(className == null) throw new NullPointerException("className is null");
+		if(className.isBlank()) throw new NullPointerException("className is blank");
+		try {
+			return loadClass(className);
+		}catch(final ClassNotFoundException e) {
+		}
+		for(final String packageName : packageNames) try {
+			return loadClass(packageName + "." + className);
+		}catch(final ClassNotFoundException e) {
+		}
+		Log.warn("class \"" + className + "\" not found in " + packageNames, new ClassNotFoundException(className));
+		return null;
+	}
+
+	public static Class<?> loadClass(String className) throws ClassNotFoundException {
+		if(className == null) throw new NullPointerException("className is null");
+		try {
+			return ClassUtil.class.getClassLoader().loadClass(className);
+		}catch(final ClassNotFoundException e) {
+		}
+		throw new ClassNotFoundException(className);
+//		return null;
 	}
 }

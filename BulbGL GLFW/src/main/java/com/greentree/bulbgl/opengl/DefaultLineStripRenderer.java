@@ -1,5 +1,7 @@
 package com.greentree.bulbgl.opengl;
 
+import org.lwjgl.opengl.GL11;
+
 import com.greentree.bulbgl.BulbGL;
 import com.greentree.bulbgl.GraphicsI;
 
@@ -9,11 +11,6 @@ public class DefaultLineStripRenderer implements LineStripRenderer {
 	
 	public DefaultLineStripRenderer() {
 		GL = BulbGL.getGraphics();
-	}
-	
-	@Override
-	public boolean applyGLLineFixes() {
-		return true;
 	}
 	
 	@Override
@@ -43,7 +40,7 @@ public class DefaultLineStripRenderer implements LineStripRenderer {
 	
 	@Override
 	public void start() {
-		GL.glBegin(3);
+		GL.glBegin(GL11.GL_LINE_STRIP);
 	}
 	
 	@Override

@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-import com.greentree.common.Log;
+import com.greentree.common.logger.Log;
 
 public class CompositeImageData implements LoadableImageData {
 	

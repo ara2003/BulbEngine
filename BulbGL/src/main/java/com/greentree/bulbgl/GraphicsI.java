@@ -66,7 +66,6 @@ public interface GraphicsI  {
 	
 	boolean canSecondaryColor();
 	
-	void enterOrtho(final int p0, final int p1);
 	void flush();
 	float[] getCurrentColor();
 	void glBegin(final int p0);
@@ -112,7 +111,6 @@ public interface GraphicsI  {
 	void glTranslatef(final float p0, final float p1, final float p2);
 	void glVertex2f(final float p0, final float p1);
 	void glVertex3f(final float p0, final float p1, final float p2);
-	void initDisplay(final int p0, final int p1);
 	void setGlobalAlphaScale(final float p0);
 	void translate(float w, float h);
 	void unbindTexture();

@@ -11,7 +11,7 @@ public class ShowFPS extends GameSystem {
 	
 	@Override
 	protected void update() {
-		Graphics.setColor(Color.white);
+		Color.white.bind();
 		Graphics.drawString("FPS: " + Time.getFps(), 10, 10);
 	}
 	

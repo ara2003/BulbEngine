@@ -14,15 +14,15 @@ public class SpriteRendener extends CameraRendenerComponent {
 	private final static GraphicsI GL = BulbGL.getGraphics();
 	private transient Transform position;
 	@EditorData
-	private int width, height;
+	private float width, height;
 	@EditorData(name = "image")
 	protected Texture2D texture;
 	
-	public int getHeight() {
+	public float getHeight() {
 		return this.height;
 	}
 	
-	public int getWidth() {
+	public float getWidth() {
 		return this.width;
 	}
 	
@@ -31,47 +31,45 @@ public class SpriteRendener extends CameraRendenerComponent {
 		Color.white.bind();
 		this.texture.bind();
 		SpriteRendener.GL.glTranslatef(this.position.x(), this.position.y(), this.position.z());
-		final float w = .5f / getWidth(), h = .5f / getHeight();
+		final float w = .5f / this.getWidth(), h = .5f / this.getHeight();
 		SpriteRendener.GL.glBegin(GraphicsI.GL_QUADS);
 		SpriteRendener.GL.glTexCoord2f(w, h);
 		SpriteRendener.GL.glVertex3f(0, 0, 0.0f);
-		SpriteRendener.GL.glTexCoord2f(w, (texture.getTexHeight()) - h);
-		SpriteRendener.GL.glVertex3f(0, height, 0.0f);
-		SpriteRendener.GL.glTexCoord2f((texture.getTexWidth()) - w, (texture.getTexHeight()) - h);
-		SpriteRendener.GL.glVertex3f(width, height, 0.0f);
-		SpriteRendener.GL.glTexCoord2f((texture.getTexWidth()) - w, h);
-		SpriteRendener.GL.glVertex3f(width, 0, 0.0f);
+		SpriteRendener.GL.glTexCoord2f(w, this.texture.getTexHeight() - h);
+		SpriteRendener.GL.glVertex3f(0, this.height, 0.0f);
+		SpriteRendener.GL.glTexCoord2f(this.texture.getTexWidth() - w, this.texture.getTexHeight() - h);
+		SpriteRendener.GL.glVertex3f(this.width, this.height, 0.0f);
+		SpriteRendener.GL.glTexCoord2f(this.texture.getTexWidth() - w, h);
+		SpriteRendener.GL.glVertex3f(this.width, 0, 0.0f);
 		SpriteRendener.GL.glEnd();
 		SpriteRendener.GL.glTranslatef(-this.position.x(), -this.position.y(), -this.position.z());
 		BulbGL.getGraphics().unbindTexture();
 	}
 	
-	public void setHeight(final int height) {
+	public void setHeight(final float height) {
 		if(height <= 0) this.height = this.texture.getHeight();
 		else this.height = height;
 	}
 	
-	public void setSize(final int width, final int height) {
+	public void setSize(final float width, final float height) {
 		this.width  = width;
 		this.height = height;
 	}
 	
-	public void setWidth(final int width) {
+	public void setWidth(final float width) {
 		if(width <= 0) this.width = this.texture.getWidth();
 		else this.width = width;
 	}
 	
 	@Override
 	protected void start() {
-		
-		
 		this.texture.setMagFilter(Filtering.LINEAR);
 		this.texture.setMinFilter(Filtering.NEAREST);
-
-		texture.setWrap(Texture.Wrapping.CLAMP_TO_BORDER);
+		
+		this.texture.setWrap(Texture.Wrapping.CLAMP_TO_BORDER);
 		
 		this.position = this.getComponent(Transform.class);
-		if(texture == null)System.out.println(getObject());
+		if(this.texture == null) System.out.println(this.getObject());
 		if(this.width == 0) this.width = this.texture.getWidth();
 		if(this.height == 0) this.height = this.texture.getHeight();
 	}

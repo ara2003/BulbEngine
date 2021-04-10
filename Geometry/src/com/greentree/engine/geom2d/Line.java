@@ -57,7 +57,7 @@ public class Line extends Shape2D {
 		return Arrays.asList(p1, p2);
 	}
 	
-	@SuppressWarnings("exports")
+	
 	public Vector2f getVector() {
 		return new Vector2f(p1.getX() - p2.getX(), p1.getY() - p2.getY());
 	}

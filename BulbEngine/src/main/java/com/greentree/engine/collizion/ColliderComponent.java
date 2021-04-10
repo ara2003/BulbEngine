@@ -29,25 +29,6 @@ public abstract class ColliderComponent extends UpdatingGameComponent implements
 		return this.action;
 	}
 	
-	@Override
-	public final float getHeight() {
-		return this.shape.getAABB().getHeight();
-	}
-	
-	@Override
-	public float getWidth() {
-		return this.shape.getAABB().getWidth();
-	}
-
-	public final float getY(){
-		return y;
-	}
-	
-	
-	public final float getX(){
-		return x;
-	}
-	
 	public float getDeltaX() {
 		return 0;
 	}
@@ -56,9 +37,32 @@ public abstract class ColliderComponent extends UpdatingGameComponent implements
 		return 0;
 	}
 	
+	@Override
+	public final float getHeight() {
+		return this.shape.getAABB().getHeight();
+	}
+	
+	
+	@Override
+	public float getWidth() {
+		return this.shape.getAABB().getWidth();
+	}
+	
+	public final float getX() {
+		return this.x;
+	}
+	
+	public final float getY() {
+		return this.y;
+	}
+	
+	public boolean isIntersect(final ColliderComponent b) {
+		return this.shape.isIntersect(b.shape);
+	}
+	
 	public final void setPosition(final float x, final float y) {
-		this.x = x + getDeltaX();
-		this.y = y + getDeltaY();
+		this.x = x + this.getDeltaX();
+		this.y = y + this.getDeltaY();
 		this.shape.moveTo(this.x, this.y);
 	}
 	
@@ -68,9 +72,9 @@ public abstract class ColliderComponent extends UpdatingGameComponent implements
 	
 	@Override
 	protected final void start() {
-		this.shape    = this.generateShape();//не перемещать в конструктор
-		this.getComponent(Transform.class).getAction().addListener(t -> {
-			setPosition(t.x() + getDeltaX(), t.y() + getDeltaY());
+		this.shape = this.generateShape();//не перемещать в конструктор
+		this.getComponent(Transform.class).getAction().addListener(t-> {
+			this.setPosition(t.x() + this.getDeltaX(), t.y() + this.getDeltaY());
 		});
 	}
 	
@@ -139,10 +143,6 @@ public abstract class ColliderComponent extends UpdatingGameComponent implements
 			if(component.isDestroy()) return;
 			this.stayActon.action(component);
 		}
-	}
-
-	public boolean isIntersect(ColliderComponent b) {
-		return shape.isIntersect(b.shape);
 	}
 	
 }

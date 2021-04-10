@@ -44,12 +44,10 @@ public class Button extends UIComponent {
 	@Override
 	public void start() {
 		super.start();
-		this.width    = Graphics.getFont().getWidth(this.text);
-		this.height   = Graphics.getFont().getHeight(this.text);
+		this.width  = Graphics.getFont().getWidth(this.text);
+		this.height = Graphics.getFont().getHeight(this.text);
 		Events.addListener(new CameraMouseAdapter() {
-			
 			private static final long serialVersionUID = 1L;
-			
 			@Override
 			public void mousePress(final int button, final int x, final int y) {
 				if(Button.this.click0(button, x, y)) Button.this.action.action(l->l.click(button));

@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /** @author Arseny Latyshev */
 public class OneClassSet<E> extends AbstractSet<E> implements Serializable {
@@ -15,7 +16,7 @@ public class OneClassSet<E> extends AbstractSet<E> implements Serializable {
 	private final Map<Class<?>, E> map;
 	
 	public OneClassSet() {
-		map = Collections.synchronizedMap(new HashMap<>());
+		map = new ConcurrentHashMap<>();
 	}
 	
 	public boolean containsClass(Class<?> o) {

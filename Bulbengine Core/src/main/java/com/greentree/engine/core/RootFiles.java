@@ -2,9 +2,9 @@ package com.greentree.engine.core;
 
 import java.io.File;
 
-import com.greentree.common.Log;
 import com.greentree.common.loading.FileSystemLocation;
 import com.greentree.common.loading.ResourceLoader;
+import com.greentree.common.logger.Log;
 
 /**
  * @author Arseny Latyshev
@@ -26,9 +26,12 @@ public class RootFiles {
 		if(started)throw new UnsupportedOperationException();
 		started = true;
 		RootFiles.root   = new File(file);
+		if(!root.exists())root.mkdir();
 		RootFiles.assets = new File(root, "Assets");
 		RootFiles.debug  = new File(root, "Debug");
-		Log.setLogFolder(debug);
+		if(!assets.exists())assets.mkdir();
+		if(!debug.exists())debug.mkdir();
+		Log.init(debug);
 		ResourceLoader.addResourceLocation(new FileSystemLocation(assets));
 		ResourceLoader.addResourceLocation(new FileSystemLocation(root));
 	}

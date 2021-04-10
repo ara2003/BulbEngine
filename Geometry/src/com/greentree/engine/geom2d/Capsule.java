@@ -28,7 +28,7 @@ public class Capsule extends Shape2D {
 	}
 	
 	@Override
-	public Capsule add(@SuppressWarnings("exports") final Vector2f step) {
+	public Capsule add(final Vector2f step) {
 		this.focus1.add(step);
 		this.focus2.add(step);
 		return this;

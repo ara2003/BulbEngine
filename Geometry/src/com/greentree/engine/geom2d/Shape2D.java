@@ -17,7 +17,7 @@ public abstract class Shape2D implements Shape<AABB, Point2D, Shape2D> {
 		return add(new Vector2f(x, y));
 	}
 	
-	@SuppressWarnings("exports")
+	
 	public Shape2D add(final Vector2f step) {
 		return this.add(step.x, step.y);
 	}

@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.lwjgl.opengl.GL30;
+
 import com.greentree.bulbgl.BulbFont;
 import com.greentree.bulbgl.BulbGL;
 import com.greentree.bulbgl.GraphicsI;
@@ -118,7 +120,7 @@ public final class BasicFont implements BulbFont {
 		color.bind();
 		this.fontTexture.bind();
 		IntObject intObject = null;
-		BasicFont.GL.glBegin(7);
+		BasicFont.GL.glBegin(GL30.GL_QUADS);
 		int totalwidth = 0;
 		for(int i = 0; i < whatchars.length(); ++i) {
 			final int charCurrent = whatchars.charAt(i);

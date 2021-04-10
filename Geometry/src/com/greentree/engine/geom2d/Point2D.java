@@ -27,7 +27,7 @@ public class Point2D extends Shape2D implements Point<AABB, Point2D, Shape2D> {
 		this.y = y;
 	}
 	
-	public Point2D(Point2D center, @SuppressWarnings("exports") Vector2f vector) {
+	public Point2D(Point2D center,  Vector2f vector) {
 		x = center.x + vector.x;
 		y = center.y + vector.y;
 	}
@@ -81,7 +81,7 @@ public class Point2D extends Shape2D implements Point<AABB, Point2D, Shape2D> {
 		return 0;
 	}
 	
-	@SuppressWarnings("exports")
+	
 	public Vector2f getRadiusVector() {
 		return new Vector2f(x, y);
 	}

@@ -37,8 +37,35 @@ public final class Transform extends UpdatingGameComponent {
 		this.action();
 	}
 	
+	public void addXY(final Vector2f vec) {
+		this.x += vec.x;
+		this.y += vec.y;
+		this.action();
+	}
+	
+	public void addXYZ(final Vector3f mul) {
+		this.x += mul.x;
+		this.y += mul.y;
+		this.z += mul.z;
+		this.action();
+	}
+	
 	public EventAction<Transform> getAction() {
 		return this.action;
+	}
+
+	public void rotate(final float speedX, final float speedY, final float speedZ) {
+		this.rotateX += speedX;
+		this.rotateY += speedY;
+		this.rotateZ += speedZ;
+		this.action();
+	}
+	
+	public void rotate(double f, final float speedX, final float speedY, final float speedZ) {
+		this.rotateX += speedX*f;
+		this.rotateY += speedY*f;
+		this.rotateZ += speedZ*f;
+		this.action();
 	}
 	
 	public void set(final float x, final float y) {
@@ -60,6 +87,10 @@ public final class Transform extends UpdatingGameComponent {
 		return new Vector2f(this.x, this.y);
 	}
 	
+	public Vector3fc xyz() {
+		return new Vector3f(this.x, this.y, this.z);
+	}
+	
 	public float y() {
 		return this.y;
 	}
@@ -72,28 +103,20 @@ public final class Transform extends UpdatingGameComponent {
 	public interface Tanslate<T> extends Function<T, T> {
 	}
 
-	public void addXY(Vector2f vec) {
-		this.x += vec.x;
-		this.y += vec.y;
-		this.action();
+	public void addX(float x) {
+		this.x = x;
+		action();
 	}
 
-	public void rotate(float speedX, float speedY, float speedZ) {
-		rotateX += speedX;
-		rotateY += speedY;
-		rotateZ += speedZ;
-		this.action();
+	public void addY(float y) {
+		this.y = y;
+		action();
 	}
 
-	public Vector3fc xyz() {
-		return new Vector3f(x, y, z);
-	}
 
-	public void addXYZ(Vector3f mul) {
-		this.x += mul.x;
-		this.y += mul.y;
-		this.z += mul.z;
-		this.action();
+	public void addZ(float z) {
+		this.z = z;
+		action();
 	}
 	
 }

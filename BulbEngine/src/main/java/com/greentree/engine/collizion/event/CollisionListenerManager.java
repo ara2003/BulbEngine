@@ -10,9 +10,9 @@ public class CollisionListenerManager extends OneListenerListenerManager<Collisi
 	public CollisionListenerManager() {
 		super(DoubleCollisionListener.class);
 	}
-
+	
 	@Override
-	protected void event(DoubleCollisionListener l, CollisionEvent event) {
+	protected void event(final DoubleCollisionListener l, final CollisionEvent event) {
 		switch(event.getEventType()) {
 			case ENTER -> l.CollisionEnter(event.getCollider1(), event.getCollider2());
 			case EXIT -> l.CollisionExit(event.getCollider1(), event.getCollider2());

@@ -1,16 +1,31 @@
 package com.greentree.engine;
 
-import com.greentree.engine.component.render.Camera;
-import com.greentree.engine.core.Game;
-import com.greentree.engine.system.CameraRenderSystem;
+import java.lang.ref.WeakReference;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
-/**
- * @author Arseny Latyshev
- *
- */
+import com.greentree.engine.component.render.CameraComponent;
+import com.greentree.engine.core.GameCore;
+import com.greentree.engine.core.GameObject;
+
+/** @author Arseny Latyshev */
 public class Cameras {
-
-	public static Camera getMainCamera() {
-		return Game.getCurrentScene().getSystem(CameraRenderSystem.class).getMainCamera();
+	
+	protected static WeakReference<CameraComponent> mainCamera = new WeakReference<CameraComponent>(null);
+	
+	protected static CameraComponent foundCameraInScene() {
+		final List<CameraComponent> cameras = GameCore.getCurrentScene().getAllComponents(CameraComponent.class);
+		if(cameras.size() < 1) throw new UnsupportedOperationException("Camera not found in scene " + GameCore.getCurrentScene().toSimpleString());
+		if(cameras.size() > 1) throw new UnsupportedOperationException(
+			"Found more one camera in object " + cameras.parallelStream().map(CameraComponent::getObject).filter(Objects::nonNull).map(GameObject::getName).collect(Collectors.toList()));
+		return cameras.get(0);
+	}
+	
+	public static CameraComponent getMainCamera() {
+		if(mainCamera.get() == null) {
+			mainCamera = new WeakReference<CameraComponent>(foundCameraInScene());
+		}
+		return mainCamera.get();
 	}
 }

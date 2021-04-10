@@ -34,7 +34,7 @@ public class InternalTextureLoader {
 	public static InternalTextureLoader get() {
 		return InternalTextureLoader.loader;
 	}
-
+	
 	public Texture getTexture(final File source, final boolean flipped, final int filter) throws IOException {
 		return this.getTexture(source, flipped, null);
 	}
@@ -46,8 +46,11 @@ public class InternalTextureLoader {
 		return this.getTexture(in, resourceName, flipped, transparent);
 	}
 	
-	private Texture2D getTexture(final InputStream in, final String resourceName, final boolean flipped, final int[] transparent)
-		throws IOException {
+	private Texture2D getTexture(final InputStream resourceAsStream, final String resourceName) throws IOException {
+		return this.getTexture(resourceAsStream, resourceName, false, null);
+	}
+	
+	private Texture2D getTexture(final InputStream in, final String resourceName, final boolean flipped, final int[] transparent) throws IOException {//TODO
 		final LoadableImageData imageData     = ImageDataFactory.getImageDataFor(resourceName);
 		final ByteBuffer        textureBuffer = imageData.loadImage(new BufferedInputStream(in), flipped, transparent);
 		final int               width         = imageData.getWidth();
@@ -56,21 +59,18 @@ public class InternalTextureLoader {
 		final Texture2D         texture       = new GLTexture2D(width, height);
 		texture.bind();
 		final int srcPixelFormat = hasAlpha ? 6408 : 6407;
+		
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, this.dstPixelFormat, Mathf.get2Fold(width),
 			Mathf.get2Fold(height), 0, srcPixelFormat, GL11.GL_UNSIGNED_BYTE, textureBuffer);
-		
+	
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		return texture;
 	}
 	
 	public Texture2D getTexture(final String resourceName) throws IOException {
-		return getTexture(ResourceLoader.getResourceAsStream(resourceName), resourceName);
+		return this.getTexture(ResourceLoader.getResourceAsStream(resourceName), resourceName);
 	}
 	
-	private Texture2D getTexture(InputStream resourceAsStream, String resourceName) throws IOException {
-		return getTexture(resourceAsStream, resourceName, false, null);
-	}
-
 	public void set16BitMode() {
 		this.dstPixelFormat = GL11.GL_RGBA16;
 	}

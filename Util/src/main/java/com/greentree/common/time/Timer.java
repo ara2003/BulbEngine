@@ -3,7 +3,7 @@ package com.greentree.common.time;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.greentree.common.Log;
+import com.greentree.common.logger.Log;
 
 /** @author Arseny Latyshev */
 public class Timer {

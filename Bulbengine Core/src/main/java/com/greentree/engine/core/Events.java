@@ -31,6 +31,8 @@ public class Events {
 
 	public static void clear() {
 		eventSystem.clear();
+
+		
 	}
 
 }

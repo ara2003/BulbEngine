@@ -88,7 +88,7 @@ public final class GeomUtil2D {
 		return res;
 	}
 	
-	public static Point2D rey(final Point2D point, @SuppressWarnings("exports") final Vector2f vec, final float maxDistanse, final List<Shape2D> world) {
+	public static Point2D rey(final Point2D point, final Vector2f vec, final float maxDistanse, final List<Shape2D> world) {
 		if(vec.length() <= 0) return null;
 		vec.mul(1f / vec.length());
 		final Line scanner = new Line(point.getX(), point.getY(), point.getX() + (vec.x * maxDistanse),
@@ -107,7 +107,7 @@ public final class GeomUtil2D {
 		return res;
 	}
 	
-	public static Point2D reyCast(final Point2D point, @SuppressWarnings("exports") final Vector2f vec, float maxDistanse, final List<Shape2D> world) {
+	public static Point2D reyCast(final Point2D point, final Vector2f vec, float maxDistanse, final List<Shape2D> world) {
 		if(vec.length() == 0) return null;
 		vec.mul(1f / vec.length());
 		final Point2D p = new Point2D(point.getX(), point.getY());

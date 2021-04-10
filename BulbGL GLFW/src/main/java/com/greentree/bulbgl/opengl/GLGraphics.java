@@ -16,12 +16,10 @@ import com.greentree.bulbgl.GraphicsI;
 
 
 /** @author Arseny Latyshev */
-public class GLGraphics implements GraphicsI {
+public final class GLGraphics implements GraphicsI {
 	
 	protected float alphaScale;
 	private final float[] current;
-	protected int height;
-	private int width;
 
 	@Override
 	public void glTexCoord2f(final float x, final float y) {
@@ -36,15 +34,6 @@ public class GLGraphics implements GraphicsI {
 	@Override
 	public boolean canSecondaryColor() {
 		return true;
-	}
-	
-	@Override
-	public void enterOrtho(final int xsize, final int ysize) {
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GL11.glOrtho(0.0, this.width, this.height, 0.0, 1.0, -1.0);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glTranslatef((this.width - xsize) / 2, (this.height - ysize) / 2, 0.0f);
 	}
 	
 	@Override
@@ -259,23 +248,6 @@ public class GLGraphics implements GraphicsI {
 	@Override
 	public void glVertex3f(final float x, final float y, final float z) {
 		GL11.glVertex3f(x, y, z);
-	}
-	
-	@Override
-	public void initDisplay(final int width, final int height) {
-		this.width  = width;
-		this.height = height;
-		//		GL11.glGetString(7939);
-		//		GL11.glEnable(3553);
-		//		GL11.glShadeModel(7425);
-		//		GL11.glDisable(2929);
-		//		GL11.glDisable(2896);
-		//		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		//		GL11.glClearDepth(1.0);
-		//		GL11.glEnable(3042);
-		//		GL11.glBlendFunc(770, 771);
-		//		GL11.glViewport(0, 0, width, height);
-		//		GL11.glMatrixMode(5888);
 	}
 	
 	@Override

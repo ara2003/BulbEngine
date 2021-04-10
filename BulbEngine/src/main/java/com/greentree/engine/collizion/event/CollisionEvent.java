@@ -15,16 +15,16 @@ public class CollisionEvent implements Event {
 		this.object2 = object2;
 	}
 	
-	public EventType getEventType() {
-		return this.type;
-	}
-	
 	public ColliderComponent getCollider1() {
 		return this.object1;
 	}
 	
 	public ColliderComponent getCollider2() {
 		return this.object2;
+	}
+	
+	public EventType getEventType() {
+		return this.type;
 	}
 	
 	@Override
