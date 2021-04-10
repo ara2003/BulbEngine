@@ -6,9 +6,7 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL45;
 import org.lwjgl.opengl.GLCapabilities;
-import org.lwjgl.opengl.GLDebugMessageCallbackI;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
@@ -56,16 +54,16 @@ public class GLFWWindow extends WindowI {
 		final GLCapabilities glCapabilities = GL.createCapabilities(false);
 		if(null == glCapabilities) throw new IllegalStateException("Failed to load OpenGL native");
 		
-//		GL11.glEnable(GL11.GL_DEPTH_TEST);
-//		GL11.glDepthFunc(GL11.GL_LEQUAL);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glDepthFunc(GL11.GL_LEQUAL);
 		
-//		GL11.glEnable(GL11.GL_CULL_FACE);
-//		GL11.glCullFace(GL11.GL_BACK);
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glCullFace(GL11.GL_BACK);
 		
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
-		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
+//		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
 		GL11.glClearColor(.1f, .1f, .2f, 1);
 		GLFW.glfwShowWindow(this.id);
 		
@@ -138,7 +136,6 @@ public class GLFWWindow extends WindowI {
 			GL11.glViewport(0, 0, width, height);
 		});
 		GLFW.glfwSetKeyCallback(this.id, new GLFWKeyCallback() {
-			
 			@Override
 			public void invoke(final long window, final int key, final int scancode, final int action, final int mods) {
 				switch(action) {
@@ -185,7 +182,7 @@ public class GLFWWindow extends WindowI {
 	public void startRender() {
 		GLFW.glfwSwapBuffers(this.id);
 		GLFW.glfwPollEvents();
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT | GL11.GL_ACCUM_BUFFER_BIT);
 	}
 
 	@Override

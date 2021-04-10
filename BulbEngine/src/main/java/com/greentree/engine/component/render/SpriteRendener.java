@@ -3,9 +3,11 @@ package com.greentree.engine.component.render;
 import com.greentree.bulbgl.BulbGL;
 import com.greentree.bulbgl.Color;
 import com.greentree.bulbgl.GraphicsI;
+import com.greentree.bulbgl.opengl.Graphics;
 import com.greentree.bulbgl.texture.Texture;
 import com.greentree.bulbgl.texture.Texture.Filtering;
 import com.greentree.bulbgl.texture.Texture2D;
+import com.greentree.engine.Cameras;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.component.EditorData;
 
@@ -28,20 +30,24 @@ public class SpriteRendener extends CameraRendenerComponent {
 	
 	@Override
 	public void render() {
-		Color.white.bind();
 		this.texture.bind();
 		SpriteRendener.GL.glTranslatef(this.position.x(), this.position.y(), this.position.z());
+		Color.white.bind();
 		final float w = .5f / this.getWidth(), h = .5f / this.getHeight();
 		SpriteRendener.GL.glBegin(GraphicsI.GL_QUADS);
 		SpriteRendener.GL.glTexCoord2f(w, h);
-		SpriteRendener.GL.glVertex3f(0, 0, 0.0f);
+		SpriteRendener.GL.glVertex2f(0, 0);
 		SpriteRendener.GL.glTexCoord2f(w, this.texture.getTexHeight() - h);
-		SpriteRendener.GL.glVertex3f(0, this.height, 0.0f);
+		SpriteRendener.GL.glVertex2f(0, this.height);
 		SpriteRendener.GL.glTexCoord2f(this.texture.getTexWidth() - w, this.texture.getTexHeight() - h);
-		SpriteRendener.GL.glVertex3f(this.width, this.height, 0.0f);
+		SpriteRendener.GL.glVertex2f(this.width, this.height);
 		SpriteRendener.GL.glTexCoord2f(this.texture.getTexWidth() - w, h);
-		SpriteRendener.GL.glVertex3f(this.width, 0, 0.0f);
+		SpriteRendener.GL.glVertex2f(this.width, 0);
 		SpriteRendener.GL.glEnd();
+		Cameras.getMainCamera().translate();
+		Color.red.bind();
+		Graphics.drawOval(0, 0, width, height);
+		Cameras.getMainCamera().untranslate();
 		SpriteRendener.GL.glTranslatef(-this.position.x(), -this.position.y(), -this.position.z());
 		BulbGL.getGraphics().unbindTexture();
 	}

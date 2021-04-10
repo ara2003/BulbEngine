@@ -16,10 +16,5 @@ public class CameraRenderSystem extends GameSystem {
 			renderable.render();
 			Cameras.getMainCamera().untranslate();
 		}
-		
-		Cameras.getMainCamera().translate();
-		Color.red.bind();
-		Graphics.drawOval(0, 0, 50, 50);
-		Cameras.getMainCamera().untranslate();
 	}
 }
