@@ -3,11 +3,11 @@ package com.greentree.engine.builder.loaders;
 import java.io.IOException;
 import java.util.Properties;
 
-import com.greentree.bulbgl.BulbGL;
-import com.greentree.bulbgl.ShaderLoaderI;
-import com.greentree.bulbgl.shader.Shader;
-import com.greentree.bulbgl.shader.ShaderProgram;
 import com.greentree.common.loading.ResourceLoader;
+import com.greentree.graphics.shader.GLShaderLoader;
+import com.greentree.graphics.shader.GLShaderProgram;
+import com.greentree.graphics.shader.ShaderProgram;
+import com.greentree.graphics.shader.ShaderType;
 
 /** @author Arseny Latyshev */
 public class ShaderProgramLoader extends AbstractLoader<ShaderProgram> {
@@ -34,15 +34,13 @@ public class ShaderProgramLoader extends AbstractLoader<ShaderProgram> {
 		if(vertex == null) throw new IllegalArgumentException("vertex shader required");
 		if(fragment == null) throw new IllegalArgumentException("fragment shader required");
 		
-		final ShaderLoaderI SL = BulbGL.getShaderLoader();
+		final ShaderProgram.Builder buider = GLShaderProgram.builder();
 		
-		final ShaderProgram.Builder buider = SL.newShaderProgramBuilder();
-		
-		buider.addShader(SL.load(ResourceLoader.getResourceAsStream(vertex), Shader.Type.VERTEX));
-		buider.addShader(SL.load(ResourceLoader.getResourceAsStream(fragment), Shader.Type.FRAGMENT));
-		if(geometry != null) buider.addShader(SL.load(ResourceLoader.getResourceAsStream(geometry), Shader.Type.GEOMETRY));
-		if(tessControl != null) buider.addShader(SL.load(ResourceLoader.getResourceAsStream(tessControl), Shader.Type.TESS_CONTROL));
-		if(tessEvaluation != null) buider.addShader(SL.load(ResourceLoader.getResourceAsStream(tessEvaluation), Shader.Type.TESS_EVALUATION));
+		buider.addShader(GLShaderLoader.load(ResourceLoader.getResourceAsStream(vertex), ShaderType.VERTEX));
+		buider.addShader(GLShaderLoader.load(ResourceLoader.getResourceAsStream(fragment), ShaderType.FRAGMENT));
+		if(geometry != null) buider.addShader(GLShaderLoader.load(ResourceLoader.getResourceAsStream(geometry), ShaderType.GEOMETRY));
+		if(tessControl != null) buider.addShader(GLShaderLoader.load(ResourceLoader.getResourceAsStream(tessControl), ShaderType.TESS_CONTROL));
+		if(tessEvaluation != null) buider.addShader(GLShaderLoader.load(ResourceLoader.getResourceAsStream(tessEvaluation), ShaderType.TESS_EVALUATION));
 		
 		return buider.build();
 	}

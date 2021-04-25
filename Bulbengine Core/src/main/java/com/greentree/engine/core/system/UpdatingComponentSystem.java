@@ -8,7 +8,7 @@ import com.greentree.engine.core.GameSystem;
  *
  */
 public class UpdatingComponentSystem extends GameSystem {
-	
+
 	@Override
 	protected void update() {
 		for(Updating com : getAllComponents(Updating.class)) {

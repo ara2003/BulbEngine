@@ -10,9 +10,11 @@ public class UnOrentetPair<T> extends Pair<T, T> {
 	public UnOrentetPair() {
 		super();
 	}
+	
 	public UnOrentetPair(T first, T second) {
 		super(first, second);
 	}
+	
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean equals(Object obj) {

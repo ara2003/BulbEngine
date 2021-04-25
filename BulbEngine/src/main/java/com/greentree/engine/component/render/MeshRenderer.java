@@ -5,36 +5,34 @@ import java.nio.FloatBuffer;
 import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryStack;
 
-import com.greentree.bulbgl.BulbGL;
-import com.greentree.bulbgl.DataType;
-import com.greentree.bulbgl.GPrimitive;
-import com.greentree.bulbgl.shader.Location;
-import com.greentree.bulbgl.shader.ShaderProgram;
-import com.greentree.bulbgl.shader.ShaderProgram.Attribute;
-import com.greentree.bulbgl.shader.VertexArray;
-import com.greentree.bulbgl.shader.VideoBuffer;
-import com.greentree.bulbgl.texture.Texture2D;
 import com.greentree.engine.Cameras;
 import com.greentree.engine.component.AbstractMeshComponent;
 import com.greentree.engine.core.component.EditorData;
 import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.mesh.Mesh.IndeciesArray;
 import com.greentree.engine.mesh.Mesh.Type;
+import com.greentree.graphics.GLPrimitive;
+import com.greentree.graphics.GLType;
+import com.greentree.graphics.Graphics;
+import com.greentree.graphics.shader.GLLocation;
+import com.greentree.graphics.shader.GLVertexArray;
+import com.greentree.graphics.shader.ShaderProgram;
+import com.greentree.graphics.shader.ShaderProgram.Attribute;
+import com.greentree.graphics.shader.VertexArray;
+import com.greentree.graphics.shader.VideoBuffer;
 
 /** @author Arseny Latyshev */
 @RequireComponent({AbstractMeshComponent.class})
-public class MeshRenderer extends CameraRendenerComponent {
+public class MeshRenderer extends Camera3DRendenerComponent {
 	
 	// OpenGL program object
 	@EditorData(name = "matirial")
 	private ShaderProgram program;
 	
 	// normal matrix uniform location
-	private Location nmUL;
+	private GLLocation nmUL;
 	// model-view-projection matrix uniform location
-	private Location mvpUL;
-	
-	protected Texture2D texture;
+	private GLLocation mvpUL;
 	
 	// vertex array object id
 	private VertexArray vao;
@@ -84,7 +82,7 @@ public class MeshRenderer extends CameraRendenerComponent {
 			
 			this.vao.bind();
 			
-			BulbGL.getGraphics().glDrawElements(GPrimitive.TRIANGLES, this.lengthIndecies, DataType.UNSIGNED_INT);
+			Graphics.glDrawElements(GLPrimitive.TRIANGLES, this.lengthIndecies, GLType.UNSIGNED_INT);
 			this.vao.unbind();
 			this.program.stop();
 		}
@@ -98,7 +96,7 @@ public class MeshRenderer extends CameraRendenerComponent {
 		
 		try(MemoryStack stack = MemoryStack.stackPush()) {
 			
-			this.vao = BulbGL.getShaderLoader().createVertexArray();
+			this.vao = new GLVertexArray();
 			
 			final VideoBuffer vbo = this.program.createVideoBuffer(stack.floats(mesh.getVertex()), VideoBuffer.Type.ARRAY_BUFFER, VideoBuffer.Usage.STATIC_DRAW);
 			

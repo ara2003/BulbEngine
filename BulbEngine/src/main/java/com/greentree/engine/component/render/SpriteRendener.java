@@ -1,24 +1,25 @@
 package com.greentree.engine.component.render;
 
-import com.greentree.bulbgl.BulbGL;
-import com.greentree.bulbgl.Color;
-import com.greentree.bulbgl.GraphicsI;
-import com.greentree.bulbgl.opengl.Graphics;
-import com.greentree.bulbgl.texture.Texture;
-import com.greentree.bulbgl.texture.Texture.Filtering;
-import com.greentree.bulbgl.texture.Texture2D;
-import com.greentree.engine.Cameras;
+import org.lwjgl.system.MemoryStack;
+
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.component.EditorData;
+import com.greentree.graphics.Color;
+import com.greentree.graphics.GLPrimitive;
+import com.greentree.graphics.GLType;
+import com.greentree.graphics.Graphics;
+import com.greentree.graphics.Graphics.ClientState;
+import com.greentree.graphics.Wrapping;
+import com.greentree.graphics.texture.Filtering;
+import com.greentree.graphics.texture.GLTexture2D;
 
 public class SpriteRendener extends CameraRendenerComponent {
 	
-	private final static GraphicsI GL = BulbGL.getGraphics();
 	private transient Transform position;
 	@EditorData
 	private float width, height;
 	@EditorData(name = "image")
-	protected Texture2D texture;
+	protected GLTexture2D texture;
 	
 	public float getHeight() {
 		return this.height;
@@ -30,26 +31,31 @@ public class SpriteRendener extends CameraRendenerComponent {
 	
 	@Override
 	public void render() {
-		this.texture.bind();
-		SpriteRendener.GL.glTranslatef(this.position.x(), this.position.y(), this.position.z());
+		Graphics.pushMatrix();
+		Graphics.translate(this.position.x()+width/2, this.position.y()+height/2, this.position.z());
+		
+		Graphics.enableBlead();
+		
 		Color.white.bind();
+		
+		this.texture.bind();
 		final float w = .5f / this.getWidth(), h = .5f / this.getHeight();
-		SpriteRendener.GL.glBegin(GraphicsI.GL_QUADS);
-		SpriteRendener.GL.glTexCoord2f(w, h);
-		SpriteRendener.GL.glVertex2f(0, 0);
-		SpriteRendener.GL.glTexCoord2f(w, this.texture.getTexHeight() - h);
-		SpriteRendener.GL.glVertex2f(0, this.height);
-		SpriteRendener.GL.glTexCoord2f(this.texture.getTexWidth() - w, this.texture.getTexHeight() - h);
-		SpriteRendener.GL.glVertex2f(this.width, this.height);
-		SpriteRendener.GL.glTexCoord2f(this.texture.getTexWidth() - w, h);
-		SpriteRendener.GL.glVertex2f(this.width, 0);
-		SpriteRendener.GL.glEnd();
-		Cameras.getMainCamera().translate();
-		Color.red.bind();
-		Graphics.drawOval(0, 0, width, height);
-		Cameras.getMainCamera().untranslate();
-		SpriteRendener.GL.glTranslatef(-this.position.x(), -this.position.y(), -this.position.z());
-		BulbGL.getGraphics().unbindTexture();
+		try(MemoryStack stack = MemoryStack.stackPush()){
+			Graphics.glVertexPointer(2, GLType.FLOAT, stack.floats(0, 0, 0, -this.height, -this.width, -this.height, -this.width, 0));
+			Graphics.glTexCoordPointer(2, GLType.FLOAT, stack.floats(w, h, w, this.texture.getTexHeight() - h, this.texture.getTexWidth() - w, this.texture.getTexHeight() - h, this.texture.getTexWidth() - w, h));
+		}
+		Graphics.glEnableClientState(ClientState.VERTEX_ARRAY);
+		Graphics.glEnableClientState(ClientState.TEXTURE_COORD_ARRAY);
+		
+		Graphics.glDrawArrays(GLPrimitive.QUADS, 0, 4);
+		
+		Graphics.glDisableClientState(ClientState.VERTEX_ARRAY);
+		Graphics.glDisableClientState(ClientState.TEXTURE_COORD_ARRAY);
+
+		GLTexture2D.unbindTexture();
+		Graphics.disableBlead();
+		
+		Graphics.popMatrix();
 	}
 	
 	public void setHeight(final float height) {
@@ -72,10 +78,9 @@ public class SpriteRendener extends CameraRendenerComponent {
 		this.texture.setMagFilter(Filtering.LINEAR);
 		this.texture.setMinFilter(Filtering.NEAREST);
 		
-		this.texture.setWrap(Texture.Wrapping.CLAMP_TO_BORDER);
+		this.texture.setWrap(Wrapping.CLAMP_TO_BORDER);
 		
 		this.position = this.getComponent(Transform.class);
-		if(this.texture == null) System.out.println(this.getObject());
 		if(this.width == 0) this.width = this.texture.getWidth();
 		if(this.height == 0) this.height = this.texture.getHeight();
 	}

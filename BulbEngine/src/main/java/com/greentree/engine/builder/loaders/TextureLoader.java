@@ -2,23 +2,20 @@ package com.greentree.engine.builder.loaders;
 
 import java.io.IOException;
 
-import com.greentree.bulbgl.BulbGL;
-import com.greentree.bulbgl.TextureLoaderI;
-import com.greentree.bulbgl.texture.Texture.Filtering;
-import com.greentree.bulbgl.texture.Texture2D;
+import com.greentree.graphics.texture.Filtering;
+import com.greentree.graphics.texture.GLTexture2D;
+import com.greentree.graphics.texture.GLTextureLoader;
 
 /** @author Arseny Latyshev */
-public class TextureLoader extends CachingAbstractLoader<Texture2D> {
-	
-	private final static TextureLoaderI TL = BulbGL.getTextureLoader();
+public class TextureLoader extends CachingAbstractLoader<GLTexture2D> {
 	
 	public TextureLoader() {
-		super(Texture2D.class);
+		super(GLTexture2D.class);
 	}
 	
 	@Override
-	public Texture2D load0(final String value) throws IOException {
-		final Texture2D t = TextureLoader.TL.getTexture2D(value);
+	public GLTexture2D load0(final String value) throws IOException {
+		GLTexture2D t = GLTextureLoader.getTexture2D(value);
 		t.setMinFilter(Filtering.NEAREST);
 		t.setMagFilter(Filtering.LINEAR);
 		return t;

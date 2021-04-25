@@ -14,11 +14,13 @@ public class Log {
 	protected Log() {
 	}
 	
-	public static void debug() {
-		Log.debug("");
+	public static void debug(final String message) {
+		synchronized(Log.bedug) {
+			Log.bedug.print(message);
+		}
 	}
 	
-	public static void debug(final String message) {
+	public static void debugln(final String message) {
 		synchronized(Log.bedug) {
 			Log.bedug.println(message);
 		}

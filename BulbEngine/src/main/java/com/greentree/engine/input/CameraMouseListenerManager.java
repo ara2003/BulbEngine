@@ -1,10 +1,10 @@
 package com.greentree.engine.input;
 
-import com.greentree.bulbgl.input.event.MouseClickEvent;
-import com.greentree.bulbgl.input.event.MouseMovedEvent;
 import com.greentree.engine.Cameras;
 import com.greentree.event.Event;
 import com.greentree.event.OneListenerListenerManager;
+import com.greentree.graphics.input.event.MouseClickEvent;
+import com.greentree.graphics.input.event.MouseMovedEvent;
 
 /** @author Arseny Latyshev */
 public class CameraMouseListenerManager extends OneListenerListenerManager<Event, CameraMouseListener> {

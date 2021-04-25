@@ -1,8 +1,8 @@
 package com.greentree.engine.component.ui;
 
-import com.greentree.bulbgl.Color;
-import com.greentree.bulbgl.opengl.Graphics;
 import com.greentree.engine.core.component.EditorData;
+import com.greentree.graphics.Color;
+import com.greentree.graphics.Graphics;
 
 public final class Text extends UIComponent {
 	
@@ -21,7 +21,7 @@ public final class Text extends UIComponent {
 		this.w = Graphics.getFont().getWidth(this.text);
 		this.h = Graphics.getFont().getHeight(this.text);
 		this.color.bind();
-		Graphics.drawString(this.text, this.position.x() - this.w / 2, this.position.y() - this.h / 2);
+		Graphics.getFont().drawString(this.position.x() - this.w / 2, this.position.y() - this.h / 2, this.text);
 	}
 	
 	public void setText(final String text) {

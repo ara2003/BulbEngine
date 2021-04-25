@@ -44,6 +44,7 @@ public final class GameScene extends GameObjectParent {
 	
 	@Override
 	public void update() {
+//		System.out.println(systems);
 		for(final GameSystem system : this.systems) system.update();
 		for(final GameObject object : this.childrens) object.update();
 	}

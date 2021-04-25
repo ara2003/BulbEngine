@@ -13,7 +13,6 @@ import com.greentree.engine.core.system.UpdatingComponentSystem;
 @NecessarilySystems(UpdatingComponentSystem.class)
 public abstract class UpdatingGameComponent extends GameComponent implements Updating {
 
-
 	public abstract void update();
 
 }
