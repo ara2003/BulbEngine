@@ -3,8 +3,8 @@ package com.greentree.graphics.input.listener.manager;
 import com.greentree.event.Event;
 import com.greentree.event.OneListenerListenerManager;
 import com.greentree.graphics.input.event.KeyPressedEvent;
-import com.greentree.graphics.input.event.KeyRepleasedEvent;
 import com.greentree.graphics.input.event.KeyRepeatedEvent;
+import com.greentree.graphics.input.event.KeyRepleasedEvent;
 import com.greentree.graphics.input.listener.KeyListener;
 
 public class KeyListenerManager extends OneListenerListenerManager<Event, KeyListener> {

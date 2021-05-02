@@ -2,9 +2,9 @@ package com.greentree.engine.builder.loaders;
 
 import java.util.List;
 
-import com.greentree.engine.core.GameComponent;
 import com.greentree.engine.core.GameCore;
-import com.greentree.engine.core.GameObject;
+import com.greentree.engine.core.object.GameComponent;
+import com.greentree.engine.core.object.GameObject;
 
 /** @author Arseny Latyshev */
 public class GameComponentLoader implements Loader {

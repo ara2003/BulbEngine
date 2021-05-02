@@ -3,7 +3,6 @@ package com.greentree.common.collection;
 import java.io.Serializable;
 import java.util.AbstractSet;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;

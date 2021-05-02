@@ -6,10 +6,9 @@ import static java.lang.annotation.RetentionPolicy.*;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import com.greentree.engine.core.GameSystem;
+import com.greentree.engine.core.object.GameSystem;
 
-/** @author Arseny Latyshev
- * @see BasicClassLoader */
+/** @author Arseny Latyshev */
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface NecessarilySystems{

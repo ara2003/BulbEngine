@@ -189,10 +189,10 @@ public abstract class Graphics {
 	
 	public static void fillRect(final double x1, final double y1, final double width, final double height) {
 		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glVertex3d(x1, y1 - height, 0);
-		GL11.glVertex3d(x1 + width, y1 - height, 0);
-		GL11.glVertex3d(x1 + width, y1, 0);
-		GL11.glVertex3d(x1, y1, 0);
+		GL11.glVertex2d(x1, y1 + height);
+		GL11.glVertex2d(x1 + width, y1 + height);
+		GL11.glVertex2d(x1 + width, y1);
+		GL11.glVertex2d(x1, y1);
 		GL11.glEnd();
 	}
 	

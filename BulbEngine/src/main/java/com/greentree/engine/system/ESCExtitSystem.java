@@ -1,7 +1,7 @@
 package com.greentree.engine.system;
 
 import com.greentree.engine.Game3D;
-import com.greentree.engine.core.GameSystem;
+import com.greentree.engine.core.object.GameSystem;
 import com.greentree.graphics.input.Key;
 import com.greentree.graphics.input.listener.KeyAdapter;
 

@@ -63,7 +63,7 @@ public class Window implements AutoCloseable {
 		
 		GLFW.glfwShowWindow(this.id);
 		GLFW.glfwFocusWindow(this.id);
-		GLFW.glfwSwapInterval(1);
+		GLFW.glfwSwapInterval(0);
 		GLFW.glfwMakeContextCurrent(0);
 	}
 	
@@ -104,7 +104,11 @@ public class Window implements AutoCloseable {
 		return GLFW.glfwGetCurrentContext() == this.id;
 	}
 	
-	public boolean isShouldClose() {
+	public void shouldClose() { 
+		GLFW.glfwSetWindowShouldClose(this.id, true);
+	}
+	
+	public boolean isShouldClose() { 
 		return GLFW.glfwWindowShouldClose(this.id);
 	}
 	

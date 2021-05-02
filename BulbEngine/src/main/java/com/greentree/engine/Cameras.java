@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.greentree.engine.component.render.CameraComponent;
 import com.greentree.engine.core.GameCore;
-import com.greentree.engine.core.GameObject;
+import com.greentree.engine.core.object.GameObject;
+import com.greentree.engine.render.CameraComponent;
 
 /** @author Arseny Latyshev */
 public class Cameras {

@@ -70,15 +70,12 @@ public class Log {
 			if(s == null)throw new IllegalArgumentException("status cannot be null");
 			if(s.isBlank())throw new IllegalArgumentException("status cannot be blank");
 		});
-		System.out.printf("%s%s:", question, Arrays.toString(statuses));
 		try(final Scanner sc = new Scanner(System.in)) {
 			String line;
 			do {
-				System.out.println(Thread.currentThread());
 				line = sc.nextLine();
 				for(String s : statuses) {
 					if(s.equals(line)) {
-						System.out.println("-"+line);
 						return line;
 					}
 				}

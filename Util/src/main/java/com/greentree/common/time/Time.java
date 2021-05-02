@@ -4,7 +4,7 @@ public final class Time {
 	
 	private volatile static double delta;
 	private volatile static int fps, fps_;
-	private volatile static double lastFream, lastFPS, start;
+	private volatile static double lastFream, lastFPS = 0, start;
 	private static final long TimePerSecond = 1_000_000_000;
 	static {
 		Time.start = System.nanoTime();
@@ -37,8 +37,8 @@ public final class Time {
 		Time.delta = time - Time.lastFream;
 		Time.lastFream = time;
 		Time.fps_++;
-		if(Time.lastFPS + 1 <= time) {
-			Time.fps = Time.fps_;
+		if(Time.lastFPS + .5f <= time) {
+			Time.fps = Time.fps_ * 2;
 			Time.fps_ = 0;
 			Time.lastFPS = time;
 		}

@@ -31,7 +31,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
 import com.greentree.graphics.GLType;
-import com.greentree.graphics.core.Decoder;
 import com.greentree.graphics.shader.VideoBuffer.Type;
 import com.greentree.graphics.shader.VideoBuffer.Usage;
 
@@ -162,7 +161,6 @@ public class GLShaderProgram extends ShaderProgram {
 	/** Deletes program object and free all associated resources. Should be
 	 * called manually to prevent video memory leaks */
 	public void delete() {
-		System.out.println("delete");
 		GL20.glDeleteProgram(this.id);
 		while(!this.buffers.isEmpty()) this.buffers.pop().delete();
 	}
@@ -213,7 +211,7 @@ public class GLShaderProgram extends ShaderProgram {
 		final int  byteStride      = stride * dtpSize;
 		final long componentOffset = offset * dtpSize;
 		vbo.bind();
-		GL20.glVertexAttribPointer(attrNo, vertexSize, Decoder.glEnum(vbo.getDataType()), normalized, byteStride, componentOffset);
+		GL20.glVertexAttribPointer(attrNo, vertexSize, vbo.getDataType().glEnum(), normalized, byteStride, componentOffset);
 		GLShaderProgram.validateOpenGL();
 		GL20.glEnableVertexAttribArray(attrNo);
 		GLShaderProgram.validateOpenGL();

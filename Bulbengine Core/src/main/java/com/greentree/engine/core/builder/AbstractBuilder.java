@@ -1,15 +1,19 @@
 package com.greentree.engine.core.builder;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.greentree.engine.core.GameComponent;
-import com.greentree.engine.core.GameObject;
-import com.greentree.engine.core.GameObjectParent;
-import com.greentree.engine.core.GameScene;
+import com.greentree.common.pair.Pair;
+import com.greentree.engine.core.object.GameComponent;
+import com.greentree.engine.core.object.GameObject;
+import com.greentree.engine.core.object.GameObjectParent;
+import com.greentree.engine.core.object.GameScene;
 
 /** @author Arseny Latyshev */
 public abstract class AbstractBuilder<T> implements Builder {
 	
+	private final List<Pair<GameComponent, T>> contextComponent = new ArrayList<>();
 	
 	@Override
 	public final GameComponent createComponent(final InputStream in) {
@@ -39,7 +43,6 @@ public abstract class AbstractBuilder<T> implements Builder {
 	
 	protected abstract void fillComponent(GameComponent component, T parse);
 	
-	
 	@Override
 	public final void fillObject(final GameObject object, final InputStream in) {
 		this.fillObject(object, this.parse(in));
@@ -53,6 +56,17 @@ public abstract class AbstractBuilder<T> implements Builder {
 	}
 	
 	protected abstract void fillScene(GameScene node, T in);
+	
 	protected abstract String getName(T in);
+	
 	public abstract T parse(InputStream in);
+	
+	protected final void popComponents() {
+		for(final Pair<GameComponent, T> element : this.contextComponent) this.fillComponent(element.first, element.second);
+		this.contextComponent.clear();
+	}
+	
+	protected final void pushComponent(final GameComponent component, final T in) {
+		contextComponent.add(new Pair<>(component, in));
+	}
 }

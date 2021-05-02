@@ -8,8 +8,8 @@ import com.greentree.common.pair.UnOrentetPair;
 import com.greentree.engine.collizion.event.CollisionEvent;
 import com.greentree.engine.collizion.event.CollisionEvent.EventType;
 import com.greentree.engine.core.Events;
-import com.greentree.engine.core.GameSystem;
 import com.greentree.engine.core.component.ComponentList;
+import com.greentree.engine.core.object.GameSystem;
 
 public class ColliderSystem extends GameSystem {
 	

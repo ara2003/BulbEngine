@@ -13,10 +13,11 @@ open module bulb3Dengine {
 	exports com.greentree.engine.collizion.collider;
 
 	exports com.greentree.engine.input;
+	exports com.greentree.engine.assets;
 	
 	exports com.greentree.engine.component;
-	exports com.greentree.engine.component.ui;
-	exports com.greentree.engine.component.render;
+	exports com.greentree.engine.render.ui;
+	exports com.greentree.engine.render;
 
 	exports com.greentree.graphics.input.listener;
 	exports com.greentree.graphics.input.event;

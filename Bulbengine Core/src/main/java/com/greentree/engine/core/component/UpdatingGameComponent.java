@@ -1,7 +1,7 @@
 package com.greentree.engine.core.component;
 
 import com.greentree.common.Updating;
-import com.greentree.engine.core.GameComponent;
+import com.greentree.engine.core.object.GameComponent;
 import com.greentree.engine.core.system.NecessarilySystems;
 import com.greentree.engine.core.system.UpdatingComponentSystem;
 

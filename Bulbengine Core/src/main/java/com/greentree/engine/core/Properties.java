@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.greentree.common.Optional;
 import com.greentree.common.logger.Log;
 
 /** @author Arseny Latyshev */
@@ -19,16 +20,12 @@ public class Properties {
 		return Properties.PROPERTIES.getOrDefault(string, string2);
 	}
 	
-	public static GameProperties getProperty() {
+	public static GameProperties getProperties() {
 		return Properties.PROPERTIES;
 	}
 	
-	public static String getProperty(final String key) {
+	public static Optional<String> getProperty(final String key) {
 		return Properties.PROPERTIES.getProperty(key);
-	}
-	
-	public static String getPropertyNotNull(final String key) {
-		return Properties.PROPERTIES.getPropertyNotNull(key);
 	}
 	
 	public static void loadArguments(final String[] args) {
@@ -38,13 +35,14 @@ public class Properties {
 	public static void loadProperty(final File file) {
 		if(!file.exists()) try {
 			file.createNewFile();
+			Log.error("file " + file + " not exists");
 		}catch(final IOException e) {
 			Log.error(e);
 		}
 		try {
 			Properties.PROPERTIES.load(new FileInputStream(file));
 		}catch(final IOException e) {
-			throw new IllegalArgumentException(" file " + file + " load exception", e);
+			Log.error("file " + file + " load exception", e);
 		}
 	}
 	
@@ -52,20 +50,8 @@ public class Properties {
 		
 		private static final long serialVersionUID = 1L;
 		
-		public String getProperty(final String key) {
-			return getProperty(key, "");
-		}
-		
-		public String getProperty(final String key, final String def) {
-			final String res = this.get(key);
-			if(res == null) return def;
-			return res;
-		}
-		
-		public String getPropertyNotNull(final String key) {
-			String res = get(key);
-			if(res == null)throw new NullPointerException(String.format("argument %s does not exist", key));
-			return res;
+		public Optional<String> getProperty(final String key) {
+			return new Optional<>(get(key));
 		}
 		
 		public void load(final InputStream inputStream) throws IOException {
@@ -75,15 +61,16 @@ public class Properties {
 			while((length = inputStream.read(buffer)) != -1) result.write(buffer, 0, length);
 			for(String line : result.toString("UTF-8").split("\n")) {
 				if(line.isEmpty()) continue;
+				if(line.startsWith("#")) continue;
 				line = line.trim();
 				final String[] str = line.split("=");
 				if(str.length < 2) throw new IOException("quantity \"=\" less then 1 in line :" + line);
 				if(str.length > 2) throw new IOException("quantity \"=\" more then 1 in line :" + line);
-				this.put(str[0], str[1]);
+				put(str[0], str[1]);
 			}
 		}
 		
-		
-		
+	
 	}
+	
 }

@@ -2,17 +2,17 @@ package com.greentree.engine.core.builder;
 
 import java.io.InputStream;
 
-import com.greentree.engine.core.GameComponent;
-import com.greentree.engine.core.GameObject;
-import com.greentree.engine.core.GameObjectParent;
-import com.greentree.engine.core.GameScene;
+import com.greentree.engine.core.object.GameComponent;
+import com.greentree.engine.core.object.GameObject;
+import com.greentree.engine.core.object.GameObjectParent;
+import com.greentree.engine.core.object.GameScene;
 
 /** @author Arseny Latyshev */
 public interface Builder {
 	
-	GameComponent createComponent(Class<? extends GameComponent> class1);
 	//create Component
 	GameComponent createComponent(InputStream in);
+	GameComponent createComponent(Class<? extends GameComponent> clazz);
 	//create Object
 	GameObject createObject(InputStream in, GameObjectParent parent);
 	//create prefab

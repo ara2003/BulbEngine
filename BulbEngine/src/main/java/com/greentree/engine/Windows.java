@@ -12,9 +12,9 @@ public class Windows {
 	
 	public static Window getWindow() {
 		if(Windows.window == null) {
-			final int     width      = Integer.parseInt(Properties.getPropertyNotNull("window.width"));
-			final int     height     = Integer.parseInt(Properties.getPropertyNotNull("window.height"));
-			final boolean fullscreen = Boolean.parseBoolean(Properties.getPropertyNotNull("window.fullscreen"));
+			final int     width      = Integer.parseInt(Properties.getProperty("window.width").notNull().get());
+			final int     height     = Integer.parseInt(Properties.getProperty("window.height").notNull().get());
+			final boolean fullscreen = Boolean.parseBoolean(Properties.getProperty("window.fullscreen").notNull().get());
 			window = new SimpleWindow(Properties.getOrDefault("window.title", "blub window"), width, height, true, fullscreen);
 			Log.info("Starting display " + width + "x" + height);
 		}

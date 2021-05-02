@@ -22,10 +22,10 @@ public final class ClassUtil {
 		if(clazz.equals(Object.class)) return res;
 		if(annotationClass == null) return res;
 		for(final Class<?> c : clazz.getInterfaces()) {
-			final A annotation = c.getAnnotation(annotationClass);
+			final A annotation = c.getDeclaredAnnotation(annotationClass);
 			if(annotation != null) res.add(annotation);
 		}
-		final A annotation = clazz.getAnnotation(annotationClass);
+		final A annotation = clazz.getDeclaredAnnotation(annotationClass);
 		if(annotation != null) res.add(annotation);
 		res.addAll(ClassUtil.getAllAnnotations(clazz.getSuperclass(), annotationClass));
 		return res;

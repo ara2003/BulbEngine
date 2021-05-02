@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.greentree.engine.core.GameComponent;
-import com.greentree.engine.core.GameObject;
+import com.greentree.engine.core.object.GameComponent;
+import com.greentree.engine.core.object.GameObject;
 
 /** @author Arseny Latyshev */
 public class ComponentList<E extends GameComponent> implements List<E> {

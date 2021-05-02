@@ -1,12 +1,13 @@
 package com.greentree.engine.core.system;
 
 import com.greentree.common.Updating;
-import com.greentree.engine.core.GameSystem;
+import com.greentree.engine.core.object.GameSystem;
 
 /**
  * @author Arseny Latyshev
  *
  */
+@GroupSystem("updating")
 public class UpdatingComponentSystem extends GameSystem {
 
 	@Override
