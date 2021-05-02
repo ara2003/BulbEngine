@@ -11,7 +11,7 @@ import com.greentree.engine.core.object.GameSystem;
 public class UpdatingComponentSystem extends GameSystem {
 
 	@Override
-	protected void update() {
+	public void update() {
 		for(Updating com : getAllComponents(Updating.class)) {
 			com.update();
 		}

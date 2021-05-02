@@ -9,7 +9,7 @@ import com.greentree.engine.core.system.GroupSystem;
 public class CameraRenderSystem extends GameSystem {
 	
 	@Override
-	protected void update() {
+	public void update() {
 		for(final CameraRendenerComponent renderable : this.getAllComponents(CameraRendenerComponent.class)) {
 			Cameras.getMainCamera().translateAsWorld();
 			renderable.render();

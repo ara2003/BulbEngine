@@ -1,12 +1,12 @@
-package com.greentree.engine.core.object;
+package com.greentree.engine.core.system.collection;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 import com.greentree.common.Updating;
-import com.greentree.common.concurent.MultyTask;
 import com.greentree.common.logger.Log;
+import com.greentree.engine.core.object.GameSystem;
 import com.greentree.engine.core.system.GroupSystem;
 
 /** @author Arseny Latyshev */
@@ -14,17 +14,9 @@ public class GameSystemGroup extends ArrayList<GameSystem> implements Updating {
 	
 	private static final long serialVersionUID = 1L;
 	private final String name;
-	private final boolean mainthread;
-	private boolean updated = true;
-	private final Runnable runnable;
 	
-	protected GameSystemGroup(final String name, final boolean mainthread) {
-		this.name       = name;
-		this.mainthread = mainthread;
-		runnable        = ()-> {
-							for(final GameSystem system : GameSystemGroup.this) system.update();
-							updated = true;
-						};
+	public GameSystemGroup(final String name) {
+		this.name = name;
 	}
 	
 	@Override
@@ -67,27 +59,13 @@ public class GameSystemGroup extends ArrayList<GameSystem> implements Updating {
 		for(final GameSystem system : this) system.initSratr();
 	}
 	
-	public boolean isUpdated() {
-		return updated;
-	}
-	
-	@Override
-	public String toString() {
-		return String.format("%s%s:%s", name, mainthread ? "(main)" : "", super.toString());
-	}
-	
 	public void trim() {
 		Collections.sort(this, Comparator.comparing(this::getPrioryty));
 	}
 	
 	@Override
 	public void update() {
-		if(!isUpdated()) throw new UnsupportedOperationException("previous update not completed " + name);
-		updated = false;
-		if(mainthread)
-			runnable.run();
-		else
-			MultyTask.task(runnable);
+		for(var i : this)i.update();
 	}
 	
 	

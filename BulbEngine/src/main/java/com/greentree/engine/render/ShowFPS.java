@@ -12,7 +12,7 @@ import com.greentree.graphics.Graphics;
 public class ShowFPS extends GameSystem {
 	
 	@Override
-	protected void update() {
+	public void update() {
 		Cameras.getMainCamera().translateAsWindow();
 		Graphics.enableBlead();
 		Color.white.bind();

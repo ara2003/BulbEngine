@@ -10,7 +10,7 @@ import com.greentree.engine.core.system.GroupSystem;
 public class SimpleFigureSystem extends GameSystem {
 	
 	@Override
-	protected void update() {
+	public void update() {
 		Cameras.getMainCamera().translateAsWindow();
 		for(final SimpleFigure renderable : getAllComponents(SimpleFigure.class)) {
 			renderable.render();

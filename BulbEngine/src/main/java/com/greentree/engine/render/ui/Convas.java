@@ -13,7 +13,7 @@ public class Convas extends GameSystem {
 	int a = 9;
 	
 	@Override
-	protected void update() {
+	public void update() {
 		Cameras.getMainCamera().translateAsCamera();
 		Graphics.enableBlead();
 		for(final UIComponent renderable : getAllComponents(UIComponent.class)) {

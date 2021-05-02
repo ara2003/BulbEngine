@@ -42,6 +42,6 @@ public abstract class GameSystem extends GameElement {
 		return GameCore.getCurrentScene().getAllComponentsAsComponentList(clazz);
 	}
 
-	protected void update() {
+	public void update() {
 	}
 }

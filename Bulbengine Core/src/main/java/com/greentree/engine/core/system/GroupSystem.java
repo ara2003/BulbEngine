@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 /** @author Arseny Latyshev */
 @Retention(RUNTIME)
-@Target({TYPE,ANNOTATION_TYPE})
+@Target({TYPE})
 @Inherited
 public @interface GroupSystem {
 	

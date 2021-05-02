@@ -9,7 +9,7 @@ import com.greentree.graphics.Graphics;
 public class Camera3DRenderSystem extends GameSystem {
 	
 	@Override
-	protected void update() {
+	public void update() {
 		Graphics.enableDepthTest();
 		Graphics.enableCullFace();
 		Graphics.enableBlead();
