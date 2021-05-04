@@ -1,8 +1,5 @@
 package com.greentree.engine.core;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.greentree.common.time.Time;
 import com.greentree.engine.core.builder.Builder;
 import com.greentree.engine.core.object.GameObject;
@@ -12,8 +9,7 @@ import com.greentree.engine.core.object.GameSystem;
 public abstract class GameCore {
 	
 	protected static Builder builder;
-	private static final List<Runnable> tasks = new ArrayList<>();
-	
+
 	public static <S extends GameSystem> boolean addSystem(final S system) {
 		return SceneLoader.getCurrentScene().addSystem(system);
 	}
@@ -25,8 +21,6 @@ public abstract class GameCore {
 	protected final static void gameLoop() {
 		Time.updata();
 		Events.update();
-		for(Runnable runnable : tasks)runnable.run();
-		tasks.clear();
 		SceneLoader.getCurrentScene().update();
 	}
 	
@@ -57,10 +51,6 @@ public abstract class GameCore {
 		RootFiles.start(file);
 		Properties.loadArguments(args);
 		while(true) GameCore.gameLoop();
-	}
-
-	public static void task(Runnable runnable) {
-		tasks.add(runnable);
 	}
 	
 }

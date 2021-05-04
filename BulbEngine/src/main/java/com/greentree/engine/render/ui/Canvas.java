@@ -8,7 +8,7 @@ import com.greentree.graphics.Graphics;
 
 /** @author Arseny Latyshev */
 @GroupSystem("graphics")
-public class Convas extends GameSystem {
+public class Canvas extends GameSystem {
 	
 	int a = 9;
 	

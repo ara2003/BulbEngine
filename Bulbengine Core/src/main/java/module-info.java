@@ -1,7 +1,6 @@
 
 open module bulbengine.core {
 
-	requires transitive bulbengine.corutine;
 	requires transitive bulbengine.util;
 	requires transitive bulbengine.event;
 	requires com.google.common;

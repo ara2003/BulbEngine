@@ -14,8 +14,7 @@ public class WhileCorutine extends Corutine {
 	@Override
 	protected boolean waiting() {
 		if(while1.keepWaiting()) {
-			if(wait.keepWaiting()) return true;
-			else run_type = runType.start;
+			if(!wait.keepWaiting()) run_type = runType.start;
 			return true;
 		}
 		return false;

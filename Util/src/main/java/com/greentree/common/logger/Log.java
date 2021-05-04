@@ -3,26 +3,31 @@ package com.greentree.common.logger;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.Scanner;
 
-public class Log {
+public abstract class Log extends Logger {
 	
 	private static PrintStream log, err, bedug;
+	private static File folder;
 	
-	protected Log() {
+	static {
+		Logger.createType("debug", s->Log.bedug.println(s));
+		Logger.createType("err", s->Log.err.println(s));
+		Logger.createType("log", s->Log.log.println(s));
+		Logger.createType("error", s -> {
+			System.err.println(s);
+			System.exit(-1);
+		});
+	}
+
+	public static void createFileType(String type) throws FileNotFoundException {
+		PrintStream stream = new PrintStream(new File(folder, type.toUpperCase() + ".txt"));
+		createType(type, s -> stream.println(s));
 	}
 	
 	public static void debug(final String message) {
 		synchronized(Log.bedug) {
-			Log.bedug.print(message);
-		}
-	}
-	
-	public static void debugln(final String message) {
-		synchronized(Log.bedug) {
-			Log.bedug.println(message);
+			Logger.print("bedug", message);
 		}
 	}
 	
@@ -50,36 +55,16 @@ public class Log {
 	}
 	
 	public static void init(final File folder) {
+		Log.folder = folder;
 		if(!folder.exists()) throw new IllegalArgumentException("folder " + folder.getAbsolutePath() + " is not exists");
 		if(!folder.isDirectory()) throw new IllegalArgumentException("folder is not directory");
 		try {
 			Log.log   = new PrintStream(new File(folder, "Log.txt"));
 			Log.bedug = new PrintStream(new File(folder, "Debug.txt"));
 			Log.err   = System.err;
+			
 		}catch(final FileNotFoundException e) {
 			e.printStackTrace();
-		}
-	}
-
-	public static boolean question(final String question) {
-		return "y".equals(question(question, "y", "n"));
-	}
-	
-	public static String question(final String question, String...statuses) {
-		Arrays.asList(statuses).parallelStream().forEach(s -> {
-			if(s == null)throw new IllegalArgumentException("status cannot be null");
-			if(s.isBlank())throw new IllegalArgumentException("status cannot be blank");
-		});
-		try(final Scanner sc = new Scanner(System.in)) {
-			String line;
-			do {
-				line = sc.nextLine();
-				for(String s : statuses) {
-					if(s.equals(line)) {
-						return line;
-					}
-				}
-			}while(true);
 		}
 	}
 	
@@ -110,9 +95,6 @@ public class Log {
 	
 	public static void warn(final Throwable e) {
 		e.printStackTrace(Log.err);
-	}
-
-	public static void IError(final Throwable e) {
 	}
 	
 }

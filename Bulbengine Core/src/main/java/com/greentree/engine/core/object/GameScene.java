@@ -1,18 +1,30 @@
 package com.greentree.engine.core.object;
 
+import java.io.FileNotFoundException;
+
 import com.greentree.common.ClassUtil;
+import com.greentree.common.logger.Log;
+import com.greentree.common.logger.Logger;
 import com.greentree.engine.core.system.NecessarilySystems;
-import com.greentree.engine.core.system.collection.SimpleSystemCollection;
+import com.greentree.engine.core.system.collection.SimpleGroupSystemCollection;
 import com.greentree.engine.core.system.collection.SystemCollection;
 
 /** @author Arseny Latyshev */
 public final class GameScene extends GameObjectParent {
 	
 	private final SystemCollection systems;
+	static {
+		try {
+			Log.createFileType("update scene");
+		}catch(final FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	public GameScene(final String name) {
 		super(name);
-		systems = new SimpleSystemCollection();
+		systems = new SimpleGroupSystemCollection();
 	}
 	
 	public boolean addSystem(final GameSystem system) {
@@ -54,8 +66,10 @@ public final class GameScene extends GameObjectParent {
 	
 	@Override
 	public void update() {
+		Logger.print("update scene", "s %d", System.nanoTime());
 		systems.update();
-		for(final GameObject object : childrens) object.update();
+//		for(final GameObject object : childrens) object.update();TODO
+		Logger.print("update scene", "f %d", System.nanoTime());
 	}
 	
 	@Override

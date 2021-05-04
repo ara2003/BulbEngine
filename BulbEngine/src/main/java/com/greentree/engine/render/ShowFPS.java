@@ -16,7 +16,7 @@ public class ShowFPS extends GameSystem {
 		Cameras.getMainCamera().translateAsWindow();
 		Graphics.enableBlead();
 		Color.white.bind();
-		Graphics.getFont().drawString(10, -20, "FPS: " + Time.getFps());
+		Graphics.getFont().drawString(10, -20, String.format("FPS: %d  TTF : %d", Time.getFps(), (int)Math.ceil(Time.getAbsolutDelta() * 1E3)));
 		Graphics.disableBlead();
 		Cameras.getMainCamera().untranslate();
 	}

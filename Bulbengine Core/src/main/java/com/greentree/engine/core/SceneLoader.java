@@ -26,9 +26,9 @@ public abstract class SceneLoader {
 	}
 	
 	public static void loadScene(final String name) {
-		GameCore.task(() -> {
+//		GameCore.task(() -> {
 			loadScene0(name);
-		});
+//		});
 	}
 	
 	protected static void loadScene0(final String name) {

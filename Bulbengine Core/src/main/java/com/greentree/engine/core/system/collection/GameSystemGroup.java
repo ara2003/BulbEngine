@@ -1,11 +1,13 @@
 package com.greentree.engine.core.system.collection;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 import com.greentree.common.Updating;
 import com.greentree.common.logger.Log;
+import com.greentree.common.logger.Logger;
 import com.greentree.engine.core.object.GameSystem;
 import com.greentree.engine.core.system.GroupSystem;
 
@@ -13,6 +15,19 @@ import com.greentree.engine.core.system.GroupSystem;
 public class GameSystemGroup extends ArrayList<GameSystem> implements Updating {
 	
 	private static final long serialVersionUID = 1L;
+	static {
+		try {
+			Log.createFileType("update system");
+		}catch(final FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public String toString() {
+		return name + super.toString();
+	}
+
 	private final String name;
 	
 	public GameSystemGroup(final String name) {
@@ -65,7 +80,11 @@ public class GameSystemGroup extends ArrayList<GameSystem> implements Updating {
 	
 	@Override
 	public void update() {
-		for(var i : this)i.update();
+		for(final var i : this) {
+			Logger.print("update system", "s %s %d", i.getClass().getSimpleName(), System.nanoTime());
+			i.update();
+			Logger.print("update system", "f %s %d", i.getClass().getSimpleName(), System.nanoTime());
+		}
 	}
 	
 	

@@ -1,9 +1,7 @@
 package com.greentree.engine.core.object;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -12,18 +10,15 @@ import com.greentree.common.collection.HashMapClassTree;
 import com.greentree.common.collection.WeakClassTree;
 import com.greentree.common.logger.Log;
 import com.greentree.engine.core.component.RequireComponent;
-import com.greentree.engine.corutine.Corutine;
 
 public final class GameObject extends GameObjectParent {
 	
 	private final WeakClassTree<GameComponent> components;
 	private GameObjectParent parent;
-	private final Collection<Corutine> corutines;
 	
 	public GameObject(final String name, final GameObjectParent parent) {
 		super(name);
 		this.components = new HashMapClassTree<>();
-		this.corutines  = new LinkedList<>();
 		if(parent == null) throw new IllegalArgumentException("parent dosen\'t be null");
 		this.parent = parent;
 		parent.addChildren(this);
@@ -94,9 +89,6 @@ public final class GameObject extends GameObjectParent {
 		for(final GameObject component : this.childrens) component.start();
 	}
 	
-	public void startCorutine(final Corutine corutine) {
-		this.corutines.add(corutine);
-	}
 	
 	@Override
 	public String toString() {
@@ -115,9 +107,9 @@ public final class GameObject extends GameObjectParent {
 	}
 	
 	@Override
+	@Deprecated
 	protected void update() {
 		for(final GameObject component : this.childrens) component.update();
-		this.corutines.removeIf(Corutine::run);
 	}
 	
 	@Override

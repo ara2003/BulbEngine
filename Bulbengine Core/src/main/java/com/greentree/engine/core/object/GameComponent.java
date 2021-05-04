@@ -4,7 +4,6 @@ import java.util.Random;
 
 import com.greentree.engine.core.Events;
 import com.greentree.engine.core.GameCore;
-import com.greentree.engine.corutine.Corutine;
 import com.greentree.event.Listener;
 
 public abstract class GameComponent extends GameElement {
@@ -39,10 +38,6 @@ public abstract class GameComponent extends GameElement {
 	}
 	
 	protected void start() {
-	}
-	
-	protected final void startCorutine(final Corutine corutine) {
-		this.getObject().startCorutine(corutine);
 	}
 
 	public void setObject(GameObject object) {
