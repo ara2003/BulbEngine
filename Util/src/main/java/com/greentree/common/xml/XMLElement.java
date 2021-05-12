@@ -2,6 +2,7 @@ package com.greentree.common.xml;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -170,5 +171,38 @@ public class XMLElement implements Serializable {
 
 	public InputStream getIputStream() {
 		return new ByteArrayInputStream(("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+toString()).getBytes());
+	}
+
+	public static class Builder {
+		
+		private File file;
+		
+		public Builder() throws IOException {
+			file = File.createTempFile("temp", "xml");
+		}
+		
+		public XMLElement build() throws IOException {
+			 try(FileWriter writer = new FileWriter(file))
+		        {
+		           // запись всей строки
+		            String text = "Hello Gold!";
+		            writer.write(text);
+		            // запись по символам
+		            writer.append('\n');
+		            writer.append('E');
+		             
+		            writer.flush();
+		        }
+		        catch(IOException ex){
+		             
+		            System.out.println(ex.getMessage());
+		        } 
+			return XMLParser.parse(file);
+		}
+		
+	}
+	
+	public static Builder builder() throws IOException {
+		return new Builder();
 	}
 }

@@ -7,6 +7,7 @@ import org.joml.Vector3f;
 
 import com.greentree.common.loading.ResourceLoader;
 import com.greentree.common.logger.Log;
+import com.greentree.engine.core.builder.loaders.CachingAbstractLoader;
 import com.greentree.engine.mesh.Mesh;
 import com.greentree.engine.mesh.Mesh.Builder;
 import com.greentree.engine.mesh.Mesh.Builder.VertexIndex;

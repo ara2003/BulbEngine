@@ -1,14 +1,14 @@
 package com.greentree.engine.component;
 
 import com.greentree.engine.builder.loaders.ObjMeshLoader;
-import com.greentree.engine.builder.xml.NecessarilyLoaders;
-import com.greentree.engine.core.component.EditorData;
+import com.greentree.engine.builder.xml.loaders.NecessarilyLoaders;
+import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.mesh.Mesh;
 
 /** @author Arseny Latyshev */
+@NecessarilyLoaders(ObjMeshLoader.class)
 public class ObjMeshComponent extends AbstractMeshComponent {
 	
-	@NecessarilyLoaders(ObjMeshLoader.class)
 	@EditorData
 	private Mesh mesh;
 	

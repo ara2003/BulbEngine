@@ -10,44 +10,50 @@ import com.greentree.common.collection.HashMapClassTree;
 import com.greentree.common.collection.WeakClassTree;
 import com.greentree.common.logger.Log;
 import com.greentree.engine.core.component.RequireComponent;
+import com.greentree.engine.core.layer.Layer;
+import com.greentree.engine.core.system.RequireSystems;
 
 public final class GameObject extends GameObjectParent {
 	
 	private final WeakClassTree<GameComponent> components;
 	private GameObjectParent parent;
+	private Layer layer;
 	
-	public GameObject(final String name, final GameObjectParent parent) {
+	public GameObject(final String name, final Layer layer, final GameObjectParent parent) {
 		super(name);
-		this.components = new HashMapClassTree<>();
+		components = new HashMapClassTree<>();
 		if(parent == null) throw new IllegalArgumentException("parent dosen\'t be null");
 		this.parent = parent;
+		if(!getScene().contains(layer)) throw new IllegalArgumentException("the scene does not contain layer [name=\"" + layer.getName() + "\"] settings");
+		this.layer = layer;
 		parent.addChildren(this);
 	}
 	
 	public boolean addComponent(final GameComponent component) {
-		if(this.components.add(component)) {
+		if(components.add(component)) {
 			component.setObject(this);
-			this.updateUpTreeComponents();
-			this.tryAddNecessarilySystem(component.getClass());
+			updateUpTreeComponents();
 			return true;
 		}
 		return false;
 	}
 	
+	@Override
 	public boolean destroy() {
-		if(super.destroy())return true;
-		for(final GameComponent component : this.components) component.destroy();
-		this.components.clear();
-		for(final GameObject object : this.childrens) object.destroy();
-		this.childrens.clear();
-		this.getParent().removeChildren(this);
-		this.updateUpTreeComponents();
-		this.parent = null;
+		if(super.destroy()) return true;
+		for(final GameComponent component : components) component.destroy();
+		components.clear();
+		for(final GameObject object : childrens) object.destroy();
+		childrens.clear();
+		getParent().removeChildren(this);
+		updateUpTreeComponents();
+		parent = null;
+		layer  = null;
 		return false;
 	}
 	
 	public <T extends GameComponent> T getComponent(final Class<T> clazz) {
-		final List<? extends T> list = this.components.get(clazz);
+		final List<? extends T> list = components.get(clazz);
 		if(list.isEmpty()) {
 			Log.warn("Component " + clazz.getSimpleName() + " not create in Node " + this);
 			return null;
@@ -55,69 +61,72 @@ public final class GameObject extends GameObjectParent {
 		return list.iterator().next();
 	}
 	
+	public Layer getLayer() {
+		return layer;
+	}
+	
 	@Override
 	public String getName() {
-		return this.name;
+		return name;
 	}
 	
 	public GameObjectParent getParent() {
-		return this.parent;
+		return parent;
 	}
 	
 	public GameScene getScene() {
-		if(this.getParent() instanceof GameScene) return (GameScene) this.parent;
-		return ((GameObject) this.parent).getScene();
+		if(getParent() instanceof GameScene) return (GameScene) parent;
+		return ((GameObject) parent).getScene();
 	}
 	
 	public boolean hasComponent(final Class<? extends GameComponent> clazz) {
-		return this.components.containsClass(clazz);
+		return components.containsClass(clazz);
 	}
 	
 	public boolean hasComponent(final GameComponent component) {
-		return this.components.contains(component);
+		return components.contains(component);
 	}
 	
 	public void removeComponent(final GameComponent gameComponent) {
 		components.remove(gameComponent);
 	}
 	
+	
 	@Override
 	protected void start() {
-		if(!Validator.checkRequireComponent(this.components)) Log.error(
-			"component " + Validator.getBrokRequireComponentClass(this.components) + " require is not fulfilled \n" + this);
-		for(final GameComponent component : this.components) component.initSratr();
-		for(final GameObject component : this.childrens) component.start();
+		if(!Validator.checkRequireComponent(components)) Log.error(
+			"component " + Validator.getBrokRequireComponentClass(components) + " require is not fulfilled \n" + this);
+		
+		if(!Validator.checkRequireSystem(components, getScene())) Log.error(
+			"component " + Validator.getBrokRequireSystemClass(components, getScene()) + " require is not fulfilled \n" + this);
+		
+		for(final GameComponent component : components) component.initSratr();
+		for(final GameObject component : childrens) component.start();
 	}
-	
 	
 	@Override
 	public String toString() {
-		final StringBuilder res = new StringBuilder("[object(").append(this.getName()).append(")@").append(this.hashCode());
-		if(!this.components.isEmpty()) {
+		final StringBuilder res = new StringBuilder("[object(").append(getName()).append(")@").append(hashCode());
+		if(!components.isEmpty()) {
 			final StringBuilder r = new StringBuilder("\ncomponents:");
-			for(final Object obj : this.components) r.append("\n").append(obj.toString());
+			for(final Object obj : components) r.append("\n").append(obj.toString());
 			res.append(r.toString().replace("\n", "\n\t"));
 		}
 		return res.toString() + "]";
 	}
 	
 	@Override
-	public void tryAddNecessarilySystem(final Class<?> clazz) {
-		this.getScene().tryAddNecessarilySystem(clazz);
-	}
-	
-	@Override
 	@Deprecated
 	protected void update() {
-		for(final GameObject component : this.childrens) component.update();
+		for(final GameObject component : childrens) component.update();
 	}
 	
 	@Override
 	public void updateUpTreeComponents() {
-		this.allTreeComponents.clear();
-		for(final GameObject object : this.childrens) this.allTreeComponents.addAll(object.getAllComponents(GameComponent.class));
-		this.allTreeComponents.addAll(this.components);
-		this.parent.updateUpTreeComponents();
+		allTreeComponents.clear();
+		for(final GameObject object : childrens) allTreeComponents.addAll(object.getAllComponents(GameComponent.class));
+		allTreeComponents.addAll(components);
+		parent.updateUpTreeComponents();
 	}
 	
 	private final static class Validator {
@@ -126,7 +135,7 @@ public final class GameObject extends GameObjectParent {
 		}
 		
 		public static boolean checkRequireComponent(final Iterable<GameComponent> components) {
-			A : for(final Class<? extends GameComponent> requireClases : Validator.getRequireComponentClases(components)) {
+			A : for(final Class<? extends GameComponent> requireClases : Validator.getRequireComponentClasses(components)) {
 				for(final Class<? extends GameComponent> clazz : ClassUtil.getClases(components))
 					if(requireClases.isAssignableFrom(clazz)) continue A;
 				return false;
@@ -134,17 +143,39 @@ public final class GameObject extends GameObjectParent {
 			return true;
 		}
 		
+		public static boolean checkRequireSystem(final Iterable<GameComponent> components, final GameScene scene) {
+			A : for(final Class<? extends GameSystem> requireClass : Validator.getRequireSystemClasses(components)) {
+				if(scene.contains(requireClass)) continue A;
+				return false;
+			}
+			return true;
+		}
+		
 		public static Class<? extends GameComponent> getBrokRequireComponentClass(final Iterable<GameComponent> components) {
 			final Set<Class<? extends GameComponent>> clases = ClassUtil.getClases(components);
-			for(final Class<? extends GameComponent> clazz : Validator.getRequireComponentClases(components))
+			for(final Class<? extends GameComponent> clazz : Validator.getRequireComponentClasses(components))
 				if(!clases.contains(clazz)) return clazz;
 			return null;
 		}
 		
-		public static Set<Class<? extends GameComponent>> getRequireComponentClases(final Iterable<GameComponent> components) {
+		public static Class<? extends GameSystem> getBrokRequireSystemClass(final Iterable<GameComponent> components, final GameScene scene) {
+			for(final Class<? extends GameSystem> clazz : Validator.getRequireSystemClasses(components))
+				if(!scene.contains(clazz)) return clazz;
+			return null;
+		}
+		
+		public static Set<Class<? extends GameComponent>> getRequireComponentClasses(final Iterable<GameComponent> components) {
 			final Set<Class<? extends GameComponent>> requireComponents = new HashSet<>();
 			for(final GameComponent com : components)
 				for(final RequireComponent rcom : ClassUtil.getAllAnnotations(com.getClass(), RequireComponent.class))
+					Collections.addAll(requireComponents, rcom.value());
+			return requireComponents;
+		}
+		
+		public static Set<Class<? extends GameSystem>> getRequireSystemClasses(final Iterable<GameComponent> components) {
+			final Set<Class<? extends GameSystem>> requireComponents = new HashSet<>();
+			for(final GameComponent com : components)
+				for(final RequireSystems rcom : ClassUtil.getAllAnnotations(com.getClass(), RequireSystems.class))
 					Collections.addAll(requireComponents, rcom.value());
 			return requireComponents;
 		}

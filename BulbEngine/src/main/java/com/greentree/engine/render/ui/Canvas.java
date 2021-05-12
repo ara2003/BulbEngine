@@ -16,8 +16,8 @@ public class Canvas extends GameSystem {
 	public void update() {
 		Cameras.getMainCamera().translateAsCamera();
 		Graphics.enableBlead();
-		for(final UIComponent renderable : getAllComponents(UIComponent.class)) {
-			renderable.render();
+		for(final UIComponent uiComponent : getAllComponents(UIComponent.class)) {
+			uiComponent.render();
 		}
 		Graphics.disableBlead();
 		Cameras.getMainCamera().untranslate();

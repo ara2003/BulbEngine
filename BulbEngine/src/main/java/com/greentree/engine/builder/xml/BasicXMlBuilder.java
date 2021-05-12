@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -16,25 +17,26 @@ import com.greentree.common.loading.ResourceLoader;
 import com.greentree.common.logger.Log;
 import com.greentree.common.pair.Pair;
 import com.greentree.common.xml.XMLElement;
-import com.greentree.engine.builder.loaders.BooleanLoader;
-import com.greentree.engine.builder.loaders.ByteLoader;
-import com.greentree.engine.builder.loaders.CharLoader;
-import com.greentree.engine.builder.loaders.DoubleLoader;
-import com.greentree.engine.builder.loaders.EnumLoader;
-import com.greentree.engine.builder.loaders.FloatLoader;
-import com.greentree.engine.builder.loaders.GameComponentLoader;
-import com.greentree.engine.builder.loaders.IntegerLoader;
-import com.greentree.engine.builder.loaders.Loader;
+import com.greentree.engine.builder.loaders.IntegerConstLoader;
 import com.greentree.engine.builder.loaders.LoaderList;
 import com.greentree.engine.builder.loaders.ObjMeshLoader;
 import com.greentree.engine.builder.loaders.ShaderProgramLoader;
-import com.greentree.engine.builder.loaders.ShortLoader;
-import com.greentree.engine.builder.loaders.StaticFieldLoader;
-import com.greentree.engine.builder.loaders.StringLoader;
 import com.greentree.engine.builder.loaders.TextureLoader;
+import com.greentree.engine.builder.xml.loaders.NecessarilyLoaders;
 import com.greentree.engine.core.builder.AbstractBuilder;
-import com.greentree.engine.core.component.DefoultValue;
-import com.greentree.engine.core.component.EditorData;
+import com.greentree.engine.core.builder.EditorData;
+import com.greentree.engine.core.builder.loaders.BooleanLoader;
+import com.greentree.engine.core.builder.loaders.ByteLoader;
+import com.greentree.engine.core.builder.loaders.CharLoader;
+import com.greentree.engine.core.builder.loaders.DoubleLoader;
+import com.greentree.engine.core.builder.loaders.EnumLoader;
+import com.greentree.engine.core.builder.loaders.FloatLoader;
+import com.greentree.engine.core.builder.loaders.GameComponentLoader;
+import com.greentree.engine.core.builder.loaders.IntegerLoader;
+import com.greentree.engine.core.builder.loaders.Loader;
+import com.greentree.engine.core.builder.loaders.ShortLoader;
+import com.greentree.engine.core.builder.loaders.StaticFieldLoader;
+import com.greentree.engine.core.builder.loaders.StringLoader;
 import com.greentree.engine.core.object.GameComponent;
 import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.object.GameObjectParent;
@@ -51,8 +53,9 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 	public BasicXMlBuilder(final String... packages) {
 		this.packages = new ArrayList<>(packages.length);
 		Collections.addAll(this.packages, packages);
-		
+
 		loaders.addLoader(new FloatLoader());
+		loaders.addLoader(new IntegerConstLoader());
 		loaders.addLoader(new IntegerLoader());
 		loaders.addLoader(new TextureLoader());
 		loaders.addLoader(new StaticFieldLoader());
@@ -76,12 +79,6 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		}
 	}
 	
-	/** @return can xmlName be the name of the parameter */
-	private boolean checkXmlNameFormat(final String xmlName) {
-		if("type".equals(xmlName)) return false;
-		return xmlName.isEmpty() == false;
-	}
-	
 	@Override
 	public GameComponent createComponent(final Class<? extends GameComponent> clazz) {
 		try {
@@ -102,7 +99,6 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		return this.createComponent(clazz);
 	}
 	
-	
 	@Override
 	public GameObject createPrefab(final String prefabPath, final GameObjectParent parent) {
 		final InputStream in     = ResourceLoader.getResourceAsStream(prefabPath + ".xml");
@@ -115,23 +111,21 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 	
 	@SuppressWarnings("unchecked")
 	private GameSystem createSystem(final XMLElement xmlElement) {
-		final Class<? extends GameSystem> clazz = (Class<? extends GameSystem>) loadClass(xmlElement.getContent());
 		try {
-			return ClassUtil.newInstance(clazz);
+			final Class<? extends GameSystem> clazz = (Class<? extends GameSystem>) loadClass(xmlElement.getAttribute("type"));
+			return createSystem(clazz);
 		}catch(final Exception e) {
-			Log.warn("not create component " + xmlElement.getAttribute("type"), e);
+			Log.warn("system not create " + xmlElement, e);
 			return null;
 		}
 	}
 	
 	@Override
 	public void fillComponent(final GameComponent component, final XMLElement in) {
-		final Map<String, String> map = in.getAttributes();
-		map.remove("type");
 		try {
-			setFields(component, map);
+			setFields(component, in);
 		}catch(final Exception e) {
-			Log.warn("not create component " + in.getAttribute("type"), e);
+			Log.warn("not create component " + in, e);
 		}
 	}
 	
@@ -163,27 +157,43 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		for(final XMLElement element : in.getChildrens("package")) packages.add(element.getContent());
 		
 		for(final XMLElement el : in.getChildrens("system")) {
-			final GameSystem component = createSystem(el);
-			if(component == null) continue;
-			scene.addSystem(component);
+			final GameSystem system = createSystem(el);
+			if(system == null) continue;
+			scene.addSystem(system);
+			pushSystem(system, el);
 		}
+		
+		for(final XMLElement element : in.getChildrens("layer")) scene.addLayer(getLayer(element));
 		
 		for(final XMLElement element : in.getChildrens("object")) {
 			final GameObject сhildren = this.createObject(element, scene);
 			if(сhildren == null) continue;
-			this.fillObject(сhildren, element);
 			scene.addChildren(сhildren);
+			this.fillObject(сhildren, element);
 		}
 		
 		popComponents();
+		popSystems();
 		
 		for(final XMLElement element : in.getChildrens("package")) packages.remove(element.getContent());
 	}
 	
-	private String getDefoultValue(final Field field) {
-		final DefoultValue value = field.getAnnotation(DefoultValue.class);
-		if(value == null) return null;
-		return value.value();
+	
+	@Override
+	protected void fillSystem(final GameSystem system, final XMLElement in) {
+		try {
+			setFields(system, in);
+		}catch(final Exception e) {
+			Log.warn("not create component " + in, e);
+		}
+	}
+	
+	@Override
+	protected String getLayerName(final XMLElement in) {
+		final var v = in.getAttribute("layer");
+		if(v == null) return "default";
+		if(v.isBlank()) return "default";
+		return v;
 	}
 	
 	@Override
@@ -191,17 +201,12 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		return in.getAttribute("name", "name");
 	}
 	
-	private String getXmlName(final Field field) {
+	private static String getName(final Field field) {
 		String xmlName = field.getAnnotation(EditorData.class).name();
-		if(checkXmlNameFormat(xmlName)) return xmlName;
+		if(!xmlName.isBlank()) return xmlName;
 		xmlName = field.getName();
-		if(checkXmlNameFormat(xmlName)) return xmlName;
+		if(!xmlName.isBlank()) return xmlName;
 		throw new IllegalArgumentException("could not find a suitable name of " + field);
-	}
-	
-	private String getXmlValue(final Field field, final Map<String, String> attributes) {
-		final String xmlValue = attributes.get(getXmlName(field));
-		return xmlValue;
 	}
 	
 	protected final Class<?> loadClass(final String name) {
@@ -218,38 +223,26 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		}
 	}
 	
-	private void setFields(final Object component, final Map<String, String> attributes) {
-		final List<Field> allEditorDataFields = ClassUtil.getAllFieldsWithAnnotation(component.getClass(), EditorData.class);
-		{
+	private void setFields(final Object object, final XMLElement attributes) {
+		final List<Field> allEditorDataFields = ClassUtil.getAllFieldsWithAnnotation(object.getClass(), EditorData.class);
+		{//Validator
 			final Set<String> xmlNamesToFind = new HashSet<>(allEditorDataFields.size());
-			for(final Field field : allEditorDataFields) xmlNamesToFind.add(getXmlName(field));
-			for(final String attribute : attributes.keySet())
-				if(!xmlNamesToFind.contains(attribute))
-					Log.warn("xml element " + component + " has value " + attribute + " and it is not used. [xmlNamesToFind=" + xmlNamesToFind + " attributes=" + attributes + "]");//не часть алгоритма
+			for(final Field field : allEditorDataFields) xmlNamesToFind.add(BasicXMlBuilder.getName(field));
+			for(final XMLElement attribute : attributes.getChildrens())
+				if(!xmlNamesToFind.contains(getName(attribute)))
+					Log.warn("xml element " + object + " has value " + attribute + " and it is not used. [xmlNamesToFind=" + xmlNamesToFind + " attributes=" + attributes + "]");//не часть алгоритма
 		}
+		addNecessarilyLoaders(object.getClass().getAnnotation(NecessarilyLoaders.class));
+		final Map<String, XMLElement> attributes0 = new HashMap<>(attributes.getChildrens().size());
+		for(final var a : attributes.getChildrens()) attributes0.put(a.getAttribute("name"), a);
 		for(final Field field : allEditorDataFields) {
-			String value = getXmlValue(field, attributes);
-			if(value == null) value = getDefoultValue(field);
-			setValue(component, field, value);
+			setValue(object, field, attributes0.get(BasicXMlBuilder.getName(field)));
 		}
 	}
 	
-	protected void setValue(final Object obj, final Field f, final String xmlValue) throws NullPointerException {
-		Object        value = null;
-		final boolean flag  = f.canAccess(obj);
-		
-		addNecessarilyLoaders(f.getAnnotation(NecessarilyLoaders.class));
-		
-		final MainLoader ml = f.getAnnotation(MainLoader.class);
-		if(ml != null) {
-			final Loader l = ClassUtil.newInstance(ml.value());
-			if(l.isLoadedClass(f.getType())) try {
-				value = l.load(f.getType(), xmlValue);
-			}catch(final Exception e) {
-			}
-			else Log.warn(MainLoader.class.getName() + " of " + f + " not load his class");
-		}
-		Object def = null;
+	protected void setValue(final Object obj, final Field f, final XMLElement xmlValue) throws NullPointerException {
+		final boolean flag = f.canAccess(obj);
+		Object        def  = null;
 		f.setAccessible(true);
 		try {
 			def = f.get(obj);
@@ -258,14 +251,14 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		}finally {
 			f.setAccessible(flag);
 		}
-		
+		Object value;
 		try {
-			if(value == null) value = loaders.load(f.getType(), xmlValue);
+			value = loaders.load(f.getType(), xmlValue.getAttribute("value"));
 		}catch(final Exception e) {
-			if(def == null)
-				throw e;
-			else
+			if(def != null)
 				value = def;
+			else
+				throw e;
 		}
 		if(value != null) {
 			f.setAccessible(true);

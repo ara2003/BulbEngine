@@ -1,18 +1,19 @@
 package com.greentree.engine.core.object;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Collection;
 
-import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
 import com.greentree.common.logger.Logger;
-import com.greentree.engine.core.system.NecessarilySystems;
+import com.greentree.engine.core.GameCore;
+import com.greentree.engine.core.layer.Layer;
 import com.greentree.engine.core.system.collection.SimpleGroupSystemCollection;
 import com.greentree.engine.core.system.collection.SystemCollection;
 
 /** @author Arseny Latyshev */
 public final class GameScene extends GameObjectParent {
 	
-	private final SystemCollection systems;
 	static {
 		try {
 			Log.createFileType("update scene");
@@ -20,15 +21,26 @@ public final class GameScene extends GameObjectParent {
 			e.printStackTrace();
 		}
 	}
-	
+	private final Collection<Layer> layers;
+	private final SystemCollection systems;
 	
 	public GameScene(final String name) {
 		super(name);
 		systems = new SimpleGroupSystemCollection();
+		layers  = new ArrayList<>();
+		layers.add(GameCore.getBuilder().getLayer("default"));
+	}
+	
+	public void addLayer(final Layer layer) {
+		layers.add(layer);
 	}
 	
 	public boolean addSystem(final GameSystem system) {
 		return systems.add(system);
+	}
+	
+	public boolean contains(final Layer layer) {
+		return layers.contains(layer);
 	}
 	
 	@Override
@@ -58,17 +70,10 @@ public final class GameScene extends GameObjectParent {
 	}
 	
 	@Override
-	public void tryAddNecessarilySystem(final Class<?> clazz) {
-		for(final NecessarilySystems an : ClassUtil.getAllAnnotations(clazz, NecessarilySystems.class))
-			for(final Class<? extends GameSystem> cl : an.value()) if(!systems.containsClass(cl))
-				addSystem(GameSystem.createSystem(cl));
-	}
-	
-	@Override
 	public void update() {
 		Logger.print("update scene", "s %d", System.nanoTime());
 		systems.update();
-//		for(final GameObject object : childrens) object.update();TODO
+		//		for(final GameObject object : childrens) object.update();TODO
 		Logger.print("update scene", "f %d", System.nanoTime());
 	}
 	
@@ -78,4 +83,8 @@ public final class GameScene extends GameObjectParent {
 		for(final GameObject object : childrens) allTreeComponents.addAll(object.getAllComponents(GameComponent.class));
 	}
 
+	public boolean contains(Class<? extends GameSystem> class1) {
+		return systems.containsClass(class1);
+	}
+	
 }

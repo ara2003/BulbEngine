@@ -8,7 +8,7 @@ import com.greentree.graphics.Color;
 import com.greentree.graphics.Graphics;
 
 /** @author Arseny Latyshev */
-@GroupSystem("graphics")
+@GroupSystem(value="graphics", priority=Byte.MAX_VALUE)
 public class ShowFPS extends GameSystem {
 	
 	@Override

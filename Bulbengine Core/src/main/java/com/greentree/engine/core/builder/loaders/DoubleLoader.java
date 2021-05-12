@@ -1,7 +1,7 @@
-package com.greentree.engine.builder.loaders;
+package com.greentree.engine.core.builder.loaders;
 
 /** @author Arseny Latyshev */
-public class DoubleLoader extends com.greentree.engine.builder.loaders.PrimitiveLoader<Double> {
+public class DoubleLoader extends com.greentree.engine.core.builder.loaders.PrimitiveLoader<Double> {
 	
 	public DoubleLoader() {
 		super(double.class);

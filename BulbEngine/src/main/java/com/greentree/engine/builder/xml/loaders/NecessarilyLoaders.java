@@ -1,4 +1,4 @@
-package com.greentree.engine.builder.xml;
+package com.greentree.engine.builder.xml.loaders;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
@@ -6,13 +6,13 @@ import static java.lang.annotation.RetentionPolicy.*;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import com.greentree.engine.builder.loaders.Loader;
+import com.greentree.engine.core.builder.loaders.Loader;
 
 /** @author Arseny Latyshev
  * @see BasicClassLoader */
 @Retention(RUNTIME)
-@Target(FIELD)
-public @interface MainLoader{
+@Target(TYPE)
+public @interface NecessarilyLoaders{
 	
-	Class<? extends Loader> value();
+	Class<? extends Loader>[] value();
 }

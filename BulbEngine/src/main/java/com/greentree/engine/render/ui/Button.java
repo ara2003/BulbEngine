@@ -5,8 +5,7 @@ import org.joml.Vector2f;
 import com.greentree.action.Action;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.Events;
-import com.greentree.engine.core.component.DefoultValue;
-import com.greentree.engine.core.component.EditorData;
+import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.input.CameraMouseAdapter;
 import com.greentree.graphics.Graphics;
@@ -15,9 +14,8 @@ import com.greentree.graphics.Graphics;
 @RequireComponent({Transform.class})
 public class Button extends UIComponent {
 	
-	@DefoultValue("2")
 	@EditorData()
-	private float border;
+	private float border = 2;
 	@EditorData
 	String text;
 	private float width, height;

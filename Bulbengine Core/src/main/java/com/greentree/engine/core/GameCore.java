@@ -9,7 +9,7 @@ import com.greentree.engine.core.object.GameSystem;
 public abstract class GameCore {
 	
 	protected static Builder builder;
-
+	
 	public static <S extends GameSystem> boolean addSystem(final S system) {
 		return SceneLoader.getCurrentScene().addSystem(system);
 	}
@@ -24,22 +24,17 @@ public abstract class GameCore {
 		SceneLoader.getCurrentScene().update();
 	}
 	
+	public static Builder getBuilder() {
+		return GameCore.builder;
+	}
+	
 	public static GameScene getCurrentScene() {
 		return SceneLoader.getCurrentScene();
 	}
 	
-	public static Builder getBuilder() {
-		return GameCore.builder;
-	}
-
 	@Deprecated
 	public static void loadScene(final String name) {
 		SceneLoader.loadScene(name);
-	}
-
-	@Deprecated
-	protected static void loadScene0(final String name) {
-		SceneLoader.loadScene0(name);
 	}
 	
 	protected static void setBuilder(final Builder builder) {

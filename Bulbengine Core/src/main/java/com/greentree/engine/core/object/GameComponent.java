@@ -15,33 +15,35 @@ public abstract class GameComponent extends GameElement {
 		Events.addListener(listener);
 	}
 	
+	public static final <S extends GameSystem> void addSystem(final S system) {
+		GameCore.addSystem(system);
+	}
+	
 	protected final static GameObject createFromPrefab(final String prefab) {
 		return GameCore.createFromPrefab(prefab);
 	}
 	
-	public static final <S extends GameSystem> void addSystem(S system){
-		GameCore.addSystem(system);
-	}
-	
-	public final <T extends GameComponent> T getComponent(final Class<T> clazz) {
-		return this.getObject().getComponent(clazz);
-	}
-	
-	public final GameObject getObject() {
-		return this.object;
-	}
-	
+	@Override
 	public final boolean destroy() {
-		if(super.destroy())return true;
+		if(super.destroy()) return true;
 		object.removeComponent(this);
 		return false;
 	}
 	
-	protected void start() {
+	public final <T extends GameComponent> T getComponent(final Class<T> clazz) {
+		return getObject().getComponent(clazz);
 	}
-
-	public void setObject(GameObject object) {
+	
+	public final GameObject getObject() {
+		return object;
+	}
+	
+	public void setObject(final GameObject object) {
 		this.object = object;
+	}
+	
+	@Override
+	protected void start() {
 	}
 	
 }

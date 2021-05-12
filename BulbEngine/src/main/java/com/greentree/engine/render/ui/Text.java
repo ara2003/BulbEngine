@@ -1,6 +1,6 @@
 package com.greentree.engine.render.ui;
 
-import com.greentree.engine.core.component.EditorData;
+import com.greentree.engine.core.builder.EditorData;
 import com.greentree.graphics.Color;
 import com.greentree.graphics.Graphics;
 

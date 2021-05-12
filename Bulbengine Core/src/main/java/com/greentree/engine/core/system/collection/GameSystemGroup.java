@@ -23,11 +23,6 @@ public class GameSystemGroup extends ArrayList<GameSystem> implements Updating {
 		}
 	}
 	
-	@Override
-	public String toString() {
-		return name + super.toString();
-	}
-
 	private final String name;
 	
 	public GameSystemGroup(final String name) {
@@ -72,6 +67,11 @@ public class GameSystemGroup extends ArrayList<GameSystem> implements Updating {
 	
 	public void initSratr() {
 		for(final GameSystem system : this) system.initSratr();
+	}
+	
+	@Override
+	public String toString() {
+		return name + super.toString();
 	}
 	
 	public void trim() {

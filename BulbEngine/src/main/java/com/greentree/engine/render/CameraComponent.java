@@ -1,5 +1,7 @@
 package com.greentree.engine.render;
 
+import java.util.List;
+
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
@@ -7,8 +9,7 @@ import org.joml.Vector3f;
 
 import com.greentree.engine.Windows;
 import com.greentree.engine.component.Transform;
-import com.greentree.engine.core.component.DefoultValue;
-import com.greentree.engine.core.component.EditorData;
+import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.core.object.GameComponent;
 import com.greentree.graphics.Graphics;
@@ -17,12 +18,12 @@ import com.greentree.graphics.Graphics;
 @RequireComponent({Transform.class})
 public class CameraComponent extends GameComponent {
 	
-	@DefoultValue("window::width")
-	@EditorData()
-	private float width;
-	@DefoultValue("window::height")
-	@EditorData()
-	private float height;
+	@EditorData(required = true)
+	private float width, height;
+
+	@EditorData(required = true)
+	private List<Integer> list;
+	
 	private Transform position;
 	private final Vector3f cameraDirection = new Vector3f(), cameraRight = new Vector3f();
 	private final Vector3f up = new Vector3f(0, 1, 0);
@@ -99,6 +100,7 @@ public class CameraComponent extends GameComponent {
 	
 	@Override
 	protected void start() {
+		System.out.println(list);
 		this.up.cross(this.cameraDirection, this.cameraRight);
 		this.position = this.getComponent(Transform.class);
 	}

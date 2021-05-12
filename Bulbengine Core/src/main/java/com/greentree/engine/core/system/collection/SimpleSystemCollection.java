@@ -22,28 +22,34 @@ public class SimpleSystemCollection extends SystemCollection implements Iterable
 	}
 	
 	@Override
-	public <S extends GameSystem> S get(final Class<S> clazz) {
-		return null;
-	}
-	
-	@Override
-	public void update() {
-		for(var i : this)i.update();
-	}
-	
-	@Override
-	public void initSratr() {
-		for(var i : this)i.initSratr();
-	}
-	
-	@Override
 	public void clear() {
 		systems.clear();
 	}
 	
 	@Override
+	public <S extends GameSystem> S get(final Class<S> clazz) {
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Iterable<GameSystem> getSystemIterable() {
+		return (Iterable<GameSystem>) systems.iterator();
+	}
+	
+	@Override
+	public void initSratr() {
+		for(final var i : this) i.initSratr();
+	}
+	
+	@Override
 	public Iterator<GameSystem> iterator() {
 		return systems.iterator();
+	}
+	
+	@Override
+	public void update() {
+		for(final var i : this) i.update();
 	}
 	
 }

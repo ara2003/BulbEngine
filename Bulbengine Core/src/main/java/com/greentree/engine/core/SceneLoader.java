@@ -16,22 +16,8 @@ public abstract class SceneLoader {
 	public static GameScene getCurrentScene() {
 		return Objects.requireNonNull(SceneLoader.currentScene, "current scene is null");
 	}
-
-	private static void reset(final GameScene scene) {
-		Events.clear();
-		if(SceneLoader.currentScene != null) SceneLoader.currentScene.destroy();
-		SceneLoader.currentScene = null;
-		Runtime.getRuntime().gc();
-		SceneLoader.currentScene = scene;
-	}
 	
 	public static void loadScene(final String name) {
-//		GameCore.task(() -> {
-			loadScene0(name);
-//		});
-	}
-	
-	protected static void loadScene0(final String name) {
 		Log.info("Scene load : " + name);
 		try {
 			final InputStream inputStream = ResourceLoader.getResourceAsStream(name + ".xml");
@@ -42,6 +28,14 @@ public abstract class SceneLoader {
 		}catch(final ResourceNotFound e) {
 			Log.warn("scene not found : %s (the scene file must have \"xml\" extension)", name);
 		}
+	}
+	
+	private static void reset(final GameScene scene) {
+		Events.clear();
+		if(SceneLoader.currentScene != null) SceneLoader.currentScene.destroy();
+		SceneLoader.currentScene = null;
+		Runtime.getRuntime().gc();
+		SceneLoader.currentScene = scene;
 	}
 	
 }

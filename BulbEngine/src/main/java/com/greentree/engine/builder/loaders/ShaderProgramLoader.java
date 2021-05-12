@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import com.greentree.common.loading.ResourceLoader;
+import com.greentree.engine.core.builder.loaders.AbstractLoader;
 import com.greentree.graphics.shader.GLShaderLoader;
 import com.greentree.graphics.shader.GLShaderProgram;
 import com.greentree.graphics.shader.ShaderProgram;

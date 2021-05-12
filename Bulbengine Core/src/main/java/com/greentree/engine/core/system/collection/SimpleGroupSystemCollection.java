@@ -1,10 +1,7 @@
 package com.greentree.engine.core.system.collection;
 
 
-/**
- * @author Arseny Latyshev
- *
- */
+/** @author Arseny Latyshev */
 public class SimpleGroupSystemCollection extends GroupSystemCollection {
 	
 	public SimpleGroupSystemCollection() {
@@ -12,12 +9,12 @@ public class SimpleGroupSystemCollection extends GroupSystemCollection {
 	
 	@Override
 	public void initSratr() {
-		for(var i : this)i.initSratr();
+		for(final var i : this) i.initSratr();
 	}
 	
 	@Override
 	public void update() {
-		for(var i : this)i.update();
+		for(final var i : this) i.update();
 	}
 	
 }

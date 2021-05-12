@@ -7,7 +7,7 @@ import org.lwjgl.system.MemoryStack;
 
 import com.greentree.engine.Cameras;
 import com.greentree.engine.component.AbstractMeshComponent;
-import com.greentree.engine.core.component.EditorData;
+import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.mesh.Mesh.IndeciesArray;
 import com.greentree.engine.mesh.Mesh.Type;

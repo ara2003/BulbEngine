@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target({TYPE})
 @Inherited
-public @interface GroupSystem {
+public @interface GroupSystem{
 	
 	byte priority() default 0;
 	

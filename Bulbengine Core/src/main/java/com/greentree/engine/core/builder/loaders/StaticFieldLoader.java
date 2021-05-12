@@ -1,4 +1,4 @@
-package com.greentree.engine.builder.loaders;
+package com.greentree.engine.core.builder.loaders;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -8,7 +8,7 @@ import java.util.Objects;
 public class StaticFieldLoader implements Loader {
 	
 	@Override
-	public boolean isLoadedClass(final Class<?> clazz) {
+	public boolean isLoaded(final Class<?> clazz) {
 		if(clazz.isEnum()) return false;
 		if(clazz.isPrimitive()) return false;
 		return true;

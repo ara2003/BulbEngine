@@ -1,10 +1,10 @@
-package com.greentree.engine.builder.loaders;
+package com.greentree.engine.core.builder.loaders;
 
 /** @author Arseny Latyshev */
 public class EnumLoader implements Loader {
 	
 	@Override
-	public boolean isLoadedClass(final Class<?> clazz) {
+	public boolean isLoaded(final Class<?> clazz) {
 		return clazz.isEnum();
 	}
 	

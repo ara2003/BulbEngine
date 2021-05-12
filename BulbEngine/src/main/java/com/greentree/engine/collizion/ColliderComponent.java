@@ -8,10 +8,10 @@ import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.core.component.UpdatingGameComponent;
 import com.greentree.engine.core.object.GameObject;
-import com.greentree.engine.core.system.NecessarilySystems;
+import com.greentree.engine.core.system.RequireSystems;
 import com.greentree.engine.geom2d.Shape2D;
 
-@NecessarilySystems({ColliderSystem.class})
+@RequireSystems({ColliderSystem.class})
 @RequireComponent({Transform.class})
 public abstract class ColliderComponent extends UpdatingGameComponent implements Sized {
 	

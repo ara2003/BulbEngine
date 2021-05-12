@@ -1,5 +1,6 @@
 package com.greentree.engine.builder.loaders;
 
+import com.greentree.engine.core.builder.loaders.AbstractLoader;
 import com.greentree.graphics.input.Key;
 
 /**

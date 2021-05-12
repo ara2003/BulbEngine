@@ -3,7 +3,7 @@ package com.greentree.engine.render;
 import org.lwjgl.system.MemoryStack;
 
 import com.greentree.engine.component.Transform;
-import com.greentree.engine.core.component.EditorData;
+import com.greentree.engine.core.builder.EditorData;
 import com.greentree.graphics.Color;
 import com.greentree.graphics.GLPrimitive;
 import com.greentree.graphics.GLType;

@@ -2,6 +2,7 @@ package com.greentree.engine.builder.loaders;
 
 import java.io.IOException;
 
+import com.greentree.engine.core.builder.loaders.CachingAbstractLoader;
 import com.greentree.graphics.texture.Filtering;
 import com.greentree.graphics.texture.GLTexture2D;
 import com.greentree.graphics.texture.GLTextureLoader;

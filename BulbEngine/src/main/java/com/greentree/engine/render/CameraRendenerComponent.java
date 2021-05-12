@@ -1,9 +1,9 @@
 package com.greentree.engine.render;
 
-import com.greentree.engine.core.system.NecessarilySystems;
+import com.greentree.engine.core.system.RequireSystems;
 
 /** @author Arseny Latyshev */
-@NecessarilySystems({CameraRenderSystem.class})
+@RequireSystems({CameraRenderSystem.class})
 public abstract class CameraRendenerComponent extends AbstractRendenerComponent {
 	
 }

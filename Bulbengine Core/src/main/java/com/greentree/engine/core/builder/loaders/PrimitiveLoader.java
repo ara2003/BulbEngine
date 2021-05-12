@@ -1,4 +1,4 @@
-package com.greentree.engine.builder.loaders;
+package com.greentree.engine.core.builder.loaders;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +27,7 @@ public abstract class PrimitiveLoader<C> implements Loader {
 	}
 	
 	@Override
-	public boolean isLoadedClass(final Class<?> clazz) {
+	public boolean isLoaded(final Class<?> clazz) {
 		return this.classb.isAssignableFrom(clazz) || this.classa.isAssignableFrom(clazz);
 	}
 	

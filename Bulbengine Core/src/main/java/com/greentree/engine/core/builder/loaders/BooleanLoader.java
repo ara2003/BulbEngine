@@ -1,4 +1,4 @@
-package com.greentree.engine.builder.loaders;
+package com.greentree.engine.core.builder.loaders;
 
 /** @author Arseny Latyshev */
 public class BooleanLoader extends PrimitiveLoader<Boolean> {

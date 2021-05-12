@@ -1,7 +1,7 @@
 package com.greentree.engine.collizion.collider;
 
 import com.greentree.engine.collizion.ColliderComponent;
-import com.greentree.engine.core.component.EditorData;
+import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.geom2d.Circle;
 import com.greentree.engine.geom2d.Shape2D;
 

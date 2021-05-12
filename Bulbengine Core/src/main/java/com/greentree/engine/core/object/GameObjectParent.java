@@ -21,43 +21,52 @@ public abstract class GameObjectParent extends GameElement {
 	
 	
 	public GameObjectParent(final String name) {
-		this.name              = name;
-		this.allTreeComponents = new HashMapClassTree<>();
-		this.childrens         = new CopyOnWriteArraySet<>();
+		this.name         = name;
+		allTreeComponents = new HashMapClassTree<>();
+		childrens         = new CopyOnWriteArraySet<>();
 	}
 	
 	public final boolean addChildren(final GameObject object) {
-		if(this.childrens.add(object)) {
-			this.updateUpTreeComponents();
+		if(childrens.add(object)) {
+			updateUpTreeComponents();
 			return true;
 		}
 		return false;
 	}
 	
 	public final boolean contains(final GameObject node) {
-		return this.childrens.contains(node);
+		return childrens.contains(node);
+	}
+	
+	@Override
+	public boolean destroy() {
+		if(super.destroy()) return true;
+		for(final GameObject obj : childrens) obj.destroy();
+		childrens.clear();
+		allTreeComponents.clear();
+		return false;
 	}
 	
 	public final List<GameObject> findMyObjects(final Predicate<GameObject> predicate) {
-		return this.childrens.parallelStream().filter(predicate).collect(Collectors.toList());
+		return childrens.parallelStream().filter(predicate).collect(Collectors.toList());
 	}
 	
 	public final List<GameObject> findObjects(final Predicate<GameObject> predicate) {
-		final List<GameObject> res = this.findMyObjects(predicate);
-		for(final GameObject object : this.childrens) res.addAll(object.findObjects(predicate));
+		final List<GameObject> res = findMyObjects(predicate);
+		for(final GameObject object : childrens) res.addAll(object.findObjects(predicate));
 		return res;
 	}
 	
 	public final List<GameObject> findObjectsHasComponent(final Class<? extends GameComponent> component) {
-		return this.findObjects(obj->obj.hasComponent(component));
+		return findObjects(obj->obj.hasComponent(component));
 	}
 	
 	public final List<GameObject> findObjectsWithName(final String name) {
-		return this.findObjects(obj->obj.getName().startsWith(name));
+		return findObjects(obj->obj.getName().startsWith(name));
 	}
 	
 	public final <T> List<T> getAllComponents(final Class<T> clazz) {
-		return this.allTreeComponents.get(clazz);
+		return allTreeComponents.get(clazz);
 	}
 	
 	public final <T extends GameComponent> ComponentList<T> getAllComponentsAsComponentList(final Class<T> clazz) {
@@ -65,26 +74,17 @@ public abstract class GameObjectParent extends GameElement {
 	}
 	
 	public String getName() {
-		return this.name;
+		return name;
 	}
 	
 	public final void removeChildren(final GameObject object) {
-		this.childrens.remove(object);
-		this.updateUpTreeComponents();
-	}
-	
-	public abstract void tryAddNecessarilySystem(Class<?> clazz);
-	public abstract void updateUpTreeComponents();
-
-	public boolean destroy() {
-		if(super.destroy()) return true;
-		for(GameObject obj : childrens)obj.destroy();
-		childrens.clear();
-		allTreeComponents.clear();
-		return false;
+		childrens.remove(object);
+		updateUpTreeComponents();
 	}
 	
 	protected void update() {
 	}
+	
+	public abstract void updateUpTreeComponents();
 	
 }

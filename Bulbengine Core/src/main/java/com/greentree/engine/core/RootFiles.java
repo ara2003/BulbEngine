@@ -6,34 +6,32 @@ import com.greentree.common.loading.FileSystemLocation;
 import com.greentree.common.loading.ResourceLoader;
 import com.greentree.common.logger.Log;
 
-/**
- * @author Arseny Latyshev
- *
- */
+/** @author Arseny Latyshev */
 public class RootFiles {
 	
 	private static File root, assets, debug;
 	private static boolean started;
 	
-	public static File getRoot() {
-		return RootFiles.root;
-	}
 	public static File getAssets() {
 		return RootFiles.assets;
 	}
 	
-	public static void start(String file) {
-		if(started)throw new UnsupportedOperationException();
-		started = true;
-		RootFiles.root   = new File(file);
-		if(!root.exists())root.mkdir();
-		RootFiles.assets = new File(root, "Assets");
-		RootFiles.debug  = new File(root, "Debug");
-		if(!assets.exists())assets.mkdir();
-		if(!debug.exists())debug.mkdir();
-		Log.init(debug);
-		ResourceLoader.addResourceLocation(new FileSystemLocation(assets));
-		ResourceLoader.addResourceLocation(new FileSystemLocation(root));
+	public static File getRoot() {
+		return RootFiles.root;
+	}
+	
+	public static void start(final String file) {
+		if(RootFiles.started) throw new UnsupportedOperationException();
+		RootFiles.started = true;
+		RootFiles.root    = new File(file);
+		if(!RootFiles.root.exists()) RootFiles.root.mkdir();
+		RootFiles.assets = new File(RootFiles.root, "Assets");
+		RootFiles.debug  = new File(RootFiles.root, "Debug");
+		if(!RootFiles.assets.exists()) RootFiles.assets.mkdir();
+		if(!RootFiles.debug.exists()) RootFiles.debug.mkdir();
+		Log.init(RootFiles.debug);
+		ResourceLoader.addResourceLocation(new FileSystemLocation(RootFiles.assets));
+		ResourceLoader.addResourceLocation(new FileSystemLocation(RootFiles.root));
 	}
 	
 }

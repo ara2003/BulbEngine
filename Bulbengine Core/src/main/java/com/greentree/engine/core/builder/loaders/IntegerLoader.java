@@ -1,6 +1,4 @@
-package com.greentree.engine.builder.loaders;
-
-import com.greentree.engine.Windows;
+package com.greentree.engine.core.builder.loaders;
 
 /** @author Arseny Latyshev */
 public class IntegerLoader extends PrimitiveLoader<Integer> {
@@ -11,8 +9,6 @@ public class IntegerLoader extends PrimitiveLoader<Integer> {
 	
 	@Override
 	public Integer load(final String value) {
-		if(value.equals("window::width")) return Windows.getWindow().getWidth();
-		if(value.equals("window::height")) return Windows.getWindow().getHeight();
 		return Integer.parseInt(value);
 	}
 }

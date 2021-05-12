@@ -1,4 +1,4 @@
-package com.greentree.engine.builder.loaders;
+package com.greentree.engine.core.builder.loaders;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import com.greentree.engine.core.object.GameObject;
 public class GameComponentLoader implements Loader {
 	
 	@Override
-	public boolean isLoadedClass(final Class<?> clazz) {
+	public boolean isLoaded(final Class<?> clazz) {
 		return GameComponent.class.isAssignableFrom(clazz);
 	}
 	

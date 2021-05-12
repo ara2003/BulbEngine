@@ -3,18 +3,13 @@ package com.greentree.engine.core.system;
 import com.greentree.common.Updating;
 import com.greentree.engine.core.object.GameSystem;
 
-/**
- * @author Arseny Latyshev
- *
- */
+/** @author Arseny Latyshev */
 @GroupSystem("updating")
 public class UpdatingComponentSystem extends GameSystem {
-
+	
 	@Override
 	public void update() {
-		for(Updating com : getAllComponents(Updating.class)) {
-			com.update();
-		}
+		for(final Updating com : getAllComponents(Updating.class)) com.update();
 	}
 	
 }

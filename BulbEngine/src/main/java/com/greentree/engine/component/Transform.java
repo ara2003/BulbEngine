@@ -7,17 +7,15 @@ import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 import com.greentree.action.EventAction;
-import com.greentree.engine.core.component.DefoultValue;
-import com.greentree.engine.core.component.EditorData;
+import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.component.UpdatingGameComponent;
 
 public final class Transform extends UpdatingGameComponent {
 	
 	@EditorData
 	public float rotateX, rotateY, rotateZ;
-	@DefoultValue("1")
 	@EditorData
-	public float scaleX, scaleY, scaleZ;
+	public float scaleX = 1, scaleY = 1, scaleZ = 1;
 	@EditorData
 	public float x, y, z;
 	
