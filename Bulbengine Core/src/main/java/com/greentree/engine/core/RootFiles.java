@@ -2,9 +2,9 @@ package com.greentree.engine.core;
 
 import java.io.File;
 
-import com.greentree.common.loading.FileSystemLocation;
-import com.greentree.common.loading.ResourceLoader;
 import com.greentree.common.logger.Log;
+import com.greentree.data.loading.FileSystemLocation;
+import com.greentree.data.loading.ResourceLoader;
 
 /** @author Arseny Latyshev */
 public class RootFiles {

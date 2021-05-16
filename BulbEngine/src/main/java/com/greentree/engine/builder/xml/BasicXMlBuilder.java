@@ -13,30 +13,34 @@ import java.util.Map;
 import java.util.Set;
 
 import com.greentree.common.ClassUtil;
-import com.greentree.common.loading.ResourceLoader;
 import com.greentree.common.logger.Log;
 import com.greentree.common.pair.Pair;
 import com.greentree.common.xml.XMLElement;
+import com.greentree.data.loaders.Loader;
+import com.greentree.data.loaders.LoaderList;
+import com.greentree.data.loaders.NecessarilyLoaders;
+import com.greentree.data.loaders.collection.ListLoader;
+import com.greentree.data.loaders.collection.MapLoader;
+import com.greentree.data.loaders.collection.TableLoader;
+import com.greentree.data.loaders.value.BooleanLoader;
+import com.greentree.data.loaders.value.ByteLoader;
+import com.greentree.data.loaders.value.CharLoader;
+import com.greentree.data.loaders.value.DoubleLoader;
+import com.greentree.data.loaders.value.EnumLoader;
+import com.greentree.data.loaders.value.FloatLoader;
+import com.greentree.data.loaders.value.IntegerLoader;
+import com.greentree.data.loaders.value.ShortLoader;
+import com.greentree.data.loaders.value.StaticFieldLoader;
+import com.greentree.data.loaders.value.StringLoader;
+import com.greentree.data.loading.ResourceLoader;
+import com.greentree.engine.builder.loaders.GameComponentLoader;
 import com.greentree.engine.builder.loaders.IntegerConstLoader;
-import com.greentree.engine.builder.loaders.LoaderList;
+import com.greentree.engine.builder.loaders.LayerLoader;
 import com.greentree.engine.builder.loaders.ObjMeshLoader;
 import com.greentree.engine.builder.loaders.ShaderProgramLoader;
 import com.greentree.engine.builder.loaders.TextureLoader;
-import com.greentree.engine.builder.xml.loaders.NecessarilyLoaders;
 import com.greentree.engine.core.builder.AbstractBuilder;
 import com.greentree.engine.core.builder.EditorData;
-import com.greentree.engine.core.builder.loaders.BooleanLoader;
-import com.greentree.engine.core.builder.loaders.ByteLoader;
-import com.greentree.engine.core.builder.loaders.CharLoader;
-import com.greentree.engine.core.builder.loaders.DoubleLoader;
-import com.greentree.engine.core.builder.loaders.EnumLoader;
-import com.greentree.engine.core.builder.loaders.FloatLoader;
-import com.greentree.engine.core.builder.loaders.GameComponentLoader;
-import com.greentree.engine.core.builder.loaders.IntegerLoader;
-import com.greentree.engine.core.builder.loaders.Loader;
-import com.greentree.engine.core.builder.loaders.ShortLoader;
-import com.greentree.engine.core.builder.loaders.StaticFieldLoader;
-import com.greentree.engine.core.builder.loaders.StringLoader;
 import com.greentree.engine.core.object.GameComponent;
 import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.object.GameObjectParent;
@@ -53,7 +57,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 	public BasicXMlBuilder(final String... packages) {
 		this.packages = new ArrayList<>(packages.length);
 		Collections.addAll(this.packages, packages);
-
+		
 		loaders.addLoader(new FloatLoader());
 		loaders.addLoader(new IntegerConstLoader());
 		loaders.addLoader(new IntegerLoader());
@@ -69,6 +73,12 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		loaders.addLoader(new ByteLoader());
 		loaders.addLoader(new CharLoader());
 		loaders.addLoader(new ShaderProgramLoader());
+		loaders.addLoader(new LayerLoader());
+
+		loaders.addLoader(new ListLoader());
+		loaders.addLoader(new MapLoader());
+		loaders.addLoader(new TableLoader());
+		
 	}
 	
 	private void addNecessarilyLoaders(final NecessarilyLoaders annotation) {
@@ -236,11 +246,15 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		final Map<String, XMLElement> attributes0 = new HashMap<>(attributes.getChildrens().size());
 		for(final var a : attributes.getChildrens()) attributes0.put(a.getAttribute("name"), a);
 		for(final Field field : allEditorDataFields) {
-			setValue(object, field, attributes0.get(BasicXMlBuilder.getName(field)));
+			try {
+				setValue(object, field, attributes0.get(BasicXMlBuilder.getName(field)));
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
-	protected void setValue(final Object obj, final Field f, final XMLElement xmlValue) throws NullPointerException {
+	protected Object setValue(final Object obj, final Field f, final XMLElement xmlValue) throws Exception {
 		final boolean flag = f.canAccess(obj);
 		Object        def  = null;
 		f.setAccessible(true);
@@ -253,7 +267,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		}
 		Object value;
 		try {
-			value = loaders.load(f.getType(), xmlValue.getAttribute("value"));
+			value = loaders.parse(f, xmlValue);
 		}catch(final Exception e) {
 			if(def != null)
 				value = def;
@@ -270,6 +284,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 				f.setAccessible(flag);
 			}
 		}
+		return value;
 	}
 	
 }

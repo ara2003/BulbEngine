@@ -3,9 +3,9 @@ package com.greentree.engine.core;
 import java.io.InputStream;
 import java.util.Objects;
 
-import com.greentree.common.loading.ResourceLoader;
-import com.greentree.common.loading.ResourceNotFound;
 import com.greentree.common.logger.Log;
+import com.greentree.data.loading.ResourceLoader;
+import com.greentree.data.loading.ResourceNotFound;
 import com.greentree.engine.core.object.GameScene;
 
 /** @author Arseny Latyshev */

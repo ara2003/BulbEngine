@@ -2,7 +2,7 @@ package com.greentree.engine.builder.loaders;
 
 import java.io.IOException;
 
-import com.greentree.engine.core.builder.loaders.CachingAbstractLoader;
+import com.greentree.data.loaders.value.CachingAbstractLoader;
 import com.greentree.graphics.texture.Filtering;
 import com.greentree.graphics.texture.GLTexture2D;
 import com.greentree.graphics.texture.GLTextureLoader;
@@ -14,6 +14,7 @@ public class TextureLoader extends CachingAbstractLoader<GLTexture2D> {
 		super(GLTexture2D.class);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public GLTexture2D load0(final String value) throws IOException {
 		GLTexture2D t = GLTextureLoader.getTexture2D(value);

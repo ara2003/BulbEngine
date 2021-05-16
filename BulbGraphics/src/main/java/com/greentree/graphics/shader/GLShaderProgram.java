@@ -15,7 +15,8 @@ limitations under the License.
 */
 package com.greentree.graphics.shader;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
+import static org.lwjgl.opengl.GL11.GL_OUT_OF_MEMORY;
 
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;

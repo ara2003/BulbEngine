@@ -1,7 +1,5 @@
 package com.greentree.engine.render;
 
-import java.util.List;
-
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
@@ -20,9 +18,6 @@ public class CameraComponent extends GameComponent {
 	
 	@EditorData(required = true)
 	private float width, height;
-
-	@EditorData(required = true)
-	private List<Integer> list;
 	
 	private Transform position;
 	private final Vector3f cameraDirection = new Vector3f(), cameraRight = new Vector3f();
@@ -100,7 +95,6 @@ public class CameraComponent extends GameComponent {
 	
 	@Override
 	protected void start() {
-		System.out.println(list);
 		this.up.cross(this.cameraDirection, this.cameraRight);
 		this.position = this.getComponent(Transform.class);
 	}

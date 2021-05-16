@@ -3,22 +3,23 @@ package com.greentree.engine.builder.loaders;
 import java.io.IOException;
 import java.util.Properties;
 
-import com.greentree.common.loading.ResourceLoader;
-import com.greentree.engine.core.builder.loaders.AbstractLoader;
+import com.greentree.data.loaders.value.AbstractVlaueLoader;
+import com.greentree.data.loading.ResourceLoader;
 import com.greentree.graphics.shader.GLShaderLoader;
 import com.greentree.graphics.shader.GLShaderProgram;
 import com.greentree.graphics.shader.ShaderProgram;
 import com.greentree.graphics.shader.ShaderType;
 
 /** @author Arseny Latyshev */
-public class ShaderProgramLoader extends AbstractLoader<ShaderProgram> {
+public class ShaderProgramLoader extends AbstractVlaueLoader<ShaderProgram> {
 	
 	public ShaderProgramLoader() {
 		super(ShaderProgram.class);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public ShaderProgram load(final String value) throws Exception {
+	public ShaderProgram parse(final String value) throws Exception {
 		if(!value.endsWith(".matirial")) throw new IllegalArgumentException();
 		final Properties properties = new Properties();
 		try {

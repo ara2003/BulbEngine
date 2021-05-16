@@ -1,7 +1,5 @@
 package com.greentree.common.pair;
 
-import java.util.Objects;
-
 public class Pair<T1, T2> {
 	
 	public T1 first;
@@ -11,8 +9,8 @@ public class Pair<T1, T2> {
 	}
 	
 	public Pair(final T1 first, final T2 second) {
-		this.first = Objects.requireNonNull(first);
-		this.second = Objects.requireNonNull(second);
+		this.first = first;
+		this.second = second;
 	}
 	
 	@Override

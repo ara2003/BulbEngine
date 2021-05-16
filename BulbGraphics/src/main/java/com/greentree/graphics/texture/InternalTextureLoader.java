@@ -9,8 +9,8 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.opengl.GL11;
 
-import com.greentree.common.loading.ResourceLoader;
 import com.greentree.common.math.Mathf;
+import com.greentree.data.loading.ResourceLoader;
 
 public class InternalTextureLoader {
 	

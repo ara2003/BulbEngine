@@ -10,53 +10,54 @@ import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.input.CameraMouseAdapter;
 import com.greentree.graphics.Graphics;
 
-
 @RequireComponent({Transform.class})
 public class Button extends UIComponent {
+
+	@FunctionalInterface
+	public interface ButtonListener {
+
+		void click(int mouseButton);
+	}
 	
 	@EditorData()
-	private float border = 2;
+	private final float border = 2;
 	@EditorData
 	String text;
 	private float width, height;
 	private final Action<ButtonListener> action = new Action<>();
+
 	private boolean click0(final int x, final int y) {
-		final Vector2f vec = this.position.xy();
-		if(x < vec.x - this.width / 2 - this.border) return false;
-		if(x > vec.x + this.width / 2 + this.border) return false;
-		if(y < vec.y - this.height / 2 - this.border) return false;
-		if(y > vec.y + this.height / 2 + this.border) return false;
+		final Vector2f vec = position.xy();
+		if(x < vec.x - width / 2 - border) return false;
+		if(x > vec.x + width / 2 + border) return false;
+		if(y < vec.y - height / 2 - border) return false;
+		if(y > vec.y + height / 2 + border) return false;
 		return true;
 	}
-	
+
 	public Action<ButtonListener> getAction() {
-		return this.action;
+		return action;
 	}
-	
+
 	@Override
 	public void render() {
 		width = Graphics.getFont().getWidth(text);
 		height = Graphics.getFont().getHeight(text);
 		Graphics.setColor(1, 1, 1, 1);
-		Graphics.getFont().drawString(this.position.x() - this.width / 2, this.position.y() - this.height / 2, this.text);
+		Graphics.getFont().drawString(position.x() - width / 2, position.y() - height / 2, text);
 	}
-	
+
 	@Override
 	public void start() {
 		super.start();
 		Events.addListener(new CameraMouseAdapter() {
+			
 			private static final long serialVersionUID = 1L;
+			
 			@Override
 			public void mousePress(final int button, final int x, final int y) {
-				if(Button.this.click0(x, y)) Button.this.action.action(l->l.click(button));
+				if(Button.this.click0(x, y)) action.action(l->l.click(button));
 			}
 		});
-	}
-	
-	@FunctionalInterface
-	public interface ButtonListener {
-		
-		void click(int mouseButton);
-		
 	}
 }

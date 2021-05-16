@@ -12,6 +12,7 @@ module bulbengine.graphics {
 	requires transitive org.joml;
 	requires bulbengine.math;
 	requires transitive java.desktop;
+	requires bulbengine.data;
 
 	exports com.greentree.graphics;
 	exports com.greentree.graphics.input;

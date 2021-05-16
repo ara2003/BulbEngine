@@ -6,5 +6,4 @@ import com.greentree.engine.render.AbstractRendenerComponent;
 /** @author Arseny Latyshev */
 @RequireSystems({Canvas.class})
 public abstract class UIComponent extends AbstractRendenerComponent {
-	
 }

@@ -3,18 +3,24 @@ package com.greentree.engine.collizion;
 import java.util.Collections;
 import java.util.Comparator;
 
+import com.google.common.collect.Table;
 import com.greentree.common.collection.DoubleSet;
 import com.greentree.common.pair.UnOrentetPair;
 import com.greentree.engine.collizion.event.CollisionEvent;
 import com.greentree.engine.collizion.event.CollisionEvent.EventType;
 import com.greentree.engine.core.Events;
+import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.component.ComponentList;
+import com.greentree.engine.core.layer.Layer;
 import com.greentree.engine.core.object.GameSystem;
 
 public class ColliderSystem extends GameSystem {
 	
 	private final DoubleSet<ColliderComponent> lastFream = new DoubleSet<>();
 	private final DoubleSet<ColliderComponent> nowFream = new DoubleSet<>();
+	
+	@EditorData
+	private Table<Layer, Layer, Boolean> table;
 	
 	@Override
 	public void update() {

@@ -1,6 +1,8 @@
 package com.greentree.engine.geom2d;
 
-import static java.lang.Math.*;
+import static java.lang.Math.abs;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
