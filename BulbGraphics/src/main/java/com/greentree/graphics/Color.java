@@ -87,39 +87,20 @@ public class Color implements Serializable {
 		this.a = a / 255.0f;
 	}
 	
+	public Color(double r, double g, double b) {
+		this((float)r, (float)g, (float)b);
+	}
+
 	public static Color decode(final String nm) {
 		return new Color(Integer.decode(nm));
 	}
-	
+
 	public static Color getRandom() {
-		switch(new Random().nextInt(14)) {
-			case 0:
-				return Color.black;
-			case 1:
-				return Color.blue;
-			case 2:
-				return Color.cyan;
-			case 3:
-				return Color.darkGray;
-			case 6:
-				return Color.green;
-			case 7:
-				return Color.lightGray;
-			case 8:
-				return Color.magenta;
-			case 9:
-				return Color.orange;
-			case 10:
-				return Color.pink;
-			case 11:
-				return Color.red;
-			case 12:
-				return Color.white;
-			case 13:
-				return Color.yellow;
-			default:
-				return Color.getRandom();
-		}
+		return new Color(Math.random(), Math.random(), Math.random());
+	}
+	
+	public static Color getRandom(float min, float max) {
+		return new Color(Math.random()*(max - min) + min, Math.random()*(max - min) + min, Math.random()*(max - min) + min);
 	}
 	
 	public static Color getRandom(final int i, final int j) {
@@ -225,7 +206,7 @@ public class Color implements Serializable {
 	
 	@Override
 	public String toString() {
-		return String.format("Color(%d,%d,%d,%d)", r, g, b, a);
+		return String.format("Color(%f,%f,%f,%f)", r, g, b, a);
 	}
 
 }

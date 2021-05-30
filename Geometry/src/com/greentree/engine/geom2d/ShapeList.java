@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.joml.Vector2f;
 
+import com.greentree.engine.geom2d.util.Geom2DUtil;
+
 /** @author Arseny Latyshev */
 public class ShapeList {
 	
@@ -39,7 +41,7 @@ public class ShapeList {
 		float dis = 0;
 		int t = 50;
 		while((t-- > 0) && (maxDistanse > 0)) {
-			dis = GeomUtil2D.distanse(p, list) * 0.99f;
+			dis = Geom2DUtil.distanse(p, list) * 0.99f;
 			maxDistanse -= dis;
 			p.add(vector.mul(dis));
 			if(dis < delta) return p;

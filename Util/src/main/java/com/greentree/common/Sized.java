@@ -6,8 +6,8 @@ package com.greentree.common;
  *
  */
 public interface Sized {
-	
-	float getWidth();
+
 	float getHeight();
-	
+	float getWidth();
+
 }

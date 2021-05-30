@@ -8,7 +8,7 @@ public final class Text extends UIComponent {
 	
 	@EditorData
 	private final Color color = Color.darkGray;
-	@EditorData
+	@EditorData(required = true)
 	private String text;
 	private float w, h;
 	
@@ -29,7 +29,7 @@ public final class Text extends UIComponent {
 	}
 	
 	@Override
-	protected void start() {
+	public void start() {
 		super.start();
 	}
 }

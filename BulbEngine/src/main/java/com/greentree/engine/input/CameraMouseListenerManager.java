@@ -9,8 +9,6 @@ import com.greentree.graphics.input.event.MouseMovedEvent;
 /** @author Arseny Latyshev */
 public class CameraMouseListenerManager extends OneListenerListenerManager<Event, CameraMouseListener> {
 	
-	private static final long serialVersionUID = 1L;
-	
 	public CameraMouseListenerManager() {
 		super(CameraMouseListener.class);
 	}

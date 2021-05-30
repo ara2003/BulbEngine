@@ -7,13 +7,13 @@ import com.greentree.common.logger.Log;
 
 /** @author Arseny Latyshev */
 public class Timer {
-	
+
 	private final Map<Integer, Float> timers;
-	
+
 	public Timer() {
 		timers = new HashMap<>();
 	}
-	
+
 	public float finish(final int id) {
 		final Float l = timers.remove(id);
 		if(l == null) {
@@ -22,7 +22,7 @@ public class Timer {
 		}
 		return Time.getTime() - l;
 	}
-	
+
 	public void start(final int id) {
 		timers.put(id, Time.getTime());
 	}

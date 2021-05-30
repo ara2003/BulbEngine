@@ -14,74 +14,73 @@ import com.greentree.graphics.texture.Filtering;
 import com.greentree.graphics.texture.GLTexture2D;
 
 public class SpriteRendener extends CameraRendenerComponent {
-	
+
 	private transient Transform position;
 	@EditorData
 	private float width, height;
 	@EditorData(name = "image")
 	protected GLTexture2D texture;
-	
+
 	public float getHeight() {
-		return this.height;
+		return height;
 	}
-	
+
 	public float getWidth() {
-		return this.width;
+		return width;
 	}
-	
+
 	@Override
 	public void render() {
 		Graphics.pushMatrix();
-		Graphics.translate(this.position.x()+width/2, this.position.y()+height/2, this.position.z());
-		
+		Graphics.translate(position.x()+width/2, position.y()+height/2, position.z());
+
 		Graphics.enableBlead();
-		
+
 		Color.white.bind();
-		
-		this.texture.bind();
-		final float w = .5f / this.getWidth(), h = .5f / this.getHeight();
+
+		texture.bind();
+		final float w = .5f / getWidth(), h = .5f / getHeight();
 		try(MemoryStack stack = MemoryStack.stackPush()){
-			Graphics.glVertexPointer(2, GLType.FLOAT, stack.floats(0, 0, 0, -this.height, -this.width, -this.height, -this.width, 0));
-			Graphics.glTexCoordPointer(2, GLType.FLOAT, stack.floats(w, h, w, this.texture.getTexHeight() - h, this.texture.getTexWidth() - w, this.texture.getTexHeight() - h, this.texture.getTexWidth() - w, h));
+			Graphics.glVertexPointer(2, GLType.FLOAT, stack.floats(0, 0, 0, -height, -width, -height, -width, 0));
+			Graphics.glTexCoordPointer(2, GLType.FLOAT, stack.floats(w, h, w, texture.getTexHeight() - h, texture.getTexWidth() - w, texture.getTexHeight() - h, texture.getTexWidth() - w, h));
 		}
 		Graphics.glEnableClientState(ClientState.VERTEX_ARRAY);
 		Graphics.glEnableClientState(ClientState.TEXTURE_COORD_ARRAY);
-		
+
 		Graphics.glDrawArrays(GLPrimitive.QUADS, 0, 4);
-		
+
 		Graphics.glDisableClientState(ClientState.VERTEX_ARRAY);
 		Graphics.glDisableClientState(ClientState.TEXTURE_COORD_ARRAY);
 
 		GLTexture2D.unbindTexture();
 		Graphics.disableBlead();
-		
+
 		Graphics.popMatrix();
 	}
-	
+
 	public void setHeight(final float height) {
-		if(height <= 0) this.height = this.texture.getHeight();
+		if(height <= 0) this.height = texture.getHeight();
 		else this.height = height;
 	}
-	
+
 	public void setSize(final float width, final float height) {
 		this.width  = width;
 		this.height = height;
 	}
-	
+
 	public void setWidth(final float width) {
-		if(width <= 0) this.width = this.texture.getWidth();
+		if(width <= 0) this.width = texture.getWidth();
 		else this.width = width;
 	}
-	
+
 	@Override
-	protected void start() {
-		this.texture.setMagFilter(Filtering.LINEAR);
-		this.texture.setMinFilter(Filtering.NEAREST);
-		
-		this.texture.setWrap(Wrapping.CLAMP_TO_BORDER);
-		
-		this.position = this.getComponent(Transform.class);
-		if(this.width == 0) this.width = this.texture.getWidth();
-		if(this.height == 0) this.height = this.texture.getHeight();
+	public void start() {
+		texture.setMagFilter(Filtering.LINEAR);
+		texture.setMinFilter(Filtering.NEAREST);
+
+		texture.setWrap(Wrapping.CLAMP_TO_BORDER);
+		position = this.getComponent(Transform.class);
+		if(width == 0) width = texture.getWidth();
+		if(height == 0) height = texture.getHeight();
 	}
 }

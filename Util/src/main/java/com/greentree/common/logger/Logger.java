@@ -10,37 +10,14 @@ import java.util.function.Consumer;
 
 /** @author Arseny Latyshev */
 public abstract class Logger {
-	
+
 	private static final Map<String, Consumer<String>> types = new HashMap<>();
-	
+
 	static {
 		Logger.createType("crate logger type", System.out::println);
 		Logger.createType("warn", System.err::println);
 	}
 
-
-	public static boolean question(final String question) {
-		return "y".equals(question(question, "y", "n"));
-	}
-	
-	public static String question(final String question, String...statuses) {
-		Arrays.asList(statuses).parallelStream().forEach(s -> {
-			if(s == null)throw new IllegalArgumentException("status cannot be null");
-			if(s.isBlank())throw new IllegalArgumentException("status cannot be blank");
-		});
-		try(final Scanner sc = new Scanner(System.in)) {
-			String line;
-			do {
-				line = sc.nextLine();
-				for(String s : statuses) {
-					if(s.equals(line)) {
-						return line;
-					}
-				}
-			}while(true);
-		}
-	}
-	
 	public static void createType(String type, final Consumer<String> consumer) {
 		if(Objects.requireNonNull(type).isBlank()) throw new IllegalArgumentException("type cannot be blank");
 		type = type.toUpperCase();
@@ -49,7 +26,7 @@ public abstract class Logger {
 		Logger.types.put(type, consumer);
 		Logger.print("crate logger type", type);
 	}
-	
+
 	public static void print(String type, final String string, final Object... obj) {
 		if(Objects.requireNonNull(type).isBlank()) throw new IllegalArgumentException("type cannot be blank");
 		type = type.toUpperCase();
@@ -63,6 +40,28 @@ public abstract class Logger {
 		}
 		a.accept(String.format("%s %s : %s", new Date(), type.toUpperCase(), String.format(string, obj)));
 	}
-	
-	
+
+	public static boolean question(final String question) {
+		return "y".equals(question(question, "y", "n"));
+	}
+
+	public static String question(final String question, String...statuses) {
+		Arrays.asList(statuses).parallelStream().forEach(s -> {
+			if(s == null)throw new IllegalArgumentException("status cannot be null");
+			if(s.isBlank())throw new IllegalArgumentException("status cannot be blank");
+		});
+		System.out.println(question+" "+Arrays.toString(statuses));
+		try(final Scanner sc = new Scanner(System.in)) {
+			String line;
+			do try {
+				line = sc.nextLine();
+				for(String s : statuses) if(s.equals(line)) return line;
+			}catch (Exception e) {
+				print("warn", e.getMessage());
+			}
+			while(true);
+		}
+	}
+
+
 }

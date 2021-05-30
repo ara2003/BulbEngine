@@ -9,6 +9,8 @@ import com.greentree.common.ClassUtil;
 import com.greentree.common.collection.HashMapClassTree;
 import com.greentree.common.collection.WeakClassTree;
 import com.greentree.common.logger.Log;
+import com.greentree.engine.core.Events;
+import com.greentree.engine.core.component.NewComponentEvent;
 import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.core.layer.Layer;
 import com.greentree.engine.core.system.RequireSystems;
@@ -91,16 +93,14 @@ public final class GameObject extends GameObjectParent {
 		components.remove(gameComponent);
 	}
 	
-	
-	@Override
 	protected void start() {
 		if(!Validator.checkRequireComponent(components)) Log.error(
 			"component " + Validator.getBrokRequireComponentClass(components) + " require is not fulfilled \n" + this);
 		
 		if(!Validator.checkRequireSystem(components, getScene())) Log.error(
 			"component " + Validator.getBrokRequireSystemClass(components, getScene()) + " require is not fulfilled \n" + this);
-		
-		for(final GameComponent component : components) component.initSratr();
+
+		for(final GameComponent component : components) Events.event(new NewComponentEvent(component));
 		for(final GameObject component : childrens) component.start();
 	}
 	

@@ -345,5 +345,9 @@ public abstract class Graphics {
 	public static void widthLine(int i) {
 		GL11.glLineWidth(i);
 	}
+
+	public static void drawCircle(float x, float y, float radius) {
+		drawOval(x, y, radius, radius);
+	}
 	
 }

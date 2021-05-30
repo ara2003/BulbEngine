@@ -15,7 +15,7 @@ import java.util.Set;
 import com.greentree.common.logger.Log;
 
 public final class ClassUtil {
-	
+
 	public static <A extends Annotation> Collection<A> getAllAnnotations(final Class<?> clazz, final Class<A> annotationClass) {
 		final Collection<A> res = new ArrayList<>();
 		if(clazz == null) return res;
@@ -30,19 +30,19 @@ public final class ClassUtil {
 		res.addAll(ClassUtil.getAllAnnotations(clazz.getSuperclass(), annotationClass));
 		return res;
 	}
-	
+
 	public static List<Field> getAllFields(final Class<?> clazz) {
 		final List<Field> list = new LinkedList<>();
 		for(final Class<?> c : ClassUtil.getAllPerant(clazz)) Collections.addAll(list, c.getDeclaredFields());
 		return list;
 	}
-	
+
 	public static <A extends Annotation> List<Field> getAllFieldsWithAnnotation(final Class<?> clazz, final Class<A> annotation) {
 		final List<Field> list = ClassUtil.getAllFields(clazz);
 		list.removeIf(a->a.getAnnotation(annotation) == null);
 		return list;
 	}
-	
+
 	public static Collection<Class<?>> getAllPerant(Class<?> clazz) {
 		final Collection<Class<?>> list = new ArrayList<>();
 		while(!clazz.equals(Object.class) && clazz != null) {
@@ -51,7 +51,7 @@ public final class ClassUtil {
 		}
 		return list;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static <T> Set<Class<? extends T>> getClases(final Iterable<T> object) {
 		final Set<Class<? extends T>> res = new HashSet<>();
@@ -59,20 +59,17 @@ public final class ClassUtil {
 		for(final T t : object) if(t != null) res.add((Class<? extends T>) t.getClass());
 		return res;
 	}
-	
-	public static <T> T newInstance(final Class<T> clazz) {
-		if(clazz == null) throw new NullPointerException("clazz is null");
+
+	public static Class<?> loadClass(String className) throws ClassNotFoundException {
+		if(className == null) throw new NullPointerException("className is null");
 		try {
-			final Constructor<T> constructor = clazz.getConstructor();
-			constructor.setAccessible(true);
-			return constructor.newInstance();
-		}catch(InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException e) {
-			Log.error(e + " " + clazz);
+			return ClassUtil.class.getClassLoader().loadClass(className);
+		}catch(final ClassNotFoundException e) {
 		}
-		return null;
+		throw new ClassNotFoundException(className);
+		//		return null;
 	}
-	
+
 	public static Class<?> loadClass(String className, Iterable<String> packageNames) {
 		if(packageNames == null) throw new NullPointerException("packageNames is null");
 		if(className == null) throw new NullPointerException("className is null");
@@ -89,13 +86,16 @@ public final class ClassUtil {
 		return null;
 	}
 
-	public static Class<?> loadClass(String className) throws ClassNotFoundException {
-		if(className == null) throw new NullPointerException("className is null");
+	public static <T> T newInstance(final Class<T> clazz) {
+		if(clazz == null) throw new NullPointerException("clazz is null");
 		try {
-			return ClassUtil.class.getClassLoader().loadClass(className);
-		}catch(final ClassNotFoundException e) {
+			final Constructor<T> constructor = clazz.getConstructor();
+			constructor.setAccessible(true);
+			return constructor.newInstance();
+		}catch(InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException e) {
+			Log.error(e + " " + clazz);
 		}
-		throw new ClassNotFoundException(className);
-//		return null;
+		return null;
 	}
 }

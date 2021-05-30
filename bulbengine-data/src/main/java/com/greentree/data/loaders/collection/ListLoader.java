@@ -10,7 +10,7 @@ import com.greentree.common.xml.XMLElement;
 
 /** @author Arseny Latyshev */
 @SuppressWarnings("rawtypes")
-public class ListLoader extends CollectionLoader<List> {
+public class ListLoader extends AbstactSubLoader<List> {
 
 	public ListLoader() {
 		super(List.class);

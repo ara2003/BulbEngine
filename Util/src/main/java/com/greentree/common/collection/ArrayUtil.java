@@ -10,9 +10,6 @@ import java.util.function.Predicate;
  */
 public final class ArrayUtil {
 
-	private ArrayUtil() {
-	}
-	
 	public static <E> List<E> findObjects(Iterable<E> list, Predicate<E> filter) {
 		if(list == null)return null;
 		if(filter == null)filter = obj->false;
@@ -20,5 +17,8 @@ public final class ArrayUtil {
 		for(E e : list)if(filter.test(e))list0.add(e);
 		return list0;
 	}
-	
+
+	private ArrayUtil() {
+	}
+
 }

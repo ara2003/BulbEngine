@@ -45,6 +45,7 @@ public final class Mathf {
 		}
 		return min;
 	}
+	
 	public static float lerp(float a, float b, float k) {
 		return (b - a)*k + a;
 	}
@@ -61,6 +62,17 @@ public final class Mathf {
 		float dx = a.x - b.x;
 		float dy = a.y - b.y;
 		return (dx*dx)+(dy*dy);
+	}
+
+	public static float cos(double d) {
+		return (float)Math.cos(d);
+	}
+	public static float sin(double d) {
+		return (float)Math.sin(d);
+	}
+
+	public static float sqrt(float d) {
+		return (float)Math.sqrt(d);
 	}
 	
 	

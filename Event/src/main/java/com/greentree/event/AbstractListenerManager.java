@@ -2,12 +2,7 @@ package com.greentree.event;
 
 /** @author Arseny Latyshev */
 public abstract class AbstractListenerManager<E extends Event, L extends Listener> implements ListenerManager {
-	
-	private static final long serialVersionUID = 1L;
-	
-	public AbstractListenerManager() {
-	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public final boolean addListener(final Listener listener) {
@@ -18,7 +13,7 @@ public abstract class AbstractListenerManager<E extends Event, L extends Listene
 		return false;
 	}
 	protected abstract boolean addListener0(final L listener);
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public final boolean event(final Event event) {

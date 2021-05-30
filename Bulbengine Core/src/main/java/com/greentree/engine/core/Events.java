@@ -28,8 +28,4 @@ public class Events {
 		return Events.eventSystem;
 	}
 	
-	static void update() {
-		Events.eventSystem.update();
-	}
-	
 }

@@ -60,7 +60,7 @@ public class MeshRenderer extends Camera3DRendenerComponent {
 		//		modelView.scale(1/camera.getWidth(), 1/camera.getHeight(), 1);
 		
 		// rotate model a little by x an y axis, to see cube in projection
-		modelView.rotateXYZ(this.position.rotateX, this.position.rotateY, this.position.rotateZ);
+		modelView.rotateXYZ(this.position.getRotateX(), this.position.getRotateY(), this.position.getRotateZ());
 		
 		final Matrix4f normal = new Matrix4f();
 		modelView.normal(normal);
@@ -89,7 +89,7 @@ public class MeshRenderer extends Camera3DRendenerComponent {
 	}
 	
 	@Override
-	protected void start() {
+	public void start() {
 		super.start();
 		
 		final IndeciesArray mesh = this.getComponent(AbstractMeshComponent.class).getMesh().get(Type.VERTEX, Type.NORMAL);

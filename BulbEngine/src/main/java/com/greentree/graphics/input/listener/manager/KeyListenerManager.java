@@ -9,8 +9,6 @@ import com.greentree.graphics.input.listener.KeyListener;
 
 public class KeyListenerManager extends OneListenerListenerManager<Event, KeyListener> {
 	
-	private static final long serialVersionUID = 1L;
-	
 	public KeyListenerManager() {
 		super(KeyListener.class);
 	}

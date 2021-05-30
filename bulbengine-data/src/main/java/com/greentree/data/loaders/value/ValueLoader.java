@@ -10,7 +10,7 @@ public interface ValueLoader extends Loader {
 
 	@Override
 		default Object parse(Field value1, XMLElement value2) throws Exception {
-			return parse(value1.getType(), value2.getAttribute("value"));
+			return parse(value1.getType(), value2.getContent());
 		}
 	
 	<T> T parse(Class<T> clazz, String value) throws Exception;

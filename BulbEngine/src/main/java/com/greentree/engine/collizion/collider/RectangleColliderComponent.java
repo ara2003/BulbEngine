@@ -8,7 +8,7 @@ import com.greentree.engine.geom2d.Shape2D;
 /** @author ara */
 public final class RectangleColliderComponent extends ColliderComponent {
 
-	@EditorData
+	@EditorData(required = true)
 	private float width, height;
 
 	@Override

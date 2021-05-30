@@ -17,73 +17,116 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 public class XMLElement implements Serializable {
-	
+
+	public static class Builder {
+
+		private File file;
+
+		public Builder() throws IOException {
+			file = File.createTempFile("temp", "xml");
+		}
+
+		public XMLElement build() throws IOException {
+			try(FileWriter writer = new FileWriter(file))
+			{
+				// запись всей строки
+				String text = "Hello Gold!";
+				writer.write(text);
+				// запись по символам
+				writer.append('\n');
+				writer.append('E');
+
+				writer.flush();
+			}
+			catch(IOException ex){
+
+				System.out.println(ex.getMessage());
+			}
+			return XMLParser.parse(file);
+		}
+
+	}
 	private static final long serialVersionUID = 1L;
+	public static Builder builder() throws IOException {
+		return new Builder();
+	}
 	private List<XMLElement> children;
+
 	private transient final Element dom;
+
 	private final String name;
-	
+
 	XMLElement(final Element xmlElement) {
 		dom = xmlElement;
 		name = dom.getTagName();
 	}
-	
+
+	public XMLElement(File file) throws IOException {
+		this(XMLParser.parse(file));
+	}
+
 	public XMLElement(final File root, final String file) throws IOException {
 		this(XMLParser.parse(root, file));
 	}
-	
+
+	public XMLElement(InputStream data) throws IOException {
+		this(XMLParser.parse(data));
+
+	}
+
 	public XMLElement(final String file) throws IOException {
 		this(XMLParser.parse(file));
 	}
-	
+
 	XMLElement(final XMLElement xmlElement) {
 		dom = xmlElement.dom;
 		name = xmlElement.name;
-	}
-	
-	public XMLElement(InputStream data) throws IOException {
-		this(XMLParser.parse(data));
-		
 	}
 
 	public String getAttribute(final String name) {
 		return dom.getAttribute(name);
 	}
-	
+
 	public String getAttribute(final String name, final String def) {
 		final String value = dom.getAttribute(name);
-		if((value == null) || (value.length() == 0)) return def;
+		if(value == null || value.length() == 0) return def;
 		return value;
 	}
-	
+
 	public String[] getAttributeNames() {
 		final NamedNodeMap map = dom.getAttributes();
 		final String[] names = new String[map.getLength()];
 		for(int i = 0; i < names.length; ++i) names[i] = map.item(i).getNodeName();
 		return names;
 	}
-	
+
 	public Map<String, String> getAttributes() {
 		final String[] n = getAttributeNames();
 		final Map<String, String> map = new HashMap<>(n.length);
 		for(final String str : n) map.put(str, getAttribute(str));
 		return map;
 	}
-	
+
 	public boolean getBooleanAttribute(final String name) throws XMLException {
 		final String value = this.getAttribute(name);
-		if(value.equalsIgnoreCase("true")) return true;
-		if(value.equalsIgnoreCase("false")) return false;
+		if("true".equalsIgnoreCase(value)) return true;
+		if("false".equalsIgnoreCase(value)) return false;
 		throw new XMLException("Value read: '" + this.getAttribute(name) + "' is not a boolean");
 	}
-	
+
 	public boolean getBooleanAttribute(final String name, final boolean def) throws XMLException {
 		final String value = this.getAttribute(name, "" + def);
-		if(value.equalsIgnoreCase("true")) return true;
-		if(value.equalsIgnoreCase("false")) return false;
+		if("true".equalsIgnoreCase(value)) return true;
+		if("false".equalsIgnoreCase(value)) return false;
 		throw new XMLException("Value read: '" + this.getAttribute(name, "" + def) + "' is not a boolean");
 	}
-	
+
+	public XMLElement getChildren(final String name) {
+		final List<XMLElement> c = getChildrens(name);
+		if(c.isEmpty()) return null;
+		return c.get(0);
+	}
+
 	public List<XMLElement> getChildrens() {
 		if(children != null) return children;
 		final NodeList list = dom.getChildNodes();
@@ -92,13 +135,7 @@ public class XMLElement implements Serializable {
 			if(list.item(i) instanceof Element) children.add(new XMLElement((Element) list.item(i)));
 		return children;
 	}
-	
-	public XMLElement getChildren(final String name) {
-		final List<XMLElement> c = getChildrens(name);
-		if(c.isEmpty()) return null;
-		return c.get(0);
-	}
-	
+
 	public List<XMLElement> getChildrens(final String name) {
 		final List<XMLElement> selected = new ArrayList<>();
 		final List<XMLElement> children = getChildrens();
@@ -106,15 +143,15 @@ public class XMLElement implements Serializable {
 			if(children.get(i).getName().equals(name)) selected.add(children.get(i));
 		return selected;
 	}
-	
+
 	public String getContent() {
-		String content = "";
+		StringBuilder content = new StringBuilder();
 		final NodeList list = dom.getChildNodes();
 		for(int i = 0; i < list.getLength(); ++i)
-			if(list.item(i) instanceof Text) content += list.item(i).getNodeValue();
-		return content.replace("\n", "");
+			if(list.item(i) instanceof Text) content.append(list.item(i).getNodeValue());
+		return content.toString().replace("\n", "");
 	}
-	
+
 	public double getDoubleAttribute(final String name) throws XMLException {
 		try {
 			return Double.parseDouble(this.getAttribute(name));
@@ -122,7 +159,7 @@ public class XMLElement implements Serializable {
 			throw new XMLException("Value read: '" + this.getAttribute(name) + "' is not a double", e);
 		}
 	}
-	
+
 	public double getDoubleAttribute(final String name, final double def) throws XMLException {
 		try {
 			return Double.parseDouble(this.getAttribute(name, "" + def));
@@ -130,7 +167,7 @@ public class XMLElement implements Serializable {
 			throw new XMLException("Value read: '" + this.getAttribute(name, "" + def) + "' is not a double", e);
 		}
 	}
-	
+
 	public int getIntAttribute(final String name) throws XMLException {
 		try {
 			return Integer.parseInt(this.getAttribute(name));
@@ -138,7 +175,7 @@ public class XMLElement implements Serializable {
 			throw new XMLException("Value read: '" + this.getAttribute(name) + "' is not an integer", e);
 		}
 	}
-	
+
 	public int getIntAttribute(final String name, final int def) throws XMLException {
 		try {
 			return Integer.parseInt(this.getAttribute(name, "" + def));
@@ -146,63 +183,34 @@ public class XMLElement implements Serializable {
 			throw new XMLException("Value read: '" + this.getAttribute(name, "" + def) + "' is not an integer", e);
 		}
 	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	@Override
-	public String toString() {
-		String res = "<" + name;
-		final String[] na = getAttributeNames();
-		for(final String n : na) res += " " + n + "=\"" + getAttribute(n) + "\"";
-		if(getChildrens().isEmpty() && getContent().equals("")) res += ">" + getContent() + "</" + name + ">\n";
-		else {
-			res += ">" + getContent();
-			if(!getChildrens().isEmpty()) {
-				res += "\n\t";
-				for(final XMLElement e : getChildrens()) res += e.toString().replaceAll("\n", "\n\t");
-				res = res.substring(0, res.lastIndexOf("\t"));
-			}
-			res += "</" + name + ">\n";
-		}
-		return res;
-	}
 
 	public InputStream getIputStream() {
 		return new ByteArrayInputStream(("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+toString()).getBytes());
 	}
 
-	public static class Builder {
-		
-		private File file;
-		
-		public Builder() throws IOException {
-			file = File.createTempFile("temp", "xml");
-		}
-		
-		public XMLElement build() throws IOException {
-			 try(FileWriter writer = new FileWriter(file))
-		        {
-		           // запись всей строки
-		            String text = "Hello Gold!";
-		            writer.write(text);
-		            // запись по символам
-		            writer.append('\n');
-		            writer.append('E');
-		             
-		            writer.flush();
-		        }
-		        catch(IOException ex){
-		             
-		            System.out.println(ex.getMessage());
-		        } 
-			return XMLParser.parse(file);
-		}
-		
+	public String getName() {
+		return name;
 	}
-	
-	public static Builder builder() throws IOException {
-		return new Builder();
+
+	@Override
+	public String toString() {
+		String res = "<" + name;
+		final String[] na = getAttributeNames();
+		for(final String n : na) res += " " + n + "=\"" + getAttribute(n) + "\"";
+		if(getChildrens().isEmpty()) {
+			if(getContent().isBlank())
+				res += "/>\n";
+			else
+				res += ">" + getContent() + "</" + name + ">\n";
+		}else {
+			res += ">" + getContent();
+			if(!getChildrens().isEmpty()) {
+				res += "\n\t";
+				for(final XMLElement e : getChildrens()) res += e.toString().replace("\n", "\n\t");
+				res = res.substring(0, res.lastIndexOf("\t"));
+			}
+			res += "</" + name + ">\n";
+		}
+		return res;
 	}
 }

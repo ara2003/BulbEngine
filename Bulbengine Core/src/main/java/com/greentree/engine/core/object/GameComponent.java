@@ -4,12 +4,15 @@ import java.util.Random;
 
 import com.greentree.engine.core.Events;
 import com.greentree.engine.core.GameCore;
+import com.greentree.engine.core.component.NewComponentEvent;
+import com.greentree.event.Event;
 import com.greentree.event.Listener;
 
 public abstract class GameComponent extends GameElement {
 	
 	protected static final Random random = new Random();
 	private GameObject object;
+	
 	
 	protected final static void addListener(final Listener listener) {
 		Events.addListener(listener);
@@ -38,12 +41,8 @@ public abstract class GameComponent extends GameElement {
 		return object;
 	}
 	
-	public void setObject(final GameObject object) {
+	public final void setObject(final GameObject object) {
 		this.object = object;
-	}
-	
-	@Override
-	protected void start() {
 	}
 	
 }

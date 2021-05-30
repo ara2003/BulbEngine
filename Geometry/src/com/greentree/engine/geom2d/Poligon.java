@@ -3,16 +3,23 @@ package com.greentree.engine.geom2d;
 import java.util.Arrays;
 import java.util.List;
 
+import com.greentree.engine.geom2d.util.Geom2DUtil;
+
 public class Poligon extends Shape2D {
 	
 	protected final Point2D[] point;
 	
 	public Poligon(final float... point) {
-		this(GeomUtil2D.getPoint(point));
+		this(Geom2DUtil.getPoint(point));
 	}
 	
 	public Poligon(final Point2D... point) {
 		this.point = point;
+	}
+
+	@Override
+	public int getPointsSize() {
+		return point.length;
 	}
 	
 	@Override

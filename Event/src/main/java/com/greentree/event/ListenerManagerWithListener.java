@@ -9,7 +9,6 @@ import java.util.Collection;
  */
 public abstract class ListenerManagerWithListener<E extends Event, L extends Listener> extends AbstractListenerManager<E, L> {
 
-	private static final long serialVersionUID = 1L;
 	private Collection<L> listeners = new ArrayList<>();
 	
 	public ListenerManagerWithListener() {

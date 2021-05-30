@@ -12,7 +12,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.greentree.common.pair.Pair;
 import com.greentree.common.xml.XMLElement;
-import com.greentree.data.loaders.collection.CollectionLoader;
 import com.greentree.data.loaders.value.ValueLoader;
 import com.greentree.data.parse.PairParserSet;
 
@@ -29,11 +28,10 @@ public class LoaderList extends PairParserSet<Field, XMLElement, Object, Loader>
 				}
 			});
 
-	@SuppressWarnings({"rawtypes","unchecked"})
 	@Override
 	public void addLoader(final Loader loader) {
-		if(loader instanceof CollectionLoader)
-			((CollectionLoader) loader).setLoad((Function<Pair<Class<?>, String>, Object>) p->
+		if(loader instanceof SubLoader)
+			((SubLoader) loader).setLoad((Function<Pair<Class<?>, String>, Object>) p->
 			{
 				for(var a : getCache(p.first).parallelStream().filter(e->e instanceof ValueLoader).map(e->(ValueLoader) e)
 						.collect(Collectors.toList())) {

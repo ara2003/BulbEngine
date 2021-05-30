@@ -1,120 +1,164 @@
 package com.greentree.engine.component;
 
-import java.util.function.Function;
-
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 import com.greentree.action.EventAction;
 import com.greentree.engine.core.builder.EditorData;
-import com.greentree.engine.core.component.UpdatingGameComponent;
+import com.greentree.engine.core.object.GameComponent;
 
-public final class Transform extends UpdatingGameComponent {
-	
+public final class Transform extends GameComponent {
+
 	@EditorData
-	public float rotateX, rotateY, rotateZ;
+	private float rotateX, rotateY, rotateZ;
 	@EditorData
-	public float scaleX = 1, scaleY = 1, scaleZ = 1;
+	private final float scaleX = 1, scaleY = 1, scaleZ = 1;
 	@EditorData
-	public float x, y, z;
-	
+	private float x, y, z;
+	@EditorData(name = "static")
+	private boolean isStatic = false;
 	private final EventAction<Transform> action;
-	
+	private boolean update;
+
 	public Transform() {
-		this.action = new EventAction<>();
+		action = new EventAction<>();
 	}
-	
+
 	private void action() {
-		this.action.action(this);
+		if(isStatic) throw new UnsupportedOperationException("Transform is static " + getObject());
+		update = true;
 	}
-	
+
+	public void addX(final float x) {
+		this.x += x;
+		action();
+	}
+
 	public void addXY(final float x, final float y) {
 		this.x += x;
 		this.y += y;
-		this.action();
+		action();
 	}
-	
+
 	public void addXY(final Vector2f vec) {
-		this.x += vec.x;
-		this.y += vec.y;
-		this.action();
+		x += vec.x;
+		y += vec.y;
+		action();
 	}
-	
+
 	public void addXYZ(final Vector3f mul) {
-		this.x += mul.x;
-		this.y += mul.y;
-		this.z += mul.z;
-		this.action();
+		x += mul.x;
+		y += mul.y;
+		z += mul.z;
+		action();
 	}
-	
+
+	public void addY(final float y) {
+		this.y += y;
+		action();
+	}
+
+	public void addZ(final float z) {
+		this.z += z;
+		action();
+	}
+
 	public EventAction<Transform> getAction() {
-		return this.action;
+		return action;
+	}
+
+	public float getRotateX() {
+		update0();
+		return rotateX;
+	}
+
+	public float getRotateY() {
+		update0();
+		return rotateY;
+	}
+
+	public float getRotateZ() {
+		update0();
+		return rotateZ;
+	}
+
+	public boolean isStatic() {
+		return isStatic;
+	}
+
+	public void rotate(final double f, final float speedX, final float speedY, final float speedZ) {
+		rotateX += speedX * f;
+		rotateY += speedY * f;
+		rotateZ += speedZ * f;
+		action();
 	}
 
 	public void rotate(final float speedX, final float speedY, final float speedZ) {
-		this.rotateX += speedX;
-		this.rotateY += speedY;
-		this.rotateZ += speedZ;
-		this.action();
+		rotateX += speedX;
+		rotateY += speedY;
+		rotateZ += speedZ;
+		action();
 	}
-	
-	public void rotate(double f, final float speedX, final float speedY, final float speedZ) {
-		this.rotateX += speedX*f;
-		this.rotateY += speedY*f;
-		this.rotateZ += speedZ*f;
-		this.action();
-	}
-	
+
 	public void set(final float x, final float y) {
 		this.x = x;
 		this.y = y;
-		this.action();
+		action();
 	}
-	
-	@Override
+
+	public void setRotateX(final float rotateX) {
+		this.rotateX = rotateX;
+		action();
+	}
+
+	public void setRotateY(final float rotateY) {
+		this.rotateY = rotateY;
+		action();
+	}
+
+	public void setRotateZ(final float rotateZ) {
+		this.rotateZ = rotateZ;
+		action();
+	}
+
+	public void subXY(Vector2f vec) {
+		x -= vec.x;
+		y -= vec.y;
+		action();
+	}
+
 	public void update() {
-		this.action();
+		action.action(this);
 	}
-	
+	private void update0() {
+		if(!update) return;
+		update = false;
+		update();
+	}
+
 	public float x() {
-		return this.x;
+		update0();
+		return x;
 	}
-	
+
 	public Vector2f xy() {
-		return new Vector2f(this.x, this.y);
+		update0();
+		return new Vector2f(x, y);
 	}
-	
+
 	public Vector3fc xyz() {
-		return new Vector3f(this.x, this.y, this.z);
+		update0();
+		return new Vector3f(x, y, z);
 	}
-	
+
 	public float y() {
-		return this.y;
+		update0();
+		return y;
 	}
-	
+
 	public float z() {
-		return this.z;
+		update0();
+		return z;
 	}
-	
-	@FunctionalInterface
-	public interface Tanslate<T> extends Function<T, T> {
-	}
-
-	public void addX(float x) {
-		this.x = x;
-		action();
-	}
-
-	public void addY(float y) {
-		this.y = y;
-		action();
-	}
-
-
-	public void addZ(float z) {
-		this.z = z;
-		action();
-	}
-	
 }

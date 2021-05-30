@@ -6,7 +6,7 @@ import java.util.Collection;
 import com.greentree.common.ClassUtil;
 
 /** @author Arseny Latyshev */
-public abstract class MutiListenerListenerManager extends ListenerManagerWithListener<Event, Listener> {
+public abstract class MutiListenerListenerManager<E extends Event> extends ListenerManagerWithListener<E, Listener> {
 	
 	private static final long serialVersionUID = 1L;
 	private final Collection<Class<? extends Listener>> listenerClasses;

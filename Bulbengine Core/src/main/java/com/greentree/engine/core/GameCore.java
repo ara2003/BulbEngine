@@ -20,7 +20,6 @@ public abstract class GameCore {
 	
 	protected final static void gameLoop() {
 		Time.updata();
-		Events.update();
 		SceneLoader.getCurrentScene().update();
 	}
 	

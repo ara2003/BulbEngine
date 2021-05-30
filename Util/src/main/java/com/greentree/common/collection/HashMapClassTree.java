@@ -10,23 +10,23 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /** @author Arseny Latyshev */
 public class HashMapClassTree<E> implements WeakClassTree<E> {
-	
+
 	private static final long serialVersionUID = 1L;
 	private final Map<Class<?>, List<?>> map;
-	
+
 	public HashMapClassTree() {
 		this.map = new ConcurrentHashMap<>();
 	}
-	
+
 	public HashMapClassTree(final HashMapClassTree<? extends E> classTree) {
 		this.map = new WeakHashMap<>(classTree.map);
 	}
-	
+
 	public HashMapClassTree(final Iterable<E> collection) {
 		this();
 		this.addAll(collection);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void add(final Class<?> clazz, final Object e) {
 		if(clazz == null) throw new NullPointerException("clazz is null");
@@ -35,14 +35,14 @@ public class HashMapClassTree<E> implements WeakClassTree<E> {
 		if(superClazz != null) this.add(superClazz, e);
 		for(final Class<?> interfase : clazz.getInterfaces()) this.add(interfase, e);
 	}
-	
+
 	@Override
 	public boolean add(final E object) {
 		if(object == null) throw new NullPointerException("object is null");
 		this.add(object.getClass(), object);
 		return true;
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean addAll(final Iterable<E> iterable) {
@@ -55,91 +55,92 @@ public class HashMapClassTree<E> implements WeakClassTree<E> {
 		}
 		return t;
 	}
-	
+
 	@Override
 	public void clear() {
 		this.map.clear();
 	}
-	
+
 	@Override
 	public boolean contains(final Object obj) {
 		return this.get(Object.class).contains(obj);
 	}
-	
+
 	public boolean containsAll(final Collection<?> collection) {
 		for(final Object obj : collection) if(!this.contains(obj)) return false;
 		return true;
 	}
-	
+
 	@Override
 	public boolean containsClass(final Class<? extends E> clazz) {
 		return this.map.containsKey(clazz);
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> List<T> get(final Class<T> c) {
 		if(c == null) throw new NullPointerException("class is null");
 		final List<T> set = (List<T>) this.map.get(c);
-		
+
 		if(set == null) {
 			this.map.put(c, new CopyOnWriteArrayList<>());
 			return this.get(c);
 		}
 		return set;
 	}
-	
+
 	@Override
 	public <T> T getOne(final Class<T> c) {
 		return this.get(c).get(0);
 	}
-	
+
 	@Override
 	public boolean isEmpty() {
 		return this.get(Object.class).isEmpty();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Iterator<E> iterator() {
 		return (Iterator<E>) this.get(Object.class).iterator();
 	}
-	
+
 	private void remove(final Class<?> clazz, final Object obj) {
 		if(clazz == null) return;
 		this.get(clazz).remove(obj);
 		this.remove(clazz.getSuperclass(), obj);
 		for(final Class<?> interfase : clazz.getInterfaces()) this.remove(interfase, obj);
 	}
-	
+
+	@Override
 	public boolean remove(final Object obj) {
 		final boolean res = this.contains(obj);
 		this.remove(obj.getClass(), obj);
 		return res;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public boolean removeAll(final Collection<?> collection) {
 		return this.removeAll0((Collection<? extends E>) collection);
 	}
-	
+
 	private boolean removeAll0(final Collection<? extends E> collection) {
 		boolean t = false;
 		for(final E e : collection) if(this.remove(e)) t = true;
 		return t;
 	}
-	
+
 	@Override
 	public <T> T removeOne(final Class<T> c) {
 		final T a = this.getOne(c);
 		this.remove(a);
 		return a;
 	}
-	
+
 	public int size() {
 		return this.get(Object.class).size();
 	}
-	
+
 	@Override
 	public String toString() {
 		return "ClassList " + this.get(Object.class);

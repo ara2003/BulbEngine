@@ -11,7 +11,7 @@ public abstract class AbstractLoader<C> implements Loader {
 	
 	@Override
 	public boolean isLoaded(final Class<?> clazz) {
-		return clazz.isAssignableFrom(this.clazz);
+		return this.clazz.isAssignableFrom(clazz);
 	}
 	
 }

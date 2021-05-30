@@ -10,7 +10,7 @@ import com.greentree.common.xml.XMLElement;
 
 /** @author Arseny Latyshev */
 @SuppressWarnings("rawtypes")
-public class TableLoader extends CollectionLoader<Table> {
+public class TableLoader extends AbstactSubLoader<Table> {
 
 	public TableLoader() {
 		super(Table.class);
@@ -18,7 +18,6 @@ public class TableLoader extends CollectionLoader<Table> {
 
 	@Override
 	public Object parse(Field field, XMLElement element) throws Exception {
-		if(!"table".equals(element.getName()))throw new UnsupportedOperationException(element + " is not table");
 		Table<Object, Object, Object> list = HashBasedTable.create();
 		Class<?> r = (Class<?>) ((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0];
 		Class<?> c = (Class<?>) ((ParameterizedType)field.getGenericType()).getActualTypeArguments()[1];

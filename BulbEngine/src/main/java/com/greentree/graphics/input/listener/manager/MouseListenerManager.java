@@ -8,8 +8,6 @@ import com.greentree.graphics.input.listener.MouseListener;
 
 public class MouseListenerManager extends OneListenerListenerManager<MouseEvent, MouseListener> {
 	
-	private static final long serialVersionUID = 1L;
-	
 	public MouseListenerManager() {
 		super(MouseListener.class);
 	}

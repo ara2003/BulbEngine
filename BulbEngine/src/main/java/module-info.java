@@ -6,10 +6,12 @@ open module bulb3Dengine {
 	requires transitive bulbengine.graphics;
 	requires com.google.common;
 	requires com.google.gson;
+	requires bulbengine.util;
 
 	exports com.greentree.engine;
 	exports com.greentree.engine.collizion;
 	exports com.greentree.engine.collizion.collider;
+	exports com.greentree.engine.collizion.event;
 	exports com.greentree.engine.input;
 	exports com.greentree.engine.assets;
 	exports com.greentree.engine.component;

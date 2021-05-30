@@ -25,4 +25,5 @@ public final class CapsuleColliderComponent extends ColliderComponent {
 	public float getDeltaY() {
 		return y;
 	}
+
 }

@@ -9,12 +9,12 @@ import com.greentree.engine.Windows;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.component.RequireComponent;
-import com.greentree.engine.core.object.GameComponent;
+import com.greentree.engine.core.component.StartGameComponent;
 import com.greentree.graphics.Graphics;
 
 /** @author Arseny Latyshev */
 @RequireComponent({Transform.class})
-public class CameraComponent extends GameComponent {
+public class CameraComponent extends StartGameComponent {
 	
 	@EditorData(required = true)
 	private float width, height;
@@ -24,6 +24,7 @@ public class CameraComponent extends GameComponent {
 	private final Vector3f up = new Vector3f(0, 1, 0);
 	{
 		setFront(0, 0, 1);
+		this.up.cross(this.cameraDirection, this.cameraRight);
 	}
 	public Vector3f getCameraDirection() {
 		return this.cameraDirection;
@@ -48,7 +49,7 @@ public class CameraComponent extends GameComponent {
 	}
 	
 	public Vector2f getUVPosition(final Vector2fc position) {
-		return this.WindowToCamera(position).mul(2).div(this.width, this.height);
+		return this.WindowToCamera(position).add(-position.x(), -position.y()).mul(2).div(this.width, this.height);
 	}
 	
 	public float getWidth() {
@@ -90,24 +91,23 @@ public class CameraComponent extends GameComponent {
 			this.cameraDirection.cross(this.up, this.cameraRight);
 			cameraRight.normalize();
 		}
-		
 	}
 	
 	@Override
-	protected void start() {
-		this.up.cross(this.cameraDirection, this.cameraRight);
+	public void start() {
 		this.position = this.getComponent(Transform.class);
 	}
+	
 	public void untranslate() {
 		Graphics.popMatrix();
 	}
 	
 	public float WindowToCameraX(final float x) {
-		return (x) * width / Windows.getWindow().getWidth();
+		return (x) * width / Windows.getWindow().getWidth() + getX();
 	}
 	
 	public float WindowToCameraY(final float y) {
-		return (y) * height / Windows.getWindow().getHeight();
+		return (y) * height / Windows.getWindow().getHeight() + getY();
 	}
 	
 	public Vector2f WindowToCamera(final Vector2fc position) {

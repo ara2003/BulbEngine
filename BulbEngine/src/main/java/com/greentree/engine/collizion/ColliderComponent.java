@@ -1,19 +1,22 @@
 package com.greentree.engine.collizion;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import com.greentree.action.EventAction;
 import com.greentree.common.Sized;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.component.RequireComponent;
-import com.greentree.engine.core.component.UpdatingGameComponent;
+import com.greentree.engine.core.component.StartUpdatingGameComponent;
 import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.system.RequireSystems;
+import com.greentree.engine.geom2d.Point2D;
 import com.greentree.engine.geom2d.Shape2D;
 
 @RequireSystems({ColliderSystem.class})
 @RequireComponent({Transform.class})
-public abstract class ColliderComponent extends UpdatingGameComponent implements Sized {
+public abstract class ColliderComponent extends StartUpdatingGameComponent implements Sized {
+
 
 	/** @author Arseny Latyshev */
 	public class CollisionAction {
@@ -32,6 +35,7 @@ public abstract class ColliderComponent extends UpdatingGameComponent implements
 				c.accept(e);
 			});
 		}
+
 
 		public final void addEnterObjectListener(final Consumer<GameObject> c) {
 			addEnterListener(e->c.accept(e.getObject()));
@@ -77,11 +81,11 @@ public abstract class ColliderComponent extends UpdatingGameComponent implements
 			stayActon.action(component);
 		}
 	}
-	
+
 	private Shape2D shape;
+
 	private final CollisionAction action;
 	private float x, y;
-
 	public ColliderComponent() {
 		action = new CollisionAction();
 	}
@@ -99,10 +103,18 @@ public abstract class ColliderComponent extends UpdatingGameComponent implements
 	public float getDeltaY() {
 		return 0;
 	}
-	
+
 	@Override
 	public final float getHeight() {
 		return shape.getAABB().getHeight();
+	}
+
+	public float getPenetrationDepth(final ColliderComponent b) {
+		return shape.getPenetrationDepth(b.shape);
+	}
+
+	public List<Point2D> getPoints() {
+		return shape.getPoints();
 	}
 
 	@Override
@@ -133,11 +145,12 @@ public abstract class ColliderComponent extends UpdatingGameComponent implements
 	}
 
 	@Override
-	protected final void start() {
+	public final void start() {
 		shape = generateShape();//не перемещать в конструктор
 		this.getComponent(Transform.class).getAction().addListener(t-> {
 			setPosition(t.x() + getDeltaX(), t.y() + getDeltaY());
 		});
+		this.getComponent(Transform.class).update();
 	}
 
 	@Override

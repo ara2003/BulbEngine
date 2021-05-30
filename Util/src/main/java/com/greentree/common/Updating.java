@@ -6,7 +6,7 @@ package com.greentree.common;
  *
  */
 public interface Updating {
-	
+
 	void update();
-	
+
 }

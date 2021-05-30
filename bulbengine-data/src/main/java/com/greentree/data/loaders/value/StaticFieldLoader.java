@@ -11,7 +11,8 @@ public class StaticFieldLoader implements ValueLoader {
 	public boolean isLoaded(final Class<?> clazz) {
 		if(clazz.isEnum()) return false;
 		if(clazz.isPrimitive()) return false;
-		return true;
+		for(Field f : clazz.getFields())if((f.getModifiers() & Modifier.STATIC) != 0)return true;
+		return false;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -23,7 +24,7 @@ public class StaticFieldLoader implements ValueLoader {
 		try {
 			return (T) field.get(null);
 		}catch(final ExceptionInInitializerError e) {
-			throw new UnsupportedOperationException();
+			throw new UnsupportedOperationException(e);
 		}
 	}
 	

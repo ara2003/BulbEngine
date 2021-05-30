@@ -10,7 +10,7 @@ import com.greentree.common.xml.XMLElement;
 
 /** @author Arseny Latyshev */
 @SuppressWarnings("rawtypes")
-public class MapLoader extends CollectionLoader<Map> {
+public class MapLoader extends AbstactSubLoader<Map> {
 
 	public MapLoader() {
 		super(Map.class);

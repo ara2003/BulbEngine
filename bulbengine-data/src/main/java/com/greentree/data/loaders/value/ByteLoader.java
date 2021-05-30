@@ -8,7 +8,7 @@ public class ByteLoader extends PrimitiveLoader<Byte> {
 	}
 	
 	@Override
-	public Byte parse(final String value) {
+	public Byte parse(final String value) throws NumberFormatException {
 		return Byte.parseByte(value);
 	}
 }

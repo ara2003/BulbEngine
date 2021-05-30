@@ -7,8 +7,6 @@ import com.greentree.graphics.input.listener.TextListener;
 /** @author Arseny Latyshev */
 public class TextListenerManager extends OneListenerListenerManager<TextEvent, TextListener> {
 	
-	private static final long serialVersionUID = 1L;
-	
 	public TextListenerManager() {
 		super(TextListener.class);
 	}

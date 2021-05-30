@@ -16,9 +16,8 @@ import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
 import com.greentree.common.pair.Pair;
 import com.greentree.common.xml.XMLElement;
-import com.greentree.data.loaders.Loader;
+import com.greentree.data.loaders.ConstructorLoader;
 import com.greentree.data.loaders.LoaderList;
-import com.greentree.data.loaders.NecessarilyLoaders;
 import com.greentree.data.loaders.collection.ListLoader;
 import com.greentree.data.loaders.collection.MapLoader;
 import com.greentree.data.loaders.collection.TableLoader;
@@ -62,7 +61,6 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		loaders.addLoader(new IntegerConstLoader());
 		loaders.addLoader(new IntegerLoader());
 		loaders.addLoader(new TextureLoader());
-		loaders.addLoader(new StaticFieldLoader());
 		loaders.addLoader(new StringLoader());
 		loaders.addLoader(new ObjMeshLoader());
 		loaders.addLoader(new BooleanLoader());
@@ -74,19 +72,13 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		loaders.addLoader(new CharLoader());
 		loaders.addLoader(new ShaderProgramLoader());
 		loaders.addLoader(new LayerLoader());
+		loaders.addLoader(new StaticFieldLoader());
 
 		loaders.addLoader(new ListLoader());
 		loaders.addLoader(new MapLoader());
 		loaders.addLoader(new TableLoader());
 		
-	}
-	
-	private void addNecessarilyLoaders(final NecessarilyLoaders annotation) {
-		if(annotation == null) return;
-		for(final Class<? extends Loader> cl : annotation.value()) if(!loaders.hasLoader(cl)) {
-			final Loader l = ClassUtil.newInstance(cl);
-			loaders.addLoader(l);
-		}
+		loaders.addLoader(new ConstructorLoader());
 	}
 	
 	@Override
@@ -141,8 +133,6 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 	
 	@Override
 	protected void fillObject(final GameObject object, final XMLElement in) {
-		for(final XMLElement element : in.getChildrens("package")) packages.add(element.getContent() + ".");
-		
 		final List<Pair<GameObject, XMLElement>> contextObject = new ArrayList<>();
 		for(final XMLElement element : in.getChildrens("object")) {
 			final GameObject сhildren = this.createObject(element, object);
@@ -158,22 +148,19 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		}
 		
 		for(final Pair<GameObject, XMLElement> element : contextObject) this.fillObject(element.first, element.second);
-		
-		for(final XMLElement element : in.getChildrens("package")) packages.remove(element.getContent() + ".");
 	}
 	
 	@Override
 	protected void fillScene(final GameScene scene, final XMLElement in) {
 		for(final XMLElement element : in.getChildrens("package")) packages.add(element.getContent());
 		
+		for(final XMLElement element : in.getChildrens("layer")) scene.addLayer(getLayer(element.getContent()));
 		for(final XMLElement el : in.getChildrens("system")) {
 			final GameSystem system = createSystem(el);
 			if(system == null) continue;
 			scene.addSystem(system);
 			pushSystem(system, el);
 		}
-		
-		for(final XMLElement element : in.getChildrens("layer")) scene.addLayer(getLayer(element));
 		
 		for(final XMLElement element : in.getChildrens("object")) {
 			final GameObject сhildren = this.createObject(element, scene);
@@ -201,6 +188,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 	@Override
 	protected String getLayerName(final XMLElement in) {
 		final var v = in.getAttribute("layer");
+		
 		if(v == null) return "default";
 		if(v.isBlank()) return "default";
 		return v;
@@ -242,9 +230,8 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 				if(!xmlNamesToFind.contains(getName(attribute)))
 					Log.warn("xml element " + object + " has value " + attribute + " and it is not used. [xmlNamesToFind=" + xmlNamesToFind + " attributes=" + attributes + "]");//не часть алгоритма
 		}
-		addNecessarilyLoaders(object.getClass().getAnnotation(NecessarilyLoaders.class));
 		final Map<String, XMLElement> attributes0 = new HashMap<>(attributes.getChildrens().size());
-		for(final var a : attributes.getChildrens()) attributes0.put(a.getAttribute("name"), a);
+		for(final var a : attributes.getChildrens()) attributes0.put(a.getAttribute("name"), a.getChildren("data"));
 		for(final Field field : allEditorDataFields) {
 			try {
 				setValue(object, field, attributes0.get(BasicXMlBuilder.getName(field)));
@@ -256,23 +243,20 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 	
 	protected Object setValue(final Object obj, final Field f, final XMLElement xmlValue) throws Exception {
 		final boolean flag = f.canAccess(obj);
-		Object        def  = null;
 		f.setAccessible(true);
+		Object value = null;
 		try {
-			def = f.get(obj);
-		}catch(final IllegalArgumentException e1) {
-		}catch(final IllegalAccessException e1) {
-		}finally {
-			f.setAccessible(flag);
-		}
-		Object value;
-		try {
+			if(xmlValue == null)throw new NullPointerException(obj + " " + f + " " + xmlValue);
 			value = loaders.parse(f, xmlValue);
 		}catch(final Exception e) {
-			if(def != null)
-				value = def;
-			else
-				throw e;
+			try {
+				value = f.get(obj);
+			}catch(final IllegalArgumentException e1) {
+			}catch(final IllegalAccessException e1) {
+			}finally {
+				f.setAccessible(flag);
+			}
+			if(value == null)throw e;
 		}
 		if(value != null) {
 			f.setAccessible(true);

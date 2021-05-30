@@ -63,7 +63,7 @@ public class Window implements AutoCloseable {
 		
 		GLFW.glfwShowWindow(this.id);
 		GLFW.glfwFocusWindow(this.id);
-		GLFW.glfwSwapInterval(0);
+		GLFW.glfwSwapInterval(1);
 		GLFW.glfwMakeContextCurrent(0);
 	}
 	

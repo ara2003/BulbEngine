@@ -21,7 +21,7 @@ public class Button extends UIComponent {
 	
 	@EditorData()
 	private final float border = 2;
-	@EditorData
+	@EditorData(required = true)
 	String text;
 	private float width, height;
 	private final Action<ButtonListener> action = new Action<>();
@@ -51,8 +51,6 @@ public class Button extends UIComponent {
 	public void start() {
 		super.start();
 		Events.addListener(new CameraMouseAdapter() {
-			
-			private static final long serialVersionUID = 1L;
 			
 			@Override
 			public void mousePress(final int button, final int x, final int y) {

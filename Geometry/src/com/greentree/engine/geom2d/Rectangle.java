@@ -1,7 +1,8 @@
 package com.greentree.engine.geom2d;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import org.joml.Vector2f;
 
@@ -19,7 +20,7 @@ public class Rectangle extends Shape2D {
 	}
 	
 	@Override
-	public Rectangle add( Vector2f step) {
+	public Rectangle add(Vector2f step) {
 		x += step.x();
 		y += step.y();
 		return this;
@@ -49,7 +50,32 @@ public class Rectangle extends Shape2D {
 	public List<Point2D> getPoints() {
 		float c = (float) Math.cos(rotation);
 		float s = (float) Math.sin(rotation);
-		return Arrays.asList(new Point2D(x, y), new Point2D(x + (width * c), y + (width * s)), new Point2D((x + (width*c)) - (height*s), y + (width*s) + (height*c)), new Point2D(x - (height*s), y + (height*c)));
+		List<Point2D> list = new ArrayList<>();
+		list.add(new Point2D(x, y));
+		list.add(new Point2D(x + (width * c), y + (width * s)));
+		list.add(new Point2D((x + (width*c)) - (height*s), y + (width*s) + (height*c)));
+		list.add(new Point2D(x - (height*s), y + (height*c)));
+		return list;
+	}
+	
+	@Override
+	public boolean isInside(Point2D p) {
+		float c = (float) Math.cos(rotation);
+		float s = (float) Math.sin(rotation);
+		float x0 = p.x - x;
+		float y0 = p.y - y;
+		float x =  x0 * c + y0 * s;
+		float y =  y0 * c - x0 * s;
+		if(x < 0)return false;
+		if(y < 0)return false;
+		if(x > width)return false;
+		if(y > height)return false;
+		return true;
+	}
+	
+	@Override
+	public int getPointsSize() {
+		return 4;
 	}
 	
 	@Override
@@ -75,7 +101,7 @@ public class Rectangle extends Shape2D {
 	
 	@Override
 	public void rotate(Point2D point, double ang) {
-		rotation -= ang;
+		rotation += ang;
 		Point2D p = new Point2D(x, y);
 		p.rotate(point, ang);
 		x = p.getX();
@@ -95,13 +121,13 @@ public class Rectangle extends Shape2D {
 	}
 	
 	@Override
-	public void transleteX(Translete t) {
-		x = t.translete(x);
+	public void transleteX(Function<Float, Float> t) {
+		x = t.apply(x);
 	}
 	
 	@Override
-	public void transleteY(Translete t) {
-		y = t.translete(y);
+	public void transleteY(Function<Float, Float> t) {
+		y = t.apply(y);
 	}
 
 	@Override

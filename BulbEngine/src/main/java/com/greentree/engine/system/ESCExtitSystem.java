@@ -15,7 +15,6 @@ public class ESCExtitSystem extends GameSystem {
 	@Override
 	protected void start() {
 		addListener(new KeyAdapter() {
-			private static final long serialVersionUID = 1L;
 			
 			@Override
 			public void keyPress(int key) {

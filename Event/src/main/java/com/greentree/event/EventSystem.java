@@ -3,10 +3,8 @@ package com.greentree.event;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Queue;
 
 import com.greentree.common.ClassUtil;
 import com.greentree.common.collection.HashMapClassTree;
@@ -17,14 +15,12 @@ import com.greentree.common.logger.Log;
 public class EventSystem implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	private final Queue<Event> eventQuery;
 	private final OneClassSet<ListenerManager> listenerManagers;
 	private final WeakClassTree<Event> eventPool;
 	
 	public EventSystem() {
 		this.eventPool        = new HashMapClassTree<>();
 		this.listenerManagers = new OneClassSet<>();
-		this.eventQuery       = new LinkedList<>();
 	}
 	
 	public boolean addListener(final Listener listener) {
@@ -48,10 +44,11 @@ public class EventSystem implements Serializable {
 	protected void deleteEvent(final Event event) {
 		eventPool.add(event);
 	}
-	
+
 	public void event(final Event event) {
 		Objects.requireNonNull(event, "event is null");
-		this.eventQuery.add(event);
+		for(final ListenerManager l : this.listenerManagers) l.event(event);
+		this.deleteEvent(event);
 	}
 	
 	public <T extends Event> T get(final Class<T> clazz) {
@@ -84,20 +81,8 @@ public class EventSystem implements Serializable {
 				this.addListenerManager(lm);
 			}
 	}
-	
-	public void update() {
-		synchronized(this.eventQuery) {
-			while(!this.eventQuery.isEmpty()) {
-				final Event event = this.eventQuery.remove();
-				for(final ListenerManager l : this.listenerManagers) l.event(event);
-				this.deleteEvent(event);
-			}
-		}
-	}
 
 	public void clear() {
-		update();
 		listenerManagers.clear();
-		eventQuery.clear();
 	}
 }

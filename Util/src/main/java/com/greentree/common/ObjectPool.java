@@ -9,18 +9,11 @@ import java.util.List;
  *
  */
 public class ObjectPool<E> {
-	
+
 	private final List<SoftReference<E>> buffer;
-	
+
 	public ObjectPool() {
 		this.buffer = new ArrayList<>();
-	}
-	
-	public final E get(){
-		if(buffer.isEmpty()) return null;
-		E obj = buffer.remove(0).get();
-		if(obj == null)return get();
-		return obj;
 	}
 
 	public final void add(E object) {
@@ -32,5 +25,12 @@ public class ObjectPool<E> {
 	public boolean contains(E object) {
 		return buffer.contains(new SoftReference<>(object));
 	}
-	
+
+	public final E get(){
+		if(buffer.isEmpty()) return null;
+		E obj = buffer.remove(0).get();
+		if(obj == null)return get();
+		return obj;
+	}
+
 }

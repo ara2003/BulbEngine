@@ -5,9 +5,8 @@ import java.util.Comparator;
 
 import com.google.common.collect.Table;
 import com.greentree.common.collection.DoubleSet;
-import com.greentree.common.pair.UnOrentetPair;
-import com.greentree.engine.collizion.event.CollisionEvent;
-import com.greentree.engine.collizion.event.CollisionEvent.EventType;
+import com.greentree.engine.collizion.event.CollisionListEvent;
+import com.greentree.engine.collizion.event.CollisionListenerManager;
 import com.greentree.engine.core.Events;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.component.ComponentList;
@@ -15,45 +14,39 @@ import com.greentree.engine.core.layer.Layer;
 import com.greentree.engine.core.object.GameSystem;
 
 public class ColliderSystem extends GameSystem {
-	
-	private final DoubleSet<ColliderComponent> lastFream = new DoubleSet<>();
+
 	private final DoubleSet<ColliderComponent> nowFream = new DoubleSet<>();
-	
-	@EditorData
+	@EditorData(required = true)
 	private Table<Layer, Layer, Boolean> table;
+
+	@Override
+	protected void start() {
+		Events.getEventsystem().addListenerManager(new CollisionListenerManager());
+	}
+	
+	private boolean layerIntersect(final ColliderComponent a, final ColliderComponent b) {
+		if(table.contains(b.getObject().getLayer(), a.getObject().getLayer()))
+			return table.get(b.getObject().getLayer(), a.getObject().getLayer());
+		if(table.contains(a.getObject().getLayer(), b.getObject().getLayer()))
+			return table.get(a.getObject().getLayer(), b.getObject().getLayer());
+		return true;
+	}
 	
 	@Override
 	public void update() {
-		final ComponentList<ColliderComponent> colliderComponent = this.getAllComponentsAsComponentList(ColliderComponent.class);
-		this.nowFream.clear();
-		//
+		final ComponentList<ColliderComponent> colliderComponent = this
+				.getAllComponentsAsComponentList(ColliderComponent.class);
+		nowFream.clear();
 		Collections.sort(colliderComponent, Comparator.comparing(ColliderComponent::getX));
 		for(int i = 0; i < colliderComponent.size(); i++) {
 			final ColliderComponent a = (ColliderComponent) colliderComponent.toArray()[i];
 			for(int j = i + 1; j < colliderComponent.size(); j++) {
 				final ColliderComponent b = (ColliderComponent) colliderComponent.toArray()[j];
-				if(a.isIntersect(b)) this.nowFream.addPair(a, b);
+				if(!layerIntersect(a, b)) continue;
+				if(a.isIntersect(b)) nowFream.addPair(a, b);
 				else break;
 			}
 		}
-		for(final UnOrentetPair<ColliderComponent> p : this.nowFream) if(this.lastFream.remove(p)) {
-			p.first.getAction().collizionStay(p.second);
-			p.second.getAction().collizionStay(p.first);
-			Events.event(new CollisionEvent(EventType.STAY, p.first, p.second));
-			Events.event(new CollisionEvent(EventType.STAY, p.second, p.first));
-		}else {
-			p.first.getAction().collizionEnter(p.second);
-			p.second.getAction().collizionEnter(p.first);
-			Events.event(new CollisionEvent(EventType.ENTER, p.first, p.second));
-			Events.event(new CollisionEvent(EventType.ENTER, p.second, p.first));
-		}
-		for(final UnOrentetPair<ColliderComponent> p : this.lastFream) {
-			p.first.getAction().collizionExit(p.second);
-			p.second.getAction().collizionExit(p.first);
-			Events.event(new CollisionEvent(EventType.EXIT, p.first, p.second));
-			Events.event(new CollisionEvent(EventType.EXIT, p.second, p.first));
-		}
-		this.lastFream.clear();
-		this.lastFream.addAll(this.nowFream);
+		Events.event(new CollisionListEvent(nowFream));
 	}
 }

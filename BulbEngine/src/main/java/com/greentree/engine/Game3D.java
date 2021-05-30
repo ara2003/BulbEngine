@@ -10,6 +10,8 @@ import com.greentree.engine.core.GameCore;
 import com.greentree.engine.core.Properties;
 import com.greentree.engine.core.RootFiles;
 import com.greentree.engine.core.SceneLoader;
+import com.greentree.engine.core.system.UpdatingComponentSystem;
+import com.greentree.engine.navmap.NavMeshSystem;
 import com.greentree.engine.render.CameraRenderSystem;
 import com.greentree.engine.render.ui.Button;
 import com.greentree.engine.system.ESCExtitSystem;
@@ -30,7 +32,7 @@ public class Game3D extends GameCore {
 		Properties.loadProperty(new File(RootFiles.getRoot(), "game.properties"));
 		GameCore.setBuilder(new BasicXMlBuilder(Transform.class.getPackageName(),
 				CircleColliderComponent.class.getPackageName(), Button.class.getPackageName(),
-				CameraRenderSystem.class.getPackageName(), ESCExtitSystem.class.getPackageName()));
+				CameraRenderSystem.class.getPackageName(), ESCExtitSystem.class.getPackageName(), UpdatingComponentSystem.class.getPackageName(), NavMeshSystem.class.getPackageName()));
 		Windows.getWindow().makeCurrent();
 		Graphics.clearColor(.6f, .6f, .6f);
 		Graphics.setClearDepth(1.0);
@@ -50,7 +52,7 @@ public class Game3D extends GameCore {
 	public static void start(final String[] args) {
 		Game3D.start("Game", args);
 	}
-	
+
 	protected Game3D() {
 	}
 }

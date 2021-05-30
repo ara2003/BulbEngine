@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 /** @author Arseny Latyshev */
 public interface Shape<A extends AABB<A>, P extends Point<A, P, S>, S extends Shape<A, P, S>> {
 	
+	boolean isInside(P p);
 	float distanseSqr(P p);
 	
 	default float distanse(P p) {
@@ -21,5 +22,5 @@ public interface Shape<A extends AABB<A>, P extends Point<A, P, S>, S extends Sh
 	List<P> getPoints();
 	float getRadius();
 	boolean isIntersect(S other);
-	void moveTo(P p); 
+	S moveTo(P p); 
 }
