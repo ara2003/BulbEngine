@@ -45,15 +45,15 @@
 			 <artifactId>math</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.greentree.common</groupId>
+			 <artifactId>geometry</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
 		<!-- bulb engine -->
 		<dependency>
 			<groupId>com.greentree.common</groupId>
 			 <artifactId>graphics</artifactId>
-			<version>0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.greentree.bulbengine</groupId>
-			 <artifactId>geometry</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -62,7 +62,7 @@
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>com.greentree.bulbengine</groupId>
+			<groupId>com.greentree.common</groupId>
 			<artifactId>event</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>

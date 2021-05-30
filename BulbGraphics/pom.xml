@@ -76,7 +76,7 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>com.greentree.bulbengine</groupId>
+			<groupId>com.greentree.common</groupId>
 			<artifactId>event</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
