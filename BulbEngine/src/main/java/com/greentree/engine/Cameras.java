@@ -1,6 +1,5 @@
 package com.greentree.engine;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -12,7 +11,7 @@ import com.greentree.engine.render.CameraComponent;
 /** @author Arseny Latyshev */
 public class Cameras {
 	
-	protected static WeakReference<CameraComponent> mainCamera = new WeakReference<CameraComponent>(null);
+	protected static CameraComponent mainCamera = null;
 	
 	protected static CameraComponent foundCameraInScene() {
 		final List<CameraComponent> cameras = GameCore.getCurrentScene().getAllComponents(CameraComponent.class);
@@ -23,9 +22,13 @@ public class Cameras {
 	}
 	
 	public static CameraComponent getMainCamera() {
-		if(mainCamera.get() == null) {
-			mainCamera = new WeakReference<CameraComponent>(foundCameraInScene());
+		if(mainCamera != null)
+		if(mainCamera.getObject().isDestroy()) {
+			mainCamera = null;
 		}
-		return mainCamera.get();
+		if(mainCamera == null) {
+			mainCamera = foundCameraInScene();
+		}
+		return mainCamera;
 	}
 }

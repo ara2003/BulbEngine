@@ -16,8 +16,6 @@ public class Events {
 	
 	public static void clear() {
 		Events.eventSystem.clear();
-		
-		
 	}
 	
 	public static void event(final Event event) {

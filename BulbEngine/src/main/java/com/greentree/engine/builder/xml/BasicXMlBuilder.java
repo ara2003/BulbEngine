@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -48,15 +46,17 @@ import com.greentree.engine.core.object.GameSystem;
 
 /** @author Arseny Latyshev */
 public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
-	
+
+	private static String getName(final Field field) {
+		String xmlName = field.getAnnotation(EditorData.class).name();
+		if(!xmlName.isBlank()) return xmlName;
+		xmlName = field.getName();
+		if(!xmlName.isBlank()) return xmlName;
+		throw new IllegalArgumentException("could not find a suitable name of " + field);
+	}
 	private final LoaderList loaders = new LoaderList();
-	
-	private final Collection<String> packages;
-	
-	public BasicXMlBuilder(final String... packages) {
-		this.packages = new ArrayList<>(packages.length);
-		Collections.addAll(this.packages, packages);
-		
+
+	{
 		loaders.addLoader(new FloatLoader());
 		loaders.addLoader(new IntegerConstLoader());
 		loaders.addLoader(new IntegerLoader());
@@ -77,10 +77,10 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		loaders.addLoader(new ListLoader());
 		loaders.addLoader(new MapLoader());
 		loaders.addLoader(new TableLoader());
-		
+
 		loaders.addLoader(new ConstructorLoader());
 	}
-	
+
 	@Override
 	public GameComponent createComponent(final Class<? extends GameComponent> clazz) {
 		try {
@@ -91,7 +91,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 			return null;
 		}
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public GameComponent createComponent(final XMLElement xmlElement) {
@@ -100,7 +100,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		final Class<? extends GameComponent> clazz = (Class<? extends GameComponent>) loadClass(type);
 		return this.createComponent(clazz);
 	}
-	
+
 	@Override
 	public GameObject createPrefab(final String prefabPath, final GameObjectParent parent) {
 		final InputStream in     = ResourceLoader.getResourceAsStream(prefabPath + ".xml");
@@ -110,7 +110,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		object.initSratr();
 		return object;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private GameSystem createSystem(final XMLElement xmlElement) {
 		try {
@@ -121,7 +121,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public void fillComponent(final GameComponent component, final XMLElement in) {
 		try {
@@ -130,7 +130,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 			Log.warn("not create component " + in, e);
 		}
 	}
-	
+
 	@Override
 	protected void fillObject(final GameObject object, final XMLElement in) {
 		final List<Pair<GameObject, XMLElement>> contextObject = new ArrayList<>();
@@ -139,21 +139,20 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 			contextObject.add(new Pair<>(сhildren, element));
 			object.addChildren(сhildren);
 		}
-		
+
 		for(final XMLElement element : in.getChildrens("component")) {
 			final GameComponent component = this.createComponent(element);
 			if(component == null) continue;
 			pushComponent(component, element);
 			object.addComponent(component);
 		}
-		
+
 		for(final Pair<GameObject, XMLElement> element : contextObject) this.fillObject(element.first, element.second);
 	}
-	
+
+
 	@Override
 	protected void fillScene(final GameScene scene, final XMLElement in) {
-		for(final XMLElement element : in.getChildrens("package")) packages.add(element.getContent());
-		
 		for(final XMLElement element : in.getChildrens("layer")) scene.addLayer(getLayer(element.getContent()));
 		for(final XMLElement el : in.getChildrens("system")) {
 			final GameSystem system = createSystem(el);
@@ -161,21 +160,18 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 			scene.addSystem(system);
 			pushSystem(system, el);
 		}
-		
+
 		for(final XMLElement element : in.getChildrens("object")) {
 			final GameObject сhildren = this.createObject(element, scene);
 			if(сhildren == null) continue;
 			scene.addChildren(сhildren);
 			this.fillObject(сhildren, element);
 		}
-		
+
 		popComponents();
 		popSystems();
-		
-		for(final XMLElement element : in.getChildrens("package")) packages.remove(element.getContent());
 	}
-	
-	
+
 	@Override
 	protected void fillSystem(final GameSystem system, final XMLElement in) {
 		try {
@@ -184,33 +180,24 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 			Log.warn("not create component " + in, e);
 		}
 	}
-	
+
 	@Override
 	protected String getLayerName(final XMLElement in) {
 		final var v = in.getAttribute("layer");
-		
 		if(v == null) return "default";
 		if(v.isBlank()) return "default";
 		return v;
 	}
-	
+
 	@Override
 	protected String getName(final XMLElement in) {
 		return in.getAttribute("name", "name");
 	}
-	
-	private static String getName(final Field field) {
-		String xmlName = field.getAnnotation(EditorData.class).name();
-		if(!xmlName.isBlank()) return xmlName;
-		xmlName = field.getName();
-		if(!xmlName.isBlank()) return xmlName;
-		throw new IllegalArgumentException("could not find a suitable name of " + field);
-	}
-	
+
 	protected final Class<?> loadClass(final String name) {
-		return ClassUtil.loadClass(name, packages);
+		return ClassUtil.loadClass(name);
 	}
-	
+
 	@Override
 	public XMLElement parse(final InputStream inputStream) {
 		try {
@@ -220,7 +207,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 			return null;
 		}
 	}
-	
+
 	private void setFields(final Object object, final XMLElement attributes) {
 		final List<Field> allEditorDataFields = ClassUtil.getAllFieldsWithAnnotation(object.getClass(), EditorData.class);
 		{//Validator
@@ -232,43 +219,39 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		}
 		final Map<String, XMLElement> attributes0 = new HashMap<>(attributes.getChildrens().size());
 		for(final var a : attributes.getChildrens()) attributes0.put(a.getAttribute("name"), a.getChildren("data"));
-		for(final Field field : allEditorDataFields) {
-			try {
-				setValue(object, field, attributes0.get(BasicXMlBuilder.getName(field)));
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
+		for(final Field field : allEditorDataFields) try {
+			XMLElement xml = attributes0.get(BasicXMlBuilder.getName(field));
+			if(xml == null && field.getAnnotation(EditorData.class).required())
+				throw new IllegalArgumentException(String.format("required field(%s) not listed in %s", field, attributes));
+			setValue(object, field, xml);
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
-	
-	protected Object setValue(final Object obj, final Field f, final XMLElement xmlValue) throws Exception {
-		final boolean flag = f.canAccess(obj);
-		f.setAccessible(true);
+
+	protected Object setValue(final Object obj, final Field field, final XMLElement xmlValue) throws Exception {
+		final boolean flag = field.canAccess(obj);
+		field.setAccessible(true);
 		Object value = null;
-		try {
-			if(xmlValue == null)throw new NullPointerException(obj + " " + f + " " + xmlValue);
-			value = loaders.parse(f, xmlValue);
-		}catch(final Exception e) {
-			try {
-				value = f.get(obj);
-			}catch(final IllegalArgumentException e1) {
-			}catch(final IllegalAccessException e1) {
-			}finally {
-				f.setAccessible(flag);
-			}
-			if(value == null)throw e;
+		if(xmlValue == null) try {
+			value = field.get(obj);
+		}catch(final IllegalArgumentException | IllegalAccessException e1) {
+			throw new NullPointerException(obj + " " + field + " " + xmlValue);
+		}finally {
+			field.setAccessible(flag);
 		}
+		else value = loaders.parse(field, xmlValue);
 		if(value != null) {
-			f.setAccessible(true);
+			field.setAccessible(true);
 			try {
-				f.set(obj, value);
+				field.set(obj, value);
 			}catch(IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 			}finally {
-				f.setAccessible(flag);
+				field.setAccessible(flag);
 			}
 		}
 		return value;
 	}
-	
+
 }

@@ -44,6 +44,7 @@ public abstract class GameCore {
 		GameCore.builder = builder;
 		RootFiles.start(file);
 		Properties.loadArguments(args);
+		SceneLoader.loadScene("bootstrap-scene");
 		while(true) GameCore.gameLoop();
 	}
 	

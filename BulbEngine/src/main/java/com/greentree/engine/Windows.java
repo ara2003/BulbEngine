@@ -1,7 +1,6 @@
 package com.greentree.engine;
 
 import com.greentree.common.logger.Log;
-import com.greentree.engine.core.Properties;
 import com.greentree.graphics.Window;
 import com.greentree.graphics.window.SimpleWindow;
 
@@ -10,14 +9,20 @@ public class Windows {
 	
 	static SimpleWindow window;
 	
+	public static void createWindow(String title, int width, int height, boolean fullscreen){
+		if(window != null);
+		window = new SimpleWindow(title, width, height, true, fullscreen);
+		Log.info("Starting window " + width + "x" + height);
+	}
+	
 	public static Window getWindow() {
-		if(Windows.window == null) {
-			final int     width      = Integer.parseInt(Properties.getProperty("window.width").notNull().get());
-			final int     height     = Integer.parseInt(Properties.getProperty("window.height").notNull().get());
-			final boolean fullscreen = Boolean.parseBoolean(Properties.getProperty("window.fullscreen").notNull().get());
-			window = new SimpleWindow(Properties.getOrDefault("window.title", "blub window"), width, height, true, fullscreen);
-			Log.info("Starting display " + width + "x" + height);
-		}
+//		if(Windows.window == null) {
+//			final int     width      = Properties.getProperty("window.width").notNull().toInt();
+//			final int     height     = Properties.getProperty("window.height").notNull().toInt();
+//			final boolean fullscreen = Properties.getProperty("window.fullscreen").notNull().toBoolean();
+//			window = new SimpleWindow(Properties.getOrDefault("window.title", "blub window"), width, height, true, fullscreen);
+//			Log.info("Starting display " + width + "x" + height);
+//		}
 		return Windows.window;
 	}
 	

@@ -9,8 +9,6 @@ import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.component.StartGameComponent;
 import com.greentree.engine.geom2d.Capsule;
 import com.greentree.engine.geom2d.Circle;
-import com.greentree.engine.geom2d.Line2D;
-import com.greentree.engine.geom2d.Point2D;
 import com.greentree.engine.geom2d.Rectangle;
 
 

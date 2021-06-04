@@ -34,7 +34,7 @@ public class NavMeshAgent extends GameComponent {
 	}
 
 	public float getRadius() {
-		return 100;
+		return 40;
 	}
 	
 }

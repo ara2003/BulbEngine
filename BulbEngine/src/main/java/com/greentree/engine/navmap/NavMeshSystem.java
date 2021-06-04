@@ -19,20 +19,26 @@ import com.greentree.graphics.Graphics;
 public class NavMeshSystem extends GameSystem {
 
 	private NavMesh mesh;
-	private float radius;
-
+	private float radius = 100;
+//	{
+//		bake();
+//	}
 	public void bake(){
-		mesh = new NavMesh(getAllComponents(NavMeshObstacle.class), -1000, -1000, 2000, 2000);
+		mesh = new NavMesh(getAllComponents(NavMeshObstacle.class), -2000, -2000, 4000, 4000);
 	}
 
 	private boolean canGo(Vector2f from, Vector2f to) {
-		for(var a : getAllComponents(NavMeshObstacle.class))if(!a.canGo(from, to, radius))return false;
-		return true;
+		return getAllComponents(NavMeshObstacle.class).parallelStream().filter(e -> e.canGo(from, to, radius)).findAny().isPresent();
+	}
+	private boolean isInside(Vector2f vec) {
+		return getAllComponents(NavMeshObstacle.class).parallelStream().filter(e -> !e.isInside(vec, 100)).findAny().isPresent();
 	}
 
 	@Override
 	public void update() {
 		Cameras.getMainCamera().translateAsWorld();
+//		if(mesh == null)bake();
+//		mesh.draw();
 		for(NavMeshAgent agent : getAllComponents(NavMeshAgent.class)) {
 			radius = agent.getRadius();
 			LinkedList<Vector2f> points = (LinkedList<Vector2f>) agent.getPath();
@@ -40,13 +46,15 @@ public class NavMeshSystem extends GameSystem {
 			Transform t = agent.getComponent(Transform.class);
 			var point = points.getLast();
 			if(!canGo(t.xy(), point)) {
+//				if(isInside(point)) {
+//					points.removeLast();
+//					continue;
+//				}
 				if(mesh == null)bake();
 				var res = mesh.get(t.xy(), point);
-				System.out.println(points);
 				points.removeLast();
 				points.addAll(res);
-				System.out.println(points);
-				continue;
+//				continue;
 			}
 			float dx = point.x() - t.x();
 			float dy = point.y() - t.y();
@@ -69,17 +77,15 @@ public class NavMeshSystem extends GameSystem {
 				}
 			}
 		}
-		if(mesh == null)bake();
-		mesh.draw();
 		Cameras.getMainCamera().untranslate();
 	}
 	
 	public class NavMesh {
 
 		private boolean checkJoint(Vector2f a, Vector2f b){
-//			var dis = a.distanceSquared(b);
-//			if(dis > 250000)return false;
-//			if(dis < 300)return false;
+			var dis = a.distanceSquared(b);
+			if(dis > 90000)return false;
+			if(dis < 300)return false;
 			return NavMeshSystem.this.canGo(a, b);
 		}
 		
@@ -87,13 +93,14 @@ public class NavMeshSystem extends GameSystem {
 
 		public NavMesh(List<NavMeshObstacle> list, float x, float y, float w, float h) {
 			List<Vector2f> list0 = new ArrayList<>();
-			final float p = 200f;
-			for(float x0 = x; x0 < x+w; x0 += p)
+			final float p = 100f;
+			for(float x0 = x; x0 < x+w; x0 += p) {
 				for(float y0 = y; y0 < y+w; y0 += p) {
 					Vector2f vec = new Vector2f(x0, y0);
-					if(list.parallelStream().filter(e -> !e.isInside(vec, 100)).findAny().isPresent())
+					if(isInside(vec))
 						list0.add(vec);
 				}
+			}
 			g.addAll(list0);
 			for(Vector2f a : list0)
 				for(Vector2f b : list0)if(a == b)break;
@@ -119,23 +126,17 @@ public class NavMeshSystem extends GameSystem {
 		}
 
 		public Collection<? extends Vector2f> get(Vector2f from, Vector2f to) {
-			g.add(from);
-			for(Vector2f v : g.getVertex()) if(checkJoint(from, v))g.addJoint(from, v);
-
-			g.add(to);
-			for(Vector2f v : g.getVertex()) if(checkJoint(v, to)) g.addJoint(to, v);
-
-			System.out.println(from + " " + to);
-		 	System.out.println(g.getJoints(from).size());
-		 	System.out.println(g.getJoints(to).size());
+			boolean flag_from = !g.contains(from), flag_to = !g.contains(to);
 			
-			var res = g.getPathFinder(j -> (double)j.getA().distanceSquared(j.getB())).get(from, to);
-
-			res.remove(0);
-			System.out.println(res);
+			if(flag_from)for(Vector2f v : new ArrayList<>(g.getVertex())) if(checkJoint(from, v))g.addJoint(from, v);
+			if(flag_to)for(Vector2f v : new ArrayList<>(g.getVertex())) if(checkJoint(v, to)) g.addJoint(to, v);
 			
-			g.remove(to);
-			g.remove(from);
+			var res = g.getPathAStar(from, to, j -> (double)j.first.distanceSquared(j.second));
+			
+			if(flag_from)g.remove(to);
+			if(flag_to)g.remove(from);
+			
+			res.remove(res.size()-1);
 			return res;
 		}
 

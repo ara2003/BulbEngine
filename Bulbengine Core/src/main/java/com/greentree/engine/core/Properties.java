@@ -10,28 +10,33 @@ import java.util.Map;
 
 import com.greentree.common.Optional;
 import com.greentree.common.logger.Log;
+import com.greentree.engine.core.Properties.GameProperties.PropertyOptional;
 
 /** @author Arseny Latyshev */
+@Deprecated
 public class Properties {
-	
+
 	private final static GameProperties PROPERTIES = new GameProperties();
+	static {
+		PROPERTIES.putAll(System.getenv());
+	}
 	
 	public static String getOrDefault(final String string, final String string2) {
 		return Properties.PROPERTIES.getOrDefault(string, string2);
 	}
-	
+
 	public static GameProperties getProperties() {
 		return Properties.PROPERTIES;
 	}
-	
-	public static Optional<String> getProperty(final String key) {
+
+	public static PropertyOptional getProperty(final String key) {
 		return Properties.PROPERTIES.getProperty(key);
 	}
-	
+
 	public static void loadArguments(final String[] args) {
 		//TODO
 	}
-	
+
 	public static void loadProperty(final File file) {
 		if(!file.exists()) try {
 			file.createNewFile();
@@ -45,15 +50,14 @@ public class Properties {
 			Log.error("file " + file + " load exception", e);
 		}
 	}
-	
+
 	public static final class GameProperties extends HashMap<String, String> implements Map<String, String> {
-		
+
 		private static final long serialVersionUID = 1L;
-		
-		public Optional<String> getProperty(final String key) {
-			return new Optional<>(get(key));
+		public PropertyOptional getProperty(final String key) {
+			return new PropertyOptional(get(key));
 		}
-		
+
 		public void load(final InputStream inputStream) throws IOException {
 			final ByteArrayOutputStream result = new ByteArrayOutputStream();
 			final byte[]                buffer = new byte[1024];
@@ -69,8 +73,29 @@ public class Properties {
 				put(str[0], str[1]);
 			}
 		}
-		
-		
+
+		public static class PropertyOptional extends Optional<String> {
+
+			public PropertyOptional(String value) {
+				super(value);
+			}
+
+			@Override
+			public PropertyOptional notNull() {
+				return (PropertyOptional) super.notNull();
+			}
+			
+			public boolean toBoolean(){
+				return Boolean.parseBoolean(get());
+			}
+			
+			public int toInt(){
+				return Integer.parseInt(get());
+			}
+			
+		}
+
+
 	}
-	
+
 }

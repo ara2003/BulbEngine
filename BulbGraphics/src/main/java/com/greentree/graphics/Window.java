@@ -26,169 +26,166 @@ import org.lwjgl.system.MemoryUtil;
 
 /** @author Arseny Latyshev */
 public class Window implements AutoCloseable {
-	
-	
+
 	private final long id;
 	private int width, height;
-	
+
 	public Window(final String title, final int width, final int height, final boolean resizable, final boolean fullscreen) {
 		GLFW.glfwDefaultWindowHints();
 		GLFW.glfwWindowHint(GLFW.GLFW_DOUBLEBUFFER, GLFW.GLFW_TRUE);
-		if(resizable) GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
-		else GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
-		
-		
-		this.id = GLFW.glfwCreateWindow(width, height, title, MemoryUtil.NULL, MemoryUtil.NULL);
-		if(this.id == MemoryUtil.NULL) throw new IllegalStateException("Failed to create the GLFW window " + title);
-		
-		GLFW.glfwMakeContextCurrent(this.id);
-		GLFW.glfwSetWindowSizeCallback(this.id, (window, width0, height0)-> {
-			if(window != this.id) return;
+		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, resizable?GLFW.GLFW_TRUE:GLFW.GLFW_FALSE);
+
+		id = GLFW.glfwCreateWindow(width, height, title, MemoryUtil.NULL, MemoryUtil.NULL);
+		if(id == MemoryUtil.NULL) throw new IllegalStateException("Failed to create the BulbGL window " + title + " " + width + "x" + height + " fullscreen: " + fullscreen);
+
+		GLFW.glfwMakeContextCurrent(id);
+		GLFW.glfwSetWindowSizeCallback(id, (window, width0, height0)-> {
+			if(window != id) return;
 			this.width  = width0;
 			this.height = height0;
 			GL11.glViewport(0, 0, width0, height0);
 		});
 		this.width  = width;
 		this.height = height;
-		
-		if(fullscreen) GLFW.glfwSetWindowMonitor(this.id, GLFW.glfwGetPrimaryMonitor(), 0, 0, width, height, GLFW.GLFW_REFRESH_RATE);
+
+		if(fullscreen) GLFW.glfwSetWindowMonitor(id, GLFW.glfwGetPrimaryMonitor(), 0, 0, width, height, GLFW.GLFW_REFRESH_RATE);
 		else
 			try(MemoryStack stack = MemoryStack.stackPush()) {
 				final GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-				GLFW.glfwSetWindowPos(this.id, (vidmode.width() - width) / 2, (vidmode.height() - height) / 2);
+				GLFW.glfwSetWindowPos(id, (vidmode.width() - width) / 2, (vidmode.height() - height) / 2);
 			}
-		
+
 		final GLCapabilities glCapabilities = GL.createCapabilities(false);
 		if(null == glCapabilities) throw new IllegalStateException("Failed to load OpenGL native");
-		
-		GLFW.glfwShowWindow(this.id);
-		GLFW.glfwFocusWindow(this.id);
+
+		GLFW.glfwShowWindow(id);
+		GLFW.glfwFocusWindow(id);
 		GLFW.glfwSwapInterval(1);
 		GLFW.glfwMakeContextCurrent(0);
 	}
-	
+
 	public static long getCurrent() {
 		return GLFW.glfwGetCurrentContext();
 	}
-	
+
 	protected static void setCallback(final GLFWErrorCallbackI listener) {
 		GLFW.glfwSetErrorCallback(listener);
 	}
-	
+
 	protected static void setCallback(final GLFWJoystickCallbackI listener) {
 		GLFW.glfwSetJoystickCallback(listener);
 	}
-	
+
 	@Override
 	public void close() {
-		GLFW.glfwDestroyWindow(this.id);
+		GLFW.glfwDestroyWindow(id);
 	}
-	
+
 	public void getCursorPosition(final double[] x, final double[] y) {
-		GLFW.glfwGetCursorPos(this.id, x, y);
+		GLFW.glfwGetCursorPos(id, x, y);
 	}
-	
+
 	public int getHeight() {
-		return this.height;
+		return height;
 	}
-	
+
 	protected long getId() {
-		return this.id;
+		return id;
 	}
-	
+
 	public int getWidth() {
-		return this.width;
+		return width;
 	}
-	
+
 	public boolean isCurrent() {
-		return GLFW.glfwGetCurrentContext() == this.id;
+		return GLFW.glfwGetCurrentContext() == id;
 	}
-	
-	public void shouldClose() { 
-		GLFW.glfwSetWindowShouldClose(this.id, true);
+
+	public void shouldClose() {
+		GLFW.glfwSetWindowShouldClose(id, true);
 	}
-	
-	public boolean isShouldClose() { 
-		return GLFW.glfwWindowShouldClose(this.id);
+
+	public boolean isShouldClose() {
+		return GLFW.glfwWindowShouldClose(id);
 	}
-	
+
 	public void makeCurrent() {
-		GLFW.glfwMakeContextCurrent(this.id);
+		GLFW.glfwMakeContextCurrent(id);
 	}
-	
+
 	protected void setCallback(final GLFWDropCallbackI listener) {
-		GLFW.glfwSetDropCallback(this.id, listener);
+		GLFW.glfwSetDropCallback(id, listener);
 	}
-	
+
 	protected void setCallback(final GLFWFramebufferSizeCallbackI listener) {
-		GLFW.glfwSetFramebufferSizeCallback(this.id, listener);
+		GLFW.glfwSetFramebufferSizeCallback(id, listener);
 	}
-	
+
 	protected void setCallback(final GLFWKeyCallbackI listener) {
-		GLFW.glfwSetKeyCallback(this.id, listener);
+		GLFW.glfwSetKeyCallback(id, listener);
 	}
-	
+
 	protected void setCallback(final GLFWMonitorCallbackI listener) {
 		GLFW.glfwSetMonitorCallback(listener);
 	}
-	
+
 	protected void setCallback(final GLFWMouseButtonCallbackI listener) {
-		GLFW.glfwSetMouseButtonCallback(this.id, listener);
+		GLFW.glfwSetMouseButtonCallback(id, listener);
 	}
-	
+
 	protected void setCallback(final GLFWScrollCallbackI listener) {
-		GLFW.glfwSetScrollCallback(this.id, listener);
+		GLFW.glfwSetScrollCallback(id, listener);
 	}
-	
+
 	protected void setCallback(final GLFWWindowCloseCallbackI listener) {
-		GLFW.glfwSetWindowCloseCallback(this.id, listener);
+		GLFW.glfwSetWindowCloseCallback(id, listener);
 	}
-	
+
 	protected void setCallback(final GLFWWindowContentScaleCallbackI listener) {
-		GLFW.glfwSetWindowContentScaleCallback(this.id, listener);
+		GLFW.glfwSetWindowContentScaleCallback(id, listener);
 	}
-	
+
 	protected void setCallback(final GLFWWindowFocusCallbackI listener) {
-		GLFW.glfwSetWindowFocusCallback(this.id, listener);
+		GLFW.glfwSetWindowFocusCallback(id, listener);
 	}
-	
+
 	protected void setCallback(final GLFWWindowIconifyCallbackI listener) {
-		GLFW.glfwSetWindowIconifyCallback(this.id, listener);
+		GLFW.glfwSetWindowIconifyCallback(id, listener);
 	}
-	
+
 	protected void setCallback(final GLFWWindowMaximizeCallbackI listener) {
-		GLFW.glfwSetWindowMaximizeCallback(this.id, listener);
+		GLFW.glfwSetWindowMaximizeCallback(id, listener);
 	}
-	
+
 	protected void setCallback(final GLFWWindowPosCallbackI listener) {
-		GLFW.glfwSetWindowPosCallback(this.id, listener);
+		GLFW.glfwSetWindowPosCallback(id, listener);
 	}
-	
+
 	protected void setCallback(final GLFWWindowRefreshCallbackI listener) {
-		GLFW.glfwSetWindowRefreshCallback(this.id, listener);
+		GLFW.glfwSetWindowRefreshCallback(id, listener);
 	}
-	
-	//	protected void setCallback(final GLFWWindowSizeCallbackI listener) {
+
+	//	protected void setCallback(final BulbGLWindowSizeCallbackI listener) {
 	//		GLFW.glfwSetWindowSizeCallback(this.id, listener);
 	//	}
-	
+
 	public void swapBuffer() {
-		GLFW.glfwSwapBuffers(this.id);
+		GLFW.glfwSwapBuffers(id);
 	}
-	
+
 	public void updateEvents() {
 		GLFW.glfwPollEvents();
 	}
-	
-	public class Builder {
-		
+
+	public static class Builder {
+
 		public void setResizable(final boolean resizable) {
-			
+
 		}
 	}
 
 	protected void setCallback(GLFWCursorPosCallbackI listener) {
 		GLFW.glfwSetCursorPosCallback(id, listener);
 	}
-	
+
 }
