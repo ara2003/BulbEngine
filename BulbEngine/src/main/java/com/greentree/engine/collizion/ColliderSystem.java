@@ -5,13 +5,15 @@ import java.util.Comparator;
 
 import com.google.common.collect.Table;
 import com.greentree.common.collection.DoubleSet;
+import com.greentree.engine.Layers;
 import com.greentree.engine.collizion.event.CollisionListEvent;
 import com.greentree.engine.collizion.event.CollisionListenerManager;
 import com.greentree.engine.core.Events;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.component.ComponentList;
-import com.greentree.engine.core.layer.Layer;
 import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.layer.Layer;
+import com.greentree.engine.layer.LayerComponent;
 
 public class ColliderSystem extends GameSystem {
 
@@ -20,10 +22,10 @@ public class ColliderSystem extends GameSystem {
 	private Table<Layer, Layer, Boolean> table;
 
 	private boolean layerIntersect(final ColliderComponent a, final ColliderComponent b) {
-		if(table.contains(b.getObject().getLayer(), a.getObject().getLayer()))
-			return table.get(b.getObject().getLayer(), a.getObject().getLayer());
-		if(table.contains(a.getObject().getLayer(), b.getObject().getLayer()))
-			return table.get(a.getObject().getLayer(), b.getObject().getLayer());
+		if(table.contains(Layers.get(b.getObject()), Layers.get(a.getObject())))
+			return table.get(Layers.get(b.getObject()), Layers.get(a.getObject()));
+		if(table.contains(Layers.get(a.getObject()), Layers.get(b.getObject())))
+			return table.get(Layers.get(a.getObject()), Layers.get(b.getObject()));
 		return true;
 	}
 

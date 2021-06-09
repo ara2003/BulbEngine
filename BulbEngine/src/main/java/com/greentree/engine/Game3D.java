@@ -20,7 +20,7 @@ public class Game3D extends GameCore {
 	public static void exit() {
 		Windows.getWindow().shouldClose();
 	}
-
+	
 	public static void start(final String folder, final String[] args) {
 		RootFiles.start(folder);
 		GameCore.setBuilder(new BasicXMlBuilder());

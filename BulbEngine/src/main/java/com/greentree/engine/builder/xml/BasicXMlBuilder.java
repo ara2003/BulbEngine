@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -30,6 +31,7 @@ import com.greentree.data.loaders.value.ShortLoader;
 import com.greentree.data.loaders.value.StaticFieldLoader;
 import com.greentree.data.loaders.value.StringLoader;
 import com.greentree.data.loading.ResourceLoader;
+import com.greentree.engine.Layers;
 import com.greentree.engine.builder.loaders.GameComponentLoader;
 import com.greentree.engine.builder.loaders.IntegerConstLoader;
 import com.greentree.engine.builder.loaders.LayerLoader;
@@ -43,17 +45,13 @@ import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.object.GameObjectParent;
 import com.greentree.engine.core.object.GameScene;
 import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.layer.Layer;
+import com.greentree.engine.layer.LayerComponent;
+import com.greentree.engine.layer.LayerFactory;
 
 /** @author Arseny Latyshev */
 public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 
-	private static String getName(final Field field) {
-		String xmlName = field.getAnnotation(EditorData.class).name();
-		if(!xmlName.isBlank()) return xmlName;
-		xmlName = field.getName();
-		if(!xmlName.isBlank()) return xmlName;
-		throw new IllegalArgumentException("could not find a suitable name of " + field);
-	}
 	private final LoaderList loaders = new LoaderList();
 
 	{
@@ -81,6 +79,13 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		loaders.addLoader(new ConstructorLoader());
 	}
 
+	private static String getName(final Field field) {
+		String xmlName = field.getAnnotation(EditorData.class).name();
+		if(!xmlName.isBlank()) return xmlName;
+		xmlName = field.getName();
+		if(!xmlName.isBlank()) return xmlName;
+		throw new IllegalArgumentException("could not find a suitable name of " + field);
+	}
 	@Override
 	public GameComponent createComponent(final Class<? extends GameComponent> clazz) {
 		try {
@@ -133,6 +138,13 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 
 	@Override
 	protected void fillObject(final GameObject object, final XMLElement in) {
+		var layer = in.getAttribute("layer");
+		if(layer != null && !layer.isBlank()) {
+			final LayerComponent component = new LayerComponent();
+			ClassUtil.setField(component, "layer", Layers.get(layer));
+			object.addComponent(component);
+		}
+		
 		final List<Pair<GameObject, XMLElement>> contextObject = new ArrayList<>();
 		for(final XMLElement element : in.getChildrens("object")) {
 			final GameObject сhildren = this.createObject(element, object);
@@ -150,10 +162,8 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		for(final Pair<GameObject, XMLElement> element : contextObject) this.fillObject(element.first, element.second);
 	}
 
-
 	@Override
 	protected void fillScene(final GameScene scene, final XMLElement in) {
-		for(final XMLElement element : in.getChildrens("layer")) scene.addLayer(getLayer(element.getContent()));
 		for(final XMLElement el : in.getChildrens("system")) {
 			final GameSystem system = createSystem(el);
 			if(system == null) continue;
@@ -181,16 +191,17 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		}
 	}
 
-	@Override
-	protected String getLayerName(final XMLElement in) {
-		final var v = in.getAttribute("layer");
-		if(v == null) return "default";
-		if(v.isBlank()) return "default";
-		return v;
+	public final Layer getLayer(final String name) {
+		return Layers.get(name);
 	}
 
+	public final Layer getLayer(final XMLElement in) {
+		return getLayer(in.getAttribute("layer"));
+	}
+
+
 	@Override
-	protected String getName(final XMLElement in) {
+	protected String getObjectName(final XMLElement in) {
 		return in.getAttribute("name", "name");
 	}
 
@@ -215,7 +226,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 			final Set<String> xmlNamesToFind = new HashSet<>(allEditorDataFields.size());
 			for(final Field field : allEditorDataFields) xmlNamesToFind.add(BasicXMlBuilder.getName(field));
 			for(final XMLElement attribute : attributes.getChildrens())
-				if(!xmlNamesToFind.contains(getName(attribute)))
+				if(!xmlNamesToFind.contains(getObjectName(attribute)))
 					Log.warn("xml element " + object + " has value " + attribute + " and it is not used. [xmlNamesToFind=" + xmlNamesToFind + " attributes=" + attributes + "]");//не часть алгоритма
 		}
 		final Map<String, XMLElement> attributes0 = new HashMap<>(attributes.getChildrens().size());

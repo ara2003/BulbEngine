@@ -12,22 +12,18 @@ import com.greentree.common.logger.Log;
 import com.greentree.engine.core.Events;
 import com.greentree.engine.core.component.NewComponentEvent;
 import com.greentree.engine.core.component.RequireComponent;
-import com.greentree.engine.core.layer.Layer;
 import com.greentree.engine.core.system.RequireSystems;
 
 public final class GameObject extends GameObjectParent {
 
 	private final WeakClassTree<GameComponent> components;
 	private GameObjectParent parent;
-	private Layer layer;
 
-	public GameObject(final String name, final Layer layer, final GameObjectParent parent) {
+	public GameObject(final String name, final GameObjectParent parent) {
 		super(name);
 		components = new HashMapClassTree<>();
 		if(parent == null) throw new IllegalArgumentException("parent dosen\'t be null");
 		this.parent = parent;
-		if(!getScene().contains(layer)) throw new IllegalArgumentException("the scene does not contain layer [name=\"" + layer.getName() + "\"] settings");
-		this.layer = layer;
 		parent.addChildren(this);
 	}
 
@@ -50,21 +46,16 @@ public final class GameObject extends GameObjectParent {
 		getParent().removeChildren(this);
 		updateUpTreeComponents();
 		parent = null;
-		layer  = null;
 		return false;
 	}
 
 	public <T extends GameComponent> T getComponent(final Class<T> clazz) {
 		final List<? extends T> list = components.get(clazz);
 		if(list.isEmpty()) {
-			Log.warn("Component " + clazz.getSimpleName() + " not create in Node " + this);
+			Log.info("Component " + clazz.getSimpleName() + " not create in Node " + this);
 			return null;
 		}
 		return list.iterator().next();
-	}
-
-	public Layer getLayer() {
-		return layer;
 	}
 
 	@Override

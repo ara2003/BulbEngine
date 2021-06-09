@@ -2,7 +2,6 @@ package com.greentree.engine.core.builder;
 
 import java.io.InputStream;
 
-import com.greentree.engine.core.layer.Layer;
 import com.greentree.engine.core.object.GameComponent;
 import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.object.GameObjectParent;
@@ -27,8 +26,6 @@ public interface Builder {
 	void fillObject(GameObject emptyObjectBuilder, InputStream in);
 	void fillScene(GameScene emptyScene, InputStream in);
 	void fillSystem(GameSystem system, InputStream in);
-	//create System
-	Layer getLayer(String name);
 
 }
 

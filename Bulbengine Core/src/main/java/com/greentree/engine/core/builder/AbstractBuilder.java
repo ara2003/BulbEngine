@@ -8,8 +8,6 @@ import com.greentree.common.ClassUtil;
 import com.greentree.common.pair.Pair;
 import com.greentree.engine.core.Events;
 import com.greentree.engine.core.component.NewComponentEvent;
-import com.greentree.engine.core.layer.Layer;
-import com.greentree.engine.core.layer.LayerFactory;
 import com.greentree.engine.core.object.GameComponent;
 import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.object.GameObjectParent;
@@ -21,7 +19,6 @@ public abstract class AbstractBuilder<T> implements Builder {
 
 	private final List<Pair<GameComponent, T>> contextComponent = new ArrayList<>();
 	private final List<Pair<GameSystem, T>> contextSystem = new ArrayList<>();
-	private static final LayerFactory layerFactory = new LayerFactory();
 
 	@Override
 	public final GameComponent createComponent(final InputStream in) {
@@ -36,12 +33,13 @@ public abstract class AbstractBuilder<T> implements Builder {
 	}
 
 	public final GameObject createObject(final T in, final GameObjectParent parent) {
-		return new GameObject(this.getName(in), getLayer(this.getLayerName(in)), parent);
+		//TODO if(!getScene().contains(layer)) throw new IllegalArgumentException("the scene does not contain layer [name=\"" + layer.getName() + "\"] settings");
+		return new GameObject(this.getObjectName(in), parent);
 	}
 
 	@Override
 	public final GameScene createScene(final InputStream in) {
-		return new GameScene(this.getName(this.parse(in)));
+		return new GameScene(this.getObjectName(this.parse(in)));
 	}
 
 	@Override
@@ -77,18 +75,7 @@ public abstract class AbstractBuilder<T> implements Builder {
 
 	protected abstract void fillSystem(GameSystem system, T in);
 
-	@Override
-	public final Layer getLayer(final String name) {
-		return AbstractBuilder.layerFactory.get(name);
-	}
-
-	public final Layer getLayer(final T t) {
-		return getLayer(getLayerName(t));
-	}
-
-	protected abstract String getLayerName(T object);
-
-	protected abstract String getName(T in);
+	protected abstract String getObjectName(T in);
 
 	public abstract T parse(InputStream in);
 

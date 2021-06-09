@@ -1,8 +1,6 @@
 package com.greentree.engine.core.object;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,15 +9,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
 import com.greentree.common.logger.Logger;
-import com.greentree.engine.core.GameCore;
 import com.greentree.engine.core.SceneLoader;
-import com.greentree.engine.core.layer.Layer;
 import com.greentree.engine.core.system.RequireSystems;
 
 /** @author Arseny Latyshev */
 public final class GameScene extends GameObjectParent {
 
-	private final Collection<Layer> layers;
 	private final SystemCollection systems;
 	static {
 		try {
@@ -31,12 +26,6 @@ public final class GameScene extends GameObjectParent {
 	public GameScene(final String name) {
 		super(name);
 		systems = new SystemCollection();
-		layers  = new ArrayList<>();
-		layers.add(GameCore.getBuilder().getLayer("default"));
-	}
-
-	public void addLayer(final Layer layer) {
-		layers.add(layer);
 	}
 
 	public boolean addSystem(final GameSystem system) {
@@ -47,16 +36,12 @@ public final class GameScene extends GameObjectParent {
 		return systems.containsClass(class1);
 	}
 
-	public boolean contains(final Layer layer) {
-		return layers.contains(layer);
-	}
 
 	@Override
 	public boolean destroy() {
 		if(super.destroy()) return true;
 		for(final GameSystem obj : systems) obj.destroy();
 		systems.clear();
-		layers.clear();
 		return false;
 	}
 

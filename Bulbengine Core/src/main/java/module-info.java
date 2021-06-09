@@ -10,7 +10,6 @@ open module bulbengine.core {
 	exports com.greentree.engine.core.system;
 	exports com.greentree.engine.core.builder;
 	exports com.greentree.engine.core.object;
-	exports com.greentree.engine.core.layer;
 	exports com.greentree.engine.core;
 
 }
