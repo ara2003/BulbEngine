@@ -9,8 +9,8 @@ import com.greentree.engine.core.system.UpdatingComponentSystem;
 /** @author Arseny Latyshev */
 @RequireSystems(UpdatingComponentSystem.class)
 public abstract class UpdatingGameComponent extends GameComponent implements Updating {
-	
+
 	@Override
 	public abstract void update();
-	
+
 }

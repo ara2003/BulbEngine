@@ -8,7 +8,7 @@ import com.greentree.graphics.input.listener.manager.KeyListenerManager;
 public interface KeyListener extends Listener {
 
 	void keyPress(int key);
-	void keyRepeat(int key);
 	void keyRelease(int key);
-	
+	void keyRepeat(int key);
+
 }

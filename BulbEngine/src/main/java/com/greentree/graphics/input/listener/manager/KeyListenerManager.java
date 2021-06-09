@@ -8,11 +8,11 @@ import com.greentree.graphics.input.event.KeyRepleasedEvent;
 import com.greentree.graphics.input.listener.KeyListener;
 
 public class KeyListenerManager extends OneListenerListenerManager<Event, KeyListener> {
-	
+
 	public KeyListenerManager() {
 		super(KeyListener.class);
 	}
-	
+
 	@Override
 	public void event(final KeyListener l, final Event event) {
 		if(event instanceof KeyPressedEvent) {
@@ -28,7 +28,6 @@ public class KeyListenerManager extends OneListenerListenerManager<Event, KeyLis
 		if(event instanceof KeyRepeatedEvent) {
 			final KeyRepeatedEvent keyevent = (KeyRepeatedEvent) event;
 			l.keyRepeat(keyevent.getKey());
-			return;
 		}
 	}
 }

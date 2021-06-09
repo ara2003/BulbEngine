@@ -14,7 +14,6 @@ public class ShowColliders extends GameSystem {
 
 	@Override
 	protected void start() {
-
 	}
 
 	@Override

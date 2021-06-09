@@ -8,6 +8,7 @@ import com.greentree.engine.core.system.StartGameSystem;
 @RequireSystems({StartGameSystem.class})
 public abstract class StartGameComponent extends GameComponent implements Starting {
 
+	@Override
 	public abstract void start();
-	
+
 }

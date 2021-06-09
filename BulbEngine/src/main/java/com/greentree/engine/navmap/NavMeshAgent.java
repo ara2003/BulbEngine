@@ -20,21 +20,21 @@ public class NavMeshAgent extends GameComponent {
 	@EditorData
 	private float speed;
 	private final Deque<Vector2f> path = new LinkedList<>();
-	
+
 	public void addPathPoint(Vector2f point) {
 		path.push(point);
 	}
-	
+
 	public Deque<Vector2f> getPath() {
 		return path;
+	}
+
+	public float getRadius() {
+		return 40;
 	}
 
 	public float getSpeed() {
 		return speed;
 	}
 
-	public float getRadius() {
-		return 40;
-	}
-	
 }

@@ -19,11 +19,6 @@ public class ColliderSystem extends GameSystem {
 	@EditorData(required = true)
 	private Table<Layer, Layer, Boolean> table;
 
-	@Override
-	protected void start() {
-		Events.getEventsystem().addListenerManager(new CollisionListenerManager());
-	}
-	
 	private boolean layerIntersect(final ColliderComponent a, final ColliderComponent b) {
 		if(table.contains(b.getObject().getLayer(), a.getObject().getLayer()))
 			return table.get(b.getObject().getLayer(), a.getObject().getLayer());
@@ -31,7 +26,12 @@ public class ColliderSystem extends GameSystem {
 			return table.get(a.getObject().getLayer(), b.getObject().getLayer());
 		return true;
 	}
-	
+
+	@Override
+	protected void start() {
+		Events.getEventsystem().addListenerManager(new CollisionListenerManager());
+	}
+
 	@Override
 	public void update() {
 		final ComponentList<ColliderComponent> colliderComponent = this

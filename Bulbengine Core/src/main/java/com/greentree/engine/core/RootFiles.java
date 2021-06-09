@@ -8,18 +8,18 @@ import com.greentree.data.loading.ResourceLoader;
 
 /** @author Arseny Latyshev */
 public class RootFiles {
-	
+
 	private static File root, assets, debug;
 	private static boolean started;
-	
+
 	public static File getAssets() {
 		return RootFiles.assets;
 	}
-	
+
 	public static File getRoot() {
 		return RootFiles.root;
 	}
-	
+
 	public static void start(final String file) {
 		if(RootFiles.started) throw new UnsupportedOperationException();
 		RootFiles.started = true;
@@ -33,5 +33,5 @@ public class RootFiles {
 		ResourceLoader.addResourceLocation(new FileSystemLocation(RootFiles.assets));
 		ResourceLoader.addResourceLocation(new FileSystemLocation(RootFiles.root));
 	}
-	
+
 }

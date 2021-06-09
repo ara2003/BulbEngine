@@ -5,9 +5,9 @@ import java.util.Map;
 
 /** @author Arseny Latyshev */
 public final class LayerFactory {
-	
+
 	private final Map<String, Layer> map = new HashMap<>();
-	
+
 	public Layer get(final String name) {
 		final var v = map.get(name);
 		if(v != null) return v;
@@ -15,5 +15,5 @@ public final class LayerFactory {
 		map.put(name, k);
 		return k;
 	}
-	
+
 }

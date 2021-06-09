@@ -7,7 +7,7 @@ import com.greentree.graphics.input.event.MouseMovedEvent;
 import com.greentree.graphics.input.listener.MouseListener;
 
 public class MouseListenerManager extends OneListenerListenerManager<MouseEvent, MouseListener> {
-	
+
 	public MouseListenerManager() {
 		super(MouseListener.class);
 	}
@@ -18,29 +18,34 @@ public class MouseListenerManager extends OneListenerListenerManager<MouseEvent,
 			MouseMovedEvent	event = (MouseMovedEvent)mouseevent;
 			switch(event.getEventType()) {
 				case mouseDragged:
-						l.mouseDragged(event.getX1(), event.getY1(), event.getX2(), event.getY2());
-				break;
+					l.mouseDragged(event.getX1(), event.getY1(), event.getX2(), event.getY2());
+					break;
 				case mouseMoved:
-						l.mouseMoved(event.getX1(), event.getY1(), event.getX2(), event.getY2());
-				break;
+					l.mouseMoved(event.getX1(), event.getY1(), event.getX2(), event.getY2());
+					break;
 			}
 			return;
-		}	
+		}
 		if(mouseevent instanceof MouseClickEvent) {
 			MouseClickEvent	event = (MouseClickEvent)mouseevent;
 			switch(event.getEventType()) {
 				case mousePress:
 					l.mousePress(event.getButton(), event.getX(), event.getY());
-				break;
+					break;
 				case mouseRelease:
 					l.mouseRelease(event.getButton(), event.getX(), event.getY());
-				break;
+					break;
 				case mouseRepeat:
 					l.mouseRepeat(event.getButton(), event.getX(), event.getY());
-				break;
+					break;
 			}
-			return;
 		}
+	}
+
+	@Override
+	protected boolean isUse(MouseListener listener) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 

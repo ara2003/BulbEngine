@@ -10,22 +10,22 @@ import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.input.CameraMouseAdapter;
 import com.greentree.graphics.Graphics;
 
+/**
+ * @deprecated use ClickComponent
+ * @author User
+ *
+ */
 @RequireComponent({Transform.class})
+@Deprecated
 public class Button extends UIComponent {
 
-	@FunctionalInterface
-	public interface ButtonListener {
-
-		void click(int mouseButton);
-	}
-	
 	@EditorData()
 	private final float border = 2;
+
 	@EditorData(required = true)
 	String text;
 	private float width, height;
 	private final Action<ButtonListener> action = new Action<>();
-
 	private boolean click0(final int x, final int y) {
 		final Vector2f vec = position.xy();
 		if(x < vec.x - width / 2 - border) return false;
@@ -51,11 +51,17 @@ public class Button extends UIComponent {
 	public void start() {
 		super.start();
 		Events.addListener(new CameraMouseAdapter() {
-			
+
 			@Override
 			public void mousePress(final int button, final int x, final int y) {
 				if(Button.this.click0(x, y)) action.action(l->l.click(button));
 			}
 		});
+	}
+
+	@FunctionalInterface
+	public interface ButtonListener {
+
+		void click(int mouseButton);
 	}
 }

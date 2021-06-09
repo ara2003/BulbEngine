@@ -12,6 +12,6 @@ import com.greentree.engine.core.object.GameSystem;
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface RequireSystems{
-	
+
 	Class<? extends GameSystem>[] value();
 }

@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
@@ -14,12 +15,12 @@ import com.greentree.engine.core.GameCore;
 import com.greentree.engine.core.SceneLoader;
 import com.greentree.engine.core.layer.Layer;
 import com.greentree.engine.core.system.RequireSystems;
-import com.greentree.engine.core.system.collection.SimpleGroupSystemCollection;
-import com.greentree.engine.core.system.collection.SystemCollection;
 
 /** @author Arseny Latyshev */
 public final class GameScene extends GameObjectParent {
 
+	private final Collection<Layer> layers;
+	private final SystemCollection systems;
 	static {
 		try {
 			Log.createFileType("update scene");
@@ -27,12 +28,9 @@ public final class GameScene extends GameObjectParent {
 			e.printStackTrace();
 		}
 	}
-	private final Collection<Layer> layers;
-	private final SystemCollection systems;
-
 	public GameScene(final String name) {
 		super(name);
-		systems = new SimpleGroupSystemCollection();
+		systems = new SystemCollection();
 		layers  = new ArrayList<>();
 		layers.add(GameCore.getBuilder().getLayer("default"));
 	}
@@ -56,7 +54,7 @@ public final class GameScene extends GameObjectParent {
 	@Override
 	public boolean destroy() {
 		if(super.destroy()) return true;
-		for(final GameSystem obj : systems.getSystemIterable()) obj.destroy();
+		for(final GameSystem obj : systems) obj.destroy();
 		systems.clear();
 		layers.clear();
 		return false;
@@ -66,10 +64,14 @@ public final class GameScene extends GameObjectParent {
 		return systems.get(clazz);
 	}
 
+	public boolean isCurrent() {
+		return this == SceneLoader.getCurrentScene();
+	}
+
 	@Override
 	public void start() {
-		if(!Validator.checkRequire(systems.getSystemIterable())) Log.error(
-				"system " + Validator.getBrokRequireClass(systems.getSystemIterable()) + " require is not fulfilled \n" + this);
+		if(!Validator.checkRequire(systems)) Log.error(
+				"system " + Validator.getBrokRequireClass(systems) + " require is not fulfilled \n" + this);
 
 		systems.initSratr();
 		for(final GameObject object : childrens) object.initSratr();
@@ -97,7 +99,33 @@ public final class GameScene extends GameObjectParent {
 		for(final GameObject object : childrens) allTreeComponents.addAll(object.getAllComponents(GameComponent.class));
 	}
 
+	private final class SystemCollection extends CopyOnWriteArrayList<GameSystem> {
+		private static final long serialVersionUID = 1L;
+
+		public <S extends GameSystem> boolean containsClass(final Class<S> clazz) {
+			return null != get(clazz);
+		}
+
+		@SuppressWarnings("unchecked")
+		public <S extends GameSystem> S get(final Class<S> clazz) {
+			for(GameSystem e : this) if(clazz.isAssignableFrom(clazz))return (S) e;
+			return null;
+		}
+
+		public void initSratr() {
+			forEach(GameSystem::initSratr);
+		}
+
+		public void update() {
+			forEach(GameSystem::update);
+		}
+
+	}
+
 	private final static class Validator {
+
+		private Validator() {
+		}
 
 		public static boolean checkRequire(final Iterable<GameSystem> systems) {
 			A : for(final Class<? extends GameSystem> requireClases : Validator.getRequireClasses(systems)) {
@@ -115,6 +143,7 @@ public final class GameScene extends GameObjectParent {
 			return null;
 		}
 
+
 		public static Set<Class<? extends GameSystem>> getRequireClasses(final Iterable<GameSystem> components) {
 			final Set<Class<? extends GameSystem>> requireComponents = new HashSet<>();
 			for(final GameSystem com : components)
@@ -122,14 +151,6 @@ public final class GameScene extends GameObjectParent {
 					Collections.addAll(requireComponents, rcom.value());
 			return requireComponents;
 		}
-
-
-		private Validator() {
-		}
-	}
-
-	public boolean isCurrent() {
-		return this == SceneLoader.getCurrentScene();
 	}
 
 }

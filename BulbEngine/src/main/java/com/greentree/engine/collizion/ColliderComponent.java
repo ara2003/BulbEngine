@@ -18,78 +18,14 @@ import com.greentree.engine.geom2d.Shape2D;
 public abstract class ColliderComponent extends StartUpdatingGameComponent implements Sized {
 
 
-	/** @author Arseny Latyshev */
-	public class CollisionAction {
-
-		private final EventAction<ColliderComponent> enterActon, exitActon, stayActon;
-
-		public CollisionAction() {
-			enterActon = new EventAction<>();
-			exitActon = new EventAction<>();
-			stayActon = new EventAction<>();
-		}
-
-		public final void addEnterListener(final Consumer<ColliderComponent> c) {
-			enterActon.addListener(e-> {
-				if(e.isDestroy()) return;
-				c.accept(e);
-			});
-		}
-
-
-		public final void addEnterObjectListener(final Consumer<GameObject> c) {
-			addEnterListener(e->c.accept(e.getObject()));
-		}
-
-		public final void addExitListener(final Consumer<ColliderComponent> c) {
-			exitActon.addListener(e-> {
-				if(e.isDestroy()) return;
-				c.accept(e);
-			});
-		}
-
-		public final void addExitObjectListener(final Consumer<GameObject> c) {
-			addExitListener(e->c.accept(e.getObject()));
-		}
-
-		public final void addStayListener(final Consumer<ColliderComponent> c) {
-			stayActon.addListener(e-> {
-				if(e.isDestroy()) return;
-				c.accept(e);
-			});
-		}
-
-		public final void addStayObjectListener(final Consumer<GameObject> c) {
-			addStayListener(e->c.accept(e.getObject()));
-		}
-
-		public final void collizionEnter(final ColliderComponent component) {
-			if(isDestroy()) return;
-			if(component.isDestroy()) return;
-			enterActon.action(component);
-		}
-
-		public final void collizionExit(final ColliderComponent component) {
-			if(isDestroy()) return;
-			if(component.isDestroy()) return;
-			exitActon.action(component);
-		}
-
-		public final void collizionStay(final ColliderComponent component) {
-			if(isDestroy()) return;
-			if(component.isDestroy()) return;
-			stayActon.action(component);
-		}
-	}
-
 	private Shape2D shape;
 
 	private final CollisionAction action;
+
 	private float x, y;
 	public ColliderComponent() {
 		action = new CollisionAction();
 	}
-
 	protected abstract Shape2D generateShape();
 
 	public final CollisionAction getAction() {
@@ -155,5 +91,69 @@ public abstract class ColliderComponent extends StartUpdatingGameComponent imple
 
 	@Override
 	public final void update() {
+	}
+
+	/** @author Arseny Latyshev */
+	public class CollisionAction {
+
+		private final EventAction<ColliderComponent> enterActon, exitActon, stayActon;
+
+		public CollisionAction() {
+			enterActon = new EventAction<>();
+			exitActon = new EventAction<>();
+			stayActon = new EventAction<>();
+		}
+
+		public final void addEnterListener(final Consumer<ColliderComponent> c) {
+			enterActon.addListener(e-> {
+				if(e.isDestroy()) return;
+				c.accept(e);
+			});
+		}
+
+
+		public final void addEnterObjectListener(final Consumer<GameObject> c) {
+			addEnterListener(e->c.accept(e.getObject()));
+		}
+
+		public final void addExitListener(final Consumer<ColliderComponent> c) {
+			exitActon.addListener(e-> {
+				if(e.isDestroy()) return;
+				c.accept(e);
+			});
+		}
+
+		public final void addExitObjectListener(final Consumer<GameObject> c) {
+			addExitListener(e->c.accept(e.getObject()));
+		}
+
+		public final void addStayListener(final Consumer<ColliderComponent> c) {
+			stayActon.addListener(e-> {
+				if(e.isDestroy()) return;
+				c.accept(e);
+			});
+		}
+
+		public final void addStayObjectListener(final Consumer<GameObject> c) {
+			addStayListener(e->c.accept(e.getObject()));
+		}
+
+		public final void collizionEnter(final ColliderComponent component) {
+			if(isDestroy()) return;
+			if(component.isDestroy()) return;
+			enterActon.action(component);
+		}
+
+		public final void collizionExit(final ColliderComponent component) {
+			if(isDestroy()) return;
+			if(component.isDestroy()) return;
+			exitActon.action(component);
+		}
+
+		public final void collizionStay(final ColliderComponent component) {
+			if(isDestroy()) return;
+			if(component.isDestroy()) return;
+			stayActon.action(component);
+		}
 	}
 }

@@ -5,15 +5,15 @@ import com.greentree.engine.Windows;
 
 /** @author Arseny Latyshev */
 public class IntegerConstLoader extends PrimitiveLoader<Integer> {
-	
+
 	public IntegerConstLoader() {
 		super(int.class);
 	}
-	
+
 	@Override
 	public Integer parse(final String value) {
-		if(value.equals("window::width")) return Windows.getWindow().getWidth();
-		if(value.equals("window::height")) return Windows.getWindow().getHeight();
+		if("window::width".equals(value)) return Windows.getWindow().getWidth();
+		if("window::height".equals(value)) return Windows.getWindow().getHeight();
 		throw new UnsupportedOperationException(value + " is not Integer Const");
 	}
 }

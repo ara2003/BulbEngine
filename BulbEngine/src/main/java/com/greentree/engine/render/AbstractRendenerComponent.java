@@ -7,14 +7,14 @@ import com.greentree.engine.core.component.StartGameComponent;
 /** @author Arseny Latyshev */
 @RequireComponent({Transform.class})
 public abstract class AbstractRendenerComponent extends StartGameComponent {
-	
+
 	protected Transform position;
-	
+
+	public abstract void render();
+
 	@Override
 	public void start() {
-		this.position = this.getComponent(Transform.class);
+		position = this.getComponent(Transform.class);
 	}
-	
-	public abstract void render();
-	
+
 }

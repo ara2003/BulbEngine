@@ -5,29 +5,29 @@ import com.greentree.graphics.Color;
 import com.greentree.graphics.Graphics;
 
 public final class Text extends UIComponent {
-	
+
 	@EditorData
 	private final Color color = Color.darkGray;
 	@EditorData(required = true)
 	private String text;
-	private float w, h;
-	
+	private float h;
+
 	public String getText() {
-		return this.text;
+		return text;
 	}
-	
+
 	@Override
 	public void render() {
-		this.w = Graphics.getFont().getWidth(this.text);
-		this.h = Graphics.getFont().getHeight(this.text);
-		this.color.bind();
-		Graphics.getFont().drawString(this.position.x() - this.w / 2, this.position.y() - this.h / 2, this.text);
+		float w = Graphics.getFont().getWidth(text);
+		h = Graphics.getFont().getHeight(text);
+		color.bind();
+		Graphics.getFont().drawString(position.x() - w / 2, position.y() - h / 2, text);
 	}
-	
+
 	public void setText(final String text) {
 		this.text = text;
 	}
-	
+
 	@Override
 	public void start() {
 		super.start();

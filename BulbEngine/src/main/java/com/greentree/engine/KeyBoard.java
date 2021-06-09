@@ -10,14 +10,14 @@ import com.greentree.graphics.input.event.KeyRepleasedEvent;
  *
  */
 public abstract class KeyBoard {
-	
+
 	static {
 		Windows.window.getKeyPress().addListener(e -> Events.event(KeyPressedEvent.getInstanse(Events.getEventsystem(), e)));
 		Windows.window.getKeyRelease().addListener(e -> Events.event(KeyRepleasedEvent.getInstanse(Events.getEventsystem(), e)));
 		Windows.window.getKeyRepeat().addListener(e -> Events.event(KeyRepeatedEvent.getInstanse(Events.getEventsystem(), e)));
 	}
-	
+
 	public static void init(){
 	}
-	
+
 }

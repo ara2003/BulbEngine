@@ -9,7 +9,7 @@ import com.greentree.graphics.input.event.MouseMovedEvent;
  *
  */
 public class Mouse {
-	
+
 	private final static boolean[] mouseButton = new boolean[2];
 	private static int mouseX, mouseY;
 	private static boolean ignre = true;
@@ -32,10 +32,18 @@ public class Mouse {
 			Events.event(MouseClickEvent.getInstanse(Events.getEventsystem(), MouseClickEvent.EventType.mouseRepeat, b, mouseX, mouseY));
 		});
 	}
-	
+
 	public static boolean anyButtonPressed() {
 		for(var b : mouseButton)if(b)return true;
 		return false;
+	}
+
+	public static float getMouseX() {
+		return mouseX;
+	}
+
+	public static float getMouseY() {
+		return mouseY;
 	}
 
 	public static void setMousePos(int x, int y) {
@@ -43,12 +51,4 @@ public class Mouse {
 		Windows.window.setMousePos(x, y);
 	}
 
-	public static float getMouseY() {
-		return mouseY;
-	}
-
-	public static float getMouseX() {
-		return mouseX;
-	}
-	
 }

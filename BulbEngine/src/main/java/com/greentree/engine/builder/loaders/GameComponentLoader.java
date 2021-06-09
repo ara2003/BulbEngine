@@ -18,7 +18,7 @@ public class GameComponentLoader extends AbstractLoader<GameComponent> implement
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T parse(final Class<T> clazz, final String value) throws Exception {
-		
+
 		final List<GameObject> list = GameCore.getCurrentScene().findObjectsWithName(value);
 		if(!list.isEmpty()) return (T) list.get(0).getComponent(clazz.asSubclass(GameComponent.class));
 		return null;

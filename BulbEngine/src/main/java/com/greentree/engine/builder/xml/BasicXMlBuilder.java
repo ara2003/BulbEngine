@@ -209,6 +209,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 	}
 
 	private void setFields(final Object object, final XMLElement attributes) {
+		if(object.getClass().getAnnotation(Deprecated.class) != null)Log.warn("load Deprecated class " + object.getClass().getName());
 		final List<Field> allEditorDataFields = ClassUtil.getAllFieldsWithAnnotation(object.getClass(), EditorData.class);
 		{//Validator
 			final Set<String> xmlNamesToFind = new HashSet<>(allEditorDataFields.size());

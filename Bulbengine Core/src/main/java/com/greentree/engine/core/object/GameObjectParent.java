@@ -14,10 +14,10 @@ import com.greentree.engine.core.component.ComponentList;
 /** @author Arseny Latyshev */
 public abstract class GameObjectParent extends StartGameElement {
 
-	protected static final Random random = new Random();
 	protected final Set<GameObject> childrens;
 	protected final WeakClassTree<GameComponent> allTreeComponents;
 	protected final String name;
+	protected static final Random random = new Random();
 
 
 	public GameObjectParent(final String name) {

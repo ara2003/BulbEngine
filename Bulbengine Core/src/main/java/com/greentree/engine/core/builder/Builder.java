@@ -11,7 +11,7 @@ import com.greentree.engine.core.object.GameSystem;
 
 /** @author Arseny Latyshev */
 public interface Builder {
-	
+
 	GameComponent createComponent(Class<? extends GameComponent> clazz);
 	//create Component
 	GameComponent createComponent(InputStream in);
@@ -27,7 +27,8 @@ public interface Builder {
 	void fillObject(GameObject emptyObjectBuilder, InputStream in);
 	void fillScene(GameScene emptyScene, InputStream in);
 	void fillSystem(GameSystem system, InputStream in);
-	//create Layer
+	//create System
 	Layer getLayer(String name);
-	
+
 }
+

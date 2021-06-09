@@ -13,39 +13,39 @@ import com.greentree.engine.geom2d.Rectangle;
 
 
 public class NavMeshObstacle extends StartGameComponent implements Sized {
-	
+
 	@EditorData(required = true)
 	private float width, height;
 	private Transform poisition;
-	
-	@Override
-	public float getHeight() {
-		return height;
-	}
-	@Override
-	public float getWidth() {
-		return width;
-	}
-	
-	public float getY() {
-		return poisition.y() - height/2;
-	}
-	
-	public float getX() {
-		return poisition.x() - width/2;
-	}
-	
-	public boolean isInside(Vector2f vec, float radius) {
-		return new Rectangle(getX(), getY(), width, height).isIntersect(new Circle(vec, radius));
-	}
-	@Override
-	public void start() {
-		poisition = getComponent(Transform.class);
-	}
-	
+
 	public boolean canGo(Vector2f from, Vector2f to, float radius) {
 		if(isInside(from, radius))return true;
 		return !new Rectangle(getX(), getY(), width, height).isIntersect(new Capsule(from, to, radius));
 	}
-	
+	@Override
+	public float getHeight() {
+		return height;
+	}
+
+	@Override
+	public float getWidth() {
+		return width;
+	}
+
+	public float getX() {
+		return poisition.x() - width/2;
+	}
+
+	public float getY() {
+		return poisition.y() - height/2;
+	}
+	public boolean isInside(Vector2f vec, float radius) {
+		return new Rectangle(getX(), getY(), width, height).isIntersect(new Circle(vec, radius));
+	}
+
+	@Override
+	public void start() {
+		poisition = getComponent(Transform.class);
+	}
+
 }

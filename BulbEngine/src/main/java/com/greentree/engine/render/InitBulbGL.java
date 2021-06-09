@@ -5,10 +5,10 @@ import com.greentree.graphics.BulbGL;
 
 
 public class InitBulbGL extends GameSystem {
-	
+
 	@Override
 	protected void start() {
 		BulbGL.init();
 	}
-	
+
 }

@@ -19,9 +19,9 @@ import com.greentree.engine.core.object.GameSystem;
 /** @author Arseny Latyshev */
 public abstract class AbstractBuilder<T> implements Builder {
 
-	private static final LayerFactory layerFactory = new LayerFactory();
 	private final List<Pair<GameComponent, T>> contextComponent = new ArrayList<>();
 	private final List<Pair<GameSystem, T>> contextSystem = new ArrayList<>();
+	private static final LayerFactory layerFactory = new LayerFactory();
 
 	@Override
 	public final GameComponent createComponent(final InputStream in) {

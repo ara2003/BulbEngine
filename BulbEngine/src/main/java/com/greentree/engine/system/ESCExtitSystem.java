@@ -11,17 +11,17 @@ import com.greentree.graphics.input.listener.KeyAdapter;
  *
  */
 public class ESCExtitSystem extends GameSystem {
-	
+
 	@Override
 	protected void start() {
 		addListener(new KeyAdapter() {
-			
+
 			@Override
 			public void keyPress(int key) {
 				if(key == Key.ESCAPE.index())Game3D.exit();
 			}
-			
+
 		});
 	}
-	
+
 }

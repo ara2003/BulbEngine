@@ -5,7 +5,7 @@ import com.greentree.engine.core.object.GameSystem;
 
 
 public class StartGameSystem extends GameSystem {
-	
+
 	@Override
 	protected void start() {
 		addNewComponentListener(Starting.class, c -> {
@@ -15,7 +15,7 @@ public class StartGameSystem extends GameSystem {
 
 	@Override
 	public void update() {
-		
+
 	}
-	
+
 }

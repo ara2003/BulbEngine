@@ -28,7 +28,7 @@ public class InternalTextureLoader {
 		return InternalTextureLoader.loader;
 	}
 	
-	private GLTexture2D getTexture(final InputStream in, final String resourceName) throws IOException {//TODO
+	private GLTexture2D getTexture(final InputStream in, final String resourceName) throws IOException {//TODO why TODO
 		final LoadableImageData imageData     = ImageDataFactory.getImageDataFor(resourceName);
 		final ByteBuffer        textureBuffer = imageData.loadImage(new BufferedInputStream(in), false, null);
 		final int               width         = imageData.getWidth();
@@ -45,8 +45,12 @@ public class InternalTextureLoader {
 		return texture;
 	}
 	
-	public GLTexture2D getTexture(final String resourceName) throws IOException {
-		return this.getTexture(ResourceLoader.getResourceAsStream(resourceName), resourceName);
+	public GLTexture2D getTexture(final String resourceName) {
+		try {
+    		return this.getTexture(ResourceLoader.getResourceAsStream(resourceName), resourceName);
+    	}catch(IOException e) {
+    		throw new IllegalArgumentException(resourceName, e);
+    	}
 	}
 	
 	public void set16BitMode() {

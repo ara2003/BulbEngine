@@ -17,6 +17,13 @@ public class CollisionListenerManager extends AbstractListenerManager<CollisionL
 	private final ArrayList<CollisionListListener> listenersList = new ArrayList<>();
 
 	@Override
+	protected boolean addListener0(Listener listener) {
+		if(DoubleCollisionListener.class.isInstance(listener))return listeners.add((DoubleCollisionListener)listener);else
+			if(CollisionListListener.class.isInstance(listener))return listenersList.add((CollisionListListener)listener);else
+				return false;
+	}
+
+	@Override
 	protected void event0(final CollisionListEvent event) {
 		nowFream.clear();
 		nowFream.addAll(event.getCollection());
@@ -42,11 +49,4 @@ public class CollisionListenerManager extends AbstractListenerManager<CollisionL
 		lastFream.addAll(nowFream);
 	}
 
-	@Override
-	protected boolean addListener0(Listener listener) {
-		if(DoubleCollisionListener.class.isInstance(listener))return listeners.add((DoubleCollisionListener)listener);else
-		if(CollisionListListener.class.isInstance(listener))return listenersList.add((CollisionListListener)listener);else
-		return false;
-	}
-	
 }

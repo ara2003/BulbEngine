@@ -27,12 +27,7 @@ public abstract class GLTextureLoader {
 	}
 	
 	public static GLTexture2D getTexture2D(final String value) {
-		try {
-			return InternalTextureLoader.get().getTexture(value);
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+		return InternalTextureLoader.get().getTexture(value);
 	}
 
 	public static void glTexImage2D(int mipmapLevel, PixelFormat dstPixelFormat, int width, int height, PixelFormat srcPixelFormat, GLType type, ByteBuffer data) {

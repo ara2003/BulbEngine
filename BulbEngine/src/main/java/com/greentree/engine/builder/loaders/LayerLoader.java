@@ -7,7 +7,7 @@ import com.greentree.engine.core.layer.Layer;
 
 /** @author Arseny Latyshev */
 public class LayerLoader extends AbstractLoader<Layer> implements ValueLoader {
-	
+
 	public LayerLoader() {
 		super(Layer.class);
 	}

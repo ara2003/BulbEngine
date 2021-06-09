@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 public @interface EditorData {
 
 	String name() default "";
-	boolean required() default false; 
-	
+	boolean required() default false;
+
 }

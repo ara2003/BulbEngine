@@ -12,6 +12,6 @@ import com.greentree.engine.core.object.GameComponent;
 @Target(TYPE)
 /** @author Arseny Latyshev */
 public @interface RequireComponent{
-	
+
 	Class<? extends GameComponent>[] value();
 }

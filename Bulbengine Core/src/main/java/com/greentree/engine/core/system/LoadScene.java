@@ -6,13 +6,13 @@ import com.greentree.engine.core.object.GameSystem;
 
 
 public class LoadScene extends GameSystem {
-	
+
 	@EditorData
 	private String file;
-	
+
 	@Override
 	protected void start() {
 		SceneLoader.loadScene(file);
 	}
-	
+
 }

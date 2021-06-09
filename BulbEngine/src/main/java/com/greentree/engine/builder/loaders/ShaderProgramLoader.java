@@ -12,11 +12,11 @@ import com.greentree.graphics.shader.ShaderType;
 
 /** @author Arseny Latyshev */
 public class ShaderProgramLoader extends AbstractVlaueLoader<ShaderProgram> {
-	
+
 	public ShaderProgramLoader() {
 		super(ShaderProgram.class);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public ShaderProgram parse(final String value) throws Exception {
@@ -32,19 +32,19 @@ public class ShaderProgramLoader extends AbstractVlaueLoader<ShaderProgram> {
 		final String geometry       = properties.getProperty("shader.geometry");
 		final String tessControl    = properties.getProperty("shader.tess_control");
 		final String tessEvaluation = properties.getProperty("shader.tess_evaluation");
-		
+
 		if(vertex == null) throw new IllegalArgumentException("vertex shader required");
 		if(fragment == null) throw new IllegalArgumentException("fragment shader required");
-		
+
 		final ShaderProgram.Builder buider = GLShaderProgram.builder();
-		
+
 		buider.addShader(GLShaderLoader.load(ResourceLoader.getResourceAsStream(vertex), ShaderType.VERTEX));
 		buider.addShader(GLShaderLoader.load(ResourceLoader.getResourceAsStream(fragment), ShaderType.FRAGMENT));
 		if(geometry != null) buider.addShader(GLShaderLoader.load(ResourceLoader.getResourceAsStream(geometry), ShaderType.GEOMETRY));
 		if(tessControl != null) buider.addShader(GLShaderLoader.load(ResourceLoader.getResourceAsStream(tessControl), ShaderType.TESS_CONTROL));
 		if(tessEvaluation != null) buider.addShader(GLShaderLoader.load(ResourceLoader.getResourceAsStream(tessEvaluation), ShaderType.TESS_EVALUATION));
-		
+
 		return buider.build();
 	}
-	
+
 }

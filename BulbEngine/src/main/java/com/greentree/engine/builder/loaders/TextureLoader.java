@@ -9,11 +9,11 @@ import com.greentree.graphics.texture.GLTextureLoader;
 
 /** @author Arseny Latyshev */
 public class TextureLoader extends CachingAbstractLoader<GLTexture2D> {
-	
+
 	public TextureLoader() {
 		super(GLTexture2D.class);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public GLTexture2D load0(final String value) throws IOException {

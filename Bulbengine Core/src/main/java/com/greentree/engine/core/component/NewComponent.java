@@ -6,7 +6,7 @@ import com.greentree.event.NecessarilyListenerManagers;
 
 @NecessarilyListenerManagers({NewComponentListenerManager.class})
 public interface NewComponent extends Listener {
-	
+
 	void newComponent(GameComponent c);
-	
+
 }

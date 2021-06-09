@@ -11,8 +11,8 @@ import com.greentree.data.loading.ResourceLocation;
  */
 public class AssetsResourseLocation implements ResourceLocation {
 
-	
-	
+
+
 	@Override
 	public URL getResource(String name) {
 		return null;
@@ -22,5 +22,5 @@ public class AssetsResourseLocation implements ResourceLocation {
 	public InputStream getResourceAsStream(String name) {
 		return null;
 	}
-	
+
 }

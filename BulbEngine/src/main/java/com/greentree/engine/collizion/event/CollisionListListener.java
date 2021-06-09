@@ -7,7 +7,7 @@ import com.greentree.event.NecessarilyListenerManagers;
 
 @NecessarilyListenerManagers({CollisionListenerManager.class})
 public interface CollisionListListener extends Listener {
-	
+
 	void ColliderList(DoubleSet<ColliderComponent> list);
-	
+
 }

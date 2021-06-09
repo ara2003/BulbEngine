@@ -10,9 +10,9 @@ import com.greentree.engine.core.object.GameScene;
 
 /** @author Arseny Latyshev */
 public abstract class SceneLoader {
-	
+
 	protected static GameScene currentScene;
-	
+
 	public static GameScene getCurrentScene() {
 		return Objects.requireNonNull(SceneLoader.currentScene, "current scene is null");
 	}
@@ -29,7 +29,7 @@ public abstract class SceneLoader {
 		}
 		return null;
 	}
-	
+
 	public static GameScene loadScene(final String file) {
 		Log.info("Scene load : " + file);
 		try {
@@ -44,7 +44,7 @@ public abstract class SceneLoader {
 		}
 		return null;
 	}
-	
+
 	private static void reset(final GameScene scene) {
 		Events.clear();
 		if(SceneLoader.currentScene != null) SceneLoader.currentScene.destroy();
@@ -52,5 +52,5 @@ public abstract class SceneLoader {
 		Runtime.getRuntime().gc();
 		SceneLoader.currentScene = scene;
 	}
-	
+
 }
