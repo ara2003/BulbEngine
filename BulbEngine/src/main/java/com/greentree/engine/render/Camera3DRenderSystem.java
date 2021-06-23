@@ -1,10 +1,10 @@
 package com.greentree.engine.render;
 
-import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 import com.greentree.graphics.Graphics;
 
 /** @author Arseny Latyshev */
-public class Camera3DRenderSystem extends GameSystem {
+public class Camera3DRenderSystem extends MultiBehaviour {
 
 	@Override
 	public void update() {

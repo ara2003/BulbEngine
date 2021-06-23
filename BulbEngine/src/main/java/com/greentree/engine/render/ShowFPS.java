@@ -2,12 +2,12 @@ package com.greentree.engine.render;
 
 import com.greentree.common.time.Time;
 import com.greentree.engine.Cameras;
-import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 import com.greentree.graphics.Color;
 import com.greentree.graphics.Graphics;
 
 /** @author Arseny Latyshev */
-public class ShowFPS extends GameSystem {
+public class ShowFPS extends MultiBehaviour {
 
 	@Override
 	public void update() {

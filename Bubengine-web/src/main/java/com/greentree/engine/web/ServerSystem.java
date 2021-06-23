@@ -1,8 +1,8 @@
 package com.greentree.engine.web;
 
-import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 
 
-public class ServerSystem extends GameSystem {
+public class ServerSystem extends MultiBehaviour {
 	
 }

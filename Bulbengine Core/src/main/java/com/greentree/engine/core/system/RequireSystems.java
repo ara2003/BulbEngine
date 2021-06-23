@@ -6,12 +6,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 
 /** @author Arseny Latyshev */
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface RequireSystems{
 
-	Class<? extends GameSystem>[] value();
+	Class<? extends MultiBehaviour>[] value();
 }

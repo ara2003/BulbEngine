@@ -1,5 +1,6 @@
 package com.greentree.engine.core.object;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -9,11 +10,12 @@ import com.greentree.common.ClassUtil;
 import com.greentree.common.collection.HashMapClassTree;
 import com.greentree.common.collection.WeakClassTree;
 import com.greentree.common.logger.Log;
-import com.greentree.engine.core.Events;
 import com.greentree.engine.core.component.GameComponent;
 import com.greentree.engine.core.component.NewComponentEvent;
 import com.greentree.engine.core.component.RequireComponent;
+import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 import com.greentree.engine.core.system.RequireSystems;
+import com.greentree.engine.core.util.Events;
 
 public final class GameObject extends GameObjectParent {
 
@@ -29,16 +31,6 @@ public final class GameObject extends GameObjectParent {
 		parent.addChildren(this);
 	}
 
-	@Override
-	public boolean destroy() {
-		if(super.destroy()) return true;
-		for(final GameComponent component : components) component.destroy();
-		components.clear();
-		allTreeComponents.clear();
-		updateUpTreeComponents();
-		return false;
-	}
-	
 	public boolean addComponent(final GameComponent component) {
 		if(components.add(component)) {
 			component.setObject(this);
@@ -55,6 +47,16 @@ public final class GameObject extends GameObjectParent {
 			return checkParent(parent.getParent());
 		}else
 			return false;
+	}
+
+	@Override
+	public boolean destroy() {
+		if(super.destroy()) return true;
+		for(final GameComponent component : components) component.destroy();
+		components.clear();
+		allTreeComponents.clear();
+		updateUpTreeComponents();
+		return false;
 	}
 
 	public <T extends GameComponent> T getComponent(final Class<T> clazz) {
@@ -138,19 +140,19 @@ public final class GameObject extends GameObjectParent {
 		}
 
 		public static boolean checkRequireSystem(final Iterable<GameComponent> components, final GameScene scene) {
-			for(final Class<? extends GameSystem> requireClass : Validator.getRequireSystemClasses(components)) if(!scene.contains(requireClass))return false;
+			for(final Class<? extends MultiBehaviour> requireClass : Validator.getRequireSystemClasses(components)) if(!scene.contains(requireClass))return false;
 			return true;
 		}
 
 		public static Class<? extends GameComponent> getBrokRequireComponentClass(final Iterable<GameComponent> components) {
-			final Set<Class<? extends GameComponent>> clases = ClassUtil.getClases(components);
+			final Collection<Class<? extends GameComponent>> clases = ClassUtil.getClases(components);
 			for(final Class<? extends GameComponent> clazz : Validator.getRequireComponentClasses(components))
 				if(!clases.contains(clazz)) return clazz;
 			return null;
 		}
 
-		public static Class<? extends GameSystem> getBrokRequireSystemClass(final Iterable<GameComponent> components, final GameScene scene) {
-			for(final Class<? extends GameSystem> clazz : Validator.getRequireSystemClasses(components))
+		public static Class<? extends MultiBehaviour> getBrokRequireSystemClass(final Iterable<GameComponent> components, final GameScene scene) {
+			for(final Class<? extends MultiBehaviour> clazz : Validator.getRequireSystemClasses(components))
 				if(!scene.contains(clazz)) return clazz;
 			return null;
 		}
@@ -163,8 +165,8 @@ public final class GameObject extends GameObjectParent {
 			return requireComponents;
 		}
 
-		public static Set<Class<? extends GameSystem>> getRequireSystemClasses(final Iterable<GameComponent> components) {
-			final Set<Class<? extends GameSystem>> requireComponents = new HashSet<>();
+		public static Collection<Class<? extends MultiBehaviour>> getRequireSystemClasses(final Iterable<GameComponent> components) {
+			final Collection<Class<? extends MultiBehaviour>> requireComponents = new HashSet<>();
 			for(final GameComponent com : components)
 				for(final RequireSystems rcom : ClassUtil.getAllAnnotations(com.getClass(), RequireSystems.class))
 					Collections.addAll(requireComponents, rcom.value());

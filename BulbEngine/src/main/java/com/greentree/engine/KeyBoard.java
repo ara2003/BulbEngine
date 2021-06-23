@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 
-import com.greentree.engine.core.Events;
+import com.greentree.engine.core.util.Events;
 import com.greentree.graphics.input.Key;
 import com.greentree.graphics.input.event.KeyPressedEvent;
 import com.greentree.graphics.input.event.KeyRepeatedEvent;

@@ -1,4 +1,5 @@
-package com.greentree.engine.core;
+package com.greentree.engine.core.util;
+
 
 import com.greentree.event.Event;
 import com.greentree.event.EventSystem;

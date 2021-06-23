@@ -1,12 +1,12 @@
 package com.greentree.engine.render.ui;
 
 import com.greentree.engine.Cameras;
-import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 import com.greentree.graphics.Graphics;
 
 
 /** @author Arseny Latyshev */
-public class Canvas extends GameSystem {
+public class Canvas extends MultiBehaviour {
 
 	int a = 9;
 

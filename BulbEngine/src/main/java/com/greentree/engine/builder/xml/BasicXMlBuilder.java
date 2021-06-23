@@ -44,7 +44,8 @@ import com.greentree.engine.core.component.GameComponent;
 import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.object.GameObjectParent;
 import com.greentree.engine.core.object.GameScene;
-import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.core.system.GameSystem;
+import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 import com.greentree.engine.layer.LayerComponent;
 
 /** @author Arseny Latyshev */
@@ -150,10 +151,10 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Class<? extends GameSystem> getSystemClass(XMLElement in) {
+	public Class<? extends MultiBehaviour> getMultiBehaviourClass(XMLElement in) {
 		final String type = in.getAttribute("type");
 		if(type.isBlank()) throw new IllegalArgumentException(in + " does not contains atribute \"type\"");
-		return (Class<? extends GameSystem>) ClassUtil.loadClass(type);
+		return (Class<? extends MultiBehaviour>) ClassUtil.loadClass(type);
 	}
 
 

@@ -11,9 +11,9 @@ import com.greentree.common.graph.Graph;
 import com.greentree.common.math.Mathf;
 import com.greentree.common.time.Time;
 import com.greentree.engine.component.Transform;
-import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 
-public class NavMeshSystem extends GameSystem {
+public class NavMeshSystem extends MultiBehaviour {
 
 	private NavMesh mesh;
 	private float radius = 100;

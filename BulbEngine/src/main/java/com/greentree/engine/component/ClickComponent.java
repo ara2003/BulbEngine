@@ -6,6 +6,7 @@ import com.greentree.action.Action;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.core.component.StartGameComponent;
+import com.greentree.engine.core.util.Events;
 import com.greentree.graphics.input.listener.MouseAdapter;
 
 @RequireComponent({Transform.class})
@@ -31,7 +32,7 @@ public class ClickComponent extends StartGameComponent {
 	@Override
 	public void start() {
 		position = getComponent(Transform.class);
-		addListener(new MouseAdapter() {
+		Events.addListener(new MouseAdapter() {
 			@Override
 			public void mousePress(int button, int x, int y) {
 				if(click0(x, y)) action.action(l->l.click(button));

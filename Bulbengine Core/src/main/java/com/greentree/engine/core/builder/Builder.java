@@ -11,7 +11,7 @@ public interface Builder {
 
 	//create prefab
 	GameObject createPrefab(String name, String prefabName, GameObjectParent parent);
-	
+
 	//create Scene
 	GameScene createScene(InputStream in);
 	void fillScene(GameScene emptyScene, InputStream in);

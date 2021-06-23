@@ -12,7 +12,8 @@ import com.greentree.engine.core.component.GameComponent;
 import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.object.GameObjectParent;
 import com.greentree.engine.core.object.GameScene;
-import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.core.system.GameSystem;
+import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 
 /** @author Arseny Latyshev */
 public abstract class AbstractBuilder<T> implements Builder {
@@ -52,60 +53,22 @@ public abstract class AbstractBuilder<T> implements Builder {
 		return new GameObject(this.getObjectName(in), parent);
 	}
 
-	public abstract Class<? extends GameSystem> getSystemClass(T in);
-	
-	protected final GameSystem createSystem(final T in) {
-		try {
-			return createSystem(getSystemClass(in));
-		}catch(final Exception e) {
-			Log.warn("system not create " + in, e);
-			return null;
-		}
-	}
-	
 	@Override
 	public final GameScene createScene(final InputStream in) {
 		return new GameScene(this.getSceneName(this.parse(in)));
 	}
 
-	public final GameSystem createSystem(final Class<? extends GameSystem> cl) {
-		return ClassUtil.newInstance(cl);
+	public final GameSystem createSystem(final Class<? extends MultiBehaviour> cl) {
+		return new GameSystem(ClassUtil.newInstance(cl));
 	}
 
-	public final void fillObject(final GameObject object, final InputStream in) {
-		this.fillObject(object, this.parse(in));
-	}
-
-	protected abstract void fillObject(GameObject node, T in);
-
-	protected void fillSystem(final GameSystem system, final T in) {
+	protected final GameSystem createSystem(final T in) {
 		try {
-			setFields(system, in);
+			return createSystem(getMultiBehaviourClass(in));
 		}catch(final Exception e) {
-			Log.warn("not create component " + in, e);
+			Log.warn("system not create " + in, e);
+			return null;
 		}
-	}
-	@Override
-	public final void fillScene(final GameScene scene, final InputStream in) {
-		this.fillScene(scene, this.parse(in));
-	}
-
-	protected abstract void fillScene(GameScene node, T in);
-
-
-	protected abstract Class<? extends GameComponent> getComponentClass(T parse);
-
-	protected abstract String getObjectName(T in);
-	
-	protected String getSceneName(T in) {
-		return getObjectName(in);
-	}
-
-	public abstract T parse(InputStream in);
-
-	protected final void popComponents() {
-		for(final Pair<GameComponent, T> element : this.contextComponent) this.fillComponent(element.first, element.second);
-		this.contextComponent.clear();
 	}
 
 	public void fillComponent(final GameComponent component, final T in) {
@@ -115,7 +78,45 @@ public abstract class AbstractBuilder<T> implements Builder {
 			Log.warn("not create component " + in, e);
 		}
 	}
-	protected abstract void setFields(final Object object, final T attributes);
+
+	public final void fillObject(final GameObject object, final InputStream in) {
+		this.fillObject(object, this.parse(in));
+	}
+
+	protected abstract void fillObject(GameObject node, T in);
+
+	@Override
+	public final void fillScene(final GameScene scene, final InputStream in) {
+		this.fillScene(scene, this.parse(in));
+	}
+	protected abstract void fillScene(GameScene node, T in);
+
+	protected void fillSystem(final GameSystem system, final T in) {
+		try {
+			setFields(system.getBehaviour(), in);
+		}catch(final Exception e) {
+			Log.warn("not create component " + in, e);
+		}
+	}
+
+
+	protected abstract Class<? extends GameComponent> getComponentClass(T parse);
+
+	protected abstract String getObjectName(T in);
+
+	protected String getSceneName(T in) {
+		return getObjectName(in);
+	}
+
+	public abstract Class<? extends MultiBehaviour> getMultiBehaviourClass(T in);
+
+	public abstract Object load(Field field, T xmlValue) throws Exception;
+
+	public abstract T parse(InputStream in);
+	protected final void popComponents() {
+		for(final Pair<GameComponent, T> element : this.contextComponent) this.fillComponent(element.first, element.second);
+		this.contextComponent.clear();
+	}
 
 	protected final void popSystems() {
 		for(final Pair<GameSystem, T> element : this.contextSystem) this.fillSystem(element.first, element.second);
@@ -136,7 +137,9 @@ public abstract class AbstractBuilder<T> implements Builder {
 		if(a)Log.warn("use Deprecated EditorData.required in field " + field);
 		return a || b;
 	}
-	
+
+	protected abstract void setFields(final Object object, final T attributes);
+
 	protected Object setValue(final Object obj, final Field field, final T xmlValue) throws Exception {
 		final boolean flag = field.canAccess(obj);
 		field.setAccessible(true);
@@ -161,6 +164,4 @@ public abstract class AbstractBuilder<T> implements Builder {
 		}
 		return value;
 	}
-	
-	public abstract Object load(Field field, T xmlValue) throws Exception;
 }

@@ -4,7 +4,9 @@ import com.greentree.common.time.Time;
 import com.greentree.engine.core.builder.Builder;
 import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.object.GameScene;
-import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.core.system.GameSystem;
+import com.greentree.engine.core.util.RootFiles;
+import com.greentree.engine.core.util.SceneLoader;
 
 public abstract class GameCore {
 
@@ -14,11 +16,11 @@ public abstract class GameCore {
 		return SceneLoader.getCurrentScene().addSystem(system);
 	}
 
-	public static GameObject createFromPrefab(final String name, final String prefab) {
-		return GameCore.builder.createPrefab(name, prefab, SceneLoader.getCurrentScene());
-	}
 	public static GameObject createFromPrefab(final String prefab) {
 		return GameCore.builder.createPrefab(null, prefab, SceneLoader.getCurrentScene());
+	}
+	public static GameObject createFromPrefab(final String name, final String prefab) {
+		return GameCore.builder.createPrefab(name, prefab, SceneLoader.getCurrentScene());
 	}
 
 	protected final static void gameLoop() {

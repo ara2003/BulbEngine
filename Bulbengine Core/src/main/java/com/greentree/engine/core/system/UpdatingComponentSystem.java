@@ -1,10 +1,10 @@
 package com.greentree.engine.core.system;
 
 import com.greentree.common.Updating;
-import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 
 /** @author Arseny Latyshev */
-public class UpdatingComponentSystem extends GameSystem {
+public class UpdatingComponentSystem extends MultiBehaviour {
 
 	@Override
 	public void update() {

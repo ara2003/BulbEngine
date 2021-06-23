@@ -1,7 +1,7 @@
 package com.greentree.engine.system;
 
 import com.greentree.engine.Game3D;
-import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 import com.greentree.graphics.input.Key;
 import com.greentree.graphics.input.listener.KeyAdapter;
 
@@ -10,7 +10,7 @@ import com.greentree.graphics.input.listener.KeyAdapter;
  * @author Arseny Latyshev
  *
  */
-public class ESCExtitSystem extends GameSystem {
+public class ESCExtitSystem extends MultiBehaviour {
 
 	@Override
 	protected void start() {

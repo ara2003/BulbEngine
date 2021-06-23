@@ -2,10 +2,10 @@ package com.greentree.engine.render;
 
 import com.greentree.engine.Windows;
 import com.greentree.engine.core.builder.EditorData;
-import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 
 
-public class InitWindow extends GameSystem {
+public class InitWindow extends MultiBehaviour {
 
 	@EditorData(required = true)
 	private int width, height;

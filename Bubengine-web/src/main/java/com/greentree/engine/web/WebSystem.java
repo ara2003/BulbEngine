@@ -2,10 +2,10 @@ package com.greentree.engine.web;
 
 import com.greentree.common.web.Client;
 import com.greentree.engine.core.builder.EditorData;
-import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 
 
-public class WebSystem extends GameSystem {
+public class WebSystem extends MultiBehaviour {
 	
 	@EditorData
 	public Client client;

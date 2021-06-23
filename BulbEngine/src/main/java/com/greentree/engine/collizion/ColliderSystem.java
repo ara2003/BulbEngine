@@ -8,13 +8,13 @@ import com.greentree.common.collection.DoubleSet;
 import com.greentree.engine.Layers;
 import com.greentree.engine.collizion.event.CollisionListEvent;
 import com.greentree.engine.collizion.event.CollisionListenerManager;
-import com.greentree.engine.core.Events;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.component.ComponentList;
-import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.util.Events;
 import com.greentree.engine.layer.Layer;
 
-public class ColliderSystem extends GameSystem {
+public class ColliderSystem extends MultiBehaviour {
 
 	private final DoubleSet<ColliderComponent> nowFream = new DoubleSet<>();
 	@EditorData(required = true)
@@ -35,8 +35,7 @@ public class ColliderSystem extends GameSystem {
 
 	@Override
 	public void update() {
-		final ComponentList<ColliderComponent> colliderComponent = this
-				.getAllComponentsAsComponentList(ColliderComponent.class);
+		final ComponentList<ColliderComponent> colliderComponent = getAllComponentsAsComponentList(ColliderComponent.class);
 		nowFream.clear();
 		Collections.sort(colliderComponent, Comparator.comparing(ColliderComponent::getX));
 		for(int i = 0; i < colliderComponent.size(); i++) {

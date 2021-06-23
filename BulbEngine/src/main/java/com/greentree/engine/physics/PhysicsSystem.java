@@ -8,11 +8,11 @@ import com.greentree.common.pair.Pair;
 import com.greentree.engine.collizion.ColliderComponent;
 import com.greentree.engine.collizion.event.CollisionListListener;
 import com.greentree.engine.component.Transform;
-import com.greentree.engine.core.Events;
 import com.greentree.engine.core.object.GameObject;
-import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.util.Events;
 
-public class PhysicsSystem extends GameSystem {
+public class PhysicsSystem extends MultiBehaviour {
 
 	@Override
 	protected void start() {

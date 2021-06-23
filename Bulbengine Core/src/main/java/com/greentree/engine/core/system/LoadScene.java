@@ -1,11 +1,11 @@
 package com.greentree.engine.core.system;
 
-import com.greentree.engine.core.SceneLoader;
 import com.greentree.engine.core.builder.EditorData;
-import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.util.SceneLoader;
 
 
-public class LoadScene extends GameSystem {
+public class LoadScene extends MultiBehaviour {
 
 	@EditorData
 	private String file;

@@ -1,6 +1,6 @@
 package com.greentree.engine;
 
-import com.greentree.engine.core.Events;
+import com.greentree.engine.core.util.Events;
 import com.greentree.graphics.input.event.MouseClickEvent;
 import com.greentree.graphics.input.event.MouseMovedEvent;
 

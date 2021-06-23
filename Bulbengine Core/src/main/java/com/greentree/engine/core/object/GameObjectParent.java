@@ -16,34 +16,22 @@ import com.greentree.engine.core.component.GameComponent;
 public abstract class GameObjectParent {
 
 	private boolean isDestoy = false;
-	
+
 	private boolean isStart = false;
 
 
-	public final void initSratr() {
-		if(isStart) throw new UnsupportedOperationException("reinitialization of : " + this);
-		isStart = true;
-		start();
-	}
-
-	public final boolean isDestroy() {
-		return isDestoy;
-	}
-
-	protected abstract void start();
-	
 	protected final Collection<GameObject> childrens;
+
 	protected final WeakClassTree<GameComponent> allTreeComponents;
+
 	protected final String name;
+
 	protected static final Random random = new Random();
-
-
 	public GameObjectParent(final String name) {
 		this.name         = name;
 		allTreeComponents = new HashMapClassTree<>();
 		childrens         = new CopyOnWriteArraySet<>();
 	}
-
 	public final boolean addChildren(final GameObject object) {
 		if(childrens.add(object)) {
 			updateUpTreeComponents();
@@ -51,11 +39,11 @@ public abstract class GameObjectParent {
 		}
 		return false;
 	}
-
 	public final boolean contains(final GameObject node) {
 		return childrens.contains(node);
 	}
-	
+
+
 	public boolean destroy() {
 		if(isDestroy()) return true;
 		isDestoy = true;
@@ -94,10 +82,22 @@ public abstract class GameObjectParent {
 		return name;
 	}
 
+	public final void initSratr() {
+		if(isStart) throw new UnsupportedOperationException("reinitialization of : " + this);
+		isStart = true;
+		start();
+	}
+
+	public final boolean isDestroy() {
+		return isDestoy;
+	}
+
 	public final void removeChildren(final GameObject object) {
 		childrens.remove(object);
 		updateUpTreeComponents();
 	}
+
+	protected abstract void start();
 
 	protected void update() {
 	}

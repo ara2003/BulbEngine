@@ -3,9 +3,9 @@ package com.greentree.engine;
 import com.greentree.common.concurent.MultyTask;
 import com.greentree.engine.builder.xml.BasicXMlBuilder;
 import com.greentree.engine.core.GameCore;
-import com.greentree.engine.core.RootFiles;
-import com.greentree.engine.core.SceneLoader;
 import com.greentree.engine.core.object.GameScene;
+import com.greentree.engine.core.util.RootFiles;
+import com.greentree.engine.core.util.SceneLoader;
 import com.greentree.graphics.BulbGL;
 import com.greentree.graphics.Graphics;
 
@@ -34,6 +34,7 @@ public class Game3D extends GameCore {
 		Mouse.getMouseX();//static constructor
 
 		KeyBoard.init();
+		
 		//		SceneLoader.loadScene(Properties.getProperty("scene.first").notNull().get());
 		while(!Windows.getWindow().isShouldClose()) {
 			Windows.getWindow().swapBuffer();
