@@ -1,6 +1,6 @@
 package com.greentree.engine.component;
 
-import com.greentree.engine.core.object.GameComponent;
+import com.greentree.engine.core.component.GameComponent;
 import com.greentree.engine.mesh.Mesh;
 
 

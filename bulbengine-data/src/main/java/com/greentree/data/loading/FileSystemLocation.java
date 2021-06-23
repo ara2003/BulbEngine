@@ -12,7 +12,7 @@ public class FileSystemLocation implements ResourceLocation {
 	private final File root;
 	
 	public FileSystemLocation(final File root) {
-		if(root.isDirectory() == false) throw new IllegalArgumentException("root must by directory");
+		if(root != null && root.isDirectory() == false) throw new IllegalArgumentException("root must by directory");
 		this.root = root;
 	}
 	
@@ -24,6 +24,10 @@ public class FileSystemLocation implements ResourceLocation {
 		this(new File(root));
 	}
 	
+	public FileSystemLocation() {
+		root = null;
+	}
+
 	@Override
 	public URL getResource(final String ref) {
 		try {
@@ -49,6 +53,6 @@ public class FileSystemLocation implements ResourceLocation {
 	
 	@Override
 	public String toString() {
-		return "FileSystemLocation [file=" + root + "]";
+		return "FileSystemLocation" + ((root == null)?"":" [file=" + root + "]");
 	}
 }

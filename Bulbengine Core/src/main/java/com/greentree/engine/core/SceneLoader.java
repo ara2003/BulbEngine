@@ -1,5 +1,8 @@
 package com.greentree.engine.core;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Objects;
 
@@ -17,32 +20,41 @@ public abstract class SceneLoader {
 		return Objects.requireNonNull(SceneLoader.currentScene, "current scene is null");
 	}
 
-	public static GameScene getScene(final String file) {
+	public static GameScene getScene(String file) {
 		Log.info("Scene load : " + file);
 		try {
-			final InputStream inputStream = ResourceLoader.getResourceAsStream(file + ".xml");
+			if(!file.endsWith(".xml"))file += ".xml";
+			final InputStream inputStream = ResourceLoader.getResourceAsStream(file);
 			final GameScene   scene       = GameCore.builder.createScene(inputStream);
 			GameCore.builder.fillScene(scene, inputStream);
 			return scene;
 		}catch(final ResourceNotFound e) {
-			Log.warn("scene not found : %s (the scene file must have \"xml\" extension)", file);
+			Log.warn("scene not found : %s", file);
 		}
 		return null;
 	}
 
-	public static GameScene loadScene(final String file) {
+	private static GameScene loadScene0(final InputStream inputStream) {
+		final GameScene   scene       = GameCore.builder.createScene(inputStream);
+		SceneLoader.reset(scene);
+		GameCore.builder.fillScene(scene, inputStream);
+		scene.start();
+		return scene;
+	}
+	
+	public static GameScene loadScene(String file) {
 		Log.info("Scene load : " + file);
 		try {
-			final InputStream inputStream = ResourceLoader.getResourceAsStream(file + ".xml");
-			final GameScene   scene       = GameCore.builder.createScene(inputStream);
-			SceneLoader.reset(scene);
-			GameCore.builder.fillScene(scene, inputStream);
-			scene.start();
-			return scene;
+			if(!file.endsWith(".xml"))file += ".xml";
+			return loadScene0(ResourceLoader.getResourceAsStream(file));
 		}catch(final ResourceNotFound e) {
-			Log.warn("scene not found : %s (the scene file must have \"xml\" extension)", file);
+			Log.warn("scene not found : %s", file);
+			e.printStackTrace();
 		}
 		return null;
+	}
+	public static GameScene loadScene(final File file) throws FileNotFoundException {
+		return loadScene0(new FileInputStream(file));
 	}
 
 	private static void reset(final GameScene scene) {

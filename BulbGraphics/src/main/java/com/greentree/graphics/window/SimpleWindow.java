@@ -1,6 +1,7 @@
 package com.greentree.graphics.window;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWCharCallbackI;
 import org.lwjgl.glfw.GLFWCursorPosCallbackI;
 import org.lwjgl.glfw.GLFWKeyCallbackI;
 import org.lwjgl.glfw.GLFWMouseButtonCallbackI;
@@ -12,72 +13,92 @@ import com.greentree.graphics.input.PoisitionAction;
 
 /** @author Arseny Latyshev */
 public class SimpleWindow extends Window {
-	
-	private final EventAction<Integer> keyPress, keyRelease, keyRepeat;
+
+	private final EventAction<Integer> keyPress, keyRelease, keyRepeat, keyPressOrRepeat;
 	private final EventAction<Integer> mouseButtonPress, mouseButtonRelease, mouseButtonRepeat;
+	private final EventAction<String> charEnter;
+	
+	public EventAction<String> getCharEnter() {
+		return charEnter;
+	}
+
 	private final PoisitionAction mousePosition;
 	{
-		this.keyPress   = new EventAction<>();
-		this.keyRelease = new EventAction<>();
-		this.keyRepeat  = new EventAction<>();
+		keyPress   = new EventAction<>();
+		keyRelease = new EventAction<>();
+		keyRepeat  = new EventAction<>();
+		charEnter  = new EventAction<>();
+		keyPressOrRepeat  = new EventAction<>();
 		this.setCallback((GLFWKeyCallbackI) (window, key, scancode, action, mods)-> {
-			if(window != this.getId()) return;
-			if(action == GLFW.GLFW_RELEASE) this.keyRelease.action(key);
-			if(action == GLFW.GLFW_REPEAT) this.keyRepeat.action(key);
-			if(action == GLFW.GLFW_PRESS) this.keyPress.action(key);
+			if(window != getId()) return;
+			if(action == GLFW.GLFW_RELEASE) keyRelease.action(key);
+			if(action == GLFW.GLFW_REPEAT) {
+				keyPressOrRepeat.action(key);
+				keyRepeat.action(key);
+			}
+			if(action == GLFW.GLFW_PRESS) {
+				keyPressOrRepeat.action(key);
+				keyPress.action(key);
+			}
 		});
-		this.mouseButtonPress   = new EventAction<>();
-		this.mouseButtonRelease = new EventAction<>();
-		this.mouseButtonRepeat  = new EventAction<>();
+		this.setCallback((GLFWCharCallbackI) (window, codepoint)-> {
+			charEnter.action(Character.toString(codepoint));
+		});
+		mouseButtonPress   = new EventAction<>();
+		mouseButtonRelease = new EventAction<>();
+		mouseButtonRepeat  = new EventAction<>();
 		this.setCallback((GLFWMouseButtonCallbackI) (window, button, action, mods)-> {
 			if(window != SimpleWindow.this.getId()) return;
 			if(action == GLFW.GLFW_RELEASE) SimpleWindow.this.mouseButtonPress.action(button);
 			if(action == GLFW.GLFW_REPEAT) SimpleWindow.this.mouseButtonRelease.action(button);
 			if(action == GLFW.GLFW_PRESS) SimpleWindow.this.mouseButtonRepeat.action(button);
 		});
-		this.mousePosition = new PoisitionAction();
+		mousePosition = new PoisitionAction();
 		this.setCallback((GLFWCursorPosCallbackI) (window, xpos, ypos)-> {
-			this.mousePosition.action((int)(xpos-getWidth()/2f), (int)(getHeight()/2f-ypos));
+			mousePosition.action((int)(xpos-getWidth()/2f), (int)(getHeight()/2f-ypos));
 		});
 	}
-	
-	public void setMousePos(int x, int y) {
-		GLFW.glfwSetCursorPos(getId(), x + getWidth() / 2, y + getHeight() / 2);
-	}
-	
+
 	public SimpleWindow(final String title, final int width, final int height) {
 		super(title, width, height, true, false);
 	}
-	
+
 	public SimpleWindow(final String title, final int width, final int height, final boolean resizable, final boolean fullscreen) {
 		super(title, width, height, resizable, fullscreen);
 	}
-	
+
 	public EventAction<Integer> getKeyPress() {
-		return this.keyPress;
+		return keyPress;
 	}
-	
+
 	public EventAction<Integer> getKeyRelease() {
-		return this.keyRelease;
+		return keyRelease;
 	}
-	
+
 	public EventAction<Integer> getKeyRepeat() {
-		return this.keyRepeat;
+		return keyRepeat;
 	}
-	
+
 	public EventAction<Integer> getMouseButtonPress() {
-		return this.mouseButtonPress;
+		return mouseButtonPress;
 	}
-	
 	public EventAction<Integer> getMouseButtonRelease() {
-		return this.mouseButtonRelease;
+		return mouseButtonRelease;
 	}
-	
+
 	public EventAction<Integer> getMouseButtonRepeat() {
-		return this.mouseButtonRepeat;
+		return mouseButtonRepeat;
 	}
-	
+
 	public PoisitionAction getMousePosition() {
-		return this.mousePosition;
+		return mousePosition;
+	}
+
+	public void setMousePos(int x, int y) {
+		GLFW.glfwSetCursorPos(getId(), x + getWidth() / 2, y + getHeight() / 2);
+	}
+
+	public EventAction<Integer> getKeyPressOrRepeat() {
+		return keyPressOrRepeat;
 	}
 }

@@ -18,7 +18,6 @@ public abstract class Layers {
 		return layerFactory.get(value);
 	}
 	
-	@SuppressWarnings("exports")
 	public static Layer get(String value) {
 		return layerFactory.get(getLayerName(value));
 	}
@@ -29,7 +28,6 @@ public abstract class Layers {
 		return v;
 	}
 
-	@SuppressWarnings("exports")
 	public static Layer get(GameObject object) {
 		LayerComponent layer = object.getComponent(LayerComponent.class);
 		if(layer == null)return layerFactory.get("default");

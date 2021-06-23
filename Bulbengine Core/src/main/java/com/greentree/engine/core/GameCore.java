@@ -14,8 +14,11 @@ public abstract class GameCore {
 		return SceneLoader.getCurrentScene().addSystem(system);
 	}
 
+	public static GameObject createFromPrefab(final String name, final String prefab) {
+		return GameCore.builder.createPrefab(name, prefab, SceneLoader.getCurrentScene());
+	}
 	public static GameObject createFromPrefab(final String prefab) {
-		return GameCore.builder.createPrefab(prefab, SceneLoader.getCurrentScene());
+		return GameCore.builder.createPrefab(null, prefab, SceneLoader.getCurrentScene());
 	}
 
 	protected final static void gameLoop() {

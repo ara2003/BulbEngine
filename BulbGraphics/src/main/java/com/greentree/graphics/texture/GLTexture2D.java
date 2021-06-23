@@ -1,6 +1,7 @@
 package com.greentree.graphics.texture;
 
 import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
 
 import com.greentree.common.math.Mathf;
 import com.greentree.graphics.Wrapping;
@@ -17,10 +18,10 @@ public class GLTexture2D {
 	private final int textureID;
 
 	public GLTexture2D(final int width, final int height) {
-		if(!GL11.glIsEnabled(GL11.GL_TEXTURE_2D))
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-		textureID = GL11.glGenTextures();
-		if(textureID == 0)throw new UnsupportedOperationException(String.format("texture not createed %dx%d", width, height));
+		if(!glIsEnabled(GL_TEXTURE_2D))
+			glEnable(GL_TEXTURE_2D);
+		textureID = glGenTextures();
+		if(textureID == 0)throw new UnsupportedOperationException(String.format("texture not createed %dx%d OpenGL error : %d", width, height, GL11.glGetError()));
 		this.width     = width;
 		this.height    = height;
 		texWidth  = (width + 0.0f) / Mathf.get2Fold(width);
@@ -28,11 +29,11 @@ public class GLTexture2D {
 	}
 
 	public static void unbindTexture() {
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	public final void bind() {
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+		glBindTexture(GL_TEXTURE_2D, textureID);
 	}
 
 	public final int getHeight() {
@@ -52,7 +53,7 @@ public class GLTexture2D {
 	}
 
 	public boolean isBind() {//TODO test
-		return GL11.glGetInteger(GL11.GL_TEXTURE_2D) == textureID;
+		return glGetInteger(GL11.GL_TEXTURE_2D) == textureID;
 	}
 
 	public void setFilter(Filtering filtering) {
@@ -62,13 +63,13 @@ public class GLTexture2D {
 
 	public final void setMagFilter(final Filtering p0) {
 		bind();
-		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, Decoder.glEnum(p0));
+		glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, Decoder.glEnum(p0));
 		unbind();
 	}
 
 	public final void setMinFilter(final Filtering p0) {
 		bind();
-		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, Decoder.glEnum(p0));
+		glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, Decoder.glEnum(p0));
 		unbind();
 	}
 
@@ -78,11 +79,11 @@ public class GLTexture2D {
 	}
 
 	public void setWrapX(final Wrapping wrap) {
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, Decoder.glEnum(wrap));
+		glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, Decoder.glEnum(wrap));
 	}
 
 	public void setWrapY(final Wrapping wrap) {
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, Decoder.glEnum(wrap));
+		glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, Decoder.glEnum(wrap));
 	}
 
 	@Override
@@ -92,7 +93,7 @@ public class GLTexture2D {
 	}
 
 	public final void unbind() {
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 }

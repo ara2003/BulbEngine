@@ -12,9 +12,9 @@ public class LayerLoader extends AbstractLoader<Layer> implements ValueLoader {
 		super(Layer.class);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <T> T parse(Class<T> clazz, String value) throws Exception {
-		return (T) Layers.getLayer(value);
+		return (T) Layers.get(value);
 	}
 }

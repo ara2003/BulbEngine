@@ -1,17 +1,20 @@
-package com.greentree.engine.core.object;
+package com.greentree.engine.core.component;
 
 import java.util.Random;
 
 import com.greentree.engine.core.Events;
 import com.greentree.engine.core.GameCore;
+import com.greentree.engine.core.object.GameObject;
+import com.greentree.engine.core.object.GameSystem;
 import com.greentree.event.Listener;
 
-public abstract class GameComponent extends GameElement {
+public abstract class GameComponent {
+
+	private boolean isDestoy = false;
 
 	private GameObject object;
+	@Deprecated
 	protected static final Random random = new Random();
-
-
 	protected final static void addListener(final Listener listener) {
 		Events.addListener(listener);
 	}
@@ -24,10 +27,11 @@ public abstract class GameComponent extends GameElement {
 		return GameCore.createFromPrefab(prefab);
 	}
 
-	@Override
 	public final boolean destroy() {
-		if(super.destroy()) return true;
+		if(isDestroy()) return true;
+		isDestoy = true;
 		object.removeComponent(this);
+		object = null;
 		return false;
 	}
 
@@ -39,7 +43,11 @@ public abstract class GameComponent extends GameElement {
 		return object;
 	}
 
-	public final void setObject(final GameObject object) {
+	public final boolean isDestroy() {
+		return isDestoy;
+	}
+
+	public final void setObject(final GameObject object) {//TODO
 		this.object = object;
 	}
 

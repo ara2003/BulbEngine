@@ -5,7 +5,7 @@ import java.util.List;
 import com.greentree.data.loaders.AbstractLoader;
 import com.greentree.data.loaders.value.ValueLoader;
 import com.greentree.engine.core.GameCore;
-import com.greentree.engine.core.object.GameComponent;
+import com.greentree.engine.core.component.GameComponent;
 import com.greentree.engine.core.object.GameObject;
 
 /** @author Arseny Latyshev */

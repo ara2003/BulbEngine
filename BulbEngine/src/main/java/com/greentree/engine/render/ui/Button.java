@@ -3,10 +3,9 @@ package com.greentree.engine.render.ui;
 import org.joml.Vector2f;
 
 import com.greentree.action.Action;
-import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.Events;
 import com.greentree.engine.core.builder.EditorData;
-import com.greentree.engine.core.component.RequireComponent;
+import com.greentree.engine.core.builder.Required;
 import com.greentree.engine.input.CameraMouseAdapter;
 import com.greentree.graphics.Graphics;
 
@@ -15,15 +14,25 @@ import com.greentree.graphics.Graphics;
  * @author User
  *
  */
-@RequireComponent({Transform.class})
 @Deprecated
 public class Button extends UIComponent {
 
-	@EditorData()
-	private final float border = 2;
+	@EditorData
+	private float border = 2;
+	@Required
+	@EditorData
+	private String text;
+	
+	
+	public String getText() {
+		return text;
+	}
 
-	@EditorData(required = true)
-	String text;
+	
+	public void setText(String text) {
+		this.text = text;
+	}
+
 	private float width, height;
 	private final Action<ButtonListener> action = new Action<>();
 	private boolean click0(final int x, final int y) {

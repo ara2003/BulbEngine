@@ -9,18 +9,22 @@ import com.greentree.data.loading.ResourceLocation;
  * @author Arseny Latyshev
  *
  */
-public class AssetsResourseLocation implements ResourceLocation {
+public class AssetsResourseLocation implements ResourceLocation {	 
 
-
-
+	private final AssetBundle assetBundle;
+	
+	public AssetsResourseLocation(AssetBundle assetBundle) {
+		this.assetBundle = assetBundle;
+	}
+	
 	@Override
 	public URL getResource(String name) {
-		return null;
+		return assetBundle.getResource(name);
 	}
 
 	@Override
 	public InputStream getResourceAsStream(String name) {
-		return null;
+		return assetBundle.openStream(name);
 	}
 
 }

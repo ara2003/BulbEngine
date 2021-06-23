@@ -12,6 +12,7 @@ public class ResourceLoader {
 	private static final List<ResourceLocation> locations = new ArrayList<>();
 	static {
 		ResourceLoader.locations.add(new FileSystemLocation(new File(".")));
+		ResourceLoader.locations.add(new FileSystemLocation());
 	}
 	
 	public static void addResourceLocation(final ResourceLocation location) {

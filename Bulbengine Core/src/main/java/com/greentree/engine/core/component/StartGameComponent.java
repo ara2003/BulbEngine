@@ -1,7 +1,6 @@
 package com.greentree.engine.core.component;
 
 import com.greentree.common.Starting;
-import com.greentree.engine.core.object.GameComponent;
 import com.greentree.engine.core.system.RequireSystems;
 import com.greentree.engine.core.system.StartGameSystem;
 

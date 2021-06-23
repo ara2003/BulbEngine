@@ -9,6 +9,7 @@ open module bulb3Dengine {
 	requires bulbengine.util;
 
 	exports com.greentree.engine;
+	exports com.greentree.engine.layer;
 	exports com.greentree.engine.collizion;
 	exports com.greentree.engine.collizion.collider;
 	exports com.greentree.engine.collizion.event;

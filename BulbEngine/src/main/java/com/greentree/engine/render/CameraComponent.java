@@ -8,6 +8,7 @@ import org.joml.Vector3f;
 import com.greentree.engine.Windows;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.builder.EditorData;
+import com.greentree.engine.core.builder.Required;
 import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.core.component.StartGameComponent;
 import com.greentree.graphics.Graphics;
@@ -16,7 +17,8 @@ import com.greentree.graphics.Graphics;
 @RequireComponent({Transform.class})
 public class CameraComponent extends StartGameComponent {
 
-	@EditorData(required = true)
+	@Required
+	@EditorData
 	private float width, height;
 
 	private Transform position;

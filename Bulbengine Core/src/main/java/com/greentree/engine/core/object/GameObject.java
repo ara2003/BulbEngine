@@ -10,6 +10,7 @@ import com.greentree.common.collection.HashMapClassTree;
 import com.greentree.common.collection.WeakClassTree;
 import com.greentree.common.logger.Log;
 import com.greentree.engine.core.Events;
+import com.greentree.engine.core.component.GameComponent;
 import com.greentree.engine.core.component.NewComponentEvent;
 import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.core.system.RequireSystems;
@@ -17,16 +18,27 @@ import com.greentree.engine.core.system.RequireSystems;
 public final class GameObject extends GameObjectParent {
 
 	private final WeakClassTree<GameComponent> components;
-	private GameObjectParent parent;
+	private final GameObjectParent parent;
 
 	public GameObject(final String name, final GameObjectParent parent) {
 		super(name);
 		components = new HashMapClassTree<>();
-		if(parent == null) throw new IllegalArgumentException("parent dosen\'t be null");
+		if(parent == null) throw new IllegalArgumentException(this + "parent dosen\'t be null");
+		if(checkParent(parent)) throw new IllegalArgumentException(this + " object cannot be its parent");
 		this.parent = parent;
 		parent.addChildren(this);
 	}
 
+	@Override
+	public boolean destroy() {
+		if(super.destroy()) return true;
+		for(final GameComponent component : components) component.destroy();
+		components.clear();
+		allTreeComponents.clear();
+		updateUpTreeComponents();
+		return false;
+	}
+	
 	public boolean addComponent(final GameComponent component) {
 		if(components.add(component)) {
 			component.setObject(this);
@@ -36,17 +48,13 @@ public final class GameObject extends GameObjectParent {
 		return false;
 	}
 
-	@Override
-	public boolean destroy() {
-		if(super.destroy()) return true;
-		for(final GameComponent component : components) component.destroy();
-		components.clear();
-		for(final GameObject object : childrens) object.destroy();
-		childrens.clear();
-		getParent().removeChildren(this);
-		updateUpTreeComponents();
-		parent = null;
-		return false;
+	private boolean checkParent(GameObjectParent parent2) {
+		if(parent2 instanceof GameObject) {
+			GameObject parent = (GameObject) parent2;
+			if(parent2 == this)return true;
+			return checkParent(parent.getParent());
+		}else
+			return false;
 	}
 
 	public <T extends GameComponent> T getComponent(final Class<T> clazz) {
@@ -68,7 +76,7 @@ public final class GameObject extends GameObjectParent {
 	}
 
 	public GameScene getScene() {
-		if(getParent() instanceof GameScene) return (GameScene) parent;
+		if(parent instanceof GameScene) return (GameScene) parent;
 		return ((GameObject) parent).getScene();
 	}
 
@@ -92,25 +100,19 @@ public final class GameObject extends GameObjectParent {
 		if(!Validator.checkRequireSystem(components, getScene())) Log.error(
 				"component " + Validator.getBrokRequireSystemClass(components, getScene()) + " require is not fulfilled \n" + this);
 
+		for(final GameObject obj : childrens) obj.initSratr();
 		for(final GameComponent component : components) Events.event(new NewComponentEvent(component));
-		for(final GameObject component : childrens) component.start();
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder res = new StringBuilder("[object(").append(getName()).append(")@").append(hashCode());
+		final StringBuilder res = new StringBuilder("[object(").append(getName()).append(")@").append(super.hashCode());
 		if(!components.isEmpty()) {
 			final StringBuilder r = new StringBuilder("\ncomponents:");
-			for(final Object obj : components) r.append("\n").append(obj.toString());
+			for(final GameComponent component : components) r.append("\n").append(component.toString());
 			res.append(r.toString().replace("\n", "\n\t"));
 		}
 		return res.toString() + "]";
-	}
-
-	@Override
-	@Deprecated
-	protected void update() {
-		for(final GameObject component : childrens) component.update();
 	}
 
 	@Override
@@ -136,10 +138,7 @@ public final class GameObject extends GameObjectParent {
 		}
 
 		public static boolean checkRequireSystem(final Iterable<GameComponent> components, final GameScene scene) {
-			A : for(final Class<? extends GameSystem> requireClass : Validator.getRequireSystemClasses(components)) {
-				if(scene.contains(requireClass)) continue A;
-				return false;
-			}
+			for(final Class<? extends GameSystem> requireClass : Validator.getRequireSystemClasses(components)) if(!scene.contains(requireClass))return false;
 			return true;
 		}
 

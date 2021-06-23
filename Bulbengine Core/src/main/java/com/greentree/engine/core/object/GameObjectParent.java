@@ -1,8 +1,8 @@
 package com.greentree.engine.core.object;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -10,11 +10,29 @@ import java.util.stream.Collectors;
 import com.greentree.common.collection.HashMapClassTree;
 import com.greentree.common.collection.WeakClassTree;
 import com.greentree.engine.core.component.ComponentList;
+import com.greentree.engine.core.component.GameComponent;
 
 /** @author Arseny Latyshev */
-public abstract class GameObjectParent extends StartGameElement {
+public abstract class GameObjectParent {
 
-	protected final Set<GameObject> childrens;
+	private boolean isDestoy = false;
+	
+	private boolean isStart = false;
+
+
+	public final void initSratr() {
+		if(isStart) throw new UnsupportedOperationException("reinitialization of : " + this);
+		isStart = true;
+		start();
+	}
+
+	public final boolean isDestroy() {
+		return isDestoy;
+	}
+
+	protected abstract void start();
+	
+	protected final Collection<GameObject> childrens;
 	protected final WeakClassTree<GameComponent> allTreeComponents;
 	protected final String name;
 	protected static final Random random = new Random();
@@ -37,13 +55,12 @@ public abstract class GameObjectParent extends StartGameElement {
 	public final boolean contains(final GameObject node) {
 		return childrens.contains(node);
 	}
-
-	@Override
+	
 	public boolean destroy() {
-		if(super.destroy()) return true;
+		if(isDestroy()) return true;
+		isDestoy = true;
 		for(final GameObject obj : childrens) obj.destroy();
 		childrens.clear();
-		allTreeComponents.clear();
 		return false;
 	}
 

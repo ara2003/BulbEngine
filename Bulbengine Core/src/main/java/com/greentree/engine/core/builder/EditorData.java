@@ -11,6 +11,11 @@ import java.lang.annotation.Target;
 public @interface EditorData {
 
 	String name() default "";
+	/**
+	 * @deprecated use Required
+	 * @return
+	 */
+	@Deprecated
 	boolean required() default false;
 
 }

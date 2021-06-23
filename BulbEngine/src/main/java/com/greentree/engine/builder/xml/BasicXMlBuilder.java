@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +32,7 @@ import com.greentree.data.loaders.value.StringLoader;
 import com.greentree.data.loading.ResourceLoader;
 import com.greentree.engine.Layers;
 import com.greentree.engine.builder.loaders.GameComponentLoader;
+import com.greentree.engine.builder.loaders.GameObjectLoader;
 import com.greentree.engine.builder.loaders.IntegerConstLoader;
 import com.greentree.engine.builder.loaders.LayerLoader;
 import com.greentree.engine.builder.loaders.ObjMeshLoader;
@@ -40,20 +40,17 @@ import com.greentree.engine.builder.loaders.ShaderProgramLoader;
 import com.greentree.engine.builder.loaders.TextureLoader;
 import com.greentree.engine.core.builder.AbstractBuilder;
 import com.greentree.engine.core.builder.EditorData;
-import com.greentree.engine.core.object.GameComponent;
+import com.greentree.engine.core.component.GameComponent;
 import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.object.GameObjectParent;
 import com.greentree.engine.core.object.GameScene;
 import com.greentree.engine.core.object.GameSystem;
-import com.greentree.engine.layer.Layer;
 import com.greentree.engine.layer.LayerComponent;
-import com.greentree.engine.layer.LayerFactory;
 
 /** @author Arseny Latyshev */
 public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 
 	private final LoaderList loaders = new LoaderList();
-
 	{
 		loaders.addLoader(new FloatLoader());
 		loaders.addLoader(new IntegerConstLoader());
@@ -76,64 +73,18 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		loaders.addLoader(new MapLoader());
 		loaders.addLoader(new TableLoader());
 
+		loaders.addLoader(new GameObjectLoader());
 		loaders.addLoader(new ConstructorLoader());
 	}
 
-	private static String getName(final Field field) {
-		String xmlName = field.getAnnotation(EditorData.class).name();
-		if(!xmlName.isBlank()) return xmlName;
-		xmlName = field.getName();
-		if(!xmlName.isBlank()) return xmlName;
-		throw new IllegalArgumentException("could not find a suitable name of " + field);
-	}
 	@Override
-	public GameComponent createComponent(final Class<? extends GameComponent> clazz) {
-		try {
-			final GameComponent component = ClassUtil.newInstance(clazz);
-			return component;
-		}catch(final Exception e) {
-			Log.warn("not create component " + clazz, e);
-			return null;
-		}
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public GameComponent createComponent(final XMLElement xmlElement) {
-		final String type = xmlElement.getAttribute("type");
-		if(type.isBlank()) throw new IllegalArgumentException(xmlElement + " does not contain atribute \"type\"");
-		final Class<? extends GameComponent> clazz = (Class<? extends GameComponent>) loadClass(type);
-		return this.createComponent(clazz);
-	}
-
-	@Override
-	public GameObject createPrefab(final String prefabPath, final GameObjectParent parent) {
-		final InputStream in     = ResourceLoader.getResourceAsStream(prefabPath + ".xml");
-		final GameObject  object = this.createObject(in, parent);
+	public GameObject createPrefab(final String name, final String prefabPath, final GameObjectParent parent) {
+		final XMLElement in     = parse(ResourceLoader.getResourceAsStream(prefabPath + ".xml"));
+		final GameObject  object = new GameObject(name+"#"+getObjectName(in), parent);
 		this.fillObject(object, in);
 		popComponents();
 		object.initSratr();
 		return object;
-	}
-
-	@SuppressWarnings("unchecked")
-	private GameSystem createSystem(final XMLElement xmlElement) {
-		try {
-			final Class<? extends GameSystem> clazz = (Class<? extends GameSystem>) loadClass(xmlElement.getAttribute("type"));
-			return createSystem(clazz);
-		}catch(final Exception e) {
-			Log.warn("system not create " + xmlElement, e);
-			return null;
-		}
-	}
-
-	@Override
-	public void fillComponent(final GameComponent component, final XMLElement in) {
-		try {
-			setFields(component, in);
-		}catch(final Exception e) {
-			Log.warn("not create component " + in, e);
-		}
 	}
 
 	@Override
@@ -144,12 +95,12 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 			ClassUtil.setField(component, "layer", Layers.get(layer));
 			object.addComponent(component);
 		}
-		
+
 		final List<Pair<GameObject, XMLElement>> contextObject = new ArrayList<>();
 		for(final XMLElement element : in.getChildrens("object")) {
 			final GameObject сhildren = this.createObject(element, object);
+			if(сhildren == null)continue;
 			contextObject.add(new Pair<>(сhildren, element));
-			object.addChildren(сhildren);
 		}
 
 		for(final XMLElement element : in.getChildrens("component")) {
@@ -158,8 +109,8 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 			pushComponent(component, element);
 			object.addComponent(component);
 		}
-
-		for(final Pair<GameObject, XMLElement> element : contextObject) this.fillObject(element.first, element.second);
+	
+		for(var var : contextObject)fillObject(var.first, var.second);
 	}
 
 	@Override
@@ -171,42 +122,44 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 			pushSystem(system, el);
 		}
 
+		final List<Pair<GameObject, XMLElement>> contextObject = new ArrayList<>();
 		for(final XMLElement element : in.getChildrens("object")) {
 			final GameObject сhildren = this.createObject(element, scene);
 			if(сhildren == null) continue;
-			scene.addChildren(сhildren);
-			this.fillObject(сhildren, element);
+			contextObject.add(new Pair<>(сhildren, element));
 		}
 
+		for(var var : contextObject)fillObject(var.first, var.second);
 		popComponents();
 		popSystems();
 	}
 
+
 	@Override
-	protected void fillSystem(final GameSystem system, final XMLElement in) {
-		try {
-			setFields(system, in);
-		}catch(final Exception e) {
-			Log.warn("not create component " + in, e);
-		}
+	@SuppressWarnings("unchecked")
+	public Class<? extends GameComponent> getComponentClass(final XMLElement xmlElement) {
+		final String type = xmlElement.getAttribute("type");
+		if(type.isBlank()) throw new IllegalArgumentException(xmlElement + " does not contain atribute \"type\"");
+		return (Class<? extends GameComponent>) ClassUtil.loadClass(type);
 	}
-
-	public final Layer getLayer(final String name) {
-		return Layers.get(name);
-	}
-
-	public final Layer getLayer(final XMLElement in) {
-		return getLayer(in.getAttribute("layer"));
-	}
-
 
 	@Override
 	protected String getObjectName(final XMLElement in) {
 		return in.getAttribute("name", "name");
 	}
 
-	protected final Class<?> loadClass(final String name) {
-		return ClassUtil.loadClass(name);
+	@SuppressWarnings("unchecked")
+	@Override
+	public Class<? extends GameSystem> getSystemClass(XMLElement in) {
+		final String type = in.getAttribute("type");
+		if(type.isBlank()) throw new IllegalArgumentException(in + " does not contains atribute \"type\"");
+		return (Class<? extends GameSystem>) ClassUtil.loadClass(type);
+	}
+
+
+	@Override
+	public Object load(Field field, XMLElement xmlValue) throws Exception {
+		return loaders.parse(field, xmlValue);
 	}
 
 	@Override
@@ -219,51 +172,27 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		}
 	}
 
-	private void setFields(final Object object, final XMLElement attributes) {
-		if(object.getClass().getAnnotation(Deprecated.class) != null)Log.warn("load Deprecated class " + object.getClass().getName());
-		final List<Field> allEditorDataFields = ClassUtil.getAllFieldsWithAnnotation(object.getClass(), EditorData.class);
+	@Override
+	protected void setFields(final Object object, final XMLElement attributes) {
+		if(object.getClass().getAnnotation(Deprecated.class) != null)Log.warn("load Deprecated class " + object.getClass().getName());//Validator
+		final List<Field> allEditorDataFields = ClassUtil.getAllFieldsHasAnnotation(object.getClass(), EditorData.class);
 		{//Validator
 			final Set<String> xmlNamesToFind = new HashSet<>(allEditorDataFields.size());
-			for(final Field field : allEditorDataFields) xmlNamesToFind.add(BasicXMlBuilder.getName(field));
+			for(final Field field : allEditorDataFields) xmlNamesToFind.add(BasicXMlBuilder.getNameOfField(field));
 			for(final XMLElement attribute : attributes.getChildrens())
 				if(!xmlNamesToFind.contains(getObjectName(attribute)))
 					Log.warn("xml element " + object + " has value " + attribute + " and it is not used. [xmlNamesToFind=" + xmlNamesToFind + " attributes=" + attributes + "]");//не часть алгоритма
 		}
 		final Map<String, XMLElement> attributes0 = new HashMap<>(attributes.getChildrens().size());
-		for(final var a : attributes.getChildrens()) attributes0.put(a.getAttribute("name"), a.getChildren("data"));
+		for(final var a : attributes.getChildrens()) attributes0.put(a.getAttribute("name"), a);
 		for(final Field field : allEditorDataFields) try {
-			XMLElement xml = attributes0.get(BasicXMlBuilder.getName(field));
-			if(xml == null && field.getAnnotation(EditorData.class).required())
+			XMLElement xml = attributes0.get(BasicXMlBuilder.getNameOfField(field));
+			if(xml == null && required(field))
 				throw new IllegalArgumentException(String.format("required field(%s) not listed in %s", field, attributes));
 			setValue(object, field, xml);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	protected Object setValue(final Object obj, final Field field, final XMLElement xmlValue) throws Exception {
-		final boolean flag = field.canAccess(obj);
-		field.setAccessible(true);
-		Object value = null;
-		if(xmlValue == null) try {
-			value = field.get(obj);
-		}catch(final IllegalArgumentException | IllegalAccessException e1) {
-			throw new NullPointerException(obj + " " + field + " " + xmlValue);
-		}finally {
-			field.setAccessible(flag);
-		}
-		else value = loaders.parse(field, xmlValue);
-		if(value != null) {
-			field.setAccessible(true);
-			try {
-				field.set(obj, value);
-			}catch(IllegalArgumentException | IllegalAccessException e) {
-				e.printStackTrace();
-			}finally {
-				field.setAccessible(flag);
-			}
-		}
-		return value;
 	}
 
 }

@@ -10,6 +10,7 @@ import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
 import com.greentree.common.logger.Logger;
 import com.greentree.engine.core.SceneLoader;
+import com.greentree.engine.core.component.GameComponent;
 import com.greentree.engine.core.system.RequireSystems;
 
 /** @author Arseny Latyshev */
@@ -60,6 +61,7 @@ public final class GameScene extends GameObjectParent {
 
 		systems.initSratr();
 		for(final GameObject object : childrens) object.initSratr();
+		
 	}
 	public String toSimpleString() {
 		return String.format("GameScene[name=\"%s\"]@%d", name, super.hashCode());
@@ -93,7 +95,7 @@ public final class GameScene extends GameObjectParent {
 
 		@SuppressWarnings("unchecked")
 		public <S extends GameSystem> S get(final Class<S> clazz) {
-			for(GameSystem e : this) if(clazz.isAssignableFrom(clazz))return (S) e;
+			for(GameSystem e : this)if(e.getClass().isAssignableFrom(clazz))return (S) e;
 			return null;
 		}
 

@@ -13,7 +13,6 @@ import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.component.ComponentList;
 import com.greentree.engine.core.object.GameSystem;
 import com.greentree.engine.layer.Layer;
-import com.greentree.engine.layer.LayerComponent;
 
 public class ColliderSystem extends GameSystem {
 
@@ -49,6 +48,8 @@ public class ColliderSystem extends GameSystem {
 				else break;
 			}
 		}
-		Events.event(new CollisionListEvent(nowFream));
+		if(!nowFream.isEmpty()) {
+    		Events.event(new CollisionListEvent(nowFream));
+		}
 	}
 }

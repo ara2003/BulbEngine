@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.greentree.engine.core.object.GameComponent;
 import com.greentree.engine.core.object.GameObject;
 
 /** @author Arseny Latyshev */

@@ -1,6 +1,7 @@
 package com.greentree.graphics;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWCharCallbackI;
 import org.lwjgl.glfw.GLFWCursorPosCallbackI;
 import org.lwjgl.glfw.GLFWDropCallbackI;
 import org.lwjgl.glfw.GLFWErrorCallbackI;
@@ -70,6 +71,9 @@ public class Window implements AutoCloseable {
 
 	protected static void setCallback(final GLFWErrorCallbackI listener) {
 		GLFW.glfwSetErrorCallback(listener);
+	}
+	protected void setCallback(final GLFWCharCallbackI listener) {
+		GLFW.glfwSetCharCallback(id, listener);
 	}
 
 	protected static void setCallback(final GLFWJoystickCallbackI listener) {
