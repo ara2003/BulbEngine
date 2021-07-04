@@ -10,7 +10,6 @@ public class Camera3DRenderSystem extends MultiBehaviour {
 	public void update() {
 		Graphics.enableDepthTest();
 		Graphics.enableCullFace();
-		Graphics.enableBlead();
 
 		//		Cameras.getMainCamera().translate(CameraTranslateType.FRUSTUM, CameraTranslateType.SCALE, CameraTranslateType.MOVE, CameraTranslateType.ROTATE);
 
@@ -20,6 +19,5 @@ public class Camera3DRenderSystem extends MultiBehaviour {
 
 		Graphics.disableDepthTest();
 		Graphics.disableCullFace();
-		Graphics.disableBlead();
 	}
 }

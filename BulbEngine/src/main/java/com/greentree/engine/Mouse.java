@@ -12,11 +12,11 @@ public class Mouse {
 
 	private final static boolean[] mouseButton = new boolean[2];
 	private static int mouseX, mouseY;
-	private static boolean ignre = true;
+	private static boolean ignore = true;
+	
 	static {
 		Windows.window.getMousePosition().addListener((x, y) -> {
-			if(!ignre)Events.event(MouseMovedEvent.getInstanse(Events.getEventsystem(), anyButtonPressed() ? MouseMovedEvent.EventType.mouseDragged : MouseMovedEvent.EventType.mouseMoved, mouseX, mouseY, x, y));
-			ignre = false;
+			if(ignore)ignore = false; else Events.event(MouseMovedEvent.getInstanse(Events.getEventsystem(), anyButtonPressed() ? MouseMovedEvent.EventType.mouseDragged : MouseMovedEvent.EventType.mouseMoved, mouseX, mouseY, x, y));
 			mouseX = x;
 			mouseY = y;
 		});
@@ -47,7 +47,7 @@ public class Mouse {
 	}
 
 	public static void setMousePos(int x, int y) {
-		ignre = true;
+		ignore = true;
 		Windows.window.setMousePos(x, y);
 	}
 

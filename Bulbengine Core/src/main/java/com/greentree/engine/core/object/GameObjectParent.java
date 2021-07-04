@@ -2,7 +2,6 @@ package com.greentree.engine.core.object;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -25,8 +24,7 @@ public abstract class GameObjectParent {
 	protected final WeakClassTree<GameComponent> allTreeComponents;
 
 	protected final String name;
-
-	protected static final Random random = new Random();
+	
 	public GameObjectParent(final String name) {
 		this.name         = name;
 		allTreeComponents = new HashMapClassTree<>();

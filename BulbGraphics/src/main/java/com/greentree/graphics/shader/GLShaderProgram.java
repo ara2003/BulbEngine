@@ -32,6 +32,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
 import com.greentree.graphics.GLType;
+import com.greentree.graphics.Graphics;
 import com.greentree.graphics.shader.VideoBuffer.Type;
 import com.greentree.graphics.shader.VideoBuffer.Usage;
 
@@ -61,21 +62,6 @@ public class GLShaderProgram extends ShaderProgram {
 	}
 	
 	
-	/** Validates current OpenGL error state
-	 * 
-	 * @throws IllegalStateException in case of an OpenGL state error code
-	 * @throws OutOfMemoryError      when no free video memory left */
-	public static void validateOpenGL() {
-		final int errCode = GL11.glGetError();
-		switch(errCode) {
-			case GL_NO_ERROR:
-			break;
-			case GL_OUT_OF_MEMORY:
-				throw new OutOfMemoryError("OpenGL can not allocate video memory");
-			default:
-				throw new IllegalStateException("OpenGL error: " + errCode);
-		}
-	}
 	
 	/** Binds an shader attribute to a number
 	 * 
@@ -84,7 +70,7 @@ public class GLShaderProgram extends ShaderProgram {
 	 *               bind */
 	public void bindAttribLocation(final int attrNo, final String name) {
 		GL20.glBindAttribLocation(this.id, attrNo, name);
-		GLShaderProgram.validateOpenGL();
+		Graphics.validateOpenGL();
 	}
 	
 	/** Creates new OpenGL video buffer, i.e. allocates video memory and
@@ -213,9 +199,9 @@ public class GLShaderProgram extends ShaderProgram {
 		final long componentOffset = offset * dtpSize;
 		vbo.bind();
 		GL20.glVertexAttribPointer(attrNo, vertexSize, vbo.getDataType().glEnum(), normalized, byteStride, componentOffset);
-		GLShaderProgram.validateOpenGL();
+		Graphics.validateOpenGL();
 		GL20.glEnableVertexAttribArray(attrNo);
-		GLShaderProgram.validateOpenGL();
+		Graphics.validateOpenGL();
 		vbo.unbind();
 	}
 	

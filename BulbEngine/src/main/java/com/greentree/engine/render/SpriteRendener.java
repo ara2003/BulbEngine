@@ -14,11 +14,9 @@ import com.greentree.graphics.texture.Filtering;
 import com.greentree.graphics.texture.GLTexture2D;
 
 public class SpriteRendener extends CameraRendenerComponent {
-
-	private transient Transform position;
 	@EditorData
 	private float width, height;
-	@EditorData(name = "image")
+	@EditorData(value = "image")
 	protected GLTexture2D texture;
 
 	public float getHeight() {
@@ -29,6 +27,8 @@ public class SpriteRendener extends CameraRendenerComponent {
 		return width;
 	}
 
+	public Transform position;
+	
 	@Override
 	public void render() {
 		Graphics.pushMatrix();
@@ -75,12 +75,11 @@ public class SpriteRendener extends CameraRendenerComponent {
 
 	@Override
 	public void start() {
+		position = getComponent(Transform.class);
+		
 		texture.setMagFilter(Filtering.LINEAR);
 		texture.setMinFilter(Filtering.NEAREST);
 
 		texture.setWrap(Wrapping.CLAMP_TO_BORDER);
-		position = this.getComponent(Transform.class);
-		if(width == 0) width = texture.getWidth();
-		if(height == 0) height = texture.getHeight();
 	}
 }

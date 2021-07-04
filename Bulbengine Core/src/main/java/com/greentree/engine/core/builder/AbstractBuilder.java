@@ -22,7 +22,7 @@ public abstract class AbstractBuilder<T> implements Builder {
 	private final List<Pair<GameSystem, T>> contextSystem = new ArrayList<>();
 
 	public final static String getNameOfField(final Field field) {
-		String xmlName = field.getAnnotation(EditorData.class).name();
+		String xmlName = field.getAnnotation(EditorData.class).value();
 		if(!xmlName.isBlank()) return xmlName;
 		xmlName = field.getName();
 		if(!xmlName.isBlank()) return xmlName;
@@ -132,10 +132,11 @@ public abstract class AbstractBuilder<T> implements Builder {
 	}
 
 	protected boolean required(Field field) {
-		boolean a =  field.getAnnotation(EditorData.class).required();
-		boolean b =  field.getAnnotation(Required.class) != null;
-		if(a)Log.warn("use Deprecated EditorData.required in field " + field);
-		return a || b;
+//		boolean a =  field.getAnnotation(EditorData.class).required();
+//		boolean b =  field.getAnnotation(Required.class) != null;
+//		if(a)Log.warn("use Deprecated EditorData.required in field " + field);
+//		return a || b;
+		return field.getAnnotation(Required.class) != null;
 	}
 
 	protected abstract void setFields(final Object object, final T attributes);

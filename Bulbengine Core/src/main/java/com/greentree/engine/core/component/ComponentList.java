@@ -65,7 +65,7 @@ public class ComponentList<E extends GameComponent> implements List<E> {
 		return this.list.get(index);
 	}
 
-	public List<? extends GameComponent> getList() {
+	public List<? extends E> getList() {
 		return this.list;
 	}
 

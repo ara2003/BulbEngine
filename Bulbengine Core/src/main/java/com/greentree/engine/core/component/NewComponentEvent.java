@@ -4,6 +4,7 @@ import com.greentree.event.Event;
 
 
 public class NewComponentEvent implements Event {
+
 	private final GameComponent component;
 	private static final long serialVersionUID = 1L;
 

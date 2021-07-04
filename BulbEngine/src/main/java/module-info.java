@@ -7,6 +7,8 @@ open module bulb3Dengine {
 	requires com.google.common;
 	requires com.google.gson;
 	requires bulbengine.util;
+	requires java.xml;
+	requires org.joml;
 
 	exports com.greentree.engine;
 	exports com.greentree.engine.layer;
@@ -14,7 +16,6 @@ open module bulb3Dengine {
 	exports com.greentree.engine.collizion.collider;
 	exports com.greentree.engine.collizion.event;
 	exports com.greentree.engine.input;
-	exports com.greentree.engine.assets;
 	exports com.greentree.engine.component;
 	exports com.greentree.engine.render.ui;
 	exports com.greentree.engine.render;

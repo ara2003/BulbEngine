@@ -1,6 +1,7 @@
 package com.greentree.engine.render.ui;
 
 import com.greentree.engine.core.builder.EditorData;
+import com.greentree.engine.core.builder.Required;
 import com.greentree.graphics.Color;
 import com.greentree.graphics.Graphics;
 
@@ -8,7 +9,8 @@ public final class Text extends UIComponent {
 
 	@EditorData
 	private final Color color = Color.darkGray;
-	@EditorData(required = true)
+	@Required
+	@EditorData
 	private String text;
 	private float h;
 

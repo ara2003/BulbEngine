@@ -31,6 +31,7 @@ import com.greentree.data.loaders.value.StaticFieldLoader;
 import com.greentree.data.loaders.value.StringLoader;
 import com.greentree.data.loading.ResourceLoader;
 import com.greentree.engine.Layers;
+import com.greentree.engine.builder.loaders.ColorLoader;
 import com.greentree.engine.builder.loaders.GameComponentLoader;
 import com.greentree.engine.builder.loaders.GameObjectLoader;
 import com.greentree.engine.builder.loaders.IntegerConstLoader;
@@ -53,29 +54,31 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 
 	private final LoaderList loaders = new LoaderList();
 	{
-		loaders.addLoader(new FloatLoader());
-		loaders.addLoader(new IntegerConstLoader());
-		loaders.addLoader(new IntegerLoader());
-		loaders.addLoader(new TextureLoader());
-		loaders.addLoader(new StringLoader());
-		loaders.addLoader(new ObjMeshLoader());
-		loaders.addLoader(new BooleanLoader());
-		loaders.addLoader(new EnumLoader());
-		loaders.addLoader(new GameComponentLoader());
-		loaders.addLoader(new DoubleLoader());
-		loaders.addLoader(new ShortLoader());
-		loaders.addLoader(new ByteLoader());
-		loaders.addLoader(new CharLoader());
-		loaders.addLoader(new ShaderProgramLoader());
-		loaders.addLoader(new LayerLoader());
-		loaders.addLoader(new StaticFieldLoader());
+		loaders.addParser(new FloatLoader());
+		loaders.addParser(new IntegerConstLoader());
+		loaders.addParser(new IntegerLoader());
+		loaders.addParser(new TextureLoader());
+		loaders.addParser(new StringLoader());
+		loaders.addParser(new ObjMeshLoader());
+		loaders.addParser(new BooleanLoader());
+		loaders.addParser(new EnumLoader());
+		loaders.addParser(new GameComponentLoader());
+		loaders.addParser(new DoubleLoader());
+		loaders.addParser(new ShortLoader());
+		loaders.addParser(new ByteLoader());
+		loaders.addParser(new CharLoader());
+		loaders.addParser(new ShaderProgramLoader());
+		loaders.addParser(new LayerLoader());
+		loaders.addParser(new StaticFieldLoader());
 
-		loaders.addLoader(new ListLoader());
-		loaders.addLoader(new MapLoader());
-		loaders.addLoader(new TableLoader());
+		loaders.addParser(new ListLoader());
+		loaders.addParser(new MapLoader());
+		loaders.addParser(new TableLoader());
 
-		loaders.addLoader(new GameObjectLoader());
-		loaders.addLoader(new ConstructorLoader());
+		loaders.addParser(new GameObjectLoader());
+		loaders.addParser(new ConstructorLoader());
+		
+		loaders.addParser(new ColorLoader());
 	}
 
 	@Override

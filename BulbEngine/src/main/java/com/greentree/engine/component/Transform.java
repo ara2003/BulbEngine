@@ -1,5 +1,6 @@
 package com.greentree.engine.component;
 
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
@@ -13,10 +14,10 @@ public final class Transform extends GameComponent {
 	@EditorData
 	private float rotateX, rotateY, rotateZ;
 	@EditorData
-	private final float scaleX = 1, scaleY = 1, scaleZ = 1;
+	private float scaleX = 1, scaleY = 1, scaleZ = 1;
 	@EditorData
 	private float x, y, z;
-	@EditorData(name = "static")
+	@EditorData(value = "static")
 	private boolean isStatic = false;
 	private final EventAction<Transform> action;
 	private boolean update;
@@ -147,7 +148,7 @@ public final class Transform extends GameComponent {
 		return new Vector2f(x, y);
 	}
 
-	public Vector3fc xyz() {
+	public Vector3f xyz() {
 		update0();
 		return new Vector3f(x, y, z);
 	}
@@ -160,5 +161,32 @@ public final class Transform extends GameComponent {
 	public float z() {
 		update0();
 		return z;
+	}
+
+	public Vector3fc rotateXYZ() {
+		return new Vector3f(rotateX, rotateY, rotateZ);
+	}
+	public Vector3fc scaleXYZ() {
+		return new Vector3f(getScaleX(), getScaleY(), getScaleZ());
+	}
+
+	public float getScaleX() {
+		return scaleX;
+	}
+
+	public float getScaleY() {
+		return scaleY;
+	}
+
+	public float getScaleZ() {
+		return scaleZ;
+	}
+
+	public Matrix4f getModexViewMatrix() {
+		final Matrix4f modelView = new Matrix4f().identity();
+		modelView.translate(x(), y(), z());
+		modelView.scale(getScaleX(), getScaleY(), getScaleZ());
+		modelView.rotateXYZ(getRotateX(), getRotateY(), getRotateZ());
+		return modelView;
 	}
 }

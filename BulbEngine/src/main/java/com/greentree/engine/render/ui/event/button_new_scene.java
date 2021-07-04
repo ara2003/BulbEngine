@@ -1,13 +1,15 @@
 package com.greentree.engine.render.ui.event;
 
 import com.greentree.engine.core.builder.EditorData;
+import com.greentree.engine.core.builder.Required;
 import com.greentree.engine.core.component.StartGameComponent;
 import com.greentree.engine.core.util.SceneLoader;
 import com.greentree.engine.render.ui.Button;
 
 public class button_new_scene extends StartGameComponent {
 
-	@EditorData(required = true, name = "scene")
+	@Required
+	@EditorData(value = "scene")
 	private String sceneName;
 
 	@Override

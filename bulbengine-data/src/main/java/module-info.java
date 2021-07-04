@@ -10,5 +10,6 @@ open module bulbengine.data {
 	exports com.greentree.data.loading;
 	exports com.greentree.data.parse;
 	exports com.greentree.data.serialize;
+	exports com.greentree.engine.assets;
 	
 }

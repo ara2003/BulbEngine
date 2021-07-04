@@ -21,14 +21,18 @@ public class CameraComponent extends StartGameComponent {
 	@EditorData
 	private float width, height;
 
-	private Transform position;
+	public Transform position;
 	private final Vector3f cameraDirection = new Vector3f(), cameraRight = new Vector3f();
-	private final Vector3f up = new Vector3f(0, 1, 0);
+
+	private double pitch;
+
+	private double yaw;
 	{
-		setFront(0, 0, 1);
-		up.cross(cameraDirection, cameraRight);
+		
+		getCameraUp().cross(getCameraDirection(), getCameraRight());
 	}
 	public Vector3f getCameraDirection() {
+		setFront((float) (Math.cos(pitch) * Math.cos(yaw)),(float) Math.sin(pitch),(float) (Math.cos(pitch) * Math.sin(yaw)));
 		return cameraDirection;
 	}
 
@@ -37,7 +41,7 @@ public class CameraComponent extends StartGameComponent {
 	}
 
 	public Vector3f getCameraUp() {
-		return up;
+		return new Vector3f(0, 1, 0);
 	}
 
 	public float getHeight() {
@@ -45,9 +49,9 @@ public class CameraComponent extends StartGameComponent {
 	}
 
 	public Matrix4f getProjection() {
-		final float w = 1.0F;
+		final float w = 1.0F;//TODO
 		final float h = getHeight() / getWidth() * w;
-		return new Matrix4f().frustum(-w, w, -h, h, 0.9F, 10000.0F).lookAt(position.xyz(), cameraDirection.add(position.xyz(), new Vector3f()), up);
+		return new Matrix4f().frustum(-w, w, -h, h, 1.0F, 10000.0F).lookAt(position.xyz(), cameraDirection.add(position.xyz(), new Vector3f()), getCameraUp());
 	}
 
 	public Vector2f getUVPosition(final Vector2fc position) {
@@ -82,16 +86,16 @@ public class CameraComponent extends StartGameComponent {
 	 * @param pitch - в радианах
 	 * @param yaw - в радианах
 	 */
-	public void setAngle(double pitch, double yaw){
-		setFront((float) (Math.cos(pitch) * Math.cos(yaw)),(float) Math.sin(pitch),(float) (Math.cos(pitch) * Math.sin(yaw)));
+	public void setAngle(double pitch, double yaw) {
+		this.pitch = pitch;
+		this.yaw = yaw;
 	}
 
-	public void setFront(float x, float y, float z) {
+	private void setFront(float x, float y, float z) {
 		synchronized(cameraDirection) {
 			cameraDirection.set(x, y, z);
 			cameraDirection.normalize();
-			cameraDirection.cross(up, cameraRight);
-			cameraRight.normalize();
+			cameraDirection.cross(getCameraUp(), cameraRight);
 		}
 	}
 
@@ -100,6 +104,15 @@ public class CameraComponent extends StartGameComponent {
 		position = this.getComponent(Transform.class);
 	}
 
+	public void translateAs3DCamera() {
+		Graphics.pushMatrix();
+		final float w = 1.0F;//TODO
+		final float h = getHeight() / getWidth() * w;
+		Graphics.frustum(-w, w, -h, h, -1.0F, -10000.0F);
+		Graphics.translate(position.x(), position.y(), position.z());
+		Graphics.rotate( -yaw*180 / Math.PI, -pitch*180 / Math.PI, 0);
+	}
+	
 	public void translateAsCamera() {
 		Graphics.pushMatrix();
 		Graphics.scale(2 / width, 2 / height);
@@ -132,10 +145,10 @@ public class CameraComponent extends StartGameComponent {
 	public float WindowToCameraY(final float y) {
 		return y * height / Windows.getWindow().getHeight() + getY();
 	}
-
 	public Vector2f WorldToCamera(final Vector2fc position) {
 		return new Vector2f(WorldToCameraX(position.x()), WorldToCameraY(position.y()));
 	}
+
 	public float WorldToCameraX(final float x) {
 		return x - position.x();
 	}

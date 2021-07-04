@@ -4,6 +4,7 @@ import org.joml.Vector2f;
 
 import com.greentree.engine.KeyBoard;
 import com.greentree.engine.core.builder.EditorData;
+import com.greentree.engine.core.builder.Required;
 import com.greentree.engine.core.util.Events;
 import com.greentree.engine.input.CameraMouseAdapter;
 import com.greentree.graphics.Graphics;
@@ -17,9 +18,11 @@ public class Edit extends UIComponent {
 
 	@EditorData
 	private float border = 2;
-	@EditorData(required = true, name = "default text")
+	@Required
+	@EditorData(value = "default text")
 	private String defaultText;
-	@EditorData(required = true)
+	@Required
+	@EditorData
 	private float width;
 	@EditorData
 	private float height;

@@ -4,6 +4,7 @@ import org.joml.Vector2f;
 
 import com.greentree.action.Action;
 import com.greentree.engine.core.builder.EditorData;
+import com.greentree.engine.core.builder.Required;
 import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.core.component.StartGameComponent;
 import com.greentree.engine.core.util.Events;
@@ -14,7 +15,9 @@ public class ClickComponent extends StartGameComponent {
 
 	@EditorData()
 	private final float border = 2;
-	@EditorData(required = true)
+
+	@Required
+	@EditorData
 	private float width, height;
 
 	private final Action<ButtonListener> action = new Action<>();

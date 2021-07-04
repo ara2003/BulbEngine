@@ -7,9 +7,7 @@ import com.greentree.engine.core.GameCore;
 import com.greentree.engine.core.component.ComponentList;
 import com.greentree.engine.core.component.GameComponent;
 import com.greentree.engine.core.component.NewComponentListener;
-import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.util.Events;
-import com.greentree.event.Listener;
 
 public final class GameSystem  {
 	private boolean isStart = false;
@@ -23,35 +21,22 @@ public final class GameSystem  {
 	public MultiBehaviour getBehaviour() {
 		return behaviour;
 	}
+	
 	public void initSratr() {
 		if(isStart) throw new UnsupportedOperationException("reinitialization of : " + this);
 		isStart = true;
 	    behaviour.start();
 	}
 	
-	public static class MultiBehaviour{
-
-		@Deprecated
-		protected final static void addListener(final Listener listener) {
-			Events.addListener(listener);
-		}
+	public static class MultiBehaviour {
 
 		@SuppressWarnings("unchecked")
 		public static <T> void addNewComponentListener(Class<T> clazz, Consumer<T> consumer) {
-			addListener((NewComponentListener)c-> {
+			Events.addListener((NewComponentListener)c-> {
 				if(clazz.isAssignableFrom(c.getClass()))consumer.accept((T) c);
 			});
 		}
 
-		@Deprecated
-		protected final static GameObject createFromPrefab(final String prefab) {
-			return createFromPrefab(prefab, prefab);
-		}
-
-		@Deprecated
-		protected final static GameObject createFromPrefab(final String name, final String prefab) {
-			return GameCore.createFromPrefab(name, prefab);
-		}
 		protected final <T> List<T> getAllComponents(final Class<T> clazz) {
 			return GameCore.getCurrentScene().getAllComponents(clazz);
 		}

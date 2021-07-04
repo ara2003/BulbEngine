@@ -7,6 +7,7 @@ import org.lwjgl.system.MemoryStack;
 
 import com.greentree.engine.Cameras;
 import com.greentree.engine.component.AbstractMeshComponent;
+import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.mesh.Mesh.IndeciesArray;
@@ -26,7 +27,7 @@ import com.greentree.graphics.shader.VideoBuffer;
 public class MeshRenderer extends Camera3DRendenerComponent {
 
 	// OpenGL program object
-	@EditorData(name = "matirial")
+	@EditorData("matirial")
 	private ShaderProgram program;
 
 	// normal matrix uniform location
@@ -39,36 +40,19 @@ public class MeshRenderer extends Camera3DRendenerComponent {
 
 	private int lengthIndecies;
 
+	private Transform position;
+
 	@Override
 	public void render() {
-
-		//		glEnable(GL_CULL_FACE);
-		//		glCullFace(GL_BACK);
-		//		glEnable(GL_DEPTH_TEST);
-
-		// calculate perspective for our context
-		// those works similar to gluPerspective
-
-		final CameraComponent camera = Cameras.getMainCamera();
-
-		final Matrix4f modelView = new Matrix4f().identity();
-
-		// move model far from eye position
-		modelView.translate(position.x(), position.y(), position.z());
-
-		//		modelView.scale(position.scaleX, position.scaleY, position.scaleZ);
-		//		modelView.scale(1/camera.getWidth(), 1/camera.getHeight(), 1);
-
-		// rotate model a little by x an y axis, to see cube in projection
-		modelView.rotateXYZ(position.getRotateX(), position.getRotateY(), position.getRotateZ());
-
+		final Matrix4f modelView = position.getModexViewMatrix();
+		
 		final Matrix4f normal = new Matrix4f();
 		modelView.normal(normal);
 
 		// take MVP
-		final Matrix4f modelVeiwProjection = new Matrix4f().identity().mul(camera.getProjection()).mul(modelView);
-
-		try(MemoryStack stack = MemoryStack.stackPush()) {
+		final Matrix4f modelVeiwProjection = new Matrix4f().identity().mul(Cameras.getMainCamera().getProjection()).mul(modelView);
+		
+		try(MemoryStack stack = MemoryStack.create(32 * Float.BYTES).push()) {
 			program.start();
 
 			final FloatBuffer nm = stack.callocFloat(16);
@@ -79,10 +63,10 @@ public class MeshRenderer extends Camera3DRendenerComponent {
 			mvpUL.glUniformMatrix4fv(false, mvp);
 			nmUL.glUniformMatrix4fv(false, nm);
 
-
 			vao.bind();
 
 			Graphics.glDrawElements(GLPrimitive.TRIANGLES, lengthIndecies, GLType.UNSIGNED_INT);
+			
 			vao.unbind();
 			program.stop();
 		}
@@ -90,12 +74,11 @@ public class MeshRenderer extends Camera3DRendenerComponent {
 
 	@Override
 	public void start() {
-		super.start();
-
+		position = getComponent(Transform.class);
+		
 		final IndeciesArray mesh = this.getComponent(AbstractMeshComponent.class).getMesh().get(Type.VERTEX, Type.NORMAL);
-
+		
 		try(MemoryStack stack = MemoryStack.stackPush()) {
-
 			vao = new GLVertexArray();
 
 			final VideoBuffer vbo = program.createVideoBuffer(stack.floats(mesh.getVertex()), VideoBuffer.Type.ARRAY_BUFFER, VideoBuffer.Usage.STATIC_DRAW);
@@ -106,6 +89,16 @@ public class MeshRenderer extends Camera3DRendenerComponent {
 
 			vao.bind();
 			vio.bind();
+
+//			for(int i = 0; i < mesh.getVertex().length; i += 6) {
+//				System.out.printf("%2d :", i/6);
+//				for(int j = 0; j < 3; j++) 
+//					System.out.printf("%2d ",Math.round(mesh.getVertex()[i+j]));
+//				for(int j = 0; j < 3; j++) 
+//					System.out.printf("%2d ",Math.round(mesh.getVertex()[i+j]));
+//				System.out.println();
+//			}
+//			System.out.println(Arrays.toString(mesh.getIndecies()));
 
 			program.passVertexAttribArray(vbo, false, Attribute.of("vertex_coord", 3), Attribute.of("vertex_normal", 3));
 
@@ -121,5 +114,5 @@ public class MeshRenderer extends Camera3DRendenerComponent {
 		mvpUL = program.getUniformLocation("mvp");
 		nmUL  = program.getUniformLocation("nm");
 	}
-
+	
 }

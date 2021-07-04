@@ -23,11 +23,6 @@ public abstract class GameCore {
 		return GameCore.builder.createPrefab(name, prefab, SceneLoader.getCurrentScene());
 	}
 
-	protected final static void gameLoop() {
-		Time.updata();
-		SceneLoader.getCurrentScene().update();
-	}
-
 	public static Builder getBuilder() {
 		return GameCore.builder;
 	}
@@ -48,8 +43,10 @@ public abstract class GameCore {
 	public static void start(final String file, final Builder builder, final String[] args) {
 		GameCore.builder = builder;
 		RootFiles.start(file);
-		SceneLoader.loadScene("bootstrap-scene");
-		while(true) GameCore.gameLoop();
+		while(true) {
+			Time.updata();
+			SceneLoader.getCurrentScene().update();
+		}
 	}
 
 }

@@ -47,7 +47,6 @@ public abstract class KeyBoard {
 			result = (String)contents.getTransferData(DataFlavor.stringFlavor);
 		}
 		catch (UnsupportedFlavorException | IOException ex){
-			System.out.println(ex);
 			ex.printStackTrace();
 		}
 		return result;

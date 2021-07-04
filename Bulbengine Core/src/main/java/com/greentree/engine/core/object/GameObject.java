@@ -32,7 +32,7 @@ public final class GameObject extends GameObjectParent {
 	}
 
 	public boolean addComponent(final GameComponent component) {
-		if(components.add(component)) {
+		if(components.add(component, component.getClass())) {
 			component.setObject(this);
 			updateUpTreeComponents();
 			return true;

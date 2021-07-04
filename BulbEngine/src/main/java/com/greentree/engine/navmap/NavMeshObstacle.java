@@ -6,6 +6,7 @@ import org.joml.Vector2f;
 import com.greentree.common.Sized;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.builder.EditorData;
+import com.greentree.engine.core.builder.Required;
 import com.greentree.engine.core.component.StartGameComponent;
 import com.greentree.engine.geom2d.Capsule;
 import com.greentree.engine.geom2d.Circle;
@@ -14,7 +15,9 @@ import com.greentree.engine.geom2d.Rectangle;
 
 public class NavMeshObstacle extends StartGameComponent implements Sized {
 
-	@EditorData(required = true)
+
+	@Required
+	@EditorData
 	private float width, height;
 	private Transform poisition;
 

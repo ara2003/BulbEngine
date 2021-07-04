@@ -24,12 +24,12 @@ public class LoaderList extends PairParserSet<Field, XMLElement, Object, Loader>
 
 				@Override
 				public List<Loader> load(final Class<?> key) throws Exception {
-					return getList().parallelStream().filter(e->e.isLoaded(key)).collect(Collectors.toList());
+					return getParsers().parallelStream().filter(e->e.isLoaded(key)).collect(Collectors.toList());
 				}
 			});
 
 	@Override
-	public void addLoader(final Loader loader) {
+	public void addParser(final Loader loader) {
 		if(loader instanceof SubLoader)
 			((SubLoader) loader).setLoad((Function<Pair<Class<?>, String>, Object>) p->
 			{
@@ -42,7 +42,7 @@ public class LoaderList extends PairParserSet<Field, XMLElement, Object, Loader>
 				}
 				throw new UnsupportedOperationException("no one loader can not load " + p);
 			});
-		super.addLoader(loader);
+		super.addParser(loader);
 	}
 	
 	private List<Loader> getCache(final Class<?> clazz) {
@@ -54,12 +54,8 @@ public class LoaderList extends PairParserSet<Field, XMLElement, Object, Loader>
 		return new ArrayList<>();
 	}
 
-	protected List<Loader> getCache(final Pair<Field, XMLElement> value) {
+	protected List<Loader> getParsers(final Pair<Field, XMLElement> value) {
 		return getCache(value.first.getType());
-	}
-
-	public boolean hasLoader(final Class<? extends Loader> clazz) {
-		return hasParser(clazz);
 	}
 
 	@Override

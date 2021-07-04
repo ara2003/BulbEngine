@@ -9,13 +9,10 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(FIELD)
 public @interface EditorData {
-
-	String name() default "";
+	
 	/**
-	 * @deprecated use Required
-	 * @return
+	 * name
 	 */
-	@Deprecated
-	boolean required() default false;
+	String value() default "";
 
 }

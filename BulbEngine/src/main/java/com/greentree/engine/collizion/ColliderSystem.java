@@ -9,6 +9,7 @@ import com.greentree.engine.Layers;
 import com.greentree.engine.collizion.event.CollisionListEvent;
 import com.greentree.engine.collizion.event.CollisionListenerManager;
 import com.greentree.engine.core.builder.EditorData;
+import com.greentree.engine.core.builder.Required;
 import com.greentree.engine.core.component.ComponentList;
 import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 import com.greentree.engine.core.util.Events;
@@ -17,7 +18,8 @@ import com.greentree.engine.layer.Layer;
 public class ColliderSystem extends MultiBehaviour {
 
 	private final DoubleSet<ColliderComponent> nowFream = new DoubleSet<>();
-	@EditorData(required = true)
+	@Required
+	@EditorData
 	private Table<Layer, Layer, Boolean> table;
 
 	private boolean layerIntersect(final ColliderComponent a, final ColliderComponent b) {
