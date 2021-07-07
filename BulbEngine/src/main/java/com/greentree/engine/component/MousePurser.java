@@ -10,7 +10,7 @@ public class MousePurser extends UpdatingGameComponent {
 
 	@Override
 	public void update() {
-		getComponent(Transform.class).set(Cameras.getMainCamera().getX() + Mouse.getMouseX() * 2, Cameras.getMainCamera().getY() + Mouse.getMouseY() * 2);
+		getComponent(Transform.class).position.set(Cameras.getMainCamera().getX() + Mouse.getMouseX() * 2, Cameras.getMainCamera().getY() + Mouse.getMouseY() * 2, 0);
 	}
 
 }

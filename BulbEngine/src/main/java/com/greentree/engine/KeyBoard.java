@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 
+import com.greentree.common.logger.Log;
 import com.greentree.engine.core.util.Events;
 import com.greentree.graphics.input.Key;
 import com.greentree.graphics.input.event.KeyPressedEvent;
@@ -56,15 +57,25 @@ public abstract class KeyBoard {
 		Windows.window.getKeyPress().addListener(e -> Events.event(KeyPressedEvent.getInstanse(Events.getEventsystem(), e)));
 		Windows.window.getKeyRelease().addListener(e -> Events.event(KeyRepleasedEvent.getInstanse(Events.getEventsystem(), e)));
 		Windows.window.getKeyRepeat().addListener(e -> Events.event(KeyRepeatedEvent.getInstanse(Events.getEventsystem(), e)));
-		
-		Windows.window.getKeyRelease().addListener(k -> press[k] = false);
-				
-		Windows.window.getKeyPressOrRepeat().addListener(e -> {
-			press[e] = true;
-			if(e == Key.BACKSPACE.index()) list.forEach(a -> {
+
+		Windows.window.getKeyRelease().addListener(key -> {
+			try {
+				press[key] = false;
+			}catch (ArrayIndexOutOfBoundsException e) {
+				Log.warn(e);
+			}
+		});
+
+		Windows.window.getKeyPressOrRepeat().addListener(key -> {
+			try {
+				press[key] = true;
+			}catch (ArrayIndexOutOfBoundsException e) {
+				Log.warn(e);
+			}
+			if(key == Key.BACKSPACE.index()) list.forEach(a -> {
 				if(a.length() > 0)a.delete(a.length()-1, a.length());
 			});
-			if(e == Key.V.index() && (isPress(Key.LEFT_CTRL) || isPress(Key.RIGHT_CTRL))) list.forEach(a -> {
+			if(key == Key.V.index() && (isPress(Key.LEFT_CTRL) || isPress(Key.RIGHT_CTRL))) list.forEach(a -> {
 				a.append(getClipboardContents());
 			});
 		});

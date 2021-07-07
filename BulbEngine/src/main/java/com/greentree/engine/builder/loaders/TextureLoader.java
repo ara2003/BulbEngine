@@ -8,13 +8,12 @@ import com.greentree.graphics.texture.GLTexture2D;
 import com.greentree.graphics.texture.GLTextureLoader;
 
 /** @author Arseny Latyshev */
-public class TextureLoader extends CachingAbstractLoader<GLTexture2D> {
+public class TextureLoader extends CachingAbstractLoader {
 
 	public TextureLoader() {
 		super(GLTexture2D.class);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public GLTexture2D load0(final String value) throws IOException {
 		GLTexture2D t = GLTextureLoader.getTexture2D(value);

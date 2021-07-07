@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.greentree.common.logger.Log;
 import com.greentree.common.pair.Pair;
 
 /** @author Arseny Latyshev */
@@ -42,18 +43,21 @@ public class ParserSet<V, R, P extends Parser<V, R>> implements Parser<V, R>, It
 	}
 
 	protected final R parse(final V value, Collection<P> collection) throws Exception {
+		if(collection.isEmpty())throw new IllegalArgumentException("not parsers for " + value);
 		final Collection<Pair<P, Exception>> exception = new ArrayList<>();
-		for(final P a : collection) try {
-			return a.parse(value);
+		for(final P p : collection) try {
+			var res = p.parse(value);
+			Log.info(value + " parse with " + p);
+			return res;
 		}catch(final Exception e) {
-			exception.add(new Pair<>(a, e));
+			exception.add(new Pair<>(p, e));
 		}
 		if(isNullable(value)) {
 			return null;
 		}else {
 			for(final Pair<P, Exception> e : exception) {
-				var e0 = new UnsupportedOperationException(String.format("%s in %s error:%s", value, e.first, e.second.getMessage()));
-				e0.setStackTrace(e.second.getStackTrace());
+				var e0 = new UnsupportedOperationException(String.format("%s in %s error:%s", value, e.first, e.seconde.getMessage()));
+				e0.setStackTrace(e.seconde.getStackTrace());
 				e0.printStackTrace();
 			}
 			throw new UnsupportedOperationException(exception.toString());

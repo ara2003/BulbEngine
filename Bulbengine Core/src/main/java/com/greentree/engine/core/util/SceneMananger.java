@@ -4,7 +4,9 @@ package com.greentree.engine.core.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Objects;
 
 import com.greentree.common.logger.Log;
@@ -14,12 +16,12 @@ import com.greentree.engine.core.GameCore;
 import com.greentree.engine.core.object.GameScene;
 
 /** @author Arseny Latyshev */
-public abstract class SceneLoader {
+public abstract class SceneMananger {
 
 	protected static GameScene currentScene;
 
 	public static GameScene getCurrentScene() {
-		return Objects.requireNonNull(SceneLoader.currentScene, "current scene is null");
+		return Objects.requireNonNull(SceneMananger.currentScene, "current scene is null");
 	}
 
 	public static GameScene getScene(String file) {
@@ -53,7 +55,7 @@ public abstract class SceneLoader {
 	}
 	private static GameScene loadScene0(final InputStream inputStream) {
 		final GameScene   scene       = GameCore.getBuilder().createScene(inputStream);
-		SceneLoader.reset(scene);
+		SceneMananger.reset(scene);
 		GameCore.getBuilder().fillScene(scene, inputStream);
 		scene.start();
 		return scene;
@@ -61,10 +63,14 @@ public abstract class SceneLoader {
 
 	private static void reset(final GameScene scene) {
 		Events.clear();
-		if(SceneLoader.currentScene != null) SceneLoader.currentScene.destroy();
-		SceneLoader.currentScene = null;
+		if(SceneMananger.currentScene != null) SceneMananger.currentScene.destroy();
+		SceneMananger.currentScene = null;
 		Runtime.getRuntime().gc();
-		SceneLoader.currentScene = scene;
+		SceneMananger.currentScene = scene;
+	}
+
+	public static boolean isCurrent(GameScene scene) {
+		return scene == currentScene;
 	}
 
 }

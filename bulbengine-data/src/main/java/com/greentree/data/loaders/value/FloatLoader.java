@@ -1,7 +1,7 @@
 package com.greentree.data.loaders.value;
 
 /** @author Arseny Latyshev */
-public class FloatLoader extends PrimitiveLoader<Float> {
+public class FloatLoader extends PrimitiveLoader {
 	
 	public FloatLoader() {
 		super(float.class);

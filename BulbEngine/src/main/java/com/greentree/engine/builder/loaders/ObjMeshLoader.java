@@ -2,10 +2,9 @@ package com.greentree.engine.builder.loaders;
 
 import java.util.Scanner;
 
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-
 import com.greentree.common.logger.Log;
+import com.greentree.common.math.vector.Vector2f;
+import com.greentree.common.math.vector.Vector3f;
 import com.greentree.data.loaders.value.CachingAbstractLoader;
 import com.greentree.data.loading.ResourceLoader;
 import com.greentree.engine.mesh.Mesh;
@@ -13,7 +12,7 @@ import com.greentree.engine.mesh.Mesh.Builder;
 import com.greentree.engine.mesh.Mesh.Builder.VertexIndex;
 
 /** @author Arseny Latyshev */
-public class ObjMeshLoader extends CachingAbstractLoader<Mesh> {
+public class ObjMeshLoader extends CachingAbstractLoader {
 
 	private Builder mesh;
 
@@ -31,7 +30,6 @@ public class ObjMeshLoader extends CachingAbstractLoader<Mesh> {
 		return mesh.new VertexIndex(v, n, t);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Mesh load0(final String resourse) {
 		if(!resourse.endsWith(".obj")) throw new IllegalArgumentException(resourse);

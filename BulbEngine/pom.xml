@@ -50,6 +50,12 @@
 			 <artifactId>geometry</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
+		<!-- my lan -->
+		<dependency>
+			<groupId>com.greentree.freamworks</groupId>
+			<artifactId>mylan</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
 		<!-- bulb engine -->
 		<dependency>
 			<groupId>com.greentree.common</groupId>

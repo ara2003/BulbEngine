@@ -15,6 +15,7 @@ public class CollisionListenerManager extends AbstractListenerManager<CollisionL
 	private final DoubleSet<ColliderComponent> nowFream = new DoubleSet<>();
 	private final ArrayList<DoubleCollisionListener> listeners = new ArrayList<>();
 	private final ArrayList<CollisionListListener> listenersList = new ArrayList<>();
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected boolean addListener0(Listener listener) {
@@ -29,21 +30,21 @@ public class CollisionListenerManager extends AbstractListenerManager<CollisionL
 		nowFream.addAll(event.getCollection());
 		for(CollisionListListener l : listenersList)l.ColliderList(nowFream);
 		for(final UnOrentetPair<ColliderComponent> p : nowFream) if(lastFream.remove(p)) {
-			p.first.getAction().collizionStay(p.second);
-			p.second.getAction().collizionStay(p.first);
-			for(DoubleCollisionListener l : listeners)l.CollisionStay(p.first, p.second);
-			for(DoubleCollisionListener l : listeners)l.CollisionStay(p.second, p.first);
+			p.first.getAction().collizionStay(p.seconde);
+			p.seconde.getAction().collizionStay(p.first);
+			for(DoubleCollisionListener l : listeners)l.CollisionStay(p.first, p.seconde);
+			for(DoubleCollisionListener l : listeners)l.CollisionStay(p.seconde, p.first);
 		}else {
-			p.first.getAction().collizionEnter(p.second);
-			p.second.getAction().collizionEnter(p.first);
-			for(DoubleCollisionListener l : listeners)l.CollisionEnter(p.first, p.second);
-			for(DoubleCollisionListener l : listeners)l.CollisionEnter(p.second, p.first);
+			p.first.getAction().collizionEnter(p.seconde);
+			p.seconde.getAction().collizionEnter(p.first);
+			for(DoubleCollisionListener l : listeners)l.CollisionEnter(p.first, p.seconde);
+			for(DoubleCollisionListener l : listeners)l.CollisionEnter(p.seconde, p.first);
 		}
 		for(final UnOrentetPair<ColliderComponent> p : lastFream) {
-			p.first.getAction().collizionExit(p.second);
-			p.second.getAction().collizionExit(p.first);
-			for(DoubleCollisionListener l : listeners)l.CollisionExit(p.first, p.second);
-			for(DoubleCollisionListener l : listeners)l.CollisionExit(p.second, p.first);
+			p.first.getAction().collizionExit(p.seconde);
+			p.seconde.getAction().collizionExit(p.first);
+			for(DoubleCollisionListener l : listeners)l.CollisionExit(p.first, p.seconde);
+			for(DoubleCollisionListener l : listeners)l.CollisionExit(p.seconde, p.first);
 		}
 		lastFream.clear();
 		lastFream.addAll(nowFream);

@@ -1,7 +1,7 @@
 package com.greentree.data.loaders.value;
 
 /** @author Arseny Latyshev */
-public class ShortLoader extends PrimitiveLoader<Short> {
+public class ShortLoader extends PrimitiveLoader {
 	
 	public ShortLoader() {
 		super(short.class);

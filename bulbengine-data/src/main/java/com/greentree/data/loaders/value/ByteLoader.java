@@ -1,7 +1,7 @@
 package com.greentree.data.loaders.value;
 
 /** @author Arseny Latyshev */
-public class ByteLoader extends PrimitiveLoader<Byte> {
+public class ByteLoader extends PrimitiveLoader {
 	
 	public ByteLoader() {
 		super(byte.class);

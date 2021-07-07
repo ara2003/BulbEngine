@@ -28,7 +28,7 @@ public abstract class AbstractBuilder<T> implements Builder {
 		if(!xmlName.isBlank()) return xmlName;
 		throw new IllegalArgumentException("could not find a suitable name of " + field);
 	}
-
+	
 	public final GameComponent createComponent(final Class<? extends GameComponent> clazz) {
 		try {
 			return ClassUtil.newInstance(clazz);
@@ -71,7 +71,7 @@ public abstract class AbstractBuilder<T> implements Builder {
 		}
 	}
 
-	public void fillComponent(final GameComponent component, final T in) {
+	protected void fillComponent(final GameComponent component, final T in) {
 		try {
 			setFields(component, in);
 		}catch(final Exception e) {
@@ -110,16 +110,16 @@ public abstract class AbstractBuilder<T> implements Builder {
 
 	public abstract Class<? extends MultiBehaviour> getMultiBehaviourClass(T in);
 
-	public abstract Object load(Field field, T xmlValue) throws Exception;
+	public abstract Object load(Field field, T xmlValue, Object _default) throws Exception;
 
 	public abstract T parse(InputStream in);
 	protected final void popComponents() {
-		for(final Pair<GameComponent, T> element : this.contextComponent) this.fillComponent(element.first, element.second);
+		for(final Pair<GameComponent, T> element : this.contextComponent) this.fillComponent(element.first, element.seconde);
 		this.contextComponent.clear();
 	}
 
 	protected final void popSystems() {
-		for(final Pair<GameSystem, T> element : this.contextSystem) this.fillSystem(element.first, element.second);
+		for(final Pair<GameSystem, T> element : this.contextSystem) this.fillSystem(element.first, element.seconde);
 		this.contextSystem.clear();
 	}
 
@@ -132,27 +132,23 @@ public abstract class AbstractBuilder<T> implements Builder {
 	}
 
 	protected boolean required(Field field) {
-//		boolean a =  field.getAnnotation(EditorData.class).required();
-//		boolean b =  field.getAnnotation(Required.class) != null;
-//		if(a)Log.warn("use Deprecated EditorData.required in field " + field);
-//		return a || b;
 		return field.getAnnotation(Required.class) != null;
 	}
 
 	protected abstract void setFields(final Object object, final T attributes);
 
-	protected Object setValue(final Object obj, final Field field, final T xmlValue) throws Exception {
+	protected Object setValue(final Object obj, final Field field, final T tvalue) throws Exception {
 		final boolean flag = field.canAccess(obj);
 		field.setAccessible(true);
-		Object value = null;
-		if(xmlValue == null) try {
-			value = field.get(obj);
-		}catch(final IllegalArgumentException | IllegalAccessException e1) {
-			throw new NullPointerException(obj + " " + field + " " + xmlValue);
+		Object _default = null;
+		try {
+			_default = field.get(obj);
+		}catch(final IllegalArgumentException | IllegalAccessException e) {
+			throw new NullPointerException(obj + " " + field + " " + tvalue);
 		}finally {
 			field.setAccessible(flag);
 		}
-		else value = load(field, xmlValue);
+		Object value = (tvalue == null)?_default : load(field, tvalue, _default);
 		if(value != null) {
 			field.setAccessible(true);
 			try {

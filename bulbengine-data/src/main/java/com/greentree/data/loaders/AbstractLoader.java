@@ -1,11 +1,11 @@
 package com.greentree.data.loaders;
 
 /** @author Arseny Latyshev */
-public abstract class AbstractLoader<C> implements Loader {
+public abstract class AbstractLoader implements Loader {
 	
-	private final Class<C> clazz;
+	private final Class<?> clazz;
 	
-	public AbstractLoader(final Class<C> LoadengClazz) {
+	public AbstractLoader(final Class<?> LoadengClazz) {
 		this.clazz = LoadengClazz;
 	}
 	

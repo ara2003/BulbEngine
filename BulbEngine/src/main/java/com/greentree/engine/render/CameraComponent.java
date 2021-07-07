@@ -1,10 +1,12 @@
 package com.greentree.engine.render;
 
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
 import org.joml.Vector2fc;
-import org.joml.Vector3f;
 
+import com.greentree.common.math.vector.AbstractVector2f;
+import com.greentree.common.math.vector.AbstractVector3f;
+import com.greentree.common.math.vector.Vector2f;
+import com.greentree.common.math.vector.Vector3f;
 import com.greentree.engine.Windows;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.builder.EditorData;
@@ -22,21 +24,21 @@ public class CameraComponent extends StartGameComponent {
 	private float width, height;
 
 	public Transform position;
-	private final Vector3f cameraDirection = new Vector3f(), cameraRight = new Vector3f();
+	private final AbstractVector3f cameraDirection = new Vector3f(), cameraRight = new Vector3f();
 
 	private double pitch;
 
 	private double yaw;
 	{
-		
 		getCameraUp().cross(getCameraDirection(), getCameraRight());
 	}
-	public Vector3f getCameraDirection() {
+	
+	public AbstractVector3f getCameraDirection() {
 		setFront((float) (Math.cos(pitch) * Math.cos(yaw)),(float) Math.sin(pitch),(float) (Math.cos(pitch) * Math.sin(yaw)));
 		return cameraDirection;
 	}
 
-	public Vector3f getCameraRight() {
+	public AbstractVector3f getCameraRight() {
 		return cameraRight;
 	}
 
@@ -51,10 +53,10 @@ public class CameraComponent extends StartGameComponent {
 	public Matrix4f getProjection() {
 		final float w = 1.0F;//TODO
 		final float h = getHeight() / getWidth() * w;
-		return new Matrix4f().frustum(-w, w, -h, h, 1.0F, 10000.0F).lookAt(position.xyz(), cameraDirection.add(position.xyz(), new Vector3f()), getCameraUp());
+		return new Matrix4f().frustum(-w, w, -h, h, 1.0F, 10000.0F).lookAt(position.position.toJoml(), cameraDirection.add(position.position, new Vector3f()).toJoml(), getCameraUp().toJoml());
 	}
 
-	public Vector2f getUVPosition(final Vector2fc position) {
+	public AbstractVector2f getUVPosition(final Vector2fc position) {
 		return WindowToCamera(position).add(-position.x(), -position.y()).mul(2).div(width, height);
 	}
 
@@ -62,24 +64,24 @@ public class CameraComponent extends StartGameComponent {
 		return width;
 	}
 
-	public Vector2f getWorldPosition(final Vector2fc position) {
+	public AbstractVector2f getWorldPosition(final AbstractVector2f position) {
 		final Vector2f vec = new Vector2f(position);
-		vec.x += this.position.x();
+		vec.x += this.position.position.x();
 		vec.x /= 1f * Windows.getWindow().getWidth() / width;
-		vec.y += this.position.y();
+		vec.y += this.position.position.y();
 		vec.y /= 1f * Windows.getWindow().getHeight() / height;
 		return vec;
 	}
 
 	public float getX() {
-		return position.x();
+		return position.position.x();
 	}
 	public float getY() {
-		return position.y();
+		return position.position.y();
 	}
 
 	public float getZ() {
-		return position.z();
+		return position.position.z();
 	}
 
 	/**
@@ -109,7 +111,7 @@ public class CameraComponent extends StartGameComponent {
 		final float w = 1.0F;//TODO
 		final float h = getHeight() / getWidth() * w;
 		Graphics.frustum(-w, w, -h, h, -1.0F, -10000.0F);
-		Graphics.translate(position.x(), position.y(), position.z());
+		Graphics.translate(position.position.x(), position.position.y(), position.position.z());
 		Graphics.rotate( -yaw*180 / Math.PI, -pitch*180 / Math.PI, 0);
 	}
 	
@@ -134,7 +136,7 @@ public class CameraComponent extends StartGameComponent {
 		Graphics.popMatrix();
 	}
 
-	public Vector2f WindowToCamera(final Vector2fc position) {
+	public AbstractVector2f WindowToCamera(final Vector2fc position) {
 		return new Vector2f(WindowToCameraX(position.x()), WindowToCameraY(position.y()));
 	}
 
@@ -150,11 +152,11 @@ public class CameraComponent extends StartGameComponent {
 	}
 
 	public float WorldToCameraX(final float x) {
-		return x - position.x();
+		return x - position.position.x();
 	}
 
 	public float WorldToCameraY(final float y) {
-		return y - position.y();
+		return y - position.position.y();
 	}
 
 }

@@ -2,6 +2,7 @@ package com.greentree.engine.render;
 
 import org.lwjgl.system.MemoryStack;
 
+import com.greentree.common.math.vector.VectorAction3f;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.graphics.Color;
@@ -27,12 +28,12 @@ public class SpriteRendener extends CameraRendenerComponent {
 		return width;
 	}
 
-	public Transform position;
+	public VectorAction3f position;
 	
 	@Override
 	public void render() {
 		Graphics.pushMatrix();
-		Graphics.translate(position.x()+width/2, position.y()+height/2, position.z());
+		Graphics.translate(position.x() + width/2, position.y() + height/2, position.z());
 
 		Graphics.enableBlead();
 
@@ -75,7 +76,7 @@ public class SpriteRendener extends CameraRendenerComponent {
 
 	@Override
 	public void start() {
-		position = getComponent(Transform.class);
+		position = getComponent(Transform.class).position;
 		
 		texture.setMagFilter(Filtering.LINEAR);
 		texture.setMinFilter(Filtering.NEAREST);

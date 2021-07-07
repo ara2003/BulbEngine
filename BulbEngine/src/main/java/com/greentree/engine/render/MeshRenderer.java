@@ -44,7 +44,7 @@ public class MeshRenderer extends Camera3DRendenerComponent {
 
 	@Override
 	public void render() {
-		final Matrix4f modelView = position.getModexViewMatrix();
+		final Matrix4f modelView = position.getModelViewMatrix();
 		
 		final Matrix4f normal = new Matrix4f();
 		modelView.normal(normal);

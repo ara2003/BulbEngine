@@ -1,9 +1,10 @@
 package com.greentree.data.loaders.collection;
 
+import com.greentree.data.loaders.Loader2;
 import com.greentree.data.loaders.SubLoader;
 
 
-public abstract class AbstactSubLoader<C> extends SubLoader {
+public abstract class AbstactSubLoader<C> extends SubLoader implements Loader2 {
 
 	private final Class<C> clazz;
 	

@@ -1,8 +1,9 @@
 package com.greentree.engine.render.ui;
 
-import org.joml.Vector2f;
-
+import com.greentree.common.math.vector.AbstractVector2f;
+import com.greentree.common.math.vector.VectorAction3f;
 import com.greentree.engine.KeyBoard;
+import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.builder.Required;
 import com.greentree.engine.core.util.Events;
@@ -39,13 +40,14 @@ public class Edit extends UIComponent {
 		return defaultText;
 	}
 	private final StringBuilder textBuilder = new StringBuilder("");
+	private VectorAction3f position;
 	
 	private boolean click0(final int x, final int y) {
-		final Vector2f vec = position.xy();
-		if(x < vec.x - width / 2 - border) return false;
-		if(x > vec.x + width / 2 + border) return false;
-		if(y < vec.y - height / 2 - border) return false;
-		if(y > vec.y + height / 2 + border) return false;
+		final AbstractVector2f vec = position.xy();
+		if(x < vec.x() - width / 2 - border) return false;
+		if(x > vec.x() + width / 2 + border) return false;
+		if(y < vec.y() - height / 2 - border) return false;
+		if(y > vec.y() + height / 2 + border) return false;
 		return true;
 	}
 	@Override
@@ -65,8 +67,9 @@ public class Edit extends UIComponent {
 	}
 	@Override
 	public void start() {
-		super.start();
+		position = getComponent(Transform.class).position;
 		Events.addListener(new CameraMouseAdapter() {
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void mousePress(final int button, final int x, final int y) {

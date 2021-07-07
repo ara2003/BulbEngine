@@ -11,9 +11,9 @@ public class EnumLoader implements ValueLoader {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T parse(Class<T> clazz, String value) throws Exception {
+	public Object parse(Class<?> clazz, String value) throws Exception {
 		try {
-		return (T) Enum.valueOf(clazz.asSubclass(Enum.class), value);
+		return Enum.valueOf(clazz.asSubclass(Enum.class), value);
 	}catch(final NoClassDefFoundError e) {
 		throw new ClassNotFoundException(clazz.getName() + " " + value);
 	}

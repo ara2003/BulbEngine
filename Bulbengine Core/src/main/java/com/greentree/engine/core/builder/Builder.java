@@ -1,6 +1,7 @@
 package com.greentree.engine.core.builder;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.object.GameObjectParent;
@@ -11,7 +12,7 @@ public interface Builder {
 
 	//create prefab
 	GameObject createPrefab(String name, String prefabName, GameObjectParent parent);
-
+	
 	//create Scene
 	GameScene createScene(InputStream in);
 	void fillScene(GameScene emptyScene, InputStream in);

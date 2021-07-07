@@ -18,7 +18,6 @@ import com.greentree.engine.core.system.RequireSystems;
 import com.greentree.engine.core.util.Events;
 
 public final class GameObject extends GameObjectParent {
-
 	private final WeakClassTree<GameComponent> components;
 	private final GameObjectParent parent;
 

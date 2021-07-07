@@ -2,11 +2,12 @@ package com.greentree.engine;
 
 import com.greentree.common.concurent.MultyTask;
 import com.greentree.common.time.Time;
+import com.greentree.data.FileUtil;
 import com.greentree.engine.builder.xml.BasicXMlBuilder;
 import com.greentree.engine.core.GameCore;
 import com.greentree.engine.core.object.GameScene;
 import com.greentree.engine.core.util.RootFiles;
-import com.greentree.engine.core.util.SceneLoader;
+import com.greentree.engine.core.util.SceneMananger;
 import com.greentree.graphics.BulbGL;
 import com.greentree.graphics.Graphics;
 
@@ -20,15 +21,19 @@ public class Game3D extends GameCore {
 	}
 	
 	public static void start(final String folder, final String[] args) {
+		GameCore.addArgumentConflict("-run", "-build");
+		GameCore.addArguments(args);
 		RootFiles.start(folder);
+		
+		FileUtil.addUseFileListener(f -> System.out.println(f.getName()));
+		
 		GameCore.setBuilder(new BasicXMlBuilder());
 		{
-    		GameScene scene = SceneLoader.loadScene(BOOTSTRAP_SCENE);
-    		if(scene.isCurrent()) throw new UnsupportedOperationException("the boot-strap scene has not changed");
+    		GameScene scene = SceneMananger.loadScene(BOOTSTRAP_SCENE);
+    		if(SceneMananger.isCurrent(scene)) throw new UnsupportedOperationException("the boot-strap scene has not changed");
 		}
 
-		Mouse.getMouseX();//static constructor
-
+		Mouse.init();
 		KeyBoard.init();
 		
 		while(!Windows.getWindow().isShouldClose()) {
@@ -36,7 +41,7 @@ public class Game3D extends GameCore {
 			Graphics.glClearAll();
 			Windows.getWindow().updateEvents();
 			Time.updata();
-			SceneLoader.getCurrentScene().update();
+			SceneMananger.getCurrentScene().update();
 		}
 		MultyTask.shutdown();
 		BulbGL.terminate();

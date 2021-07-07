@@ -1,7 +1,7 @@
 package com.greentree.data.loaders.value;
 
 /** @author Arseny Latyshev */
-public class DoubleLoader extends PrimitiveLoader<Double> {
+public class DoubleLoader extends PrimitiveLoader {
 	
 	public DoubleLoader() {
 		super(double.class);

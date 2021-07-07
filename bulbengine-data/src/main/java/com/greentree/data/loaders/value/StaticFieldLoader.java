@@ -6,26 +6,24 @@ import java.util.Objects;
 
 /** @author Arseny Latyshev */
 public class StaticFieldLoader implements ValueLoader {
-	
+
 	@Override
 	public boolean isLoaded(final Class<?> clazz) {
-		if(clazz.isEnum()) return false;
-		if(clazz.isPrimitive()) return false;
-		for(Field f : clazz.getFields())if((f.getModifiers() & Modifier.STATIC) != 0)return true;
+		if(clazz.isEnum() || clazz.isPrimitive()) return false;
+		for(Field f : clazz.getFields())if((f.getModifiers() & (Modifier.STATIC | Modifier.FINAL)) != 0&&clazz.isAssignableFrom(f.getType()))return true;
 		return false;
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	@Override
-	public <T> T parse(final Class<T> fieldClass, final String value) throws Exception {
+	public Object parse(final Class<?> fieldClass, final String value) throws Exception {
 		final Field field = fieldClass.getField(Objects.requireNonNull(value));
 		if((field.getModifiers() & Modifier.STATIC) == 0)
 			throw new UnsupportedOperationException("not static");
 		try {
-			return (T) field.get(null);
+			return field.get(null);
 		}catch(final ExceptionInInitializerError e) {
 			throw new UnsupportedOperationException(e);
 		}
 	}
-	
+
 }

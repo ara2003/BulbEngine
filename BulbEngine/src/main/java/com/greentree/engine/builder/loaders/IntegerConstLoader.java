@@ -4,7 +4,7 @@ import com.greentree.data.loaders.value.PrimitiveLoader;
 import com.greentree.engine.Windows;
 
 /** @author Arseny Latyshev */
-public class IntegerConstLoader extends PrimitiveLoader<Integer> {
+public class IntegerConstLoader extends PrimitiveLoader {
 
 	public IntegerConstLoader() {
 		super(int.class);
@@ -16,4 +16,5 @@ public class IntegerConstLoader extends PrimitiveLoader<Integer> {
 		if("window::height".equals(value)) return Windows.getWindow().getHeight();
 		throw new UnsupportedOperationException(value + " is not Integer Const");
 	}
+
 }

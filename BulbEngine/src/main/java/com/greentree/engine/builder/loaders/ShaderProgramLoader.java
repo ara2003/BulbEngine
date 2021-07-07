@@ -11,15 +11,14 @@ import com.greentree.graphics.shader.ShaderProgram;
 import com.greentree.graphics.shader.ShaderType;
 
 /** @author Arseny Latyshev */
-public class ShaderProgramLoader extends AbstractVlaueLoader<ShaderProgram> {
+public class ShaderProgramLoader extends AbstractVlaueLoader {
 
 	public ShaderProgramLoader() {
 		super(ShaderProgram.class);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public ShaderProgram parse(final String value) throws Exception {
+	public Object parse(final String value) throws Exception {
 		if(!value.endsWith(".matirial")) throw new IllegalArgumentException();
 		final Properties properties = new Properties();
 		try {

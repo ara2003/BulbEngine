@@ -1,7 +1,7 @@
 package com.greentree.data.loaders.value;
 
 /** @author Arseny Latyshev */
-public class BooleanLoader extends PrimitiveLoader<Boolean> {
+public class BooleanLoader extends PrimitiveLoader {
 	
 	public BooleanLoader() {
 		super(boolean.class);

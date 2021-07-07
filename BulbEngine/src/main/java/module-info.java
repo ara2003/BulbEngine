@@ -7,8 +7,9 @@ open module bulb3Dengine {
 	requires com.google.common;
 	requires com.google.gson;
 	requires bulbengine.util;
-	requires java.xml;
 	requires org.joml;
+	requires bulbengine.data;
+	requires mylan;
 
 	exports com.greentree.engine;
 	exports com.greentree.engine.layer;

@@ -1,5 +1,7 @@
 package com.greentree.engine.render.ui;
 
+import com.greentree.common.math.vector.VectorAction3f;
+import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.builder.Required;
 import com.greentree.graphics.Color;
@@ -13,6 +15,7 @@ public final class Text extends UIComponent {
 	@EditorData
 	private String text;
 	private float h;
+	private VectorAction3f position;
 
 	public String getText() {
 		return text;
@@ -32,6 +35,6 @@ public final class Text extends UIComponent {
 
 	@Override
 	public void start() {
-		super.start();
+		position = getComponent(Transform.class).position;
 	}
 }

@@ -9,11 +9,11 @@ import java.util.stream.Collectors;
 import com.greentree.common.xml.XMLElement;
 
 
-public class ConstructorLoader extends SubLoader implements Loader {
+public class ConstructorLoader extends SubLoader implements Loader2 {
 
 	@Override
 	public boolean isLoaded(Class<?> clazz) {
-		if(clazz.isPrimitive() || clazz.isArray() || clazz.isEnum() || clazz.isInterface() || (clazz.getConstructors().length == 0))return false;
+		if(clazz.isPrimitive() || clazz.isArray() || clazz.isEnum() || clazz.isInterface())return false;
 		return true;
 	}
 

@@ -5,11 +5,11 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
 
 import com.greentree.common.math.Mathf;
+import com.greentree.common.math.vector.AbstractVector3f;
+import com.greentree.common.math.vector.Vector3f;
 import com.greentree.common.time.Time;
 import com.greentree.engine.Cameras;
 import com.greentree.engine.component.AbstractMeshComponent;
@@ -62,14 +62,12 @@ public class ParticleComponent extends Camera3DRendenerComponent {
 	private float deltaTime;
 	private Transform position;
 
-	private final static Vector3f norm = new Vector3f(0, 0, -1);
-	private final static Vector3f origin_norm = new Vector3f(0, 0, 1);
+//	private final static Vector3f norm = new Vector3f(0, 0, -1);
+//	private final static Vector3f origin_norm = new Vector3f(0, 0, 1);
 	
 	@Override
 	public void render() {
-		final Matrix4f modelView = new Matrix4f().identity();
-		modelView.translate(position.x(), position.y(), position.z());
-		modelView.rotateXYZ(position.getRotateX(), position.getRotateY(), position.getRotateZ());
+		final Matrix4f modelView = position.getModelViewMatrix();
 		Matrix4f modelVeiwProjection = new Matrix4f().identity().mul(Cameras.getMainCamera().getProjection()).mul(modelView);
 		try(MemoryStack stack = MemoryStack.create(Float.BYTES * 16 * particles.size()).push()) {
 			program.start();
@@ -80,8 +78,8 @@ public class ParticleComponent extends Camera3DRendenerComponent {
 				var old = new Matrix4f(modelVeiwProjection);
 				modelVeiwProjection.translate(particle.x, particle.y, particle.z);
 				
-				Vector3f norm = sub(Cameras.getMainCamera().position.xyz(), new Vector3f(particle.x+position.x(), particle.y+position.y(), particle.z+position.z()));
-				norm.normalize();
+//				Vector3f norm = sub(Cameras.getMainCamera().position.xyz(), new Vector3f(particle.x+position.x(), particle.y+position.y(), particle.z+position.z()));
+//				norm.normalize();
 				
 //				System.out.println(Cameras.getMainCamera().position.xyz() + "-" + new Vector3f(particle.x, particle.y, particle.z) + "=" +norm);
 				
@@ -101,13 +99,7 @@ public class ParticleComponent extends Camera3DRendenerComponent {
 		}
 		updateParticls();
 	}
-	private Vector3f sub(Vector3f v1, Vector3f v2) {
-		return new Vector3f(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
-	}
 	
-	private Vector3f negative(Vector3f vec) {
-		return new Vector3f(-vec.x, -vec.y, -vec.z);
-	}
 	@Override
 	public void start() {
 		position = getComponent(Transform.class);
@@ -156,19 +148,16 @@ public class ParticleComponent extends Camera3DRendenerComponent {
 	protected static class Particle {
 		public float x, y, z, speedx, speedy, speedz, time, scale = 1;
 
-		public Particle(Vector3f speed) {
-			speedx = speed.x;
-			speedy = speed.y;
-			speedz = speed.z;
+		public Particle(AbstractVector3f speed) {
+			speedx = speed.x();
+			speedy = speed.y();
+			speedz = speed.z();
 		}
-		public Particle(Vector3f position, Vector3f speed) {
-			x = position.x;
-			y = position.y;
-			z = position.z;
-
-			speedx = speed.x;
-			speedy = speed.y;
-			speedz = speed.z;
+		public Particle(AbstractVector3f position, AbstractVector3f speed) {
+			this(speed);
+			x = position.x();
+			y = position.y();
+			z = position.z();
 		}
 
 		@Override
@@ -181,13 +170,12 @@ public class ParticleComponent extends Camera3DRendenerComponent {
 	public enum Shape{
 		SPHERE{
 			@Override
-			protected Vector3f nextSpeed() {
+			protected AbstractVector3f nextSpeed() {
 				return new Vector3f(Mathf.random()*2-1, Mathf.random()*2-1, Mathf.random()*2-1).normalize();
-//				return new Vector3f(0);
 			}
 		};
 
-		protected abstract Vector3f nextSpeed();
+		protected abstract AbstractVector3f nextSpeed();
 	}
 
 }

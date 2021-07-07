@@ -10,13 +10,13 @@ import java.util.stream.Collectors;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.greentree.common.pair.Pair;
+import com.greentree.common.triple.Triple;
 import com.greentree.common.xml.XMLElement;
 import com.greentree.data.loaders.value.ValueLoader;
-import com.greentree.data.parse.PairParserSet;
+import com.greentree.data.parse.TripleParserSet;
 
 /** @author Arseny Latyshev */
-public class LoaderList extends PairParserSet<Field, XMLElement, Object, Loader> {
+public class LoaderList extends TripleParserSet<Field, XMLElement, Object, Object, Loader> {
 
 	private static final long serialVersionUID = 1L;
 	private final LoadingCache<Class<?>, List<Loader>> cache = CacheBuilder.newBuilder().softValues()
@@ -31,12 +31,11 @@ public class LoaderList extends PairParserSet<Field, XMLElement, Object, Loader>
 	@Override
 	public void addParser(final Loader loader) {
 		if(loader instanceof SubLoader)
-			((SubLoader) loader).setLoad((Function<Pair<Class<?>, String>, Object>) p->
-			{
-				for(var a : getCache(p.first).parallelStream().filter(e->e instanceof ValueLoader).map(e->(ValueLoader) e)
+			((SubLoader) loader).setLoad((Function<Triple<Class<?>, String, Object>, Object>) p -> {
+				for(var a : getCache(p.v1).parallelStream().filter(e->e instanceof ValueLoader).map(e->(ValueLoader) e)
 						.collect(Collectors.toList())) {
 					try {
-						return a.parse(p.first, p.second.trim());
+						return a.parse(p.v1, p.v2.trim());
 					}catch(Exception e1) {
 					}
 				}
@@ -54,13 +53,14 @@ public class LoaderList extends PairParserSet<Field, XMLElement, Object, Loader>
 		return new ArrayList<>();
 	}
 
-	protected List<Loader> getParsers(final Pair<Field, XMLElement> value) {
-		return getCache(value.first.getType());
+	@Override
+	protected List<Loader> getParsers(final Triple<Field, XMLElement, Object> value) {
+		return getCache(value.v1.getType());
 	}
 
 	@Override
-	protected boolean isNullable(final Pair<Field, XMLElement> value) {
-		return value.first.getType().isPrimitive();
+	protected boolean isNullable(final Triple<Field, XMLElement, Object> value) {
+		return value.v1.getType().isPrimitive();
 	}
 	
 }

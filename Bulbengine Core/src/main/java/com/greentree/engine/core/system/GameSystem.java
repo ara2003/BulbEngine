@@ -10,8 +10,9 @@ import com.greentree.engine.core.component.NewComponentListener;
 import com.greentree.engine.core.util.Events;
 
 public final class GameSystem  {
-	private boolean isStart = false;
 
+
+	private boolean isStart = false;
 	private final MultiBehaviour behaviour;
 
 	public GameSystem(MultiBehaviour behaviour) {
@@ -21,13 +22,13 @@ public final class GameSystem  {
 	public MultiBehaviour getBehaviour() {
 		return behaviour;
 	}
-	
+
 	public void initSratr() {
 		if(isStart) throw new UnsupportedOperationException("reinitialization of : " + this);
 		isStart = true;
-	    behaviour.start();
+		behaviour.start();
 	}
-	
+
 	public static class MultiBehaviour {
 
 		@SuppressWarnings("unchecked")

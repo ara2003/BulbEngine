@@ -13,11 +13,9 @@ import com.greentree.engine.core.component.GameComponent;
 import com.greentree.engine.core.system.GameSystem;
 import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 import com.greentree.engine.core.system.RequireSystems;
-import com.greentree.engine.core.util.SceneLoader;
 
 /** @author Arseny Latyshev */
 public final class GameScene extends GameObjectParent {
-
 	private final SystemCollection systems;
 	static {
 		try {
@@ -49,10 +47,6 @@ public final class GameScene extends GameObjectParent {
 
 	public <T extends MultiBehaviour> GameSystem getSystem(final Class<T> clazz) {
 		return systems.get(clazz);
-	}
-
-	public boolean isCurrent() {
-		return this == SceneLoader.getCurrentScene();
 	}
 
 	@Override
@@ -138,6 +132,10 @@ public final class GameScene extends GameObjectParent {
 					Collections.addAll(requireComponents, rcom.value());
 			return requireComponents;
 		}
+	}
+
+	public Collection<GameSystem> getSystems() {
+		return systems;
 	}
 
 }

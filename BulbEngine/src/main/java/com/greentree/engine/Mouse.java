@@ -1,5 +1,6 @@
 package com.greentree.engine;
 
+import com.greentree.common.logger.Log;
 import com.greentree.engine.core.util.Events;
 import com.greentree.graphics.input.event.MouseClickEvent;
 import com.greentree.graphics.input.event.MouseMovedEvent;
@@ -10,22 +11,30 @@ import com.greentree.graphics.input.event.MouseMovedEvent;
  */
 public class Mouse {
 
-	private final static boolean[] mouseButton = new boolean[2];
+	private final static boolean[] mouseButton = new boolean[3];
 	private static int mouseX, mouseY;
 	private static boolean ignore = true;
 	
-	static {
+	public static void init(){
 		Windows.window.getMousePosition().addListener((x, y) -> {
 			if(ignore)ignore = false; else Events.event(MouseMovedEvent.getInstanse(Events.getEventsystem(), anyButtonPressed() ? MouseMovedEvent.EventType.mouseDragged : MouseMovedEvent.EventType.mouseMoved, mouseX, mouseY, x, y));
 			mouseX = x;
 			mouseY = y;
 		});
 		Windows.window.getMouseButtonPress().addListener(b -> {
-			mouseButton[b] = true;
+			try {
+				mouseButton[b] = true;
+			}catch (ArrayIndexOutOfBoundsException e) {
+				Log.warn(e);
+			}
 			Events.event(MouseClickEvent.getInstanse(Events.getEventsystem(), MouseClickEvent.EventType.mousePress, b, mouseX, mouseY));
 		});
 		Windows.window.getMouseButtonRelease().addListener(b -> {
-			mouseButton[b] = false;
+			try {
+				mouseButton[b] = false;
+			}catch (ArrayIndexOutOfBoundsException e) {
+				Log.warn(e);
+			}
 			Events.event(MouseClickEvent.getInstanse(Events.getEventsystem(), MouseClickEvent.EventType.mouseRelease, b, mouseX, mouseY));
 		});
 		Windows.window.getMouseButtonRepeat().addListener(b -> {

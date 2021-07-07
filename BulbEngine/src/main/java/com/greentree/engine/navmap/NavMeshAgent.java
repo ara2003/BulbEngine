@@ -3,8 +3,7 @@ package com.greentree.engine.navmap;
 import java.util.Deque;
 import java.util.LinkedList;
 
-import org.joml.Vector2f;
-
+import com.greentree.common.math.vector.AbstractVector2f;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.component.GameComponent;
@@ -19,13 +18,13 @@ public class NavMeshAgent extends GameComponent {
 	private String type = "default";
 	@EditorData
 	private float speed;
-	private final Deque<Vector2f> path = new LinkedList<>();
+	private final Deque<AbstractVector2f> path = new LinkedList<>();
 
-	public void addPathPoint(Vector2f point) {
+	public void addPathPoint(AbstractVector2f point) {
 		path.push(point);
 	}
 
-	public Deque<Vector2f> getPath() {
+	public Deque<AbstractVector2f> getPath() {
 		return path;
 	}
 

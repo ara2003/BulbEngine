@@ -1,18 +1,14 @@
 package com.greentree.data.loading;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.nio.file.Path;
 
-public class FileSystemLocation implements ResourceLocation {
+public class FileSystemLocation extends FileResourceLocation {
 	
 	private final File root;
 	
 	public FileSystemLocation(final File root) {
-		if(root != null && root.isDirectory() == false) throw new IllegalArgumentException("root must by directory");
+		if(root.isDirectory() == false) throw new IllegalArgumentException("root must by directory");
 		this.root = root;
 	}
 	
@@ -20,39 +16,23 @@ public class FileSystemLocation implements ResourceLocation {
 		this(path.toFile());
 	}
 	
-	public FileSystemLocation(final String root) {
-		this(new File(root));
+	public FileSystemLocation(final String file) {
+		this(new File(file));
 	}
 	
 	public FileSystemLocation() {
 		root = null;
 	}
-
-	@Override
-	public URL getResource(final String ref) {
-		try {
-			File file = new File(root, ref);
-			if(!file.exists()) file = new File(ref);
-			if(!file.exists()) return null;
-			return file.toURI().toURL();
-		}catch(final IOException e) {
-			return null;
-		}
-	}
-	
-	@Override
-	public InputStream getResourceAsStream(final String ref) {
-		try {
-			File file = new File(root, ref);
-			if(!file.exists()) file = new File(ref);
-			return new FileInputStream(file);
-		}catch(final IOException e) {
-		}
-		return null;
-	}
 	
 	@Override
 	public String toString() {
 		return "FileSystemLocation" + ((root == null)?"":" [file=" + root + "]");
+	}
+
+	@Override
+	protected File getFile(String name) {
+		if(root != null)
+			return new File(root, name);
+		return new File(name);
 	}
 }

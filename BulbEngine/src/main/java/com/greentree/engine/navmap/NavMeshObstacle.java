@@ -1,9 +1,8 @@
 package com.greentree.engine.navmap;
 
 
-import org.joml.Vector2f;
-
 import com.greentree.common.Sized;
+import com.greentree.common.math.vector.AbstractVector2f;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.builder.Required;
@@ -21,7 +20,7 @@ public class NavMeshObstacle extends StartGameComponent implements Sized {
 	private float width, height;
 	private Transform poisition;
 
-	public boolean canGo(Vector2f from, Vector2f to, float radius) {
+	public boolean canGo(AbstractVector2f from, AbstractVector2f to, float radius) {
 		if(isInside(from, radius))return true;
 		return !new Rectangle(getX(), getY(), width, height).isIntersect(new Capsule(from, to, radius));
 	}
@@ -36,13 +35,13 @@ public class NavMeshObstacle extends StartGameComponent implements Sized {
 	}
 
 	public float getX() {
-		return poisition.x() - width/2;
+		return poisition.position.x() - width/2;
 	}
 
 	public float getY() {
-		return poisition.y() - height/2;
+		return poisition.position.y() - height/2;
 	}
-	public boolean isInside(Vector2f vec, float radius) {
+	public boolean isInside(AbstractVector2f vec, float radius) {
 		return new Rectangle(getX(), getY(), width, height).isIntersect(new Circle(vec, radius));
 	}
 

@@ -83,10 +83,10 @@ public abstract class ColliderComponent extends StartUpdatingGameComponent imple
 	@Override
 	public final void start() {
 		shape = generateShape();//не перемещать в конструктор
-		this.getComponent(Transform.class).getAction().addListener(t-> {
+		this.getComponent(Transform.class).position.addListener(t-> {
 			setPosition(t.x() + getDeltaX(), t.y() + getDeltaY());
 		});
-		this.getComponent(Transform.class).update();
+		this.getComponent(Transform.class).position.tryAction();
 	}
 
 	@Override

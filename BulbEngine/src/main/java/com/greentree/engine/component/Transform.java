@@ -1,192 +1,58 @@
 package com.greentree.engine.component;
 
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector3fc;
 
-import com.greentree.action.EventAction;
+import com.greentree.common.math.Mathf;
+import com.greentree.common.math.vector.VectorAction3f;
 import com.greentree.engine.core.builder.EditorData;
-import com.greentree.engine.core.component.GameComponent;
+import com.greentree.engine.core.component.StartGameComponent;
+import com.greentree.engine.core.object.GameObject;
+import com.greentree.engine.core.object.GameObjectParent;
 
-public final class Transform extends GameComponent {
+public class Transform extends StartGameComponent {
 
 	@EditorData
-	private float rotateX, rotateY, rotateZ;
+	public final VectorAction3f scale = new VectorAction3f(1);
+
+	
 	@EditorData
-	private float scaleX = 1, scaleY = 1, scaleZ = 1;
+	public final VectorAction3f rotation = new VectorAction3f(0);
+	
 	@EditorData
-	private float x, y, z;
-	@EditorData(value = "static")
+	public final VectorAction3f position = new VectorAction3f(0);
+	
+	@EditorData("static")
 	private boolean isStatic = false;
-	private final EventAction<Transform> action;
-	private boolean update;
 
-	public Transform() {
-		action = new EventAction<>();
+	private static Matrix4f getModelViewMatrix0(GameObject obj) {
+		Transform transform = obj.getComponent(Transform.class);
+		final Matrix4f modelView = new Matrix4f();
+		if(transform == null)return modelView;
+		modelView.translate(transform.position.toJoml());
+		modelView.scale(transform.scale.toJoml());
+		modelView.rotateXYZ(transform.rotation.toJoml());
+		return modelView;
 	}
-
-	private void action() {
-		if(isStatic) throw new UnsupportedOperationException("Transform is static " + getObject());
-		update = true;
-	}
-
-	public void addX(final float x) {
-		this.x += x;
-		action();
-	}
-
-	public void addXY(final float x, final float y) {
-		this.x += x;
-		this.y += y;
-		action();
-	}
-
-	public void addXY(final Vector2f vec) {
-		x += vec.x;
-		y += vec.y;
-		action();
-	}
-
-	public void addXYZ(final Vector3f mul) {
-		x += mul.x;
-		y += mul.y;
-		z += mul.z;
-		action();
-	}
-
-	public void addY(final float y) {
-		this.y += y;
-		action();
-	}
-
-	public void addZ(final float z) {
-		this.z += z;
-		action();
-	}
-
-	public EventAction<Transform> getAction() {
-		return action;
-	}
-
-	public float getRotateX() {
-		update0();
-		return rotateX;
-	}
-
-	public float getRotateY() {
-		update0();
-		return rotateY;
-	}
-
-	public float getRotateZ() {
-		update0();
-		return rotateZ;
+	
+	
+	public Matrix4f getModelViewMatrix() {
+		final Matrix4f modelView = new Matrix4f();
+		GameObjectParent par = getObject();
+		while(par instanceof GameObject) {
+			GameObject obj = (GameObject) par;
+			modelView.mul(getModelViewMatrix0(obj));
+			par = obj.getParent();
+		}
+		return modelView;
 	}
 
 	public boolean isStatic() {
 		return isStatic;
 	}
 
-	public void rotate(final double f, final float speedX, final float speedY, final float speedZ) {
-		rotateX += speedX * f;
-		rotateY += speedY * f;
-		rotateZ += speedZ * f;
-		action();
-	}
 
-	public void rotate(final float speedX, final float speedY, final float speedZ) {
-		rotateX += speedX;
-		rotateY += speedY;
-		rotateZ += speedZ;
-		action();
-	}
-
-	public void set(final float x, final float y) {
-		this.x = x;
-		this.y = y;
-		action();
-	}
-
-	public void setRotateX(final float rotateX) {
-		this.rotateX = rotateX;
-		action();
-	}
-
-	public void setRotateY(final float rotateY) {
-		this.rotateY = rotateY;
-		action();
-	}
-
-	public void setRotateZ(final float rotateZ) {
-		this.rotateZ = rotateZ;
-		action();
-	}
-
-	public void subXY(Vector2f vec) {
-		x -= vec.x;
-		y -= vec.y;
-		action();
-	}
-
-	public void update() {
-		action.action(this);
-	}
-	private void update0() {
-		if(!update) return;
-		update = false;
-		update();
-	}
-
-	public float x() {
-		update0();
-		return x;
-	}
-
-	public Vector2f xy() {
-		update0();
-		return new Vector2f(x, y);
-	}
-
-	public Vector3f xyz() {
-		update0();
-		return new Vector3f(x, y, z);
-	}
-
-	public float y() {
-		update0();
-		return y;
-	}
-
-	public float z() {
-		update0();
-		return z;
-	}
-
-	public Vector3fc rotateXYZ() {
-		return new Vector3f(rotateX, rotateY, rotateZ);
-	}
-	public Vector3fc scaleXYZ() {
-		return new Vector3f(getScaleX(), getScaleY(), getScaleZ());
-	}
-
-	public float getScaleX() {
-		return scaleX;
-	}
-
-	public float getScaleY() {
-		return scaleY;
-	}
-
-	public float getScaleZ() {
-		return scaleZ;
-	}
-
-	public Matrix4f getModexViewMatrix() {
-		final Matrix4f modelView = new Matrix4f().identity();
-		modelView.translate(x(), y(), z());
-		modelView.scale(getScaleX(), getScaleY(), getScaleZ());
-		modelView.rotateXYZ(getRotateX(), getRotateY(), getRotateZ());
-		return modelView;
+	@Override
+	public void start() {
+		if(Mathf.min(scale.x(), scale.y(), scale.z()) <= 1E-9)throw new RuntimeException("scale x|y|z == 0 " + getObject());
 	}
 }

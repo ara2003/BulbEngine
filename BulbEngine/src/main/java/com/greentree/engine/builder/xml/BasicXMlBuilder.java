@@ -1,9 +1,12 @@
 package com.greentree.engine.builder.xml;
 
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,7 +17,8 @@ import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
 import com.greentree.common.pair.Pair;
 import com.greentree.common.xml.XMLElement;
-import com.greentree.data.loaders.ConstructorLoader;
+import com.greentree.data.assets.Asset;
+import com.greentree.data.assets.AssetUtil;
 import com.greentree.data.loaders.LoaderList;
 import com.greentree.data.loaders.collection.ListLoader;
 import com.greentree.data.loaders.collection.MapLoader;
@@ -31,14 +35,24 @@ import com.greentree.data.loaders.value.StaticFieldLoader;
 import com.greentree.data.loaders.value.StringLoader;
 import com.greentree.data.loading.ResourceLoader;
 import com.greentree.engine.Layers;
+import com.greentree.engine.assets.JPGImageAssetHandler;
+import com.greentree.engine.assets.MatirialAssetHandler;
+import com.greentree.engine.assets.OBJMeshAssetHandler;
+import com.greentree.engine.assets.OpenGLShadingLanguageAssetHandler;
+import com.greentree.engine.assets.PNGImageAssetHandler;
+import com.greentree.engine.assets.PrefabAssetHandler;
+import com.greentree.engine.assets.SceneAssetHandler;
 import com.greentree.engine.builder.loaders.ColorLoader;
 import com.greentree.engine.builder.loaders.GameComponentLoader;
 import com.greentree.engine.builder.loaders.GameObjectLoader;
 import com.greentree.engine.builder.loaders.IntegerConstLoader;
 import com.greentree.engine.builder.loaders.LayerLoader;
 import com.greentree.engine.builder.loaders.ObjMeshLoader;
+import com.greentree.engine.builder.loaders.PrefabLoader;
 import com.greentree.engine.builder.loaders.ShaderProgramLoader;
 import com.greentree.engine.builder.loaders.TextureLoader;
+import com.greentree.engine.builder.loaders.Vector2fLoader;
+import com.greentree.engine.builder.loaders.Vector3fLoader;
 import com.greentree.engine.core.builder.AbstractBuilder;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.component.GameComponent;
@@ -51,34 +65,59 @@ import com.greentree.engine.layer.LayerComponent;
 
 /** @author Arseny Latyshev */
 public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
+	
+	static {
+		AssetUtil.addAssetHandler(new SceneAssetHandler());
+		AssetUtil.addAssetHandler(new PrefabAssetHandler());
+		AssetUtil.addAssetHandler(new PNGImageAssetHandler());
+		AssetUtil.addAssetHandler(new JPGImageAssetHandler());
+		AssetUtil.addAssetHandler(new OpenGLShadingLanguageAssetHandler());
+		AssetUtil.addAssetHandler(new OBJMeshAssetHandler());
+		AssetUtil.addAssetHandler(new MatirialAssetHandler());
+		
+		Collection<Asset> assets = null;
+		try {
+			File a = new File("D:\\programing\\Java\\projects\\Engines\\BulbEngine\\test3D\\Game\\Assets");
+			assets = AssetUtil.getAssets(a);
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
 
 	private final LoaderList loaders = new LoaderList();
 	{
 		loaders.addParser(new FloatLoader());
-		loaders.addParser(new IntegerConstLoader());
 		loaders.addParser(new IntegerLoader());
-		loaders.addParser(new TextureLoader());
-		loaders.addParser(new StringLoader());
-		loaders.addParser(new ObjMeshLoader());
 		loaders.addParser(new BooleanLoader());
-		loaders.addParser(new EnumLoader());
-		loaders.addParser(new GameComponentLoader());
 		loaders.addParser(new DoubleLoader());
 		loaders.addParser(new ShortLoader());
 		loaders.addParser(new ByteLoader());
 		loaders.addParser(new CharLoader());
-		loaders.addParser(new ShaderProgramLoader());
+		loaders.addParser(new EnumLoader());
+		loaders.addParser(new StringLoader());
+		
+		loaders.addParser(new Vector3fLoader());
+		loaders.addParser(new Vector2fLoader());
+		
 		loaders.addParser(new LayerLoader());
+		
+		loaders.addParser(new IntegerConstLoader());
+		
+		loaders.addParser(new GameComponentLoader());
+		loaders.addParser(new GameObjectLoader());
+		loaders.addParser(new PrefabLoader());
+		
+		loaders.addParser(new TextureLoader());
+		loaders.addParser(new ColorLoader());
+		loaders.addParser(new ObjMeshLoader());
+		loaders.addParser(new ShaderProgramLoader());
+		
 		loaders.addParser(new StaticFieldLoader());
 
 		loaders.addParser(new ListLoader());
 		loaders.addParser(new MapLoader());
 		loaders.addParser(new TableLoader());
-
-		loaders.addParser(new GameObjectLoader());
-		loaders.addParser(new ConstructorLoader());
-		
-		loaders.addParser(new ColorLoader());
 	}
 
 	@Override
@@ -99,13 +138,15 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 			ClassUtil.setField(component, "layer", Layers.get(layer));
 			object.addComponent(component);
 		}
-
+		
 		final List<Pair<GameObject, XMLElement>> contextObject = new ArrayList<>();
 		for(final XMLElement element : in.getChildrens("object")) {
 			final GameObject сhildren = this.createObject(element, object);
 			if(сhildren == null)continue;
 			contextObject.add(new Pair<>(сhildren, element));
 		}
+		
+		for(var var : contextObject)fillObject(var.first, var.seconde);
 
 		for(final XMLElement element : in.getChildrens("component")) {
 			final GameComponent component = this.createComponent(element);
@@ -113,8 +154,6 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 			pushComponent(component, element);
 			object.addComponent(component);
 		}
-	
-		for(var var : contextObject)fillObject(var.first, var.second);
 	}
 
 	@Override
@@ -133,11 +172,10 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 			contextObject.add(new Pair<>(сhildren, element));
 		}
 
-		for(var var : contextObject)fillObject(var.first, var.second);
+		for(var var : contextObject)fillObject(var.first, var.seconde);
 		popComponents();
 		popSystems();
 	}
-
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -162,8 +200,8 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 
 
 	@Override
-	public Object load(Field field, XMLElement xmlValue) throws Exception {
-		return loaders.parse(field, xmlValue);
+	public Object load(Field field, XMLElement xmlValue, Object _default) throws Exception {
+		return loaders.parse(field, xmlValue, _default);
 	}
 
 	@Override
@@ -198,5 +236,6 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 			e.printStackTrace();
 		}
 	}
+	
 
 }
