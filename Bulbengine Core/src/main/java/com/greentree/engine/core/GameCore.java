@@ -30,11 +30,11 @@ public abstract class GameCore {
 		return SceneMananger.getCurrentScene().addSystem(system);
 	}
 	public static GameObject createFromPrefab(final String prefab) {
-		return GameCore.builder.createPrefab(null, prefab, SceneMananger.getCurrentScene());
+		return GameCore.builder.createPrefab(null, prefab);
 	}
 
 	public static GameObject createFromPrefab(final String name, final String prefab) {
-		return GameCore.builder.createPrefab(name, prefab, SceneMananger.getCurrentScene());
+		return GameCore.builder.createPrefab(name, prefab);
 	}
 
 	public static Builder getBuilder() {

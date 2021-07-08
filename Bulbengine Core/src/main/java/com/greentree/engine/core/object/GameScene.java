@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
@@ -24,6 +25,8 @@ public final class GameScene extends GameObjectParent {
 			e.printStackTrace();
 		}
 	}
+
+
 	public GameScene(final String name) {
 		super(name);
 		systems = new SystemCollection();
@@ -49,6 +52,9 @@ public final class GameScene extends GameObjectParent {
 		return systems.get(clazz);
 	}
 
+	public Collection<GameSystem> getSystems() {
+		return systems;
+	}
 	@Override
 	public void start() {
 		if(!Validator.checkRequire(systems)) Log.error(
@@ -58,20 +64,21 @@ public final class GameScene extends GameObjectParent {
 		for(final GameObject object : childrens) object.initSratr();
 
 	}
+
+	@Override
 	public String toSimpleString() {
-		return String.format("GameScene[name=\"%s\"]@%d", name, super.hashCode());
+		return String.format("GameScene[name=\"%s\"]@%d", name, id);
 	}
 
 	@Override
 	public String toString() {
-		return "GameScene [systems=" + systems + " children=" + childrens + "]@" + hashCode();
+		return "GameScene [systems=" + systems + " children=" + childrens + "]@" + id;
 	}
 
 	@Override
 	public void update() {
 		Logger.print("update scene", "s %d", System.nanoTime());
 		systems.update();
-		//		for(final GameObject object : childrens) object.update();TODO
 		Logger.print("update scene", "f %d", System.nanoTime());
 	}
 
@@ -132,10 +139,6 @@ public final class GameScene extends GameObjectParent {
 					Collections.addAll(requireComponents, rcom.value());
 			return requireComponents;
 		}
-	}
-
-	public Collection<GameSystem> getSystems() {
-		return systems;
 	}
 
 }

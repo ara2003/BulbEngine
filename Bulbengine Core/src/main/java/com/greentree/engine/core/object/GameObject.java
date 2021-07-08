@@ -16,10 +16,16 @@ import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 import com.greentree.engine.core.system.RequireSystems;
 import com.greentree.engine.core.util.Events;
+import com.greentree.engine.core.util.SceneMananger;
 
 public final class GameObject extends GameObjectParent {
 	private final WeakClassTree<GameComponent> components;
 	private final GameObjectParent parent;
+	public GameObject(String name) {
+		super(name);
+		components = new HashMapClassTree<>();
+		parent = null;
+	}
 
 	public GameObject(final String name, final GameObjectParent parent) {
 		super(name);
@@ -48,10 +54,30 @@ public final class GameObject extends GameObjectParent {
 			return false;
 	}
 
+	public GameObject copy() {
+		return copy(SceneMananger.getCurrentScene());
+	}
+
+	public GameObject copy(GameObjectParent parent) {
+		GameObject obj = new GameObject(getName()+"#copy", parent);
+		for(var c : components) {
+			var copy = c.copy();
+			copy.setObject(obj);
+			obj.components.add(copy);
+		}
+		for(var c : childrens)
+			obj.childrens.add(c.copy(obj));
+		obj.updateUpTreeComponents();
+		obj.initSratr();
+		return obj;
+	}
+
 	@Override
 	public boolean destroy() {
 		if(super.destroy()) return true;
-		for(final GameComponent component : components) component.destroy();
+		for(final GameComponent component : components) {
+			component.destroy();
+		}
 		components.clear();
 		allTreeComponents.clear();
 		updateUpTreeComponents();
@@ -59,12 +85,14 @@ public final class GameObject extends GameObjectParent {
 	}
 
 	public <T extends GameComponent> T getComponent(final Class<T> clazz) {
+		return getComponent(clazz, true);
+	}
+
+	public <T extends GameComponent> T getComponent(final Class<T> clazz, boolean error_log) {
 		final List<? extends T> list = components.get(clazz);
-		if(list.isEmpty()) {
-			Log.info("Component " + clazz.getSimpleName() + " not create in Node " + this);
-			return null;
-		}
-		return list.iterator().next();
+		if(!list.isEmpty())return list.iterator().next();
+		if(error_log)Log.warn("Component " + clazz.getSimpleName() + " not create in Node " + this);
+		return null;
 	}
 
 	@Override
@@ -77,20 +105,28 @@ public final class GameObject extends GameObjectParent {
 	}
 
 	public GameScene getScene() {
-		if(parent instanceof GameScene) return (GameScene) parent;
-		return ((GameObject) parent).getScene();
+		if(parent != null) {
+			if(parent instanceof GameObject)
+				return ((GameObject) parent).getScene();
+			return (GameScene) parent;
+		}
+		return null;
 	}
 
 	public boolean hasComponent(final Class<? extends GameComponent> clazz) {
 		return components.containsClass(clazz);
 	}
 
-	public boolean hasComponent(final GameComponent component) {
-		return components.contains(component);
+	public boolean isEmpty() {
+		return components.isEmpty() && childrens.isEmpty();
 	}
 
-	public void removeComponent(final GameComponent gameComponent) {
-		components.remove(gameComponent);
+	public boolean removeComponent(final GameComponent component) {
+		if(components.remove(component)) {
+			updateUpTreeComponents();
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -98,16 +134,29 @@ public final class GameObject extends GameObjectParent {
 		if(!Validator.checkRequireComponent(components)) Log.error(
 				"component " + Validator.getBrokRequireComponentClass(components) + " require is not fulfilled \n" + this);
 
-		if(!Validator.checkRequireSystem(components, getScene())) Log.error(
-				"component " + Validator.getBrokRequireSystemClass(components, getScene()) + " require is not fulfilled \n" + this);
+		{
+			var scene = getScene();
+			if(scene != null)
+				if(!Validator.checkRequireSystem(components, scene)) Log.error(
+						"component " + Validator.getBrokRequireSystemClass(components, scene) + " require is not fulfilled \n" + this);
+		}
 
 		for(final GameObject obj : childrens) obj.initSratr();
 		for(final GameComponent component : components) Events.event(new NewComponentEvent(component));
 	}
 
 	@Override
+	public String toSimpleString() {
+		return new StringBuilder("[object(").append(getName()).append(")@").append(id).toString();
+	}
+
+	@Override
 	public String toString() {
-		final StringBuilder res = new StringBuilder("[object(").append(getName()).append(")@").append(super.hashCode());
+		final StringBuilder res = new StringBuilder("[object(").append(getName()).append(")@").append(id);
+		if(parent != null) {
+			res.append(" ");
+			res.append(parent.toSimpleString());
+		}
 		if(!components.isEmpty()) {
 			final StringBuilder r = new StringBuilder("\ncomponents:");
 			for(final GameComponent component : components) r.append("\n").append(component.toString());
@@ -121,7 +170,7 @@ public final class GameObject extends GameObjectParent {
 		allTreeComponents.clear();
 		for(final GameObject object : childrens) allTreeComponents.addAll(object.getAllComponents(GameComponent.class));
 		allTreeComponents.addAll(components);
-		parent.updateUpTreeComponents();
+		if(parent != null)parent.updateUpTreeComponents();
 	}
 
 	private final static class Validator {
@@ -139,6 +188,7 @@ public final class GameObject extends GameObjectParent {
 		}
 
 		public static boolean checkRequireSystem(final Iterable<GameComponent> components, final GameScene scene) {
+			if(scene == null)return false;
 			for(final Class<? extends MultiBehaviour> requireClass : Validator.getRequireSystemClasses(components)) if(!scene.contains(requireClass))return false;
 			return true;
 		}

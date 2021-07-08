@@ -16,6 +16,7 @@ public class ESCExtitSystem extends MultiBehaviour {
 	@Override
 	protected void start() {
 		Events.addListener(new KeyAdapter() {
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void keyPress(int key) {

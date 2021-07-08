@@ -1,6 +1,5 @@
 package com.greentree.engine.core.object;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -17,6 +16,8 @@ public abstract class GameObjectParent {
 
 	private boolean isDestoy = false;
 
+	private static int ids;
+	protected final int id;
 	private boolean isStart = false;
 
 
@@ -27,12 +28,14 @@ public abstract class GameObjectParent {
 	protected final String name;
 	
 	public GameObjectParent(final String name) {
+		id = ids++;
 		this.name         = name;
 		allTreeComponents = new HashMapClassTree<>();
 		childrens         = new CopyOnWriteArraySet<>();
 	}
 	public final boolean addChildren(final GameObject object) {
 		if(childrens.add(object)) {
+			if(object.isEmpty())return true;
 			updateUpTreeComponents();
 			return true;
 		}
@@ -102,5 +105,6 @@ public abstract class GameObjectParent {
 	}
 
 	public abstract void updateUpTreeComponents();
+	public abstract String toSimpleString();
 
 }

@@ -33,7 +33,7 @@ public abstract class SceneMananger {
 			GameCore.getBuilder().fillScene(scene, inputStream);
 			return scene;
 		}catch(final ResourceNotFound e) {
-			Log.warn("scene not found : %s", file);
+			Log.warn("scene not found : " + file);
 		}
 		return null;
 	}
@@ -48,7 +48,7 @@ public abstract class SceneMananger {
 			if(!file.endsWith(".xml"))file += ".xml";
 			return loadScene0(ResourceLoader.getResourceAsStream(file));
 		}catch(final ResourceNotFound e) {
-			Log.warn("scene not found : %s", file);
+			Log.warn("scene not found : " + file);
 			e.printStackTrace();
 		}
 		return null;

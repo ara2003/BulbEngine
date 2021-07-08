@@ -21,7 +21,7 @@ public abstract class FileUtil {
 
 	private final static EventAction<File> openFile = new EventAction<>();
 
-	public static void addUseFileListener(Consumer<File> c){
+	public static void addUseFileListener(Consumer<File> c) {
 		openFile.addListener(c);
 	}
 	

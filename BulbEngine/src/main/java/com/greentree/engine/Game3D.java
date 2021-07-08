@@ -25,8 +25,6 @@ public class Game3D extends GameCore {
 		GameCore.addArguments(args);
 		RootFiles.start(folder);
 		
-		FileUtil.addUseFileListener(f -> System.out.println(f.getName()));
-		
 		GameCore.setBuilder(new BasicXMlBuilder());
 		{
     		GameScene scene = SceneMananger.loadScene(BOOTSTRAP_SCENE);

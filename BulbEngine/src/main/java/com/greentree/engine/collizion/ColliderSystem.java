@@ -2,9 +2,11 @@ package com.greentree.engine.collizion;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import com.google.common.collect.Table;
 import com.greentree.common.collection.DoubleSet;
+import com.greentree.common.logger.Log;
 import com.greentree.engine.Layers;
 import com.greentree.engine.collizion.event.CollisionListEvent;
 import com.greentree.engine.collizion.event.CollisionListenerManager;
@@ -37,7 +39,7 @@ public class ColliderSystem extends MultiBehaviour {
 
 	@Override
 	public void update() {
-		final ComponentList<ColliderComponent> colliderComponent = getAllComponentsAsComponentList(ColliderComponent.class);
+		final List<ColliderComponent> colliderComponent = getAllComponents(ColliderComponent.class);
 		nowFream.clear();
 		Collections.sort(colliderComponent, Comparator.comparing(ColliderComponent::getX));
 		for(int i = 0; i < colliderComponent.size(); i++) {

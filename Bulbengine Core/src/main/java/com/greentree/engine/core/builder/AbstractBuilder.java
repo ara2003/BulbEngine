@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
@@ -18,8 +19,8 @@ import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 /** @author Arseny Latyshev */
 public abstract class AbstractBuilder<T> implements Builder {
 
-	private final List<Pair<GameComponent, T>> contextComponent = new ArrayList<>();
-	private final List<Pair<GameSystem, T>> contextSystem = new ArrayList<>();
+	private final Stack<List<Pair<GameComponent, T>>> contextComponent = new Stack<>();
+	private final Stack<List<Pair<GameSystem, T>>> contextSystem = new Stack<>();
 
 	public final static String getNameOfField(final Field field) {
 		String xmlName = field.getAnnotation(EditorData.class).value();
@@ -28,7 +29,14 @@ public abstract class AbstractBuilder<T> implements Builder {
 		if(!xmlName.isBlank()) return xmlName;
 		throw new IllegalArgumentException("could not find a suitable name of " + field);
 	}
-	
+
+	protected final void addComponentToFill(final GameComponent component, final T in) {
+		contextComponent.get(0).add(new Pair<>(component, in));
+	}
+
+	protected final void addSystemToFill(final GameSystem system, final T in) {
+		contextSystem.get(0).add(new Pair<>(system, in));
+	}
 	public final GameComponent createComponent(final Class<? extends GameComponent> clazz) {
 		try {
 			return ClassUtil.newInstance(clazz);
@@ -41,6 +49,7 @@ public abstract class AbstractBuilder<T> implements Builder {
 	public final GameComponent createComponent(final InputStream in) {
 		return createComponent(this.parse(in));
 	}
+
 	public final GameComponent createComponent(final T in) {
 		return createComponent(this.getComponentClass(in));
 	}
@@ -82,13 +91,14 @@ public abstract class AbstractBuilder<T> implements Builder {
 	public final void fillObject(final GameObject object, final InputStream in) {
 		this.fillObject(object, this.parse(in));
 	}
-
 	protected abstract void fillObject(GameObject node, T in);
 
 	@Override
 	public final void fillScene(final GameScene scene, final InputStream in) {
 		this.fillScene(scene, this.parse(in));
 	}
+
+
 	protected abstract void fillScene(GameScene node, T in);
 
 	protected void fillSystem(final GameSystem system, final T in) {
@@ -99,8 +109,9 @@ public abstract class AbstractBuilder<T> implements Builder {
 		}
 	}
 
-
 	protected abstract Class<? extends GameComponent> getComponentClass(T parse);
+
+	public abstract Class<? extends MultiBehaviour> getMultiBehaviourClass(T in);
 
 	protected abstract String getObjectName(T in);
 
@@ -108,27 +119,24 @@ public abstract class AbstractBuilder<T> implements Builder {
 		return getObjectName(in);
 	}
 
-	public abstract Class<? extends MultiBehaviour> getMultiBehaviourClass(T in);
-
 	public abstract Object load(Field field, T xmlValue, Object _default) throws Exception;
 
 	public abstract T parse(InputStream in);
+
 	protected final void popComponents() {
-		for(final Pair<GameComponent, T> element : this.contextComponent) this.fillComponent(element.first, element.seconde);
-		this.contextComponent.clear();
+		for(final Pair<GameComponent, T> element : this.contextComponent.remove(0)) this.fillComponent(element.first, element.seconde);
 	}
 
 	protected final void popSystems() {
-		for(final Pair<GameSystem, T> element : this.contextSystem) this.fillSystem(element.first, element.seconde);
-		this.contextSystem.clear();
+		for(final Pair<GameSystem, T> element : this.contextSystem.remove(0)) this.fillSystem(element.first, element.seconde);
 	}
 
-	protected final void pushComponent(final GameComponent component, final T in) {
-		contextComponent.add(new Pair<>(component, in));
+	protected final void pushComponents() {
+		contextComponent.add(0, new ArrayList<>());
 	}
 
-	protected final void pushSystem(final GameSystem system, final T in) {
-		contextSystem.add(new Pair<>(system, in));
+	protected final void pushSystems() {
+		contextSystem.add(0, new ArrayList<>());
 	}
 
 	protected boolean required(Field field) {
@@ -148,7 +156,7 @@ public abstract class AbstractBuilder<T> implements Builder {
 		}finally {
 			field.setAccessible(flag);
 		}
-		Object value = (tvalue == null)?_default : load(field, tvalue, _default);
+		Object value = tvalue == null?_default : load(field, tvalue, _default);
 		if(value != null) {
 			field.setAccessible(true);
 			try {

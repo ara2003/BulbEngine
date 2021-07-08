@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.greentree.common.collection.DoubleSet;
 import com.greentree.common.pair.UnOrentetPair;
+import com.greentree.engine.Layers;
 import com.greentree.engine.collizion.ColliderComponent;
 import com.greentree.event.AbstractListenerManager;
 import com.greentree.event.Listener;
@@ -29,7 +30,9 @@ public class CollisionListenerManager extends AbstractListenerManager<CollisionL
 		nowFream.clear();
 		nowFream.addAll(event.getCollection());
 		for(CollisionListListener l : listenersList)l.ColliderList(nowFream);
-		for(final UnOrentetPair<ColliderComponent> p : nowFream) if(lastFream.remove(p)) {
+		for(final UnOrentetPair<ColliderComponent> p : nowFream) {
+//			System.out.println(p.first.getObject().getName() + " "  + Layers.get(p.first.getObject()) + " <> " + p.seconde.getObject().getName() + " "  + Layers.get(p.seconde.getObject()));
+			if(lastFream.remove(p)) {
 			p.first.getAction().collizionStay(p.seconde);
 			p.seconde.getAction().collizionStay(p.first);
 			for(DoubleCollisionListener l : listeners)l.CollisionStay(p.first, p.seconde);
@@ -39,6 +42,7 @@ public class CollisionListenerManager extends AbstractListenerManager<CollisionL
 			p.seconde.getAction().collizionEnter(p.first);
 			for(DoubleCollisionListener l : listeners)l.CollisionEnter(p.first, p.seconde);
 			for(DoubleCollisionListener l : listeners)l.CollisionEnter(p.seconde, p.first);
+		}
 		}
 		for(final UnOrentetPair<ColliderComponent> p : lastFream) {
 			p.first.getAction().collizionExit(p.seconde);

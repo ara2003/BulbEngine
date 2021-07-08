@@ -1,12 +1,10 @@
 package com.greentree.engine.builder.xml;
 
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +15,6 @@ import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
 import com.greentree.common.pair.Pair;
 import com.greentree.common.xml.XMLElement;
-import com.greentree.data.assets.Asset;
 import com.greentree.data.assets.AssetUtil;
 import com.greentree.data.loaders.LoaderList;
 import com.greentree.data.loaders.collection.ListLoader;
@@ -57,11 +54,9 @@ import com.greentree.engine.core.builder.AbstractBuilder;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.component.GameComponent;
 import com.greentree.engine.core.object.GameObject;
-import com.greentree.engine.core.object.GameObjectParent;
 import com.greentree.engine.core.object.GameScene;
 import com.greentree.engine.core.system.GameSystem;
 import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
-import com.greentree.engine.layer.LayerComponent;
 
 /** @author Arseny Latyshev */
 public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
@@ -74,17 +69,8 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		AssetUtil.addAssetHandler(new OpenGLShadingLanguageAssetHandler());
 		AssetUtil.addAssetHandler(new OBJMeshAssetHandler());
 		AssetUtil.addAssetHandler(new MatirialAssetHandler());
-		
-		Collection<Asset> assets = null;
-		try {
-			File a = new File("D:\\programing\\Java\\projects\\Engines\\BulbEngine\\test3D\\Game\\Assets");
-			assets = AssetUtil.getAssets(a);
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
-		
 	}
-
+	
 	private final LoaderList loaders = new LoaderList();
 	{
 		loaders.addParser(new FloatLoader());
@@ -96,23 +82,23 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		loaders.addParser(new CharLoader());
 		loaders.addParser(new EnumLoader());
 		loaders.addParser(new StringLoader());
-		
+
 		loaders.addParser(new Vector3fLoader());
 		loaders.addParser(new Vector2fLoader());
-		
+
 		loaders.addParser(new LayerLoader());
-		
+
 		loaders.addParser(new IntegerConstLoader());
-		
+
 		loaders.addParser(new GameComponentLoader());
 		loaders.addParser(new GameObjectLoader());
 		loaders.addParser(new PrefabLoader());
-		
+
 		loaders.addParser(new TextureLoader());
 		loaders.addParser(new ColorLoader());
 		loaders.addParser(new ObjMeshLoader());
 		loaders.addParser(new ShaderProgramLoader());
-		
+
 		loaders.addParser(new StaticFieldLoader());
 
 		loaders.addParser(new ListLoader());
@@ -121,48 +107,44 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 	}
 
 	@Override
-	public GameObject createPrefab(final String name, final String prefabPath, final GameObjectParent parent) {
+	public GameObject createPrefab(final String name, final String prefabPath) {
 		final XMLElement in     = parse(ResourceLoader.getResourceAsStream(prefabPath + ".xml"));
-		final GameObject  object = new GameObject(name+"#"+getObjectName(in), parent);
+		final GameObject  object = new GameObject(name+"#"+getObjectName(in));
+		pushComponents();
 		this.fillObject(object, in);
 		popComponents();
-		object.initSratr();
 		return object;
 	}
 
 	@Override
 	protected void fillObject(final GameObject object, final XMLElement in) {
-		var layer = in.getAttribute("layer");
-		if(layer != null && !layer.isBlank()) {
-			final LayerComponent component = new LayerComponent();
-			ClassUtil.setField(component, "layer", Layers.get(layer));
-			object.addComponent(component);
-		}
-		
+		Layers.setLayer(object, in.getAttribute("layer"));
 		final List<Pair<GameObject, XMLElement>> contextObject = new ArrayList<>();
 		for(final XMLElement element : in.getChildrens("object")) {
 			final GameObject сhildren = this.createObject(element, object);
 			if(сhildren == null)continue;
 			contextObject.add(new Pair<>(сhildren, element));
 		}
-		
+
 		for(var var : contextObject)fillObject(var.first, var.seconde);
 
 		for(final XMLElement element : in.getChildrens("component")) {
 			final GameComponent component = this.createComponent(element);
 			if(component == null) continue;
-			pushComponent(component, element);
+			addComponentToFill(component, element);
 			object.addComponent(component);
 		}
 	}
 
 	@Override
 	protected void fillScene(final GameScene scene, final XMLElement in) {
+		pushSystems();
+		pushComponents();
 		for(final XMLElement el : in.getChildrens("system")) {
 			final GameSystem system = createSystem(el);
 			if(system == null) continue;
 			scene.addSystem(system);
-			pushSystem(system, el);
+			addSystemToFill(system, el);
 		}
 
 		final List<Pair<GameObject, XMLElement>> contextObject = new ArrayList<>();
@@ -185,17 +167,17 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		return (Class<? extends GameComponent>) ClassUtil.loadClass(type);
 	}
 
-	@Override
-	protected String getObjectName(final XMLElement in) {
-		return in.getAttribute("name", "name");
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public Class<? extends MultiBehaviour> getMultiBehaviourClass(XMLElement in) {
 		final String type = in.getAttribute("type");
 		if(type.isBlank()) throw new IllegalArgumentException(in + " does not contains atribute \"type\"");
 		return (Class<? extends MultiBehaviour>) ClassUtil.loadClass(type);
+	}
+
+	@Override
+	protected String getObjectName(final XMLElement in) {
+		return in.getAttribute("name", "name");
 	}
 
 
@@ -236,6 +218,6 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 			e.printStackTrace();
 		}
 	}
-	
+
 
 }

@@ -13,7 +13,7 @@ public class PrefabLoader extends AbstractLoader implements ValueLoader {
 
 	@Override
 	public Object parse(Class<?> clazz, String value) throws Exception {
-		return Game3D.getBuilder().createPrefab(value, value, null);
+		return Game3D.getBuilder().createPrefab(value, value);
 	}
 
 }
