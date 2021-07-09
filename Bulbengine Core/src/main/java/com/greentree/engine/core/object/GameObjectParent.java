@@ -9,24 +9,23 @@ import java.util.stream.Collectors;
 import com.greentree.common.collection.HashMapClassTree;
 import com.greentree.common.collection.WeakClassTree;
 import com.greentree.engine.core.component.ComponentList;
-import com.greentree.engine.core.component.GameComponent;
 
 /** @author Arseny Latyshev */
 public abstract class GameObjectParent {
 
 	private boolean isDestoy = false;
-
-	private static int ids;
+	
 	protected final int id;
 	private boolean isStart = false;
-
-
 	protected final Collection<GameObject> childrens;
+
 
 	protected final WeakClassTree<GameComponent> allTreeComponents;
 
 	protected final String name;
-	
+
+	private static int ids;
+
 	public GameObjectParent(final String name) {
 		id = ids++;
 		this.name         = name;
@@ -46,14 +45,18 @@ public abstract class GameObjectParent {
 	}
 
 
-	public boolean destroy() {
-		if(isDestroy()) return true;
-		isDestoy = true;
-		for(final GameObject obj : childrens) obj.destroy();
-		childrens.clear();
-		return false;
+	public final void destroy() {
+		if(!isDestoy) {
+			destroy_full();
+			isDestoy = true;
+		}
 	}
 
+	protected void destroy_full() {
+		for(final GameObject obj : childrens) obj.destroy_one();
+		childrens.clear();
+	}
+	
 	public final List<GameObject> findMyObjects(final Predicate<GameObject> predicate) {
 		return childrens.parallelStream().filter(predicate).collect(Collectors.toList());
 	}
@@ -101,10 +104,10 @@ public abstract class GameObjectParent {
 
 	protected abstract void start();
 
+	public abstract String toSimpleString();
+
 	protected void update() {
 	}
-
 	public abstract void updateUpTreeComponents();
-	public abstract String toSimpleString();
 
 }

@@ -2,7 +2,6 @@ package com.greentree.engine;
 
 import com.greentree.common.concurent.MultyTask;
 import com.greentree.common.time.Time;
-import com.greentree.data.FileUtil;
 import com.greentree.engine.builder.xml.BasicXMlBuilder;
 import com.greentree.engine.core.GameCore;
 import com.greentree.engine.core.object.GameScene;
@@ -19,21 +18,21 @@ public class Game3D extends GameCore {
 	public static void exit() {
 		Windows.getWindow().shouldClose();
 	}
-	
+
 	public static void start(final String folder, final String[] args) {
 		GameCore.addArgumentConflict("-run", "-build");
 		GameCore.addArguments(args);
 		RootFiles.start(folder);
-		
+
 		GameCore.setBuilder(new BasicXMlBuilder());
 		{
-    		GameScene scene = SceneMananger.loadScene(BOOTSTRAP_SCENE);
-    		if(SceneMananger.isCurrent(scene)) throw new UnsupportedOperationException("the boot-strap scene has not changed");
+			GameScene scene = SceneMananger.loadScene(BOOTSTRAP_SCENE);
+			if(SceneMananger.isCurrent(scene)) throw new UnsupportedOperationException("the boot-strap scene has not changed");
 		}
 
 		Mouse.init();
 		KeyBoard.init();
-		
+
 		while(!Windows.getWindow().isShouldClose()) {
 			Windows.getWindow().swapBuffer();
 			Graphics.glClearAll();

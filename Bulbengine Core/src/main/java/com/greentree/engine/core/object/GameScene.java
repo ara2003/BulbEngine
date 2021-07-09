@@ -5,12 +5,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 
 import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
 import com.greentree.common.logger.Logger;
-import com.greentree.engine.core.component.GameComponent;
 import com.greentree.engine.core.system.GameSystem;
 import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 import com.greentree.engine.core.system.RequireSystems;
@@ -42,10 +40,10 @@ public final class GameScene extends GameObjectParent {
 
 
 	@Override
-	public boolean destroy() {
-		if(super.destroy()) return true;
+	public void destroy_full() {
+		super.destroy_full();
 		systems.clear();
-		return false;
+		allTreeComponents.clear();
 	}
 
 	public <T extends MultiBehaviour> GameSystem getSystem(final Class<T> clazz) {

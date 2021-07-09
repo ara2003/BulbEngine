@@ -10,7 +10,6 @@ import com.greentree.common.ClassUtil;
 import com.greentree.common.collection.HashMapClassTree;
 import com.greentree.common.collection.WeakClassTree;
 import com.greentree.common.logger.Log;
-import com.greentree.engine.core.component.GameComponent;
 import com.greentree.engine.core.component.NewComponentEvent;
 import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
@@ -19,7 +18,7 @@ import com.greentree.engine.core.util.Events;
 import com.greentree.engine.core.util.SceneMananger;
 
 public final class GameObject extends GameObjectParent {
-	private final WeakClassTree<GameComponent> components;
+	protected final WeakClassTree<GameComponent> components;
 	private final GameObjectParent parent;
 	public GameObject(String name) {
 		super(name);
@@ -72,16 +71,18 @@ public final class GameObject extends GameObjectParent {
 		return obj;
 	}
 
+
 	@Override
-	public boolean destroy() {
-		if(super.destroy()) return true;
-		for(final GameComponent component : components) {
-			component.destroy();
-		}
-		components.clear();
+	protected void destroy_full() {
+		destroy_one();
 		allTreeComponents.clear();
 		updateUpTreeComponents();
-		return false;
+	}
+
+	protected void destroy_one() {
+		super.destroy_full();
+		for(var c : components)c.destroy();
+		components.clear();
 	}
 
 	public <T extends GameComponent> T getComponent(final Class<T> clazz) {
@@ -123,6 +124,7 @@ public final class GameObject extends GameObjectParent {
 
 	public boolean removeComponent(final GameComponent component) {
 		if(components.remove(component)) {
+			if(isDestroy())return true;
 			updateUpTreeComponents();
 			return true;
 		}

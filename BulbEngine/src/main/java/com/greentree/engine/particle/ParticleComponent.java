@@ -62,9 +62,9 @@ public class ParticleComponent extends Camera3DRendenerComponent {
 	private float deltaTime;
 	private Transform position;
 
-//	private final static Vector3f norm = new Vector3f(0, 0, -1);
-//	private final static Vector3f origin_norm = new Vector3f(0, 0, 1);
-	
+	//	private final static Vector3f norm = new Vector3f(0, 0, -1);
+	//	private final static Vector3f origin_norm = new Vector3f(0, 0, 1);
+
 	@Override
 	public void render() {
 		final Matrix4f modelView = position.getModelViewMatrix();
@@ -72,34 +72,34 @@ public class ParticleComponent extends Camera3DRendenerComponent {
 		try(MemoryStack stack = MemoryStack.create(Float.BYTES * 16 * particles.size()).push()) {
 			program.start();
 			vao.bind();
-//			Graphics.disableCullFace();
+			//			Graphics.disableCullFace();
 
 			for(Particle particle : particles) {
 				var old = new Matrix4f(modelVeiwProjection);
 				modelVeiwProjection.translate(particle.x, particle.y, particle.z);
-				
-//				Vector3f norm = sub(Cameras.getMainCamera().position.xyz(), new Vector3f(particle.x+position.x(), particle.y+position.y(), particle.z+position.z()));
-//				norm.normalize();
-				
-//				System.out.println(Cameras.getMainCamera().position.xyz() + "-" + new Vector3f(particle.x, particle.y, particle.z) + "=" +norm);
-				
-//				modelVeiwProjection.rotate(-Mathf.acos(origin_norm.dot(norm)), norm.cross(origin_norm, new Vector3f()));
-				
+
+				//				Vector3f norm = sub(Cameras.getMainCamera().position.xyz(), new Vector3f(particle.x+position.x(), particle.y+position.y(), particle.z+position.z()));
+				//				norm.normalize();
+
+				//				System.out.println(Cameras.getMainCamera().position.xyz() + "-" + new Vector3f(particle.x, particle.y, particle.z) + "=" +norm);
+
+				//				modelVeiwProjection.rotate(-Mathf.acos(origin_norm.dot(norm)), norm.cross(origin_norm, new Vector3f()));
+
 				final FloatBuffer mvp = stack.callocFloat(16);
 				modelVeiwProjection.get(mvp);
 				mvpUL.glUniformMatrix4fv(false, mvp);
 
 				Graphics.glDrawArrays(GLPrimitive.QUADS, 0, 4);
-				
+
 				modelVeiwProjection = old;
 			}
-//			Graphics.enableCullFace();
+			//			Graphics.enableCullFace();
 			vao.unbind();
 			program.stop();
 		}
 		updateParticls();
 	}
-	
+
 	@Override
 	public void start() {
 		position = getComponent(Transform.class);

@@ -5,8 +5,8 @@ import java.util.function.Consumer;
 
 import com.greentree.engine.core.GameCore;
 import com.greentree.engine.core.component.ComponentList;
-import com.greentree.engine.core.component.GameComponent;
 import com.greentree.engine.core.component.NewComponentListener;
+import com.greentree.engine.core.object.GameComponent;
 import com.greentree.engine.core.util.Events;
 
 public final class GameSystem  {

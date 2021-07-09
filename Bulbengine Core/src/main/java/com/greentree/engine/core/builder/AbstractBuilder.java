@@ -9,7 +9,7 @@ import java.util.Stack;
 import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
 import com.greentree.common.pair.Pair;
-import com.greentree.engine.core.component.GameComponent;
+import com.greentree.engine.core.object.GameComponent;
 import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.object.GameObjectParent;
 import com.greentree.engine.core.object.GameScene;

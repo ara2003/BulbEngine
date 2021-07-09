@@ -3,8 +3,8 @@ package com.greentree.engine.physics;
 import com.greentree.common.math.vector.Vector2f;
 import com.greentree.engine.collizion.ColliderComponent;
 import com.greentree.engine.core.builder.EditorData;
-import com.greentree.engine.core.component.GameComponent;
 import com.greentree.engine.core.component.RequireComponent;
+import com.greentree.engine.core.object.GameComponent;
 
 @RequireComponent({ColliderComponent.class})
 public class Physics2DComponent extends GameComponent {

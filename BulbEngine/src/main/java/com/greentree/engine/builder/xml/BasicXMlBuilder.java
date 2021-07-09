@@ -52,7 +52,7 @@ import com.greentree.engine.builder.loaders.Vector2fLoader;
 import com.greentree.engine.builder.loaders.Vector3fLoader;
 import com.greentree.engine.core.builder.AbstractBuilder;
 import com.greentree.engine.core.builder.EditorData;
-import com.greentree.engine.core.component.GameComponent;
+import com.greentree.engine.core.object.GameComponent;
 import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.object.GameScene;
 import com.greentree.engine.core.system.GameSystem;

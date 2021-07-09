@@ -10,7 +10,7 @@ public interface Builder {
 
 	//create prefab
 	GameObject createPrefab(String name, String prefabName);
-	
+
 	//create Scene
 	GameScene createScene(InputStream in);
 	void fillScene(GameScene emptyScene, InputStream in);

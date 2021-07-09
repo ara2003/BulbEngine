@@ -1,25 +1,22 @@
-package com.greentree.engine.core.component;
+package com.greentree.engine.core.object;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
-import com.greentree.engine.core.object.GameObject;
 
 public abstract class GameComponent {
 
-	@Override
-	public String toString() {
-		if(object != null)return super.toString() + "{" + object.toSimpleString() + "}";
-		return super.toString()+"{null}";
-	}
-
 	private boolean isDestoy = false;
-	private GameObject object;
+
+	GameObject object;
+	
+	
+	
 	public final GameComponent copy() {
 		GameComponent c = ClassUtil.newInstance(getClass());
-		for(Field f : ClassUtil.getAllFields(getClass())) if((f.getModifiers() & (Modifier.FINAL | Modifier.STATIC)) == 0)if(!f.getName().equals("object")) try {
+		for(Field f : ClassUtil.getAllFields(getClass())) if((f.getModifiers() & (Modifier.FINAL | Modifier.STATIC)) == 0)if(!"object".equals(f.getName())) try {
 			boolean flag1 = f.canAccess(c);
 			boolean flag2 = f.canAccess(this);
 			if(flag1 != flag2)throw new RuntimeException();
@@ -32,14 +29,17 @@ public abstract class GameComponent {
 		return c;
 	}
 
-	public final boolean destroy() {
-		if(isDestroy()) return true;
-		isDestoy = true;
-		object.removeComponent(this);
-		object = null;
-		return false;
+	final void destroy_full() {
+    	object.removeComponent(this);
+    	object = null;
 	}
-
+	
+	public final void destroy() {
+		if(!isDestoy) {
+			destroy_full();
+			isDestoy = true;
+		}
+	}
 	public final <T extends GameComponent> T getComponent(final Class<T> clazz) {
 		return getObject().getComponent(clazz);
 	}
@@ -58,6 +58,12 @@ public abstract class GameComponent {
 		else
 			if(this.object != object)
 				Log.warn("object is not null " + this + " " + object + "<>" + this.object);
+	}
+
+	@Override
+	public String toString() {
+		if(object != null)return super.toString() + "{" + object.toSimpleString() + "}";
+		return super.toString()+"{null}";
 	}
 
 }

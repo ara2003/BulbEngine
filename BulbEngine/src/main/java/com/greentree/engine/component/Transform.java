@@ -14,13 +14,13 @@ public class Transform extends StartGameComponent {
 	@EditorData
 	public final VectorAction3f scale = new VectorAction3f(1);
 
-	
+
 	@EditorData
 	public final VectorAction3f rotation = new VectorAction3f(0);
-	
+
 	@EditorData
 	public final VectorAction3f position = new VectorAction3f(0);
-	
+
 	@EditorData("static")
 	private boolean isStatic = false;
 
@@ -33,8 +33,8 @@ public class Transform extends StartGameComponent {
 		modelView.rotateXYZ(transform.rotation.toJoml());
 		return modelView;
 	}
-	
-	
+
+
 	public Matrix4f getModelViewMatrix() {
 		final Matrix4f modelView = new Matrix4f();
 		GameObjectParent par = getObject();

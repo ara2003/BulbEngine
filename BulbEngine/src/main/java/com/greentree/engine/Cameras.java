@@ -22,13 +22,10 @@ public class Cameras {
 	}
 
 	public static CameraComponent getMainCamera() {
-		if(mainCamera == null) {
-			mainCamera = foundCameraInScene();
-		}else {
-			if(mainCamera.isDestroy()) {
-				mainCamera = null;
-				return getMainCamera();
-			}
+		if(mainCamera == null) mainCamera = foundCameraInScene();
+		else if(mainCamera.isDestroy()) {
+			mainCamera = null;
+			return getMainCamera();
 		}
 		return mainCamera;
 	}

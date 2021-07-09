@@ -4,9 +4,7 @@ package com.greentree.engine.core.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Objects;
 
 import com.greentree.common.logger.Log;
@@ -38,10 +36,13 @@ public abstract class SceneMananger {
 		return null;
 	}
 
+	public static boolean isCurrent(GameScene scene) {
+		return scene == currentScene;
+	}
+
 	public static GameScene loadScene(final File file) throws FileNotFoundException {
 		return loadScene0(new FileInputStream(file));
 	}
-
 	public static GameScene loadScene(String file) {
 		Log.info("Scene load : " + file);
 		try {
@@ -53,6 +54,7 @@ public abstract class SceneMananger {
 		}
 		return null;
 	}
+
 	private static GameScene loadScene0(final InputStream inputStream) {
 		final GameScene   scene       = GameCore.getBuilder().createScene(inputStream);
 		SceneMananger.reset(scene);
@@ -67,10 +69,6 @@ public abstract class SceneMananger {
 		SceneMananger.currentScene = null;
 		Runtime.getRuntime().gc();
 		SceneMananger.currentScene = scene;
-	}
-
-	public static boolean isCurrent(GameScene scene) {
-		return scene == currentScene;
 	}
 
 }
