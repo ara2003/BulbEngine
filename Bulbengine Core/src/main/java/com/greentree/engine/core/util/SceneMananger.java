@@ -11,6 +11,7 @@ import com.greentree.common.logger.Log;
 import com.greentree.data.loading.ResourceLoader;
 import com.greentree.data.loading.ResourceNotFound;
 import com.greentree.engine.core.GameCore;
+import com.greentree.engine.core.builder.context.SceneBuildContext;
 import com.greentree.engine.core.object.GameScene;
 
 /** @author Arseny Latyshev */
@@ -27,8 +28,10 @@ public abstract class SceneMananger {
 		try {
 			if(!file.endsWith(".xml"))file += ".xml";
 			final InputStream inputStream = ResourceLoader.getResourceAsStream(file);
-			final GameScene   scene       = GameCore.getBuilder().createScene(inputStream);
-			GameCore.getBuilder().fillScene(scene, inputStream);
+			final SceneBuildContext   sceneBuildContext = GameCore.getBuilder().createScene(inputStream);
+
+			final GameScene scene = sceneBuildContext.fill();
+
 			return scene;
 		}catch(final ResourceNotFound e) {
 			Log.warn("scene not found : " + file);
@@ -56,10 +59,11 @@ public abstract class SceneMananger {
 	}
 
 	private static GameScene loadScene0(final InputStream inputStream) {
-		final GameScene   scene       = GameCore.getBuilder().createScene(inputStream);
+		final SceneBuildContext   sceneBuildContext       = GameCore.getBuilder().createScene(inputStream);
+		GameScene scene = sceneBuildContext.getScene();
 		SceneMananger.reset(scene);
-		GameCore.getBuilder().fillScene(scene, inputStream);
-		scene.start();
+		sceneBuildContext.fill();
+		scene.initSratr();
 		return scene;
 	}
 
@@ -69,6 +73,11 @@ public abstract class SceneMananger {
 		SceneMananger.currentScene = null;
 		Runtime.getRuntime().gc();
 		SceneMananger.currentScene = scene;
+	}
+
+	public static void terminate() {
+		currentScene.destroy();
+		currentScene = null;
 	}
 
 }

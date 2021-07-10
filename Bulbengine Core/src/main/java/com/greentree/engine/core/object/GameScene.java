@@ -42,7 +42,7 @@ public final class GameScene extends GameObjectParent {
 	@Override
 	public void destroy_full() {
 		super.destroy_full();
-		systems.clear();
+		systems.destroy();
 		allTreeComponents.clear();
 	}
 
@@ -91,6 +91,11 @@ public final class GameScene extends GameObjectParent {
 
 		public <S extends MultiBehaviour> boolean containsClass(final Class<S> clazz) {
 			return null != get(clazz);
+		}
+
+		public void destroy() {
+			forEach(GameSystem::initDestroy);
+			clear();
 		}
 
 		public <S extends MultiBehaviour> GameSystem get(final Class<S> clazz) {

@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.greentree.data.loaders.AbstractLoader;
 import com.greentree.data.loaders.value.ValueLoader;
-import com.greentree.engine.core.GameCore;
 import com.greentree.engine.core.object.GameObject;
+import com.greentree.engine.core.util.SceneMananger;
 
 /** @author Arseny Latyshev */
 public class GameObjectLoader extends AbstractLoader implements ValueLoader {
@@ -16,7 +16,7 @@ public class GameObjectLoader extends AbstractLoader implements ValueLoader {
 
 	@Override
 	public Object parse(final Class<?> clazz, final String value) throws Exception {
-		final List<GameObject> list = GameCore.getCurrentScene().findObjectsWithName(value);
+		final List<GameObject> list = SceneMananger.getCurrentScene().findObjectsWithName(value);
 		if(!list.isEmpty()) return list.get(0);
 		throw new IllegalArgumentException();
 	}

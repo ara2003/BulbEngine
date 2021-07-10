@@ -22,15 +22,19 @@ public class RootFiles {
 	}
 
 	public static void start(final String file) {
-		if(RootFiles.started) throw new UnsupportedOperationException();
-		RootFiles.started = true;
-		RootFiles.root    = new File(file);
-		if(!RootFiles.root.exists()) RootFiles.root.mkdir();
-		RootFiles.assets = new File(RootFiles.root, "Assets");
-		RootFiles.debug  = new File(RootFiles.root, "Debug");
-		if(!RootFiles.assets.exists()) RootFiles.assets.mkdir();
-		if(!RootFiles.debug.exists()) RootFiles.debug.mkdir();
-		Log.init(RootFiles.debug);
+		if(started) throw new UnsupportedOperationException();
+		started = true;
+		root    = new File(file);
+		if(!root.exists()) root.mkdir();
+		assets = new File(root, "Assets");
+		debug  = new File(root, "Debug");
+		if(!assets.exists()) assets.mkdir();
+		if(!debug.exists()) debug.mkdir();
+		{
+			var build = new File(root, "Build");
+			if(!build.exists()) build.mkdir();
+		}
+		Log.init(debug);
 		ResourceLoader.addResourceLocation(new FileSystemLocation(RootFiles.assets));
 		ResourceLoader.addResourceLocation(new FileSystemLocation(RootFiles.root));
 	}

@@ -11,9 +11,9 @@ public abstract class GameComponent {
 	private boolean isDestoy = false;
 
 	GameObject object;
-	
-	
-	
+
+
+
 	public final GameComponent copy() {
 		GameComponent c = ClassUtil.newInstance(getClass());
 		for(Field f : ClassUtil.getAllFields(getClass())) if((f.getModifiers() & (Modifier.FINAL | Modifier.STATIC)) == 0)if(!"object".equals(f.getName())) try {
@@ -29,16 +29,16 @@ public abstract class GameComponent {
 		return c;
 	}
 
-	final void destroy_full() {
-    	object.removeComponent(this);
-    	object = null;
-	}
-	
 	public final void destroy() {
 		if(!isDestoy) {
 			destroy_full();
 			isDestoy = true;
 		}
+	}
+
+	final void destroy_full() {
+		object.removeComponent(this);
+		object = null;
 	}
 	public final <T extends GameComponent> T getComponent(final Class<T> clazz) {
 		return getObject().getComponent(clazz);

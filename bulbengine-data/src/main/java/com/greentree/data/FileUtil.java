@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -16,6 +18,8 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import com.greentree.action.EventAction;
+import com.greentree.common.logger.Log;
+import com.greentree.data.loading.ResourceLoader;
 
 public abstract class FileUtil {
 
@@ -102,8 +106,27 @@ public abstract class FileUtil {
 				zin.closeEntry();
 				fout.close();
 			}
-
 		}
+	}
+
+	public static void isFile(File file) {
+		if(file.exists()) {
+			if(!file.isFile())throw new IllegalArgumentException("is not file " + file);
+		}else throw new IllegalArgumentException("not exists " + file);
+	}
+	public static void isDirectory(File directory) {
+		if(directory.exists()) {
+			if(!directory.isDirectory())throw new IllegalArgumentException("is not directory " + directory);
+		}else throw new IllegalArgumentException("not exists " + directory);
+	}
+
+	public static File getFile(String file) {
+		try {
+			return new File(ResourceLoader.getResource(file).toURI().getPath());
+		}catch(URISyntaxException e) {
+			Log.warn(e);
+		}
+		return null;
 	}
 
 }

@@ -6,13 +6,11 @@ import java.util.List;
 
 import com.google.common.collect.Table;
 import com.greentree.common.collection.DoubleSet;
-import com.greentree.common.logger.Log;
 import com.greentree.engine.Layers;
 import com.greentree.engine.collizion.event.CollisionListEvent;
 import com.greentree.engine.collizion.event.CollisionListenerManager;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.builder.Required;
-import com.greentree.engine.core.component.ComponentList;
 import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 import com.greentree.engine.core.util.Events;
 import com.greentree.engine.layer.Layer;

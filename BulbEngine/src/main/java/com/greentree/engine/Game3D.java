@@ -23,7 +23,7 @@ public class Game3D extends GameCore {
 		GameCore.addArgumentConflict("-run", "-build");
 		GameCore.addArguments(args);
 		RootFiles.start(folder);
-
+		
 		GameCore.setBuilder(new BasicXMlBuilder());
 		{
 			GameScene scene = SceneMananger.loadScene(BOOTSTRAP_SCENE);
@@ -32,7 +32,9 @@ public class Game3D extends GameCore {
 
 		Mouse.init();
 		KeyBoard.init();
+	}
 
+	public static void gameLoop(){
 		while(!Windows.getWindow().isShouldClose()) {
 			Windows.getWindow().swapBuffer();
 			Graphics.glClearAll();
@@ -40,10 +42,13 @@ public class Game3D extends GameCore {
 			Time.updata();
 			SceneMananger.getCurrentScene().update();
 		}
+	}
+
+	public static void terminate() {
+		SceneMananger.terminate();
 		MultyTask.shutdown();
 		BulbGL.terminate();
 	}
-
 	public static void start(final String[] args) {
 		Game3D.start("Game", args);
 	}

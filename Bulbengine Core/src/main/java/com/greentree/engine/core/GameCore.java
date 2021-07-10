@@ -1,5 +1,7 @@
 package com.greentree.engine.core;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,6 +31,21 @@ public abstract class GameCore {
 	public static boolean addSystem(final GameSystem system) {
 		return SceneMananger.getCurrentScene().addSystem(system);
 	}
+	public static void buildTo(File directory) {
+		if(directory.exists()) {
+			if(directory.list().length > 0)throw new UnsupportedOperationException("directory must be empty");
+		}else directory.mkdir();
+
+		File file = new File(directory, "text.txt");
+
+		try {
+			file.createNewFile();
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	public static GameObject createFromPrefab(final String prefab) {
 		return GameCore.builder.createPrefab(null, prefab);
 	}
@@ -41,17 +58,13 @@ public abstract class GameCore {
 		return GameCore.builder;
 	}
 
+	@Deprecated
 	public static GameScene getCurrentScene() {
 		return SceneMananger.getCurrentScene();
 	}
 
 	public static boolean hasArguments(String arg) {
 		return arguments.hasArguments(arg);
-	}
-
-	@Deprecated
-	public static void loadScene(final String name) {
-		SceneMananger.loadScene(name);
 	}
 
 	protected static void setBuilder(final Builder builder) {

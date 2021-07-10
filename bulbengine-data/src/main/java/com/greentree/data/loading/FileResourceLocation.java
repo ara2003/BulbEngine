@@ -15,19 +15,21 @@ public abstract class FileResourceLocation implements ResourceLocation {
 		try {
 			File file = getFile(name);
 			if(file == null)return null;
+			if(!file.exists())return null;
 			return file.toURI().toURL();
 		}catch(final IOException e) {
 			return null;
 		}
 	}
 
-	protected abstract File getFile(String name) throws IOException;
+	public abstract File getFile(String name) throws IOException;
 
 	@Override
 	public final InputStream getResourceAsStream(String name) {
 		try {
 			File file = getFile(name);
 			if(file == null)return null;
+			if(!file.exists())return null;
 			return FileUtil.openStream(file);
 		}catch(IOException e) {
 		}

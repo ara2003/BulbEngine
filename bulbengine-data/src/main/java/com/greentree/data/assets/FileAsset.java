@@ -41,11 +41,13 @@ public class FileAsset implements Asset {
 
 	protected final String type;
 	protected final File file;
+	private final long id;
 	
 	public FileAsset(String type, File file) {
 		if(!file.exists())throw new IllegalArgumentException("file does not exist");
 		this.type = type;
 		this.file = file;
+		this.id = AssetUtil.nextID();
 	}
 	
 	@Override
@@ -61,6 +63,11 @@ public class FileAsset implements Asset {
 			Log.error(e);//unreal
 		}
 		return null;
+	}
+
+	@Override
+	public long getID() {
+		return id;
 	}
 
 }

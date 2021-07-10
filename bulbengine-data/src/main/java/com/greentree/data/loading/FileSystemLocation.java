@@ -30,7 +30,7 @@ public class FileSystemLocation extends FileResourceLocation {
 	}
 
 	@Override
-	protected File getFile(String name) {
+	public File getFile(String name) {
 		if(root != null)
 			return new File(root, name);
 		return new File(name);

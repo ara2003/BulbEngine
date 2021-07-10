@@ -11,6 +11,7 @@ import com.greentree.data.FileUtil;
 public abstract class AssetUtil {
 
 	private static final AssetHandlerList handlers = new AssetHandlerList();
+	private static int ids;
 
 	public static void addAssetHandler(AssetHandler handler) {
 		handlers.addParser(handler);
@@ -43,6 +44,10 @@ public abstract class AssetUtil {
     		return assets0;
 		}
 		throw new IllegalArgumentException("not exists " + assets);
+	}
+
+	public static long nextID() {
+		return ids++;
 	}
 
 }

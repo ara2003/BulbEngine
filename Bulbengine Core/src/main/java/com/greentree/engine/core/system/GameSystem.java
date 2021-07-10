@@ -3,20 +3,24 @@ package com.greentree.engine.core.system;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.greentree.engine.core.GameCore;
 import com.greentree.engine.core.component.ComponentList;
 import com.greentree.engine.core.component.NewComponentListener;
 import com.greentree.engine.core.object.GameComponent;
+import com.greentree.engine.core.object.GameScene;
 import com.greentree.engine.core.util.Events;
 
-public final class GameSystem  {
+public final class GameSystem {
 
 
-	private boolean isStart = false;
+	private boolean isStart, isDestroy;
 	private final MultiBehaviour behaviour;
+	
+	private final GameScene scene;
 
-	public GameSystem(MultiBehaviour behaviour) {
+	public GameSystem(GameScene scene, MultiBehaviour behaviour) {
 		this.behaviour = behaviour;
+		behaviour.system = this;
+		this.scene = scene;
 	}
 
 	public MultiBehaviour getBehaviour() {
@@ -28,8 +32,19 @@ public final class GameSystem  {
 		isStart = true;
 		behaviour.start();
 	}
+	
+	public void initDestroy() {
+		if(isDestroy) throw new UnsupportedOperationException("redestroy of : " + this);
+		isDestroy = true;
+		behaviour.destroy();
+	}
+
+	public GameScene getScene() {
+		return scene;
+	}
 
 	public static class MultiBehaviour {
+		private GameSystem system;
 
 		@SuppressWarnings("unchecked")
 		public static <T> void addNewComponentListener(Class<T> clazz, Consumer<T> consumer) {
@@ -39,17 +54,28 @@ public final class GameSystem  {
 		}
 
 		protected final <T> List<T> getAllComponents(final Class<T> clazz) {
-			return GameCore.getCurrentScene().getAllComponents(clazz);
+			return system.scene.getAllComponents(clazz);
 		}
 
 		protected final <T extends GameComponent> ComponentList<T> getAllComponentsAsComponentList(final Class<T> clazz) {
-			return GameCore.getCurrentScene().getAllComponentsAsComponentList(clazz);
+			return system.scene.getAllComponentsAsComponentList(clazz);
 		}
 
+		
+		public final GameScene getScene() {
+			return system.scene;
+		}
+		
 		protected void start() {
 		}
 
 		public void update() {
 		}
+		protected void destroy() {
+		}
+	}
+
+	public boolean isDestroy() {
+		return isDestroy;
 	}
 }

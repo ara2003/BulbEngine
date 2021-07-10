@@ -143,8 +143,8 @@ public final class GameObject extends GameObjectParent {
 						"component " + Validator.getBrokRequireSystemClass(components, scene) + " require is not fulfilled \n" + this);
 		}
 
-		for(final GameObject obj : childrens) obj.initSratr();
 		for(final GameComponent component : components) Events.event(new NewComponentEvent(component));
+		for(final GameObject obj : childrens) obj.initSratr();
 	}
 
 	@Override

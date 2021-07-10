@@ -14,7 +14,7 @@ import com.greentree.engine.core.component.ComponentList;
 public abstract class GameObjectParent {
 
 	private boolean isDestoy = false;
-	
+
 	protected final int id;
 	private boolean isStart = false;
 	protected final Collection<GameObject> childrens;
@@ -56,7 +56,7 @@ public abstract class GameObjectParent {
 		for(final GameObject obj : childrens) obj.destroy_one();
 		childrens.clear();
 	}
-	
+
 	public final List<GameObject> findMyObjects(final Predicate<GameObject> predicate) {
 		return childrens.parallelStream().filter(predicate).collect(Collectors.toList());
 	}

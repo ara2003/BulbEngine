@@ -9,6 +9,7 @@ import java.util.Stack;
 import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
 import com.greentree.common.pair.Pair;
+import com.greentree.engine.core.builder.context.SceneBuildContext;
 import com.greentree.engine.core.object.GameComponent;
 import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.object.GameObjectParent;
@@ -61,26 +62,34 @@ public abstract class AbstractBuilder<T> implements Builder {
 	public final GameObject createObject(final T in, final GameObjectParent parent) {
 		return new GameObject(this.getObjectName(in), parent);
 	}
-
 	@Override
-	public final GameScene createScene(final InputStream in) {
-		return new GameScene(this.getSceneName(this.parse(in)));
+	public final SceneBuildContext createScene(final InputStream in) {
+		return new SceneBuildContext(this.getSceneName(this.parse(in)), in) {
+
+			@Override
+			public GameScene fill() {
+				fillScene(scene, in);
+				return getScene();
+			}
+
+
+		};
 	}
 
-	public final GameSystem createSystem(final Class<? extends MultiBehaviour> cl) {
-		return new GameSystem(ClassUtil.newInstance(cl));
+	public final GameSystem createSystem(final GameScene scene, final Class<? extends MultiBehaviour> cl) {
+		return new GameSystem(scene, ClassUtil.newInstance(cl));
 	}
 
-	protected final GameSystem createSystem(final T in) {
+	protected final GameSystem createSystem(final GameScene scene, final T in) {
 		try {
-			return createSystem(getMultiBehaviourClass(in));
+			return createSystem(scene, getMultiBehaviourClass(in));
 		}catch(final Exception e) {
 			Log.warn("system not create " + in, e);
 			return null;
 		}
 	}
 
-	protected void fillComponent(final GameComponent component, final T in) {
+	public void fillComponent(final GameComponent component, final T in) {
 		try {
 			setFields(component, in);
 		}catch(final Exception e) {
@@ -91,17 +100,15 @@ public abstract class AbstractBuilder<T> implements Builder {
 	public final void fillObject(final GameObject object, final InputStream in) {
 		this.fillObject(object, this.parse(in));
 	}
+
 	protected abstract void fillObject(GameObject node, T in);
-
-	@Override
-	public final void fillScene(final GameScene scene, final InputStream in) {
-		this.fillScene(scene, this.parse(in));
+	public void fillScene(GameScene scene, InputStream in) {
+		fillScene(scene, parse(in));
 	}
-
 
 	protected abstract void fillScene(GameScene node, T in);
 
-	protected void fillSystem(final GameSystem system, final T in) {
+	public void fillSystem(final GameSystem system, final T in) {
 		try {
 			setFields(system.getBehaviour(), in);
 		}catch(final Exception e) {

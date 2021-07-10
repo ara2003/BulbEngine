@@ -25,6 +25,7 @@ import com.greentree.data.loaders.value.ByteLoader;
 import com.greentree.data.loaders.value.CharLoader;
 import com.greentree.data.loaders.value.DoubleLoader;
 import com.greentree.data.loaders.value.EnumLoader;
+import com.greentree.data.loaders.value.FileLoader;
 import com.greentree.data.loaders.value.FloatLoader;
 import com.greentree.data.loaders.value.IntegerLoader;
 import com.greentree.data.loaders.value.ShortLoader;
@@ -71,6 +72,8 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		AssetUtil.addAssetHandler(new MatirialAssetHandler());
 	}
 	
+	
+	
 	private final LoaderList loaders = new LoaderList();
 	{
 		loaders.addParser(new FloatLoader());
@@ -87,6 +90,8 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		loaders.addParser(new Vector2fLoader());
 
 		loaders.addParser(new LayerLoader());
+		
+		loaders.addParser(new FileLoader());
 
 		loaders.addParser(new IntegerConstLoader());
 
@@ -141,7 +146,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		pushSystems();
 		pushComponents();
 		for(final XMLElement el : in.getChildrens("system")) {
-			final GameSystem system = createSystem(el);
+			final GameSystem system = createSystem(scene, el);
 			if(system == null) continue;
 			scene.addSystem(system);
 			addSystemToFill(system, el);
