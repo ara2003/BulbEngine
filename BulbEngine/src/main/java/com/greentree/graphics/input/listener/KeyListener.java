@@ -4,6 +4,7 @@ import com.greentree.event.Listener;
 import com.greentree.event.NecessarilyListenerManagers;
 import com.greentree.graphics.input.listener.manager.KeyListenerManager;
 
+@Deprecated
 @NecessarilyListenerManagers({KeyListenerManager.class})
 public interface KeyListener extends Listener {
 

@@ -14,23 +14,21 @@ public class JavaFile {
 	public JavaFile(File file) {
 		name = getName(file);
 	}
+	public String getName() {
+		return name;
+	}
+
 	public String getName(File file) {
 		try(Scanner sc = new Scanner(file)) {
-    		while(sc.hasNextLine()) {
-    			String line = sc.nextLine().trim();
-    			if(line.startsWith("package"))
-    				return line.substring(8, line.length()-1) +"."+ FileUtil.getName(file);
-    		}
+			while(sc.hasNextLine()) {
+				String line = sc.nextLine().trim();
+				if(line.startsWith("package"))
+					return line.substring(8, line.length()-1) +"."+ FileUtil.getName(file);
+			}
 		}catch(FileNotFoundException e) {
 			Log.warn(e);
 		}
 		return FileUtil.getName(file);
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	
-	
 }

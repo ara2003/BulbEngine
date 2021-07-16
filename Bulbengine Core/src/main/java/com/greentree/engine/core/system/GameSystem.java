@@ -14,7 +14,7 @@ public final class GameSystem {
 
 	private boolean isStart, isDestroy;
 	private final MultiBehaviour behaviour;
-	
+
 	private final GameScene scene;
 
 	public GameSystem(GameScene scene, MultiBehaviour behaviour) {
@@ -27,20 +27,24 @@ public final class GameSystem {
 		return behaviour;
 	}
 
-	public void initSratr() {
-		if(isStart) throw new UnsupportedOperationException("reinitialization of : " + this);
-		isStart = true;
-		behaviour.start();
+	public GameScene getScene() {
+		return scene;
 	}
-	
+
 	public void initDestroy() {
 		if(isDestroy) throw new UnsupportedOperationException("redestroy of : " + this);
 		isDestroy = true;
 		behaviour.destroy();
 	}
 
-	public GameScene getScene() {
-		return scene;
+	public void initSratr() {
+		if(isStart) throw new UnsupportedOperationException("reinitialization of : " + this);
+		isStart = true;
+		behaviour.start();
+	}
+
+	public boolean isDestroy() {
+		return isDestroy;
 	}
 
 	public static class MultiBehaviour {
@@ -53,29 +57,25 @@ public final class GameSystem {
 			});
 		}
 
+		protected void destroy() {
+		}
+
 		protected final <T> List<T> getAllComponents(final Class<T> clazz) {
 			return system.scene.getAllComponents(clazz);
 		}
+
 
 		protected final <T extends GameComponent> ComponentList<T> getAllComponentsAsComponentList(final Class<T> clazz) {
 			return system.scene.getAllComponentsAsComponentList(clazz);
 		}
 
-		
 		public final GameScene getScene() {
 			return system.scene;
 		}
-		
+
 		protected void start() {
 		}
-
 		public void update() {
 		}
-		protected void destroy() {
-		}
-	}
-
-	public boolean isDestroy() {
-		return isDestroy;
 	}
 }

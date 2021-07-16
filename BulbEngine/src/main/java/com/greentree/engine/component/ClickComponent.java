@@ -24,7 +24,7 @@ public class ClickComponent extends StartGameComponent {
 	private Transform position;
 	private boolean click0(final int x, final int y) {
 		final AbstractVector2f vec = position.position.xy();
-		if((x < vec.x() - width / 2 - border) || (x > vec.x() + width / 2 + border) || (y < vec.y() - height / 2 - border) || (y > vec.y() + height / 2 + border)) return false;
+		if(x < vec.x() - width / 2 - border || x > vec.x() + width / 2 + border || y < vec.y() - height / 2 - border || y > vec.y() + height / 2 + border) return false;
 		return true;
 	}
 

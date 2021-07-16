@@ -7,7 +7,13 @@ import com.greentree.graphics.input.event.KeyRepeatedEvent;
 import com.greentree.graphics.input.event.KeyRepleasedEvent;
 import com.greentree.graphics.input.listener.KeyListener;
 
+@Deprecated
 public class KeyListenerManager extends OneListenerListenerManager<Event, KeyListener> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public KeyListenerManager() {
 		super(KeyListener.class);

@@ -1,12 +1,10 @@
 package com.greentree.data.parse;
 
-import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.greentree.common.logger.Log;
 import com.greentree.common.pair.Pair;
 
 /** @author Arseny Latyshev */
@@ -14,13 +12,6 @@ public class ParserSet<V, R, P extends Parser<V, R>> implements Parser<V, R>, It
 	
 	private static final long serialVersionUID = 1L;
 	private final Collection<P> loaders = new ArrayList<>();
-	static{
-		try {
-			Log.createFileType("parse state");
-		}catch(FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
 	
 	public void addParser(final P loader) {
 		loaders.add(loader);
@@ -55,7 +46,6 @@ public class ParserSet<V, R, P extends Parser<V, R>> implements Parser<V, R>, It
 		final Collection<Pair<P, Exception>> exception = new ArrayList<>();
 		for(final P p : collection) try {
 			var res = p.parse(value);
-			Log.print("parse state", "%s parse with %s", value, p);
 			return res;
 		}catch(final Exception e) {
 			exception.add(new Pair<>(p, e));

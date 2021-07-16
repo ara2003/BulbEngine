@@ -14,18 +14,18 @@ public abstract class SceneBuildContext implements BuildContext {
 			System.out.println(c);
 		});
 	}
-	
+
 	public SceneBuildContext(String sceneName, InputStream in) {
-		this.scene = new GameScene(sceneName);
+		scene = new GameScene(sceneName);
 		this.in = in;
 	}
 
 	public abstract GameScene fill();
-	
+
 	public GameScene getScene() {
 		return scene;
 	}
-	
-	
-	
+
+
+
 }

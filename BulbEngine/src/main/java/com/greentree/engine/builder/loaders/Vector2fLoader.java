@@ -12,7 +12,14 @@ public class Vector2fLoader extends AbstractLoader {
 	public Vector2fLoader() {
 		super(AbstractVector2f.class);
 	}
-	
+
+	@Override
+	public Object parse(Field field, XMLElement element, Object def) throws Exception {
+		AbstractVector2f def0 = (AbstractVector2f)(def == null?new Vector2f():def);
+		setVector(field, element, def0);
+		return def0;
+	}
+
 	public void setVector(Field field, XMLElement element, AbstractVector2f def) throws Exception {
 		for(final var a : element.getChildrens()) {
 			float v = Float.parseFloat(a.getContent());
@@ -20,16 +27,9 @@ public class Vector2fLoader extends AbstractLoader {
 				case "x" -> def.setX(v);
 				case "y" -> def.setY(v);
 				default ->
-					throw new IllegalArgumentException("Unexpected value: " + a.getAttribute("name"));
+				throw new IllegalArgumentException("Unexpected value: " + a.getAttribute("name"));
 			}
 		}
-	}
-	
-	@Override
-	public Object parse(Field field, XMLElement element, Object def) throws Exception {
-		AbstractVector2f def0 = (AbstractVector2f)((def == null)?new Vector2f():def);
-		setVector(field, element, def0);
-		return def0;
 	}
 
 }

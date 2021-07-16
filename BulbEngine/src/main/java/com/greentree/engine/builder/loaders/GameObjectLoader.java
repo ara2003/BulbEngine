@@ -16,7 +16,7 @@ public class GameObjectLoader extends AbstractLoader implements ValueLoader {
 
 	@Override
 	public Object parse(final Class<?> clazz, final String value) throws Exception {
-		final List<GameObject> list = SceneMananger.getCurrentScene().findObjectsWithName(value);
+		final List<GameObject> list = SceneMananger.getCurrentSceneNotNull().findObjectsWithName(value);
 		if(!list.isEmpty()) return list.get(0);
 		throw new IllegalArgumentException();
 	}

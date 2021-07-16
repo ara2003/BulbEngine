@@ -15,7 +15,7 @@ import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
 import com.greentree.common.pair.Pair;
 import com.greentree.common.xml.XMLElement;
-import com.greentree.data.assets.AssetUtil;
+import com.greentree.data.loaders.Loader;
 import com.greentree.data.loaders.LoaderList;
 import com.greentree.data.loaders.collection.ListLoader;
 import com.greentree.data.loaders.collection.MapLoader;
@@ -33,13 +33,6 @@ import com.greentree.data.loaders.value.StaticFieldLoader;
 import com.greentree.data.loaders.value.StringLoader;
 import com.greentree.data.loading.ResourceLoader;
 import com.greentree.engine.Layers;
-import com.greentree.engine.assets.JPGImageAssetHandler;
-import com.greentree.engine.assets.MatirialAssetHandler;
-import com.greentree.engine.assets.OBJMeshAssetHandler;
-import com.greentree.engine.assets.OpenGLShadingLanguageAssetHandler;
-import com.greentree.engine.assets.PNGImageAssetHandler;
-import com.greentree.engine.assets.PrefabAssetHandler;
-import com.greentree.engine.assets.SceneAssetHandler;
 import com.greentree.engine.builder.loaders.ColorLoader;
 import com.greentree.engine.builder.loaders.GameComponentLoader;
 import com.greentree.engine.builder.loaders.GameObjectLoader;
@@ -61,55 +54,58 @@ import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 
 /** @author Arseny Latyshev */
 public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
-	
+
+	private static final LoaderList loaders = new LoaderList();
+
 	static {
-		AssetUtil.addAssetHandler(new SceneAssetHandler());
-		AssetUtil.addAssetHandler(new PrefabAssetHandler());
-		AssetUtil.addAssetHandler(new PNGImageAssetHandler());
-		AssetUtil.addAssetHandler(new JPGImageAssetHandler());
-		AssetUtil.addAssetHandler(new OpenGLShadingLanguageAssetHandler());
-		AssetUtil.addAssetHandler(new OBJMeshAssetHandler());
-		AssetUtil.addAssetHandler(new MatirialAssetHandler());
+		addParser(new FloatLoader());
+		addParser(new IntegerLoader());
+		addParser(new BooleanLoader());
+		addParser(new DoubleLoader());
+		addParser(new ShortLoader());
+		addParser(new ByteLoader());
+		addParser(new CharLoader());
+		addParser(new EnumLoader());
+		addParser(new StringLoader());
+
+		addParser(new Vector3fLoader());
+		addParser(new Vector2fLoader());
+
+		addParser(new LayerLoader());
+
+		addParser(new FileLoader());
+
+		addParser(new IntegerConstLoader());
+
+		addParser(new GameComponentLoader());
+		addParser(new GameObjectLoader());
+		addParser(new PrefabLoader());
+
+		addParser(new TextureLoader());
+		addParser(new ColorLoader());
+		addParser(new ObjMeshLoader());
+		addParser(new ShaderProgramLoader());
+
+		addParser(new StaticFieldLoader());
+
+		addParser(new ListLoader());
+		addParser(new MapLoader());
+		addParser(new TableLoader());
 	}
-	
-	
-	
-	private final LoaderList loaders = new LoaderList();
-	{
-		loaders.addParser(new FloatLoader());
-		loaders.addParser(new IntegerLoader());
-		loaders.addParser(new BooleanLoader());
-		loaders.addParser(new DoubleLoader());
-		loaders.addParser(new ShortLoader());
-		loaders.addParser(new ByteLoader());
-		loaders.addParser(new CharLoader());
-		loaders.addParser(new EnumLoader());
-		loaders.addParser(new StringLoader());
 
-		loaders.addParser(new Vector3fLoader());
-		loaders.addParser(new Vector2fLoader());
-
-		loaders.addParser(new LayerLoader());
-		
-		loaders.addParser(new FileLoader());
-
-		loaders.addParser(new IntegerConstLoader());
-
-		loaders.addParser(new GameComponentLoader());
-		loaders.addParser(new GameObjectLoader());
-		loaders.addParser(new PrefabLoader());
-
-		loaders.addParser(new TextureLoader());
-		loaders.addParser(new ColorLoader());
-		loaders.addParser(new ObjMeshLoader());
-		loaders.addParser(new ShaderProgramLoader());
-
-		loaders.addParser(new StaticFieldLoader());
-
-		loaders.addParser(new ListLoader());
-		loaders.addParser(new MapLoader());
-		loaders.addParser(new TableLoader());
+	public static void addParser(Loader loader) {
+		loaders.addParser(loader);
 	}
+
+	//	static {//TODO
+	//		AssetUtil.addAssetHandler(new SceneAssetHandler());
+	//		AssetUtil.addAssetHandler(new PrefabAssetHandler());
+	//		AssetUtil.addAssetHandler(new PNGImageAssetHandler());
+	//		AssetUtil.addAssetHandler(new JPGImageAssetHandler());
+	//		AssetUtil.addAssetHandler(new OpenGLShadingLanguageAssetHandler());
+	//		AssetUtil.addAssetHandler(new OBJMeshAssetHandler());
+	//		AssetUtil.addAssetHandler(new MatirialAssetHandler());
+	//	}
 
 	@Override
 	public GameObject createPrefab(final String name, final String prefabPath) {

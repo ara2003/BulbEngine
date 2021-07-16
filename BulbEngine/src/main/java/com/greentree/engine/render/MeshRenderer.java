@@ -45,13 +45,13 @@ public class MeshRenderer extends Camera3DRendenerComponent {
 	@Override
 	public void render() {
 		final Matrix4f modelView = position.getModelViewMatrix();
-		
+
 		final Matrix4f normal = new Matrix4f();
 		modelView.normal(normal);
 
 		// take MVP
 		final Matrix4f modelVeiwProjection = new Matrix4f().identity().mul(Cameras.getMainCamera().getProjection()).mul(modelView);
-		
+
 		try(MemoryStack stack = MemoryStack.create(32 * Float.BYTES).push()) {
 			program.start();
 
@@ -66,7 +66,7 @@ public class MeshRenderer extends Camera3DRendenerComponent {
 			vao.bind();
 
 			Graphics.glDrawElements(GLPrimitive.TRIANGLES, lengthIndecies, GLType.UNSIGNED_INT);
-			
+
 			vao.unbind();
 			program.stop();
 		}
@@ -75,9 +75,9 @@ public class MeshRenderer extends Camera3DRendenerComponent {
 	@Override
 	public void start() {
 		position = getComponent(Transform.class);
-		
+
 		final IndeciesArray mesh = this.getComponent(AbstractMeshComponent.class).getMesh().get(Type.VERTEX, Type.NORMAL);
-		
+
 		try(MemoryStack stack = MemoryStack.stackPush()) {
 			vao = new GLVertexArray();
 
@@ -90,15 +90,15 @@ public class MeshRenderer extends Camera3DRendenerComponent {
 			vao.bind();
 			vio.bind();
 
-//			for(int i = 0; i < mesh.getVertex().length; i += 6) {
-//				System.out.printf("%2d :", i/6);
-//				for(int j = 0; j < 3; j++) 
-//					System.out.printf("%2d ",Math.round(mesh.getVertex()[i+j]));
-//				for(int j = 0; j < 3; j++) 
-//					System.out.printf("%2d ",Math.round(mesh.getVertex()[i+j]));
-//				System.out.println();
-//			}
-//			System.out.println(Arrays.toString(mesh.getIndecies()));
+			//			for(int i = 0; i < mesh.getVertex().length; i += 6) {
+			//				System.out.printf("%2d :", i/6);
+			//				for(int j = 0; j < 3; j++)
+			//					System.out.printf("%2d ",Math.round(mesh.getVertex()[i+j]));
+			//				for(int j = 0; j < 3; j++)
+			//					System.out.printf("%2d ",Math.round(mesh.getVertex()[i+j]));
+			//				System.out.println();
+			//			}
+			//			System.out.println(Arrays.toString(mesh.getIndecies()));
 
 			program.passVertexAttribArray(vbo, false, Attribute.of("vertex_coord", 3), Attribute.of("vertex_normal", 3));
 
@@ -114,5 +114,5 @@ public class MeshRenderer extends Camera3DRendenerComponent {
 		mvpUL = program.getUniformLocation("mvp");
 		nmUL  = program.getUniformLocation("nm");
 	}
-	
+
 }

@@ -10,13 +10,13 @@ import com.greentree.data.assets.FileAsset;
 public class JPGImageAssetHandler implements AssetHandler {
 
 	@Override
+	public boolean isLoadedFileType(String type) {
+		return "jpg".equals(type);
+	}
+
+	@Override
 	public Asset parse(File value) throws Exception {
 		return new FileAsset("image", value);
 	}
 
-	@Override
-	public boolean isLoadedFileType(String type) {
-		return "jpg".equals(type);
-	}
-	
 }

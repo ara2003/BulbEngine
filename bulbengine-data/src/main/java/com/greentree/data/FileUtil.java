@@ -6,7 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URLConnection;
+import java.nio.file.CopyOption;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -25,10 +31,6 @@ public abstract class FileUtil {
 
 	private final static EventAction<File> openFile = new EventAction<>();
 
-	public static void addUseFileListener(Consumer<File> c) {
-		openFile.addListener(c);
-	}
-	
 	private static void addFileToZip0(File file, String name, ZipOutputStream zout) throws FileNotFoundException, IOException {
 		try(FileInputStream fis = new FileInputStream(file)){
 			ZipEntry entry1  =new ZipEntry(name);
@@ -37,6 +39,18 @@ public abstract class FileUtil {
 			fis.read(buffer);
 			zout.write(buffer);
 		}
+	}
+
+	public static void addUseFileListener(Consumer<File> c) {
+		openFile.addListener(c);
+	}
+
+	public static void copy(File from, File to) throws IOException {
+		Path srcPath = from.toPath();
+		Path destPath = to.toPath();
+
+		Files.walkFileTree(srcPath, new CopyDirVisitor(srcPath, destPath, StandardCopyOption.REPLACE_EXISTING));
+
 	}
 
 	public static void dirToZip(File dir, File zipFile) throws FileNotFoundException, IOException {
@@ -48,7 +62,6 @@ public abstract class FileUtil {
 			for(File file : getAllFile(dir)) addFileToZip0(file, file.getAbsolutePath().substring(len), zout);
 		}
 	}
-
 	public static Collection<File> getAllFile(File file) {
 		Collection<File> res = new ArrayList<>();
 		Queue<File> dir = new LinkedList<>();
@@ -63,24 +76,45 @@ public abstract class FileUtil {
 		}
 		return res;
 	}
+
+	public static File getFile(String file) {
+		try {
+			return new File(ResourceLoader.getResource(file).toURI().getPath());
+		}catch(URISyntaxException e) {
+			Log.warn(e);
+		}
+		return null;
+	}
+
 	public static String getName(File f) {
 		int index = f.getName().lastIndexOf('.');
 		if(index == -1)return f.getName();
 		return f.getName().substring(0, index);
 	}
-
 	public static String getType(File f) {
 		int index = f.getName().lastIndexOf('.');
 		if(index == -1)return "";
 		return f.getName().substring(index+1);
 	}
 
+	public static void isDirectory(File directory) {
+		if(directory.exists()) {
+			if(!directory.isDirectory())throw new IllegalArgumentException("is not directory " + directory);
+		}else throw new IllegalArgumentException("not exists " + directory);
+	}
+
+	public static void isFile(File file) {
+		if(file.exists()) {
+			if(!file.isFile())throw new IllegalArgumentException("is not file " + file);
+		}else throw new IllegalArgumentException("not exists " + file);
+	}
 	public static FileInputStream openStream(File file) throws FileNotFoundException {
 		FileInputStream stream = new FileInputStream(file);
 		openFile.action(file);
 		return stream;
 
 	}
+
 	public static String readFile(File file) throws FileNotFoundException {
 		StringBuilder b = new StringBuilder();
 		try(Scanner sc = new Scanner(file)){
@@ -109,24 +143,38 @@ public abstract class FileUtil {
 		}
 	}
 
-	public static void isFile(File file) {
-		if(file.exists()) {
-			if(!file.isFile())throw new IllegalArgumentException("is not file " + file);
-		}else throw new IllegalArgumentException("not exists " + file);
-	}
-	public static void isDirectory(File directory) {
-		if(directory.exists()) {
-			if(!directory.isDirectory())throw new IllegalArgumentException("is not directory " + directory);
-		}else throw new IllegalArgumentException("not exists " + directory);
+	private static class CopyDirVisitor extends SimpleFileVisitor<Path>
+	{
+		private final Path fromPath;
+		private final Path toPath;
+		private final CopyOption copyOption;
+
+		public CopyDirVisitor(Path fromPath, Path toPath, CopyOption copyOption)
+		{
+			this.fromPath = fromPath;
+			this.toPath = toPath;
+			this.copyOption = copyOption;
+		}
+
+		@Override
+		public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
+		{
+			Path targetPath = toPath.resolve(fromPath.relativize(dir));
+			if( !Files.exists(targetPath) ) Files.createDirectory(targetPath);
+			return FileVisitResult.CONTINUE;
+		}
+
+		@Override
+		public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+		{
+			Files.copy(file, toPath.resolve(fromPath.relativize(file)), copyOption);
+			return FileVisitResult.CONTINUE;
+		}
 	}
 
-	public static File getFile(String file) {
-		try {
-			return new File(ResourceLoader.getResource(file).toURI().getPath());
-		}catch(URISyntaxException e) {
-			Log.warn(e);
-		}
-		return null;
+	public static boolean isEmpty(File file) {
+		if(file.isDirectory())return file.list().length == 0;
+		throw new IllegalArgumentException(file.toString());
 	}
 
 }

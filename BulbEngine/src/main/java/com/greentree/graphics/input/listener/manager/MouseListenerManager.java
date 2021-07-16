@@ -6,7 +6,10 @@ import com.greentree.graphics.input.event.MouseEvent;
 import com.greentree.graphics.input.event.MouseMovedEvent;
 import com.greentree.graphics.input.listener.MouseListener;
 
+@Deprecated
 public class MouseListenerManager extends OneListenerListenerManager<MouseEvent, MouseListener> {
+
+	private static final long serialVersionUID = 1L;
 
 	public MouseListenerManager() {
 		super(MouseListener.class);
@@ -40,12 +43,6 @@ public class MouseListenerManager extends OneListenerListenerManager<MouseEvent,
 					break;
 			}
 		}
-	}
-
-	@Override
-	protected boolean isUse(MouseListener listener) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 

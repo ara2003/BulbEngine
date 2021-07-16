@@ -15,10 +15,10 @@ public class ColorLoader extends AbstractLoader implements ValueLoader {
 		if(!value.startsWith("#"))throw new Exception("not start with #");
 		value = value.substring(1);
 		int n = Integer.parseInt(value, 16);
-		if(value.length() == 3)return new Color((n/(16*16)%16)*16, (n/(16)%16)*16, (n%16)*16);
+		if(value.length() == 3)return new Color(n/(16*16)%16*16, n/16%16*16, n%16*16);
 		if(value.length() == 6)return new Color(n/256/256%256, n/256%256, n%256);
 		throw new Exception("unlegal size");
-		
+
 	}
 
 }

@@ -17,7 +17,7 @@ public class SimpleWindow extends Window {
 	private final EventAction<Integer> keyPress, keyRelease, keyRepeat, keyPressOrRepeat;
 	private final EventAction<Integer> mouseButtonPress, mouseButtonRelease, mouseButtonRepeat;
 	private final EventAction<String> charEnter;
-	
+
 	public EventAction<String> getCharEnter() {
 		return charEnter;
 	}
@@ -57,6 +57,7 @@ public class SimpleWindow extends Window {
 		this.setCallback((GLFWCursorPosCallbackI) (window, xpos, ypos)-> {
 			mousePosition.action((int)(xpos-getWidth()/2f), (int)(getHeight()/2f-ypos));
 		});
+
 	}
 
 	public SimpleWindow(final String title, final int width, final int height) {
@@ -101,4 +102,5 @@ public class SimpleWindow extends Window {
 	public EventAction<Integer> getKeyPressOrRepeat() {
 		return keyPressOrRepeat;
 	}
+
 }

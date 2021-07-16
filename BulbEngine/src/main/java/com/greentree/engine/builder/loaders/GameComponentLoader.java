@@ -14,11 +14,11 @@ public class GameComponentLoader extends AbstractLoader implements ValueLoader {
 
 	@Override
 	public Object parse(final Class<?> clazz, final String name) throws Exception {
-		for(var c : SceneMananger.getCurrentScene().findObjectsWithName(name)) {
+		for(var c : SceneMananger.getCurrentSceneNotNull().findObjectsWithName(name)) {
 			var res = c.getComponent(clazz.asSubclass(GameComponent.class));
 			if(res == null)continue;
 			return res;
 		}
-		throw new Exception("component "+clazz+" not find in objects with name " + name + " : " + SceneMananger.getCurrentScene().findObjectsWithName(name));
+		throw new Exception("component "+clazz+" not find in objects with name " + name + " : " + SceneMananger.getCurrentSceneNotNull().findObjectsWithName(name));
 	}
 }

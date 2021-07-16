@@ -19,8 +19,12 @@ public abstract class SceneMananger {
 
 	protected static GameScene currentScene;
 
+	public static GameScene getCurrentSceneNotNull() {
+		return Objects.requireNonNull(getCurrentScene(), "current scene is null");
+	}
+	
 	public static GameScene getCurrentScene() {
-		return Objects.requireNonNull(SceneMananger.currentScene, "current scene is null");
+		return SceneMananger.currentScene;
 	}
 
 	public static GameScene getScene(String file) {

@@ -10,13 +10,13 @@ import com.greentree.data.assets.FileAsset;
 public class OpenGLShadingLanguageAssetHandler implements AssetHandler {
 
 	@Override
+	public boolean isLoadedFileType(String type) {
+		return "glsl".equals(type);
+	}
+
+	@Override
 	public Asset parse(File value) throws Exception {
 		return new FileAsset("shader", value);
 	}
 
-	@Override
-	public boolean isLoadedFileType(String type) {
-		return "glsl".equals(type);
-	}
-	
 }

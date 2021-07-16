@@ -12,7 +12,7 @@ import org.lwjgl.system.MemoryStack;
 /** @author Arseny Latyshev */
 public abstract class Graphics {
 
-	private static GLFont font;
+	private static GLFont font = new BasicFont(new java.awt.Font("", 10, 14), false);;
 	public static final float[] array2f = {-.5f, -.5f, .5f, -.5f, .5f, .5f, -.5f, .5f};
 	public static final float[] array3f = {-.5f, -.5f, 0, .5f, -.5f, 0, .5f, .5f, 0, -.5f, .5f, 0};
 
@@ -221,7 +221,6 @@ public abstract class Graphics {
 	}
 
 	public static GLFont getFont() {
-		if(font == null)font = new BasicFont(new java.awt.Font("", 10, 14), false);
 		return font;
 	}
 

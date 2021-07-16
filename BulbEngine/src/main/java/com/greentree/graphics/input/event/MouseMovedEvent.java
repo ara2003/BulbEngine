@@ -3,19 +3,12 @@ package com.greentree.graphics.input.event;
 import com.greentree.event.EventSystem;
 
 /** @author Arseny Latyshev */
+@Deprecated
 public final class MouseMovedEvent implements MouseEvent {
 
-	private static final long serialVersionUID = 1L;
-	public static MouseMovedEvent getInstanse(final EventSystem eventSystem, final EventType type, final int x1, final int y1,
-			final int x2, final int y2) {
-		MouseMovedEvent event = eventSystem.get(MouseMovedEvent.class);
-		if(event == null) event = new MouseMovedEvent(type, x1, y1, x2, y2);
-		else event.reset(type, x1, y1, x2, y2);
-		return event;
-	}
 	private int button, x1, y1, x2, y2;
-
 	private EventType type;
+	private static final long serialVersionUID = 1L;
 
 	private MouseMovedEvent(final EventType type, final int x1, final int y1, final int x2, final int y2) {
 		this.type = type;
@@ -23,6 +16,14 @@ public final class MouseMovedEvent implements MouseEvent {
 		this.y1   = y1;
 		this.x2   = x2;
 		this.y2   = y2;
+	}
+
+	public static MouseMovedEvent getInstanse(final EventSystem eventSystem, final EventType type, final int x1, final int y1,
+			final int x2, final int y2) {
+		MouseMovedEvent event = eventSystem.get(MouseMovedEvent.class);
+		if(event == null) event = new MouseMovedEvent(type, x1, y1, x2, y2);
+		else event.reset(type, x1, y1, x2, y2);
+		return event;
 	}
 
 	public int getButton() {

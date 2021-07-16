@@ -10,7 +10,7 @@ public abstract class SaveUtil {
 
 	protected static SaveSystem getSaveSystem() {
 		if(saveSystem != null && !saveSystem.isDestroy()) return (SaveSystem) saveSystem.getBehaviour();
-		saveSystem = SceneMananger.getCurrentScene().getSystem(SaveSystem.class);
+		saveSystem = SceneMananger.getCurrentSceneNotNull().getSystem(SaveSystem.class);
 		return (SaveSystem) saveSystem.getBehaviour();
 	}
 

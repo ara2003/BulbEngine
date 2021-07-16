@@ -1,10 +1,9 @@
 package com.greentree.engine.system;
 
-import com.greentree.engine.Game3D;
+import com.greentree.engine.Game;
+import com.greentree.engine.Windows;
 import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
-import com.greentree.engine.core.util.Events;
 import com.greentree.graphics.input.Key;
-import com.greentree.graphics.input.listener.KeyAdapter;
 
 
 /**
@@ -15,14 +14,8 @@ public class ESCExtitSystem extends MultiBehaviour {
 
 	@Override
 	protected void start() {
-		Events.addListener(new KeyAdapter() {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void keyPress(int key) {
-				if(key == Key.ESCAPE.index())Game3D.exit();
-			}
-
+		Windows.getWindow().getKeyPress().addListener(key -> {
+			if(key == Key.ESCAPE.index())Game.exit();
 		});
 	}
 

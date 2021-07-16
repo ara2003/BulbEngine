@@ -7,14 +7,15 @@ import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.builder.Required;
 import com.greentree.engine.core.util.Events;
-import com.greentree.engine.input.CameraMouseAdapter;
 import com.greentree.graphics.Graphics;
+import com.greentree.graphics.input.listener.camera.CameraMouseAdapter;
 
 /**
  * @deprecated use com.greentree.engine.component.ClickComponent
  * @author User
  *
  */
+@Deprecated
 public class Edit extends UIComponent {
 
 	@EditorData
@@ -27,28 +28,25 @@ public class Edit extends UIComponent {
 	private float width;
 	@EditorData
 	private float height;
-	
-	public String getText() {
-		return textBuilder.toString();
+
+	private final StringBuilder textBuilder = new StringBuilder("");
+
+	private VectorAction3f position;
+
+	private boolean click0(final int x, final int y) {
+		final AbstractVector2f vec = position.xy();
+		if(x < vec.x() - width / 2 - border || x > vec.x() + width / 2 + border || y < vec.y() - height / 2 - border || y > vec.y() + height / 2 + border) return false;
+		return true;
 	}
-	
 	public float getBorder() {
 		return border;
 	}
-	
 	public String getDefaultText() {
 		return defaultText;
 	}
-	private final StringBuilder textBuilder = new StringBuilder("");
-	private VectorAction3f position;
-	
-	private boolean click0(final int x, final int y) {
-		final AbstractVector2f vec = position.xy();
-		if(x < vec.x() - width / 2 - border) return false;
-		if(x > vec.x() + width / 2 + border) return false;
-		if(y < vec.y() - height / 2 - border) return false;
-		if(y > vec.y() + height / 2 + border) return false;
-		return true;
+
+	public String getText() {
+		return textBuilder.toString();
 	}
 	@Override
 	public void render() {

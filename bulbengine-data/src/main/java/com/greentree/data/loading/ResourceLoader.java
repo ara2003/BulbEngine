@@ -1,6 +1,5 @@
 package com.greentree.data.loading;
 
-import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -10,8 +9,8 @@ import java.util.Objects;
 public class ResourceLoader {
 	
 	private static final List<ResourceLocation> locations = new ArrayList<>();
+	
 	static {
-		ResourceLoader.locations.add(new FileSystemLocation(new File(".")));
 		ResourceLoader.locations.add(new FileSystemLocation());
 	}
 	

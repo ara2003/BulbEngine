@@ -72,10 +72,6 @@ public class Window implements AutoCloseable {
 	protected static void setCallback(final GLFWErrorCallbackI listener) {
 		GLFW.glfwSetErrorCallback(listener);
 	}
-	protected void setCallback(final GLFWCharCallbackI listener) {
-		GLFW.glfwSetCharCallback(id, listener);
-	}
-
 	protected static void setCallback(final GLFWJoystickCallbackI listener) {
 		GLFW.glfwSetJoystickCallback(listener);
 	}
@@ -105,16 +101,20 @@ public class Window implements AutoCloseable {
 		return GLFW.glfwGetCurrentContext() == id;
 	}
 
-	public void shouldClose() {
-		GLFW.glfwSetWindowShouldClose(id, true);
-	}
-
 	public boolean isShouldClose() {
 		return GLFW.glfwWindowShouldClose(id);
 	}
 
 	public void makeCurrent() {
 		GLFW.glfwMakeContextCurrent(id);
+	}
+
+	protected void setCallback(final GLFWCharCallbackI listener) {
+		GLFW.glfwSetCharCallback(id, listener);
+	}
+
+	protected void setCallback(GLFWCursorPosCallbackI listener) {
+		GLFW.glfwSetCursorPosCallback(id, listener);
 	}
 
 	protected void setCallback(final GLFWDropCallbackI listener) {
@@ -169,9 +169,9 @@ public class Window implements AutoCloseable {
 		GLFW.glfwSetWindowRefreshCallback(id, listener);
 	}
 
-	//	protected void setCallback(final BulbGLWindowSizeCallbackI listener) {
-	//		GLFW.glfwSetWindowSizeCallback(this.id, listener);
-	//	}
+	public void shouldClose() {
+		GLFW.glfwSetWindowShouldClose(id, true);
+	}
 
 	public void swapBuffer() {
 		GLFW.glfwSwapBuffers(id);
@@ -179,17 +179,6 @@ public class Window implements AutoCloseable {
 
 	public void updateEvents() {
 		GLFW.glfwPollEvents();
-	}
-
-	public static class Builder {
-
-		public void setResizable(final boolean resizable) {
-
-		}
-	}
-
-	protected void setCallback(GLFWCursorPosCallbackI listener) {
-		GLFW.glfwSetCursorPosCallback(id, listener);
 	}
 
 }

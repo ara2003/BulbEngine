@@ -1,9 +1,10 @@
-package com.greentree.engine.core;
+package com.greentree.engine;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class ArgumentList {
 
@@ -16,13 +17,19 @@ public class ArgumentList {
 		set.addAll(list);
 	}
 
+	public void addCommand(String string, Consumer<String> run) {
+
+	}
+
+	public void addCommand(String string, Runnable run) {
+
+	}
+
 	public void addConflict(String a, String b) {
 		conflict.put(a, b);
 		conflict.put(b, a);
 	}
-
 	public boolean hasArguments(String arg) {
 		return set.contains(arg);
 	}
-
 }

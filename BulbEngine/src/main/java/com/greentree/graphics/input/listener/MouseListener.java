@@ -4,6 +4,7 @@ import com.greentree.event.Listener;
 import com.greentree.event.NecessarilyListenerManagers;
 import com.greentree.graphics.input.listener.manager.MouseListenerManager;
 
+@Deprecated
 @NecessarilyListenerManagers({MouseListenerManager.class})
 public interface MouseListener extends Listener {
 

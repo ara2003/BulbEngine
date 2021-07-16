@@ -11,16 +11,14 @@ import com.greentree.data.assets.FileAsset;
 public class PrefabAssetHandler implements AssetHandler {
 
 	@Override
-	public Asset parse(File value) throws Exception {
-		XMLElement e = new XMLElement(value);
-		if("object".equals(e.getName())) {
-			return new FileAsset("prefab", value);
-		}
-		throw new IllegalArgumentException("is not prefab");
+	public boolean isLoadedFileType(String type) {
+		return "xml".equals(type);
 	}
 
 	@Override
-	public boolean isLoadedFileType(String type) {
-		return "xml".equals(type);
+	public Asset parse(File value) throws Exception {
+		XMLElement e = new XMLElement(value);
+		if("object".equals(e.getName())) return new FileAsset("prefab", value);
+		throw new IllegalArgumentException("is not prefab");
 	}
 }

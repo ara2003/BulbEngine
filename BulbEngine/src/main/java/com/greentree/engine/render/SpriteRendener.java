@@ -20,6 +20,8 @@ public class SpriteRendener extends CameraRendenerComponent {
 	@EditorData(value = "image")
 	protected GLTexture2D texture;
 
+	public VectorAction3f position;
+
 	public float getHeight() {
 		return height;
 	}
@@ -28,8 +30,6 @@ public class SpriteRendener extends CameraRendenerComponent {
 		return width;
 	}
 
-	public VectorAction3f position;
-	
 	@Override
 	public void render() {
 		Graphics.pushMatrix();
@@ -77,7 +77,7 @@ public class SpriteRendener extends CameraRendenerComponent {
 	@Override
 	public void start() {
 		position = getComponent(Transform.class).position;
-		
+
 		texture.setMagFilter(Filtering.LINEAR);
 		texture.setMinFilter(Filtering.NEAREST);
 

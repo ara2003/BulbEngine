@@ -14,7 +14,6 @@ public final class Text extends UIComponent {
 	@Required
 	@EditorData
 	private String text;
-	private float h;
 	private VectorAction3f position;
 
 	public String getText() {
@@ -24,7 +23,7 @@ public final class Text extends UIComponent {
 	@Override
 	public void render() {
 		float w = Graphics.getFont().getWidth(text);
-		h = Graphics.getFont().getHeight(text);
+		float h = Graphics.getFont().getHeight(text);
 		color.bind();
 		Graphics.getFont().drawString(position.x() - w / 2, position.y() - h / 2, text);
 	}

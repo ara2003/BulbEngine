@@ -1,6 +1,5 @@
 package com.greentree.engine.core.object;
 
-import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -8,7 +7,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
-import com.greentree.common.logger.Logger;
 import com.greentree.engine.core.system.GameSystem;
 import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 import com.greentree.engine.core.system.RequireSystems;
@@ -16,14 +14,6 @@ import com.greentree.engine.core.system.RequireSystems;
 /** @author Arseny Latyshev */
 public final class GameScene extends GameObjectParent {
 	private final SystemCollection systems;
-	static {
-		try {
-			Log.createFileType("update scene");
-		}catch(final FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-
 
 	public GameScene(final String name) {
 		super(name);
@@ -37,7 +27,6 @@ public final class GameScene extends GameObjectParent {
 	public boolean contains(Class<? extends MultiBehaviour> class1) {
 		return systems.containsClass(class1);
 	}
-
 
 	@Override
 	public void destroy_full() {
@@ -75,9 +64,7 @@ public final class GameScene extends GameObjectParent {
 
 	@Override
 	public void update() {
-		Logger.print("update scene", "s %d", System.nanoTime());
 		systems.update();
-		Logger.print("update scene", "f %d", System.nanoTime());
 	}
 
 	@Override

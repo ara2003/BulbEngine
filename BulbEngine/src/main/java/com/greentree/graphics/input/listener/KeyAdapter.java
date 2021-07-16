@@ -1,6 +1,12 @@
 package com.greentree.graphics.input.listener;
 
+@Deprecated
 public abstract class KeyAdapter implements KeyListener {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	public void keyPress(final int key) {

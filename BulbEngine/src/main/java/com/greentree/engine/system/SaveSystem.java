@@ -24,7 +24,6 @@ public class SaveSystem extends MultiBehaviour {
 
 	@Override
 	public void destroy() {
-		System.out.println(map);
 		try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))){
 			out.writeObject(map);
 		}catch(IOException e) {
@@ -32,15 +31,8 @@ public class SaveSystem extends MultiBehaviour {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected void start() {
-		try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))){
-			map.putAll((Map<String, Object>) in.readObject());
-		}catch(IOException | ClassNotFoundException e) {
-			Log.error(e);
-		}
-		System.out.println(map);
+	public Object load(String name) {
+		return map.get(name);
 	}
 
 
@@ -53,8 +45,14 @@ public class SaveSystem extends MultiBehaviour {
 		return map.put(name, object);
 	}
 
-	public Object load(String name) {
-		return map.get(name);
+	@SuppressWarnings("unchecked")
+	@Override
+	protected void start() {
+		try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))){
+			map.putAll((Map<String, Object>) in.readObject());
+		}catch(IOException | ClassNotFoundException e) {
+			Log.error(e);
+		}
 	}
 
 }

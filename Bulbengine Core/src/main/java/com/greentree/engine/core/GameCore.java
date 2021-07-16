@@ -2,12 +2,10 @@ package com.greentree.engine.core;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 
+import com.greentree.common.concurent.MultyTask;
 import com.greentree.common.time.Time;
+import com.greentree.data.FileUtil;
 import com.greentree.engine.core.builder.Builder;
 import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.object.GameScene;
@@ -18,32 +16,24 @@ import com.greentree.engine.core.util.SceneMananger;
 public abstract class GameCore {
 
 	protected static Builder builder;
-	private static final ArgumentList arguments = new ArgumentList();
-
-	public static void addArgumentConflict(String a, String b) {
-		GameCore.arguments.addConflict(a, b);
-	}
-
-	public static void addArguments(String... arguments) {
-		GameCore.arguments.add(arguments);
-	}
 
 	public static boolean addSystem(final GameSystem system) {
-		return SceneMananger.getCurrentScene().addSystem(system);
+		return SceneMananger.getCurrentSceneNotNull().addSystem(system);
 	}
+	
 	public static void buildTo(File directory) {
 		if(directory.exists()) {
-			if(directory.list().length > 0)throw new UnsupportedOperationException("directory must be empty");
+    		if(!FileUtil.isEmpty(directory))throw new UnsupportedOperationException("directory must be empty");
 		}else directory.mkdir();
 
-		File file = new File(directory, "text.txt");
+		File file = new File(directory, "Assets");
+		if(!file.exists())file.mkdir();
 
 		try {
-			file.createNewFile();
+			FileUtil.copy(RootFiles.getAssets(), file);
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public static GameObject createFromPrefab(final String prefab) {
@@ -60,45 +50,35 @@ public abstract class GameCore {
 
 	@Deprecated
 	public static GameScene getCurrentScene() {
-		return SceneMananger.getCurrentScene();
-	}
-
-	public static boolean hasArguments(String arg) {
-		return arguments.hasArguments(arg);
+		return SceneMananger.getCurrentSceneNotNull();
 	}
 
 	protected static void setBuilder(final Builder builder) {
 		GameCore.builder = builder;
 	}
-	public static void start(final String file, final Builder builder, final String[] args) {
-		addArguments(args);
+	
+	public static void start(final File root, final Builder builder) {
 		GameCore.builder = builder;
-		RootFiles.start(file);
+		RootFiles.start(root);
+	}
+
+	@Deprecated
+	public static void exit() {
+		System.exit(0);
+	}
+
+	@Deprecated
+	public static void gameLoop(){
 		while(true) {
 			Time.updata();
-			SceneMananger.getCurrentScene().update();
+			SceneMananger.getCurrentSceneNotNull().update();
 		}
 	}
-	private static class ArgumentList {
 
-		private final HashSet<String> set = new HashSet<>();
-		private final Map<String, String> conflict = new HashMap<>();
-
-		public void add(String[] arguments) {
-			var list = Arrays.asList(arguments);
-			for(String s : list) if(list.contains(conflict.get(s))) throw new RuntimeException("conflict arguments \"" + s + "\" \"" + conflict.get(s) + "\"");
-			set.addAll(list);
-		}
-
-		public void addConflict(String a, String b) {
-			conflict.put(a, b);
-			conflict.put(b, a);
-		}
-
-		public boolean hasArguments(String arg) {
-			return set.contains(arg);
-		}
-
+	
+	public static void terminate() {
+		SceneMananger.terminate();
+		MultyTask.shutdown();
 	}
 
 }

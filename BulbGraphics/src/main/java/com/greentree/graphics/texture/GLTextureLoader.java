@@ -4,7 +4,6 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_BORDER_COLOR;
 import static org.lwjgl.opengl.GL11.glTexParameterfv;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.opengl.GL11;

@@ -7,8 +7,8 @@ import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.builder.Required;
 import com.greentree.engine.core.util.Events;
-import com.greentree.engine.input.CameraMouseAdapter;
 import com.greentree.graphics.Graphics;
+import com.greentree.graphics.input.listener.camera.CameraMouseAdapter;
 
 /**
  * @deprecated use ClickComponent
@@ -23,31 +23,24 @@ public class Button extends UIComponent {
 	@Required
 	@EditorData
 	private String text;
-	
-	
-	public String getText() {
-		return text;
-	}
 
-	
-	public void setText(String text) {
-		this.text = text;
-	}
 
 	private float width, height;
+
+
 	private final Action<ButtonListener> action = new Action<>();
+
 	private VectorAction3f position;
 	private boolean click0(final int x, final int y) {
 		final AbstractVector2f vec = position.xy();
-		if(x < vec.x() - width / 2 - border) return false;
-		if(x > vec.x() + width / 2 + border) return false;
-		if(y < vec.y() - height / 2 - border) return false;
-		if(y > vec.y() + height / 2 + border) return false;
+		if(x < vec.x() - width / 2 - border || x > vec.x() + width / 2 + border || y < vec.y() - height / 2 - border || y > vec.y() + height / 2 + border) return false;
 		return true;
 	}
-
 	public Action<ButtonListener> getAction() {
 		return action;
+	}
+	public String getText() {
+		return text;
 	}
 
 	@Override
@@ -56,6 +49,10 @@ public class Button extends UIComponent {
 		height = Graphics.getFont().getHeight(text);
 		Graphics.setColor(1, 1, 1, 1);
 		Graphics.getFont().drawString(position.x() - width / 2, position.y() - height / 2, text);
+	}
+
+	public void setText(String text) {
+		this.text = text;
 	}
 
 	@Override

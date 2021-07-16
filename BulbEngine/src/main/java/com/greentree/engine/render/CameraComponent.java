@@ -32,7 +32,7 @@ public class CameraComponent extends StartGameComponent {
 	{
 		getCameraUp().cross(getCameraDirection(), getCameraRight());
 	}
-	
+
 	public AbstractVector3f getCameraDirection() {
 		setFront((float) (Math.cos(pitch) * Math.cos(yaw)),(float) Math.sin(pitch),(float) (Math.cos(pitch) * Math.sin(yaw)));
 		return cameraDirection;
@@ -114,7 +114,7 @@ public class CameraComponent extends StartGameComponent {
 		Graphics.translate(position.position.x(), position.position.y(), position.position.z());
 		Graphics.rotate( -yaw*180 / Math.PI, -pitch*180 / Math.PI, 0);
 	}
-	
+
 	public void translateAsCamera() {
 		Graphics.pushMatrix();
 		Graphics.scale(2 / width, 2 / height);

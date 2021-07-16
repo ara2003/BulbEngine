@@ -1,5 +1,7 @@
 package com.greentree.engine;
 
+import java.io.File;
+
 import com.greentree.common.concurent.MultyTask;
 import com.greentree.common.time.Time;
 import com.greentree.engine.builder.xml.BasicXMlBuilder;
@@ -11,7 +13,7 @@ import com.greentree.graphics.BulbGL;
 import com.greentree.graphics.Graphics;
 
 /** @author Arseny Latyshev */
-public class Game3D extends GameCore {
+public class Game extends GameCore {
 
 	private static final String BOOTSTRAP_SCENE = "bootstrap-scene";
 
@@ -19,11 +21,26 @@ public class Game3D extends GameCore {
 		Windows.getWindow().shouldClose();
 	}
 
-	public static void start(final String folder, final String[] args) {
-		GameCore.addArgumentConflict("-run", "-build");
-		GameCore.addArguments(args);
-		RootFiles.start(folder);
-		
+
+	public static void gameLoop() {
+		while(!Windows.getWindow().isShouldClose()) {
+			Windows.getWindow().swapBuffer();
+			Graphics.glClearAll();
+			Windows.getWindow().updateEvents();
+			Time.updata();
+			SceneMananger.getCurrentScene().update();
+		}
+	}
+
+	public static void main(String[] args) {
+		Game.start(args);
+		Game.gameLoop();
+		Game.terminate();
+	}
+
+
+	public static void start(final String[] args) {
+		RootFiles.start(new File("Build"));
 		GameCore.setBuilder(new BasicXMlBuilder());
 		{
 			GameScene scene = SceneMananger.loadScene(BOOTSTRAP_SCENE);
@@ -34,22 +51,9 @@ public class Game3D extends GameCore {
 		KeyBoard.init();
 	}
 
-	public static void gameLoop(){
-		while(!Windows.getWindow().isShouldClose()) {
-			Windows.getWindow().swapBuffer();
-			Graphics.glClearAll();
-			Windows.getWindow().updateEvents();
-			Time.updata();
-			SceneMananger.getCurrentScene().update();
-		}
-	}
-
 	public static void terminate() {
 		SceneMananger.terminate();
 		MultyTask.shutdown();
 		BulbGL.terminate();
-	}
-	public static void start(final String[] args) {
-		Game3D.start("Game", args);
 	}
 }

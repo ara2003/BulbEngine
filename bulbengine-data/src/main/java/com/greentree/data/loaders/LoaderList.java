@@ -26,6 +26,7 @@ public class LoaderList extends TripleParserSet<Field, XMLElement, Object, Objec
 				public List<Loader> load(final Class<?> key) throws Exception {
 					return getParsers().parallelStream().filter(e->e.isLoaded(key)).collect(Collectors.toList());
 				}
+				
 			});
 
 	@Override

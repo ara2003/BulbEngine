@@ -1,7 +1,6 @@
 package com.greentree.engine;
 
 import com.greentree.common.logger.Log;
-import com.greentree.graphics.Window;
 import com.greentree.graphics.window.SimpleWindow;
 
 /** @author Arseny Latyshev */
@@ -15,7 +14,7 @@ public class Windows {
 		Log.info("Starting window " + width + "x" + height);
 	}
 
-	public static Window getWindow() {
+	public static SimpleWindow getWindow() {
 		//		if(Windows.window == null) {
 		//			final int     width      = Properties.getProperty("window.width").notNull().toInt();
 		//			final int     height     = Properties.getProperty("window.height").notNull().toInt();

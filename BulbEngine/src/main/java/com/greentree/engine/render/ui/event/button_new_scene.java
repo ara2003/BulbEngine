@@ -14,7 +14,7 @@ public class button_new_scene extends StartGameComponent {
 
 	@Override
 	public void start() {
-		this.getComponent(Button.class).getAction().addListener(new Button.ButtonListener() {
+		getComponent(Button.class).getAction().addListener(new Button.ButtonListener() {
 			private boolean on = true;
 
 			@Override

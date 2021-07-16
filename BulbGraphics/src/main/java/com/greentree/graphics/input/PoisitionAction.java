@@ -8,6 +8,7 @@ import com.greentree.graphics.input.PoisitionAction.PoisitionListener;
  *
  */
 public class PoisitionAction extends Action<PoisitionListener> {
+	private static final long serialVersionUID = 1L;
 
 	public void action(int xpos, int ypos) {
 		action(l -> l.action(xpos, ypos));

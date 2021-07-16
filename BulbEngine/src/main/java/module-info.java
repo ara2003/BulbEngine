@@ -1,4 +1,4 @@
-open module bulb3Dengine {
+open module bulbengine {
 
 	requires transitive bulbengine.core;
 	requires transitive bulbengine.geometry;
@@ -13,9 +13,6 @@ open module bulb3Dengine {
 
 	exports com.greentree.engine;
 	exports com.greentree.engine.layer;
-	exports com.greentree.engine.collizion;
-	exports com.greentree.engine.collizion.collider;
-	exports com.greentree.engine.collizion.event;
 	exports com.greentree.engine.input;
 	exports com.greentree.engine.component;
 	exports com.greentree.engine.render.ui;

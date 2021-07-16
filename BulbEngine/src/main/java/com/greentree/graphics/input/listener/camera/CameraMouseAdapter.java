@@ -1,11 +1,9 @@
-package com.greentree.graphics.input.listener;
+package com.greentree.graphics.input.listener.camera;
 
 @Deprecated
-public abstract class MouseAdapter implements MouseListener {
+/** @author Arseny Latyshev */
+public abstract class CameraMouseAdapter implements CameraMouseListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -25,6 +23,6 @@ public abstract class MouseAdapter implements MouseListener {
 	}
 
 	@Override
-	public void mouseRepeat(int button, int x, int y) {
+	public void mouseRepeat(final int button, final int x, final int y) {
 	}
 }

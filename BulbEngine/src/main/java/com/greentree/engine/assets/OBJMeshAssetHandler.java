@@ -10,13 +10,13 @@ import com.greentree.data.assets.FileAsset;
 public class OBJMeshAssetHandler implements AssetHandler {
 
 	@Override
+	public boolean isLoadedFileType(String type) {
+		return "obj".equals(type);
+	}
+
+	@Override
 	public Asset parse(File value) throws Exception {
 		return new FileAsset("mesh", value);
 	}
 
-	@Override
-	public boolean isLoadedFileType(String type) {
-		return "obj".equals(type);
-	}
-	
 }

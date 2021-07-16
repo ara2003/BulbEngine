@@ -7,5 +7,6 @@ import com.greentree.event.Event;
  * @author Arseny Latyshev
  *
  */
+@Deprecated
 public interface MouseEvent extends Event {
 }

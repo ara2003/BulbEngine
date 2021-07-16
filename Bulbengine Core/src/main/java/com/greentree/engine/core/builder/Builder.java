@@ -11,11 +11,11 @@ public interface Builder {
 	//create prefab
 	GameObject createPrefab(String name, String prefabName);
 
-	
+
 	SceneBuildContext createScene(InputStream in);
 	//create Scene
-//	GameScene createScene(InputStream in);
-//	void fillScene(GameScene emptyScene, InputStream in);
+	//	GameScene createScene(InputStream in);
+	//	void fillScene(GameScene emptyScene, InputStream in);
 
 }
 

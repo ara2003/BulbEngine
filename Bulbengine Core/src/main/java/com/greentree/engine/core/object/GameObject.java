@@ -54,7 +54,7 @@ public final class GameObject extends GameObjectParent {
 	}
 
 	public GameObject copy() {
-		return copy(SceneMananger.getCurrentScene());
+		return copy(SceneMananger.getCurrentSceneNotNull());
 	}
 
 	public GameObject copy(GameObjectParent parent) {

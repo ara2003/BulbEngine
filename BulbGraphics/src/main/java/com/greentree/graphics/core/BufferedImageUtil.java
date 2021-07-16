@@ -4,8 +4,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import org.lwjgl.opengl.GL11;
-
 import com.greentree.graphics.GLType;
 import com.greentree.graphics.PixelFormat;
 import com.greentree.graphics.Wrapping;

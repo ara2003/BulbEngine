@@ -2,6 +2,7 @@ package com.greentree.engine;
 
 import com.greentree.common.logger.Log;
 import com.greentree.engine.core.util.Events;
+import com.greentree.graphics.input.DoublePoisitionAction;
 import com.greentree.graphics.input.event.MouseClickEvent;
 import com.greentree.graphics.input.event.MouseMovedEvent;
 
@@ -10,6 +11,7 @@ import com.greentree.graphics.input.event.MouseMovedEvent;
  *
  */
 public class Mouse {
+	private static final DoublePoisitionAction mouseMoved = new DoublePoisitionAction(), mouseDragged = new DoublePoisitionAction();
 
 	private final static boolean[] mouseButton = new boolean[3];
 	private static int mouseX, mouseY;
@@ -20,6 +22,14 @@ public class Mouse {
 		return false;
 	}
 
+	public static DoublePoisitionAction getMouseDragged() {
+		return mouseDragged;
+	}
+
+	public static DoublePoisitionAction getMouseMoved() {
+		return mouseMoved;
+	}
+
 	public static float getMouseX() {
 		return mouseX;
 	}
@@ -27,10 +37,17 @@ public class Mouse {
 	public static float getMouseY() {
 		return mouseY;
 	}
-
-	public static void init(){
+	public static void init() {
 		Windows.window.getMousePosition().addListener((x, y) -> {
-			if(ignore)ignore = false; else Events.event(MouseMovedEvent.getInstanse(Events.getEventsystem(), anyButtonPressed() ? MouseMovedEvent.EventType.mouseDragged : MouseMovedEvent.EventType.mouseMoved, mouseX, mouseY, x, y));
+			if(ignore)ignore = false; else
+				if(anyButtonPressed()) {
+					Events.event(MouseMovedEvent.getInstanse(Events.getEventsystem(), MouseMovedEvent.EventType.mouseDragged , mouseX, mouseY, x, y));
+					mouseDragged.action(mouseX, mouseY, x, y);
+				}else {
+					Events.event(MouseMovedEvent.getInstanse(Events.getEventsystem(), MouseMovedEvent.EventType.mouseMoved, mouseX, mouseY, x, y));
+					mouseMoved.action(mouseX, mouseY, x, y);
+				}
+
 			mouseX = x;
 			mouseY = y;
 		});
