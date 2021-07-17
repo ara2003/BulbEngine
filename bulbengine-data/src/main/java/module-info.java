@@ -3,7 +3,7 @@ open module bulbengine.data {
 	
 	requires com.google.gson;
 	requires transitive bulbengine.util;
-	requires transitive bulbengine.event;
+	requires transitive bulbengine.action;
 
 	exports com.greentree.data;
 	exports com.greentree.data.loaders;

@@ -8,6 +8,6 @@ public class button_exit extends StartGameComponent {
 
 	@Override
 	public void start() {
-		this.getComponent(Button.class).getAction().addListener(mouseButton->Game.exit());
+		this.getComponent(Button.class).getAction().addListener(Game::exit);
 	}
 }

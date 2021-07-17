@@ -14,8 +14,6 @@ import com.greentree.engine.core.component.ComponentList;
 public abstract class GameObjectParent {
 
 	private boolean isDestoy = false;
-
-	protected final int id;
 	private boolean isStart = false;
 	protected final Collection<GameObject> childrens;
 
@@ -24,10 +22,7 @@ public abstract class GameObjectParent {
 
 	protected final String name;
 
-	private static int ids;
-
 	public GameObjectParent(final String name) {
-		id = ids++;
 		this.name         = name;
 		allTreeComponents = new HashMapClassTree<>();
 		childrens         = new CopyOnWriteArraySet<>();

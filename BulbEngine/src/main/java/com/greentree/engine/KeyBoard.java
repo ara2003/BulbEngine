@@ -10,11 +10,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import com.greentree.common.logger.Log;
-import com.greentree.engine.core.util.Events;
 import com.greentree.graphics.input.Key;
-import com.greentree.graphics.input.event.KeyPressedEvent;
-import com.greentree.graphics.input.event.KeyRepeatedEvent;
-import com.greentree.graphics.input.event.KeyRepleasedEvent;
 
 /**
  * @author Arseny Latyshev
@@ -54,10 +50,6 @@ public abstract class KeyBoard {
 	}
 
 	public static void init() {
-		Windows.window.getKeyPress().addListener(e -> Events.event(KeyPressedEvent.getInstanse(Events.getEventsystem(), e)));
-		Windows.window.getKeyRelease().addListener(e -> Events.event(KeyRepleasedEvent.getInstanse(Events.getEventsystem(), e)));
-		Windows.window.getKeyRepeat().addListener(e -> Events.event(KeyRepeatedEvent.getInstanse(Events.getEventsystem(), e)));
-
 		Windows.window.getKeyRelease().addListener(key -> {
 			try {
 				press[key] = false;

@@ -2,7 +2,7 @@
 open module bulbengine.core {
 
 	requires transitive bulbengine.util;
-	requires transitive bulbengine.event;
+	requires transitive bulbengine.action;
 	requires transitive bulbengine.data;
 	requires com.google.common;
 

@@ -72,7 +72,6 @@ public abstract class SceneMananger {
 	}
 
 	private static void reset(final GameScene scene) {
-		Events.clear();
 		if(SceneMananger.currentScene != null) SceneMananger.currentScene.destroy();
 		SceneMananger.currentScene = null;
 		Runtime.getRuntime().gc();

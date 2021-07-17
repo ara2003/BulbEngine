@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.greentree.action.EventAction;
 import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
 import com.greentree.engine.core.system.GameSystem;
@@ -14,9 +15,11 @@ import com.greentree.engine.core.system.RequireSystems;
 /** @author Arseny Latyshev */
 public final class GameScene extends GameObjectParent {
 	private final SystemCollection systems;
+	private final EventAction<GameComponent> newComponent;
 
 	public GameScene(final String name) {
 		super(name);
+		newComponent = new EventAction<>();
 		systems = new SystemCollection();
 	}
 
@@ -35,8 +38,9 @@ public final class GameScene extends GameObjectParent {
 		allTreeComponents.clear();
 	}
 
-	public <T extends MultiBehaviour> GameSystem getSystem(final Class<T> clazz) {
-		return systems.get(clazz);
+	@SuppressWarnings("unchecked")
+	public <T extends MultiBehaviour> T getSystem(final Class<T> clazz) {
+		return (T) systems.get(clazz).getBehaviour();
 	}
 
 	public Collection<GameSystem> getSystems() {
@@ -54,12 +58,12 @@ public final class GameScene extends GameObjectParent {
 
 	@Override
 	public String toSimpleString() {
-		return String.format("GameScene[name=\"%s\"]@%d", name, id);
+		return String.format("GameScene[name=\"%s\"]@%d", name, super.hashCode());
 	}
 
 	@Override
 	public String toString() {
-		return "GameScene [systems=" + systems + " children=" + childrens + "]@" + id;
+		return "GameScene [systems=" + systems + " children=" + childrens + "]@" + super.hashCode();
 	}
 
 	@Override
@@ -129,6 +133,10 @@ public final class GameScene extends GameObjectParent {
 					Collections.addAll(requireComponents, rcom.value());
 			return requireComponents;
 		}
+	}
+
+	public EventAction<GameComponent> getNewComponentAction() {
+		return newComponent;
 	}
 
 }

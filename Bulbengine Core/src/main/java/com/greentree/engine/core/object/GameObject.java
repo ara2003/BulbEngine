@@ -10,11 +10,9 @@ import com.greentree.common.ClassUtil;
 import com.greentree.common.collection.HashMapClassTree;
 import com.greentree.common.collection.WeakClassTree;
 import com.greentree.common.logger.Log;
-import com.greentree.engine.core.component.NewComponentEvent;
 import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 import com.greentree.engine.core.system.RequireSystems;
-import com.greentree.engine.core.util.Events;
 import com.greentree.engine.core.util.SceneMananger;
 
 public final class GameObject extends GameObjectParent {
@@ -138,23 +136,24 @@ public final class GameObject extends GameObjectParent {
 
 		{
 			var scene = getScene();
-			if(scene != null)
+			if(scene != null) {
 				if(!Validator.checkRequireSystem(components, scene)) Log.error(
 						"component " + Validator.getBrokRequireSystemClass(components, scene) + " require is not fulfilled \n" + this);
+				var action = scene.getNewComponentAction();
+				for(final GameComponent component : components) action.action(component);
+			}
 		}
-
-		for(final GameComponent component : components) Events.event(new NewComponentEvent(component));
 		for(final GameObject obj : childrens) obj.initSratr();
 	}
 
 	@Override
 	public String toSimpleString() {
-		return new StringBuilder("[object(").append(getName()).append(")@").append(id).toString();
+		return new StringBuilder("[object(").append(getName()).append(")@").append(super.hashCode()).toString();
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder res = new StringBuilder("[object(").append(getName()).append(")@").append(id);
+		final StringBuilder res = new StringBuilder("[object(").append(getName()).append(")@").append(super.hashCode());
 		if(parent != null) {
 			res.append(" ");
 			res.append(parent.toSimpleString());

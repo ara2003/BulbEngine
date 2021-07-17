@@ -1,13 +1,13 @@
 package com.greentree.engine.component;
 
-import com.greentree.action.Action;
+import com.greentree.action.RunAction;
 import com.greentree.common.math.vector.AbstractVector2f;
+import com.greentree.engine.Cameras;
+import com.greentree.engine.Windows;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.builder.Required;
 import com.greentree.engine.core.component.RequireComponent;
 import com.greentree.engine.core.component.StartGameComponent;
-import com.greentree.engine.core.util.Events;
-import com.greentree.graphics.input.listener.MouseAdapter;
 
 @RequireComponent({Transform.class})
 public class ClickComponent extends StartGameComponent {
@@ -19,10 +19,10 @@ public class ClickComponent extends StartGameComponent {
 	@EditorData
 	private float width, height;
 
-	private final Action<ButtonListener> action = new Action<>();
+	private final RunAction action = new RunAction();
 
 	private Transform position;
-	private boolean click0(final int x, final int y) {
+	private boolean click0(final float x, final float y) {
 		final AbstractVector2f vec = position.position.xy();
 		if(x < vec.x() - width / 2 - border || x > vec.x() + width / 2 + border || y < vec.y() - height / 2 - border || y > vec.y() + height / 2 + border) return false;
 		return true;
@@ -31,21 +31,9 @@ public class ClickComponent extends StartGameComponent {
 	@Override
 	public void start() {
 		position = getComponent(Transform.class);
-		Events.addListener(new MouseAdapter() {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void mousePress(int button, int x, int y) {
-				if(click0(x, y)) action.action(l->l.click(button));
-			}
+		Windows.getWindow().getMousePosition().addListener((xpos, ypos) -> {
+			if(click0(Cameras.getMainCamera().WindowToCameraX(xpos), Cameras.getMainCamera().WindowToCameraY(ypos))) action.action();
 		});
-	}
-
-	@FunctionalInterface
-	public interface ButtonListener {
-
-		void click(int mouseButton);
-
 	}
 
 

@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.greentree.engine.core.component.ComponentList;
-import com.greentree.engine.core.component.NewComponentListener;
 import com.greentree.engine.core.object.GameComponent;
 import com.greentree.engine.core.object.GameScene;
-import com.greentree.engine.core.util.Events;
 
 public final class GameSystem {
 
@@ -51,8 +49,8 @@ public final class GameSystem {
 		private GameSystem system;
 
 		@SuppressWarnings("unchecked")
-		public static <T> void addNewComponentListener(Class<T> clazz, Consumer<T> consumer) {
-			Events.addListener((NewComponentListener)c-> {
+		public <T> void addNewComponentListener(Class<T> clazz, Consumer<T> consumer) {
+			getScene().getNewComponentAction().addListener(c-> {
 				if(clazz.isAssignableFrom(c.getClass()))consumer.accept((T) c);
 			});
 		}
@@ -60,6 +58,10 @@ public final class GameSystem {
 		protected void destroy() {
 		}
 
+		public boolean isDestroy() {
+			return system.isDestroy;
+		}
+		
 		protected final <T> List<T> getAllComponents(final Class<T> clazz) {
 			return system.scene.getAllComponents(clazz);
 		}
@@ -78,4 +80,5 @@ public final class GameSystem {
 		public void update() {
 		}
 	}
+
 }

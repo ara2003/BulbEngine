@@ -2,13 +2,13 @@ package com.greentree.engine.render.ui;
 
 import com.greentree.common.math.vector.AbstractVector2f;
 import com.greentree.common.math.vector.VectorAction3f;
+import com.greentree.engine.Cameras;
 import com.greentree.engine.KeyBoard;
+import com.greentree.engine.Windows;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.builder.Required;
-import com.greentree.engine.core.util.Events;
 import com.greentree.graphics.Graphics;
-import com.greentree.graphics.input.listener.camera.CameraMouseAdapter;
 
 /**
  * @deprecated use com.greentree.engine.component.ClickComponent
@@ -33,7 +33,7 @@ public class Edit extends UIComponent {
 
 	private VectorAction3f position;
 
-	private boolean click0(final int x, final int y) {
+	private boolean click0(final float x, final float y) {
 		final AbstractVector2f vec = position.xy();
 		if(x < vec.x() - width / 2 - border || x > vec.x() + width / 2 + border || y < vec.y() - height / 2 - border || y > vec.y() + height / 2 + border) return false;
 		return true;
@@ -66,15 +66,9 @@ public class Edit extends UIComponent {
 	@Override
 	public void start() {
 		position = getComponent(Transform.class).position;
-		Events.addListener(new CameraMouseAdapter() {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void mousePress(final int button, final int x, final int y) {
-				if(Edit.this.click0(x, y)) KeyBoard.addString(textBuilder);
+		Windows.getWindow().getMousePosition().addListener((xpos, ypos) -> {
+				if(click0(Cameras.getMainCamera().WindowToCameraX(xpos), Cameras.getMainCamera().WindowToCameraY(ypos))) KeyBoard.addString(textBuilder);
 				else KeyBoard.removeString(textBuilder);
-			}
-
 		});
 	}
 

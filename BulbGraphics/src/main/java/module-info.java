@@ -6,12 +6,12 @@ module bulbengine.graphics {
 	requires org.lwjgl.glfw;
 	
 	requires bulbengine.util;
-	
-	requires transitive bulbengine.event;
+
+	requires transitive bulbengine.action;
 	
 	requires transitive org.joml;
-	requires bulbengine.math;
 	requires transitive java.desktop;
+	requires bulbengine.math;
 	requires bulbengine.data;
 
 	exports com.greentree.graphics;

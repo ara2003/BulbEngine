@@ -13,11 +13,7 @@ open module bulbengine {
 
 	exports com.greentree.engine;
 	exports com.greentree.engine.layer;
-	exports com.greentree.engine.input;
 	exports com.greentree.engine.component;
 	exports com.greentree.engine.render.ui;
 	exports com.greentree.engine.render;
-	exports com.greentree.graphics.input.listener;
-	exports com.greentree.graphics.input.event;
-	exports com.greentree.graphics.input.listener.manager;
 }

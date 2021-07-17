@@ -1,5 +1,6 @@
 package com.greentree.engine.render.ui.event;
 
+import com.greentree.engine.Mouse;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.builder.Required;
 import com.greentree.engine.core.component.StartGameComponent;
@@ -14,12 +15,12 @@ public class button_new_scene extends StartGameComponent {
 
 	@Override
 	public void start() {
-		getComponent(Button.class).getAction().addListener(new Button.ButtonListener() {
+		getComponent(Button.class).getAction().addListener(new Runnable() {
 			private boolean on = true;
 
 			@Override
-			public void click(final int mouseButton) {
-				if(mouseButton != 0) return;
+			public void run() {
+				if(!Mouse.isPressedMouseButton(0)) return;
 				if(on) {
 					SceneMananger.loadScene(sceneName);
 					on = false;
