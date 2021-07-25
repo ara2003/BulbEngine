@@ -1,7 +1,15 @@
 package com.greentree.graphics.texture;
 
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glGenTextures;
+import static org.lwjgl.opengl.GL11.glGetInteger;
+import static org.lwjgl.opengl.GL11.glIsEnabled;
+import static org.lwjgl.opengl.GL11.glTexParameterf;
+import static org.lwjgl.opengl.GL11.glTexParameteri;
+
 import org.lwjgl.opengl.GL11;
-import static org.lwjgl.opengl.GL11.*;
 
 import com.greentree.common.math.Mathf;
 import com.greentree.graphics.Wrapping;
@@ -26,6 +34,8 @@ public class GLTexture2D {
 		this.height    = height;
 		texWidth  = (width + 0.0f) / Mathf.get2Fold(width);
 		texHeight = (height + 0.0f) / Mathf.get2Fold(height);
+		setMinFilter(Filtering.NEAREST);
+		System.out.println("sys : " + textureID);
 	}
 
 	public static void unbindTexture() {
@@ -34,6 +44,12 @@ public class GLTexture2D {
 
 	public final void bind() {
 		glBindTexture(GL_TEXTURE_2D, textureID);
+	}
+
+	public void delete() {
+
+		GL11.glDeleteTextures(textureID);
+
 	}
 
 	public final int getHeight() {

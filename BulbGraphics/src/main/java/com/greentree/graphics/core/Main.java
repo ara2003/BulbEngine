@@ -1,17 +1,37 @@
 package com.greentree.graphics.core;
 
-import java.io.File;
+import static org.lwjgl.opengl.GL11.GL_NEAREST;
+import static org.lwjgl.opengl.GL11.GL_REPEAT;
+import static org.lwjgl.opengl.GL11.GL_RGB;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glGenTextures;
+import static org.lwjgl.opengl.GL11.glTexImage2D;
+import static org.lwjgl.opengl.GL11.glTexParameterf;
+import static org.lwjgl.opengl.GL11.glTexParameteri;
+
 import java.util.Collection;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL40;
+import org.lwjgl.system.MemoryStack;
 
-import com.greentree.common.logger.Log;
 import com.greentree.graphics.BulbGL;
 import com.greentree.graphics.Camera;
 import com.greentree.graphics.Camera.CameraTranslateType;
+import com.greentree.graphics.Color;
 import com.greentree.graphics.GLPrimitive;
+import com.greentree.graphics.GLType;
 import com.greentree.graphics.Graphics;
+import com.greentree.graphics.Graphics.ClientState;
 import com.greentree.graphics.Window;
 import com.greentree.graphics.Wrapping;
 import com.greentree.graphics.texture.Filtering;
@@ -21,74 +41,40 @@ import com.greentree.graphics.window.SimpleWindow;
 
 /** @author Arseny Latyshev */
 public abstract class Main {
-	
-	private static GLTexture2D texture;
 
-	private static void render(Window window, Camera camera) {
-		window.makeCurrent();
-		window.updateEvents();
-		camera.translate(CameraTranslateType.FRUSTUM, CameraTranslateType.SCALE, CameraTranslateType.MOVE, CameraTranslateType.ROTATE);
+//	private static GLTexture2D texture;
 
-		Graphics.glClearAll();
-		
-//		GL11.glLineWidth(5);
-//		try(MemoryStack stack = MemoryStack.stackPush()) {
-//				float[] color = {0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1};
-//				Graphics.glVertexPointer(3, GLType.FLOAT, 0, stack.floats(color));
-//				Graphics.glEnableClientState(Graphics.ClientState.VERTEX_ARRAY);
-//				Graphics.glColorPointer(3, GLType.FLOAT, 0, stack.floats(color));
-//				Graphics.glEnableClientState(Graphics.ClientState.COLOR_ARRAY);
-//				
-//				Graphics.glDrawElements(GLPrimitive.LINES, stack.ints(0, 1, 0, 2, 0, 3));
-//				
-//				Graphics.glDisableClientState(Graphics.ClientState.VERTEX_ARRAY);
-//				Graphics.glDisableClientState(Graphics.ClientState.COLOR_ARRAY);
-//		}
-		
-//		Graphics.setColor(0, 0, 0, 1);
-//		Graphics.getFont().drawString(0, 0, "text");
-		
+	private static int texture;
 
-		Graphics.enableDepthTest();
-		Main.drawBlack();
-		Main.drawGreen();
-		Graphics.disableDepthTest();
-		
-		/*
+	private static void drawBlack() {
+		Graphics.pushMatrix();
+
 		Graphics.enableBlead();
-		
+
 		Color.white.bind();
+
+		GL11.glBindTexture(GL_TEXTURE_2D, texture);
+//		texture.bind();
 		
-		texture.bind();
-		try(MemoryStack stack = MemoryStack.stackPush()){
-			Graphics.glVertexPointer(2, GLType.FLOAT, stack.floats(0, 0, 0, 1, 1, 1, 1, 0));
-			Graphics.glTexCoordPointer(2, GLType.FLOAT, stack.floats(0, 0, 0, texture.getTexHeight(), texture.getTexWidth(), texture.getTexHeight(), texture.getTexWidth(), 0));
+		try(MemoryStack stack = MemoryStack.stackPush()) {
+			Graphics.glVertexPointer(2, GLType.FLOAT, 0, stack.floats(Graphics.array2f));
+			Graphics.glTexCoordPointer(2, GLType.FLOAT, 0, stack.floats(0, 0, 1, 0, 1, 1, 0, 1));
 		}
 		Graphics.glEnableClientState(ClientState.VERTEX_ARRAY);
 		Graphics.glEnableClientState(ClientState.TEXTURE_COORD_ARRAY);
-		
+
 		Graphics.glDrawArrays(GLPrimitive.QUADS, 0, 4);
-		
+
 		Graphics.glDisableClientState(ClientState.VERTEX_ARRAY);
 		Graphics.glDisableClientState(ClientState.TEXTURE_COORD_ARRAY);
 
 		GLTexture2D.unbindTexture();
 		Graphics.disableBlead();
-		//*/
-		
-		camera.untranslate();
-		window.swapBuffer();
+
+		Graphics.popMatrix();
+		Graphics.validateOpenGL();
 	}
-	
-	private static void drawBlack() {
-		Graphics.glBegin(GLPrimitive.TRIANGLES);
-		Graphics.setColor(0, 0, 0, 1f);
-		GL11.glVertex3f(-1, 1, -1);
-		GL11.glVertex3f(-1, 1, 1);
-		GL11.glVertex3f(1, -1, 0);
-		Graphics.glEnd();
-	}
-	
+
 	private static void drawGreen() {
 		Graphics.glBegin(GLPrimitive.TRIANGLES);
 		Graphics.setColor(0, 1, 0, 1f);
@@ -97,55 +83,91 @@ public abstract class Main {
 		GL11.glVertex3f(0, 1, 0);
 		Graphics.glEnd();
 	}
-	
+
 	public static void main(final String[] args) {
 		BulbGL.init();
 		final Collection<Window> windows = new CopyOnWriteArrayList<>();
+
+		var w1 = new SimpleWindow("window 1", 500, 500);
+		var w2 = new SimpleWindow("window 2", 500, 500, w1);
 		
-		windows.add(new SimpleWindow("window 1", 500, 500));
-//		windows.add(new SimpleWindow("window 2", 500, 500));
+		windows.add(w1);
+		windows.add(w2);
+
+		w1.makeCurrent();
 		
-		for(final Window w : windows) {
-			w.makeCurrent();
-			Main.start();
+		
+		texture = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+		glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+		
+//		texture = GLTextureLoader.getTexture2D("test\\mag(2).png");
+		
+		byte[] pixels = new byte[16 * 16];
+		new Random().nextBytes(pixels);
+		
+		try(MemoryStack stack = MemoryStack.stackPush()) {
+			glTexImage2D(GL_TEXTURE_2D, 0, GL11.GL_LUMINANCE, 16, 16, 0, GL11.GL_LUMINANCE, GL11.GL_UNSIGNED_BYTE, stack.bytes(pixels));
 		}
+//		GL11.glDeleteTextures(texture);
+		GLTexture2D.unbindTexture();
+		Graphics.validateOpenGL();
 		
+		
+		for(var w : windows) {
+			w.makeCurrent();
+			glEnable(GL_TEXTURE_2D);
+			start();
+		}
+		Window.unmakeCurrent();
 		Camera c = new Camera();
 
 		c.getScale().x = 1f/2;
 		c.getScale().y = 1f/2;
 		c.getScale().z = 1f/2;
 
-		c.getPosition().z -= 3;
-		
+		c.getPosition().z -= 4;
+
 		while(!windows.isEmpty()) {
-			c.getPosition().z -= .02;
+			//			c.getPosition().z -= .02;
 			c.getRotate().x += 1f;
 			c.getRotate().y += .01f;
-			for(final Window w : windows) {
-				if(w.isShouldClose()) {
-					w.close();
-					windows.remove(w);
-				}else {
-					render(w, c);
-				}
+			for(final Window window : windows) if(window.isShouldClose()) {
+				window.close();
+				windows.remove(window);
 			}
+			Window.unmakeCurrent();
+			for(var w : windows) {
+				w.makeCurrent();
+				w.updateEvents();
+				GL11.glViewport(0, 0, w.getWidth(), w.getHeight());
+				render(c);
+				w.swapBuffer();
+			}
+			Window.unmakeCurrent();
 		}
 		BulbGL.terminate();
 	}
 
+	private static void render(Camera camera) {
+		camera.translate(CameraTranslateType.FRUSTUM, CameraTranslateType.SCALE, CameraTranslateType.MOVE, CameraTranslateType.ROTATE);
+
+		Graphics.glClearAll();
+
+		Graphics.enableDepthTest();
+		Main.drawBlack();
+//				Main.drawGreen();
+		Graphics.disableDepthTest();
+
+		camera.untranslate();
+	}
+
 	private static void start() {
-		Log.init(new File("test"));
-		
+		//		Log.init(new File("test"));
+
 		Graphics.clearColor(.6f, .6f, .6f);
 		Graphics.setClearDepth(1.0);
-		
-		texture = GLTextureLoader.getTexture2D("test\\mag(2).png");
-		texture.setMagFilter(Filtering.LINEAR);
-		texture.setMinFilter(Filtering.NEAREST);
-		
-		texture.setWrap(Wrapping.CLAMP_TO_BORDER);
-		
 	}
-	
+
 }

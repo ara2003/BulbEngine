@@ -2,8 +2,8 @@ package com.greentree.engine.builder.loaders;
 
 import com.greentree.data.loaders.AbstractLoader;
 import com.greentree.data.loaders.value.ValueLoader;
-import com.greentree.engine.Layers;
 import com.greentree.engine.layer.Layer;
+import com.greentree.engine.layer.Layers;
 
 /** @author Arseny Latyshev */
 public class LayerLoader extends AbstractLoader implements ValueLoader {

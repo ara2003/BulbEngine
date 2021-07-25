@@ -4,6 +4,8 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_BORDER_COLOR;
 import static org.lwjgl.opengl.GL11.glTexParameterfv;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.opengl.GL11;
@@ -31,6 +33,14 @@ public abstract class GLTextureLoader {
 
 	public static void glTexImage2D(int mipmapLevel, PixelFormat dstPixelFormat, int width, int height, PixelFormat srcPixelFormat, GLType type, ByteBuffer data) {
 		GL11.glTexImage2D(GL_TEXTURE_2D, mipmapLevel, Decoder.glEnum(dstPixelFormat), width, height, 0, Decoder.glEnum(srcPixelFormat), type.glEnum(), data);
+	}
+
+	public static GLTexture2D getTexture2D(InputStream data, ImageType imageType) {
+		try {
+		return InternalTextureLoader.get().getTexture(data, imageType);
+	}catch(IOException e) {
+		throw new IllegalArgumentException(data + " " + imageType, e);
+	}
 	}
 	
 }

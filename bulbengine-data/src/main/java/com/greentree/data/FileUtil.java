@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.nio.file.CopyOption;
 import java.nio.file.FileVisitResult;
@@ -86,15 +88,22 @@ public abstract class FileUtil {
 		return null;
 	}
 
+	public static String getName(String f) {
+		int index = f.lastIndexOf('.');
+		if(index == -1)return f;
+		return f.substring(0, index);
+	}
+	public static String getType(String f) {
+		int index = f.lastIndexOf('.');
+		if(index == -1)return "";
+		return f.substring(index+1);
+	}
+
 	public static String getName(File f) {
-		int index = f.getName().lastIndexOf('.');
-		if(index == -1)return f.getName();
-		return f.getName().substring(0, index);
+		return getName(f.getName());
 	}
 	public static String getType(File f) {
-		int index = f.getName().lastIndexOf('.');
-		if(index == -1)return "";
-		return f.getName().substring(index+1);
+		return getType(f.getName());
 	}
 
 	public static void isDirectory(File directory) {
@@ -175,6 +184,32 @@ public abstract class FileUtil {
 	public static boolean isEmpty(File file) {
 		if(file.isDirectory())return file.list().length == 0;
 		throw new IllegalArgumentException(file.toString());
+	}
+
+	public static boolean delete(File file) {
+		if(!file.exists())
+			throw new IllegalArgumentException(file.toString());
+		if(file.isFile())return file.delete();
+		if(file.isDirectory()) {
+			for(var f : file.listFiles())delete(f);
+			return file.delete();
+		}
+		throw new IllegalArgumentException(file.toString());
+	}
+
+
+	public static void copy(InputStream source, OutputStream target) throws IOException {
+		try(source; target){
+    	    byte[] buf = new byte[1024];
+    	    int length;
+    	    while ((length = source.read(buf)) > 0) {
+    	        target.write(buf, 0, length);
+    	    }
+		}
+	}
+
+	public static void write(File to, InputStream in) throws FileNotFoundException, IOException {
+		copy(in, new FileOutputStream(to));
 	}
 
 }

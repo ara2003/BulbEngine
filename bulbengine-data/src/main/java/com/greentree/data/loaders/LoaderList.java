@@ -55,7 +55,7 @@ public class LoaderList extends TripleParserSet<Field, XMLElement, Object, Objec
 	}
 
 	@Override
-	protected List<Loader> getParsers(final Triple<Field, XMLElement, Object> value) {
+	protected List<Loader> getRightParsers(final Triple<Field, XMLElement, Object> value) {
 		return getCache(value.v1.getType());
 	}
 

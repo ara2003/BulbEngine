@@ -14,6 +14,8 @@ import com.greentree.engine.core.system.RequireSystems;
 
 /** @author Arseny Latyshev */
 public final class GameScene extends GameObjectParent {
+
+	private final GameScene parent;
 	private final SystemCollection systems;
 	private final EventAction<GameComponent> newComponent;
 
@@ -21,14 +23,22 @@ public final class GameScene extends GameObjectParent {
 		super(name);
 		newComponent = new EventAction<>();
 		systems = new SystemCollection();
+		parent = null;
 	}
 
-	public boolean addSystem(final GameSystem system) {
+	public GameScene(final String name, GameScene parent) {
+		super(name);
+		newComponent = new EventAction<>();
+		systems = new SystemCollection();
+		this.parent = parent;
+	}
+
+	public boolean addSystem(final GameSystem<?> system) {
 		return systems.add(system);
 	}
 
 	public boolean contains(Class<? extends MultiBehaviour> class1) {
-		return systems.containsClass(class1);
+		return systems.containsClass(class1) || parent != null&&parent.contains(class1);
 	}
 
 	@Override
@@ -38,14 +48,17 @@ public final class GameScene extends GameObjectParent {
 		allTreeComponents.clear();
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T extends MultiBehaviour> T getSystem(final Class<T> clazz) {
-		return (T) systems.get(clazz).getBehaviour();
+	public EventAction<GameComponent> getNewComponentAction() {
+		return newComponent;
 	}
 
-	public Collection<GameSystem> getSystems() {
+	public <T extends MultiBehaviour> GameSystem<T> getSystem(final Class<T> clazz) {
+		return systems.get(clazz);
+	}
+	public Collection<GameSystem<?>> getSystems() {
 		return systems;
 	}
+
 	@Override
 	public void start() {
 		if(!Validator.checkRequire(systems)) Log.error(
@@ -69,6 +82,7 @@ public final class GameScene extends GameObjectParent {
 	@Override
 	public void update() {
 		systems.update();
+		if(parent == null)parent.update();
 	}
 
 	@Override
@@ -77,7 +91,7 @@ public final class GameScene extends GameObjectParent {
 		for(final GameObject object : childrens) allTreeComponents.addAll(object.getAllComponents(GameComponent.class));
 	}
 
-	private final class SystemCollection extends CopyOnWriteArrayList<GameSystem> {
+	private final class SystemCollection extends CopyOnWriteArrayList<GameSystem<?>> {
 		private static final long serialVersionUID = 1L;
 
 		public <S extends MultiBehaviour> boolean containsClass(final Class<S> clazz) {
@@ -89,8 +103,9 @@ public final class GameScene extends GameObjectParent {
 			clear();
 		}
 
-		public <S extends MultiBehaviour> GameSystem get(final Class<S> clazz) {
-			for(GameSystem s : this) if(s.getBehaviour().getClass().isAssignableFrom(clazz))return s;
+		@SuppressWarnings("unchecked")
+		public <B extends MultiBehaviour> GameSystem<B> get(final Class<B> clazz) {
+			for(GameSystem<?> s : this) if(s.getBehaviour().getClass().isAssignableFrom(clazz))return (GameSystem<B>) s;
 			return null;
 		}
 
@@ -109,7 +124,7 @@ public final class GameScene extends GameObjectParent {
 		private Validator() {
 		}
 
-		public static boolean checkRequire(final Collection<GameSystem> systems) {
+		public static boolean checkRequire(final Collection<GameSystem<?>> systems) {
 			A : for(final Class<? extends MultiBehaviour> requireClases : Validator.getRequireClasses(systems)) {
 				for(final Class<? extends MultiBehaviour> clazz :  ClassUtil.getClases(systems, GameSystem::getBehaviour))
 					if(requireClases.isAssignableFrom(clazz)) continue A;
@@ -118,7 +133,7 @@ public final class GameScene extends GameObjectParent {
 			return true;
 		}
 
-		public static Class<? extends MultiBehaviour> getBrokRequireClass(final Collection<GameSystem> systems) {
+		public static Class<? extends MultiBehaviour> getBrokRequireClass(final Collection<GameSystem<?>> systems) {
 			final Collection<Class<? extends MultiBehaviour>> clases = ClassUtil.getClases(systems, GameSystem::getBehaviour);
 			for(final Class<? extends MultiBehaviour> clazz : Validator.getRequireClasses(systems))
 				if(!clases.contains(clazz)) return clazz;
@@ -126,17 +141,13 @@ public final class GameScene extends GameObjectParent {
 		}
 
 
-		public static Collection<Class<? extends MultiBehaviour>> getRequireClasses(final Collection<GameSystem> components) {
+		public static Collection<Class<? extends MultiBehaviour>> getRequireClasses(final Collection<GameSystem<?>> components) {
 			final Collection<Class<? extends MultiBehaviour>> requireComponents = new HashSet<>();
-			for(final GameSystem com : components)
+			for(final GameSystem<?> com : components)
 				for(final RequireSystems rcom : ClassUtil.getAllAnnotations(com.getClass(), RequireSystems.class))
 					Collections.addAll(requireComponents, rcom.value());
 			return requireComponents;
 		}
-	}
-
-	public EventAction<GameComponent> getNewComponentAction() {
-		return newComponent;
 	}
 
 }

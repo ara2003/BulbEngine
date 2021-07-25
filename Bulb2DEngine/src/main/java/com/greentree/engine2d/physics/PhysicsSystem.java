@@ -15,7 +15,7 @@ public class PhysicsSystem extends MultiBehaviour {
 
 	@Override
 	protected void start() {
-		getScene().getSystem(ColliderSystem.class).getAction().addListener(list-> {
+		getScene().getSystem(ColliderSystem.class).getBehaviour().getAction().addListener(list-> {
 			final var list0 = list.parallelStream()
 					.filter(e->e.first.getObject().hasComponent(Physics2DComponent.class)
 							&& e.seconde.getObject().hasComponent(Physics2DComponent.class))

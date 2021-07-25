@@ -6,22 +6,22 @@ import java.util.function.Consumer;
 import com.greentree.engine.core.component.ComponentList;
 import com.greentree.engine.core.object.GameComponent;
 import com.greentree.engine.core.object.GameScene;
+import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 
-public final class GameSystem {
-
+public final class GameSystem<B extends MultiBehaviour> {
 
 	private boolean isStart, isDestroy;
-	private final MultiBehaviour behaviour;
+	private final B behaviour;
 
 	private final GameScene scene;
 
-	public GameSystem(GameScene scene, MultiBehaviour behaviour) {
+	public GameSystem(GameScene scene, B behaviour) {
 		this.behaviour = behaviour;
 		behaviour.system = this;
 		this.scene = scene;
 	}
 
-	public MultiBehaviour getBehaviour() {
+	public B getBehaviour() {
 		return behaviour;
 	}
 
@@ -46,7 +46,7 @@ public final class GameSystem {
 	}
 
 	public static class MultiBehaviour {
-		private GameSystem system;
+		GameSystem<?> system;
 
 		@SuppressWarnings("unchecked")
 		public <T> void addNewComponentListener(Class<T> clazz, Consumer<T> consumer) {

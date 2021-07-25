@@ -7,7 +7,6 @@ import com.greentree.common.time.Time;
 import com.greentree.engine.builder.xml.BasicXMlBuilder;
 import com.greentree.engine.core.GameCore;
 import com.greentree.engine.core.object.GameScene;
-import com.greentree.engine.core.util.RootFiles;
 import com.greentree.engine.core.util.SceneMananger;
 import com.greentree.graphics.BulbGL;
 import com.greentree.graphics.Graphics;

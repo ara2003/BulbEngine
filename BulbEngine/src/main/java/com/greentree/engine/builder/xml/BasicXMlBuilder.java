@@ -32,7 +32,6 @@ import com.greentree.data.loaders.value.ShortLoader;
 import com.greentree.data.loaders.value.StaticFieldLoader;
 import com.greentree.data.loaders.value.StringLoader;
 import com.greentree.data.loading.ResourceLoader;
-import com.greentree.engine.Layers;
 import com.greentree.engine.builder.loaders.ColorLoader;
 import com.greentree.engine.builder.loaders.GameComponentLoader;
 import com.greentree.engine.builder.loaders.GameObjectLoader;
@@ -51,6 +50,7 @@ import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.object.GameScene;
 import com.greentree.engine.core.system.GameSystem;
 import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
+import com.greentree.engine.layer.Layers;
 
 /** @author Arseny Latyshev */
 public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
@@ -97,15 +97,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		loaders.addParser(loader);
 	}
 
-	//	static {//TODO
-	//		AssetUtil.addAssetHandler(new SceneAssetHandler());
-	//		AssetUtil.addAssetHandler(new PrefabAssetHandler());
-	//		AssetUtil.addAssetHandler(new PNGImageAssetHandler());
-	//		AssetUtil.addAssetHandler(new JPGImageAssetHandler());
-	//		AssetUtil.addAssetHandler(new OpenGLShadingLanguageAssetHandler());
-	//		AssetUtil.addAssetHandler(new OBJMeshAssetHandler());
-	//		AssetUtil.addAssetHandler(new MatirialAssetHandler());
-	//	}
+	
 
 	@Override
 	public GameObject createPrefab(final String name, final String prefabPath) {
@@ -142,7 +134,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 		pushSystems();
 		pushComponents();
 		for(final XMLElement el : in.getChildrens("system")) {
-			final GameSystem system = createSystem(scene, el);
+			final GameSystem<?> system = createSystem(scene, el);
 			if(system == null) continue;
 			scene.addSystem(system);
 			addSystemToFill(system, el);

@@ -11,21 +11,21 @@ import com.greentree.common.pair.Pair;
 public class ParserSet<V, R, P extends Parser<V, R>> implements Parser<V, R>, Iterable<P>, Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	private final Collection<P> loaders = new ArrayList<>();
+	private final Collection<P> parsers = new ArrayList<>();
 	
 	public void addParser(final P loader) {
-		loaders.add(loader);
+		parsers.add(loader);
 	}
 	
 	/**
-	 * @return all loaders that can load this value
+	 * @return all parsers that can load this value
 	 */
-	protected Collection<P> getParsers(final V value) {
-		return loaders;
+	protected Collection<P> getRightParsers(final V value) {
+		return parsers;
 	}
 
-	protected Collection<P> getParsers() {
-		return loaders;
+	protected final Collection<P> getParsers() {
+		return parsers;
 	}
 	
 	/**
@@ -38,7 +38,7 @@ public class ParserSet<V, R, P extends Parser<V, R>> implements Parser<V, R>, It
 	
 	@Override
 	public Iterator<P> iterator() {
-		return loaders.iterator();
+		return parsers.iterator();
 	}
 
 	protected final R parse(final V value, Collection<P> collection) throws Exception {
@@ -64,7 +64,7 @@ public class ParserSet<V, R, P extends Parser<V, R>> implements Parser<V, R>, It
 	
 	@Override
 	public final R parse(final V value) throws Exception {
-		return parse(value, getParsers(value));
+		return parse(value, getRightParsers(value));
 	}
 	
 	

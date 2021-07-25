@@ -21,7 +21,7 @@ import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
 public abstract class AbstractBuilder<T> implements Builder {
 
 	private final Stack<List<Pair<GameComponent, T>>> contextComponent = new Stack<>();
-	private final Stack<List<Pair<GameSystem, T>>> contextSystem = new Stack<>();
+	private final Stack<List<Pair<GameSystem<?>, T>>> contextSystem = new Stack<>();
 
 	public final static String getNameOfField(final Field field) {
 		String xmlName = field.getAnnotation(EditorData.class).value();
@@ -35,7 +35,7 @@ public abstract class AbstractBuilder<T> implements Builder {
 		contextComponent.get(0).add(new Pair<>(component, in));
 	}
 
-	protected final void addSystemToFill(final GameSystem system, final T in) {
+	protected final void addSystemToFill(final GameSystem<?> system, final T in) {
 		contextSystem.get(0).add(new Pair<>(system, in));
 	}
 	public final GameComponent createComponent(final Class<? extends GameComponent> clazz) {
@@ -76,11 +76,11 @@ public abstract class AbstractBuilder<T> implements Builder {
 		};
 	}
 
-	public final GameSystem createSystem(final GameScene scene, final Class<? extends MultiBehaviour> cl) {
-		return new GameSystem(scene, ClassUtil.newInstance(cl));
+	public final GameSystem<?> createSystem(final GameScene scene, final Class<? extends MultiBehaviour> cl) {
+		return new GameSystem<>(scene, ClassUtil.newInstance(cl));
 	}
 
-	protected final GameSystem createSystem(final GameScene scene, final T in) {
+	protected final GameSystem<?> createSystem(final GameScene scene, final T in) {
 		try {
 			return createSystem(scene, getMultiBehaviourClass(in));
 		}catch(final Exception e) {
@@ -108,7 +108,7 @@ public abstract class AbstractBuilder<T> implements Builder {
 
 	protected abstract void fillScene(GameScene node, T in);
 
-	public void fillSystem(final GameSystem system, final T in) {
+	public void fillSystem(final GameSystem<?> system, final T in) {
 		try {
 			setFields(system.getBehaviour(), in);
 		}catch(final Exception e) {
@@ -135,7 +135,7 @@ public abstract class AbstractBuilder<T> implements Builder {
 	}
 
 	protected final void popSystems() {
-		for(final Pair<GameSystem, T> element : this.contextSystem.remove(0)) this.fillSystem(element.first, element.seconde);
+		for(final Pair<GameSystem<?>, T> element : this.contextSystem.remove(0)) this.fillSystem(element.first, element.seconde);
 	}
 
 	protected final void pushComponents() {

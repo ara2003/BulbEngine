@@ -40,7 +40,7 @@ public class SpriteRendener extends CameraRendenerComponent {
 		Color.white.bind();
 
 		texture.bind();
-		final float w = .5f / getWidth(), h = .5f / getHeight();
+		final float w = .5f / width, h = .5f / height;
 		try(MemoryStack stack = MemoryStack.stackPush()){
 			Graphics.glVertexPointer(2, GLType.FLOAT, stack.floats(0, 0, 0, -height, -width, -height, -width, 0));
 			Graphics.glTexCoordPointer(2, GLType.FLOAT, stack.floats(w, h, w, texture.getTexHeight() - h, texture.getTexWidth() - w, texture.getTexHeight() - h, texture.getTexWidth() - w, h));

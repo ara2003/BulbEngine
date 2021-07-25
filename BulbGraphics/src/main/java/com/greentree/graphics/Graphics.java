@@ -9,10 +9,12 @@ import java.nio.IntBuffer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 
+import com.greentree.graphics.texture.GLTexture2D;
+
 /** @author Arseny Latyshev */
 public abstract class Graphics {
-
-	private static GLFont font = new BasicFont(new java.awt.Font("", 10, 14), false);;
+	
+	private static GLFont font;
 	public static final float[] array2f = {-.5f, -.5f, .5f, -.5f, .5f, .5f, -.5f, .5f};
 	public static final float[] array3f = {-.5f, -.5f, 0, .5f, -.5f, 0, .5f, .5f, 0, -.5f, .5f, 0};
 
@@ -221,6 +223,7 @@ public abstract class Graphics {
 	}
 
 	public static GLFont getFont() {
+		if(font == null)font = new BasicFont(new java.awt.Font("", 10, 14), false);
 		return font;
 	}
 
@@ -385,6 +388,11 @@ public abstract class Graphics {
 
 	public static void pointSize(float size) {
 		GL11.glPointSize(size);
+	}
+
+	public static float[] getTexArray2f(GLTexture2D texture, float width, float height) {
+		final float w = 1 / width, h = 1 / height;
+		return new float[]{w, h, w, texture.getTexHeight() - h, texture.getTexWidth() - w, texture.getTexHeight() - h, texture.getTexWidth() - w, h};
 	}
 
 }

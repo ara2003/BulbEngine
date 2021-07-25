@@ -1,6 +1,5 @@
 package com.greentree.engine;
 
-import com.greentree.engine.core.system.GameSystem;
 import com.greentree.engine.core.util.SceneMananger;
 import com.greentree.engine.system.SaveSystem;
 
@@ -10,7 +9,7 @@ public abstract class SaveUtil {
 
 	protected static SaveSystem getSaveSystem() {
 		if(saveSystem != null && !saveSystem.isDestroy()) return saveSystem;
-		saveSystem = SceneMananger.getCurrentSceneNotNull().getSystem(SaveSystem.class);
+		saveSystem = SceneMananger.getCurrentSceneNotNull().getSystem(SaveSystem.class).getBehaviour();
 		return saveSystem;
 	}
 

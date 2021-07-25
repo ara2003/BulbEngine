@@ -7,6 +7,7 @@ import org.lwjgl.glfw.GLFWKeyCallbackI;
 import org.lwjgl.glfw.GLFWMouseButtonCallbackI;
 
 import com.greentree.action.EventAction;
+import com.greentree.graphics.GLContext;
 import com.greentree.graphics.Window;
 import com.greentree.graphics.input.PoisitionAction;
 
@@ -61,11 +62,15 @@ public class SimpleWindow extends Window {
 	}
 
 	public SimpleWindow(final String title, final int width, final int height) {
-		super(title, width, height, true, false);
+		this(title, width, height, null);
 	}
 
 	public SimpleWindow(final String title, final int width, final int height, final boolean resizable, final boolean fullscreen) {
-		super(title, width, height, resizable, fullscreen);
+		super(title, width, height, resizable, fullscreen, null);
+	}
+
+	public SimpleWindow(final String title, final int width, final int height, GLContext share) {
+		super(title, width, height, true, false, share);
 	}
 
 	public EventAction<Integer> getKeyPress() {
