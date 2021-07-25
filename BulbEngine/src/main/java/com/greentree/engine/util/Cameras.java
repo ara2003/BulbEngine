@@ -1,11 +1,11 @@
-package com.greentree.engine;
+package com.greentree.engine.util;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.greentree.engine.core.SceneMananger;
 import com.greentree.engine.core.object.GameObject;
-import com.greentree.engine.core.util.SceneMananger;
 import com.greentree.engine.render.CameraComponent;
 
 /** @author Arseny Latyshev */

@@ -10,9 +10,9 @@ import com.greentree.common.math.Mathf;
 import com.greentree.common.math.vector.AbstractVector2f;
 import com.greentree.common.math.vector.Vector2f;
 import com.greentree.common.math.vector.VectorAction3f;
-import com.greentree.common.time.Time;
 import com.greentree.engine.component.Transform;
-import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
+import com.greentree.engine.util.Time;
 
 public class NavMeshSystem extends MultiBehaviour {
 

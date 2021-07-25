@@ -10,7 +10,7 @@ import com.greentree.common.collection.DoubleSet;
 import com.greentree.common.pair.UnOrentetPair;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.builder.Required;
-import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
 import com.greentree.engine.layer.Layer;
 import com.greentree.engine.layer.Layers;
 

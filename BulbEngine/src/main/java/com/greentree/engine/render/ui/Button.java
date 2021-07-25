@@ -2,14 +2,13 @@ package com.greentree.engine.render.ui;
 
 import com.greentree.action.RunAction;
 import com.greentree.common.math.vector.AbstractVector2f;
-import com.greentree.engine.Cameras;
 import com.greentree.engine.Mouse;
-import com.greentree.engine.Windows;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.builder.Required;
+import com.greentree.engine.util.Cameras;
+import com.greentree.engine.util.Windows;
 import com.greentree.graphics.Graphics;
-import com.greentree.graphics.input.PoisitionAction.PoisitionListener;
 
 /**
  * @deprecated use ClickComponent
@@ -18,49 +17,31 @@ import com.greentree.graphics.input.PoisitionAction.PoisitionListener;
  */
 @Deprecated
 public class Button extends UIComponent {
-	
-	public RunAction getAction() {
-		return action;
-	}
+
 	@EditorData()
 	private final float border = 2;
-
 	private float width, height;
 
 	private final RunAction action = new RunAction();
 
 	private Transform position;
+
+	@Required
+	@EditorData
+	private String text;
 	private boolean click0(final float x, final float y) {
 		final AbstractVector2f vec = position.position.xy();
 		if(x < vec.x() - width / 2 - border || x > vec.x() + width / 2 + border || y < vec.y() - height / 2 - border || y > vec.y() + height / 2 + border) return false;
 		return true;
 	}
 
-	@Override
-	public void start() {
-		position = getComponent(Transform.class);
-		Windows.getWindow().getMousePosition().addListener(new PoisitionListener() {
-			private boolean on = false;
-			
-			@Override
-			public void action(int xpos, int ypos) {
-				if(on)return;
-				if(click0(Cameras.getMainCamera().WindowToCameraX(xpos), Cameras.getMainCamera().WindowToCameraY(ypos)) && Mouse.anyButtonPressed()) {
-					on = true;
-					action.action();
-				}
-				on = false;
-			}
-		});
+	public RunAction getAction() {
+		return action;
 	}
-	@Required
-	@EditorData
-	private String text;
-
-
 	public String getText() {
 		return text;
 	}
+
 
 	@Override
 	public void render() {
@@ -72,6 +53,17 @@ public class Button extends UIComponent {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	@Override
+	public void start() {
+		position = getComponent(Transform.class);
+		Windows.getWindow().getMouseButtonPress().addListener(b -> {
+			float x = Mouse.getMouseX();
+			float y = Mouse.getMouseY();
+
+			if(click0(Cameras.getMainCamera().WindowToCameraX(x), Cameras.getMainCamera().WindowToCameraY(y)) && Mouse.anyButtonPressed()) action.action();
+		});
 	}
 
 }

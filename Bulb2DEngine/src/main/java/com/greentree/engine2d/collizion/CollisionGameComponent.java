@@ -1,7 +1,7 @@
 package com.greentree.engine2d.collizion;
 
-import com.greentree.engine.core.component.RequireComponent;
-import com.greentree.engine.core.component.StartGameComponent;
+import com.greentree.engine.component.StartGameComponent;
+import com.greentree.engine.core.builder.RequireComponent;
 import com.greentree.engine.core.object.GameObject;
 
 /** @author Arseny Latyshev */

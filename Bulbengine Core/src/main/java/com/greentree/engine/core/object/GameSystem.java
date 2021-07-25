@@ -1,12 +1,9 @@
-package com.greentree.engine.core.system;
+package com.greentree.engine.core.object;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.greentree.engine.core.component.ComponentList;
-import com.greentree.engine.core.object.GameComponent;
-import com.greentree.engine.core.object.GameScene;
-import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
 
 public final class GameSystem<B extends MultiBehaviour> {
 
@@ -64,11 +61,6 @@ public final class GameSystem<B extends MultiBehaviour> {
 		
 		protected final <T> List<T> getAllComponents(final Class<T> clazz) {
 			return system.scene.getAllComponents(clazz);
-		}
-
-
-		protected final <T extends GameComponent> ComponentList<T> getAllComponentsAsComponentList(final Class<T> clazz) {
-			return system.scene.getAllComponentsAsComponentList(clazz);
 		}
 
 		public final GameScene getScene() {

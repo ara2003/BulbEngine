@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.function.Consumer;
 
+@Deprecated
 public class ArgumentList {
 
 	private final HashSet<String> set = new HashSet<>();

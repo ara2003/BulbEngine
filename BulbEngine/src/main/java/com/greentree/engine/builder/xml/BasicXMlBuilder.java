@@ -48,8 +48,8 @@ import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.object.GameComponent;
 import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.object.GameScene;
-import com.greentree.engine.core.system.GameSystem;
-import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
 import com.greentree.engine.layer.Layers;
 
 /** @author Arseny Latyshev */

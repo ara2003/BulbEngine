@@ -1,4 +1,4 @@
-package com.greentree.engine;
+package com.greentree.engine.util;
 
 import com.greentree.common.logger.Log;
 import com.greentree.graphics.window.SimpleWindow;

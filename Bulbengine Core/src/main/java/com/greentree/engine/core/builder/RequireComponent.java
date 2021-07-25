@@ -1,4 +1,4 @@
-package com.greentree.engine.core.system;
+package com.greentree.engine.core.builder;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -6,12 +6,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.object.GameComponent;
 
-/** @author Arseny Latyshev */
 @Retention(RUNTIME)
 @Target(TYPE)
-public @interface RequireSystems{
+/** @author Arseny Latyshev */
+public @interface RequireComponent{
 
-	Class<? extends MultiBehaviour>[] value();
+	Class<? extends GameComponent>[] value();
+
 }

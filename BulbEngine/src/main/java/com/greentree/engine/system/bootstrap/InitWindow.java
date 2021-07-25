@@ -1,9 +1,10 @@
-package com.greentree.engine.render;
+package com.greentree.engine.system.bootstrap;
 
-import com.greentree.engine.Windows;
+import com.greentree.engine.Game;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.builder.Required;
-import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
+import com.greentree.engine.util.Windows;
 
 
 public class InitWindow extends MultiBehaviour {
@@ -21,6 +22,9 @@ public class InitWindow extends MultiBehaviour {
 	@Override
 	protected void start() {
 		Windows.createWindow(title, width, height, fullscreen);
+		Windows.getWindow().setWindowCloseCallback(() -> {
+			Game.exit();
+		});
 		Windows.getWindow().makeCurrent();
 	}
 

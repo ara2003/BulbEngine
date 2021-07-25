@@ -1,6 +1,6 @@
 package com.greentree.engine3d.render;
 
-import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
 import com.greentree.graphics.Graphics;
 
 /** @author Arseny Latyshev */

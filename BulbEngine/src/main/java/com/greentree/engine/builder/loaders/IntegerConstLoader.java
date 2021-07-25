@@ -1,7 +1,7 @@
 package com.greentree.engine.builder.loaders;
 
 import com.greentree.data.loaders.value.PrimitiveLoader;
-import com.greentree.engine.Windows;
+import com.greentree.engine.util.Windows;
 
 /** @author Arseny Latyshev */
 public class IntegerConstLoader extends PrimitiveLoader {

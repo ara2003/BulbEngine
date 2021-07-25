@@ -1,8 +1,8 @@
-package com.greentree.engine.core.system;
+package com.greentree.engine.system.bootstrap;
 
+import com.greentree.engine.core.SceneMananger;
 import com.greentree.engine.core.builder.EditorData;
-import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
-import com.greentree.engine.core.util.SceneMananger;
+import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
 
 
 public class LoadScene extends MultiBehaviour {

@@ -2,12 +2,11 @@ package com.greentree.engine.component;
 
 import com.greentree.action.RunAction;
 import com.greentree.common.math.vector.AbstractVector2f;
-import com.greentree.engine.Cameras;
-import com.greentree.engine.Windows;
 import com.greentree.engine.core.builder.EditorData;
+import com.greentree.engine.core.builder.RequireComponent;
 import com.greentree.engine.core.builder.Required;
-import com.greentree.engine.core.component.RequireComponent;
-import com.greentree.engine.core.component.StartGameComponent;
+import com.greentree.engine.util.Cameras;
+import com.greentree.engine.util.Windows;
 
 @RequireComponent({Transform.class})
 public class ClickComponent extends StartGameComponent {

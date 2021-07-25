@@ -1,11 +1,11 @@
-package com.greentree.engine.core.component;
+package com.greentree.engine.component;
 
 import com.greentree.common.Starting;
+import com.greentree.engine.core.builder.RequireSystems;
 import com.greentree.engine.core.object.GameComponent;
-import com.greentree.engine.core.system.RequireSystems;
-import com.greentree.engine.core.system.StartGameSystem;
+import com.greentree.engine.system.StartGameComponentSystem;
 
-@RequireSystems({StartGameSystem.class})
+@RequireSystems({StartGameComponentSystem.class})
 public abstract class StartGameComponent extends GameComponent implements Starting {
 
 	@Override

@@ -395,4 +395,8 @@ public abstract class Graphics {
 		return new float[]{w, h, w, texture.getTexHeight() - h, texture.getTexWidth() - w, texture.getTexHeight() - h, texture.getTexWidth() - w, h};
 	}
 
+	public static void viewport(int x, int y, int width, int height) {
+		GL11.glViewport(x, y, width, height);
+	}
+
 }

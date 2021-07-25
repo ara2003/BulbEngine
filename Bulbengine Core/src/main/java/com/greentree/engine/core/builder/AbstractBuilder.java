@@ -14,8 +14,8 @@ import com.greentree.engine.core.object.GameComponent;
 import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.object.GameObjectParent;
 import com.greentree.engine.core.object.GameScene;
-import com.greentree.engine.core.system.GameSystem;
-import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.object.GameSystem;
+import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
 
 /** @author Arseny Latyshev */
 public abstract class AbstractBuilder<T> implements Builder {
@@ -63,15 +63,14 @@ public abstract class AbstractBuilder<T> implements Builder {
 		return new GameObject(this.getObjectName(in), parent);
 	}
 	@Override
-	public final SceneBuildContext createScene(final InputStream in) {
-		return new SceneBuildContext(this.getSceneName(this.parse(in)), in) {
+	public final SceneBuildContext createScene(final InputStream in, GameScene parent) {
+		return new SceneBuildContext(this.getSceneName(this.parse(in)), parent, in) {
 
 			@Override
 			public GameScene fill() {
 				fillScene(scene, in);
 				return getScene();
 			}
-
 
 		};
 	}

@@ -1,40 +1,22 @@
 package com.greentree.graphics.core;
 
-import static org.lwjgl.opengl.GL11.GL_NEAREST;
-import static org.lwjgl.opengl.GL11.GL_REPEAT;
-import static org.lwjgl.opengl.GL11.GL_RGB;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glGenTextures;
-import static org.lwjgl.opengl.GL11.glTexImage2D;
-import static org.lwjgl.opengl.GL11.glTexParameterf;
-import static org.lwjgl.opengl.GL11.glTexParameteri;
 
 import java.util.Collection;
-import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL40;
 import org.lwjgl.system.MemoryStack;
 
 import com.greentree.graphics.BulbGL;
 import com.greentree.graphics.Camera;
 import com.greentree.graphics.Camera.CameraTranslateType;
 import com.greentree.graphics.Color;
+import com.greentree.graphics.GLFWContext;
 import com.greentree.graphics.GLPrimitive;
 import com.greentree.graphics.GLType;
 import com.greentree.graphics.Graphics;
 import com.greentree.graphics.Graphics.ClientState;
 import com.greentree.graphics.Window;
-import com.greentree.graphics.Wrapping;
-import com.greentree.graphics.texture.Filtering;
 import com.greentree.graphics.texture.GLTexture2D;
 import com.greentree.graphics.texture.GLTextureLoader;
 import com.greentree.graphics.window.SimpleWindow;
@@ -42,9 +24,9 @@ import com.greentree.graphics.window.SimpleWindow;
 /** @author Arseny Latyshev */
 public abstract class Main {
 
-//	private static GLTexture2D texture;
+	private static GLTexture2D texture;
 
-	private static int texture;
+//	private static int texture;
 
 	private static void drawBlack() {
 		Graphics.pushMatrix();
@@ -53,8 +35,8 @@ public abstract class Main {
 
 		Color.white.bind();
 
-		GL11.glBindTexture(GL_TEXTURE_2D, texture);
-//		texture.bind();
+//		GL11.glBindTexture(GL_TEXTURE_2D, texture);
+		texture.bind();
 		
 		try(MemoryStack stack = MemoryStack.stackPush()) {
 			Graphics.glVertexPointer(2, GLType.FLOAT, 0, stack.floats(Graphics.array2f));
@@ -86,38 +68,25 @@ public abstract class Main {
 
 	public static void main(final String[] args) {
 		BulbGL.init();
-		final Collection<Window> windows = new CopyOnWriteArrayList<>();
+		final Collection<GLFWContext> windows = new CopyOnWriteArrayList<>();
 
-		var w1 = new SimpleWindow("window 1", 500, 500);
-		var w2 = new SimpleWindow("window 2", 500, 500, w1);
+		var res = new GLFWContext("res", 500, 500, true, false, false, null);
+		var w1 = new SimpleWindow("window 1", 500, 500, res);
+		var w2 = new SimpleWindow("window 2", 500, 500, res);
 		
 		windows.add(w1);
 		windows.add(w2);
+//		windows.add(res);
 
-		w1.makeCurrent();
+		res.makeCurrent();
 		
+		texture = GLTextureLoader.getTexture2D("test\\mag(2).png");
 		
-		texture = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-		glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-		
-//		texture = GLTextureLoader.getTexture2D("test\\mag(2).png");
-		
-		byte[] pixels = new byte[16 * 16];
-		new Random().nextBytes(pixels);
-		
-		try(MemoryStack stack = MemoryStack.stackPush()) {
-			glTexImage2D(GL_TEXTURE_2D, 0, GL11.GL_LUMINANCE, 16, 16, 0, GL11.GL_LUMINANCE, GL11.GL_UNSIGNED_BYTE, stack.bytes(pixels));
-		}
-//		GL11.glDeleteTextures(texture);
 		GLTexture2D.unbindTexture();
 		Graphics.validateOpenGL();
 		
-		
 		for(var w : windows) {
 			w.makeCurrent();
-			glEnable(GL_TEXTURE_2D);
 			start();
 		}
 		Window.unmakeCurrent();
@@ -130,10 +99,10 @@ public abstract class Main {
 		c.getPosition().z -= 4;
 
 		while(!windows.isEmpty()) {
-			//			c.getPosition().z -= .02;
+//						c.getPosition().z -= .02;
 			c.getRotate().x += 1f;
 			c.getRotate().y += .01f;
-			for(final Window window : windows) if(window.isShouldClose()) {
+			for(final var window : windows) if(window.isShouldClose()) {
 				window.close();
 				windows.remove(window);
 			}
@@ -141,7 +110,7 @@ public abstract class Main {
 			for(var w : windows) {
 				w.makeCurrent();
 				w.updateEvents();
-				GL11.glViewport(0, 0, w.getWidth(), w.getHeight());
+				Graphics.viewport(0, 0, w.getWidth(), w.getHeight());
 				render(c);
 				w.swapBuffer();
 			}

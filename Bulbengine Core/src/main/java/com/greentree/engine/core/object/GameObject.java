@@ -10,10 +10,10 @@ import com.greentree.common.ClassUtil;
 import com.greentree.common.collection.HashMapClassTree;
 import com.greentree.common.collection.WeakClassTree;
 import com.greentree.common.logger.Log;
-import com.greentree.engine.core.component.RequireComponent;
-import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
-import com.greentree.engine.core.system.RequireSystems;
-import com.greentree.engine.core.util.SceneMananger;
+import com.greentree.engine.core.SceneMananger;
+import com.greentree.engine.core.builder.RequireComponent;
+import com.greentree.engine.core.builder.RequireSystems;
+import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
 
 public final class GameObject extends GameObjectParent {
 	protected final WeakClassTree<GameComponent> components;

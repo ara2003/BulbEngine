@@ -6,9 +6,9 @@ import java.util.LinkedList;
 import com.greentree.common.math.vector.AbstractVector2f;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.builder.EditorData;
-import com.greentree.engine.core.component.RequireComponent;
+import com.greentree.engine.core.builder.RequireComponent;
+import com.greentree.engine.core.builder.RequireSystems;
 import com.greentree.engine.core.object.GameComponent;
-import com.greentree.engine.core.system.RequireSystems;
 
 @RequireSystems({NavMeshSystem.class})
 @RequireComponent({Transform.class})

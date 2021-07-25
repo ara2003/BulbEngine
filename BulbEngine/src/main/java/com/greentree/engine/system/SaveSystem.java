@@ -12,7 +12,7 @@ import java.util.Map;
 import com.greentree.common.logger.Log;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.builder.Required;
-import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
 
 public class SaveSystem extends MultiBehaviour {
 

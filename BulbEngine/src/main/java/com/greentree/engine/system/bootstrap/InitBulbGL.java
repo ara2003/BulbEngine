@@ -1,6 +1,6 @@
-package com.greentree.engine.render;
+package com.greentree.engine.system.bootstrap;
 
-import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
 import com.greentree.graphics.BulbGL;
 
 

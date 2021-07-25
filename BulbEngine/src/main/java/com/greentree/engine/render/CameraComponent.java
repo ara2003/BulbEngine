@@ -7,12 +7,12 @@ import com.greentree.common.math.vector.AbstractVector2f;
 import com.greentree.common.math.vector.AbstractVector3f;
 import com.greentree.common.math.vector.Vector2f;
 import com.greentree.common.math.vector.Vector3f;
-import com.greentree.engine.Windows;
+import com.greentree.engine.component.StartGameComponent;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.builder.EditorData;
+import com.greentree.engine.core.builder.RequireComponent;
 import com.greentree.engine.core.builder.Required;
-import com.greentree.engine.core.component.RequireComponent;
-import com.greentree.engine.core.component.StartGameComponent;
+import com.greentree.engine.util.Windows;
 import com.greentree.graphics.Graphics;
 
 /** @author Arseny Latyshev */

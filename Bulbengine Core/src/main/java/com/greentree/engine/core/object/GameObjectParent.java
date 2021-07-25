@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import com.greentree.common.collection.HashMapClassTree;
 import com.greentree.common.collection.WeakClassTree;
-import com.greentree.engine.core.component.ComponentList;
 
 /** @author Arseny Latyshev */
 public abstract class GameObjectParent {
@@ -72,10 +71,6 @@ public abstract class GameObjectParent {
 
 	public final <T> List<T> getAllComponents(final Class<T> clazz) {
 		return allTreeComponents.get(clazz);
-	}
-
-	public final <T extends GameComponent> ComponentList<T> getAllComponentsAsComponentList(final Class<T> clazz) {
-		return new ComponentList<>(this.getAllComponents(clazz));
 	}
 
 	public String getName() {

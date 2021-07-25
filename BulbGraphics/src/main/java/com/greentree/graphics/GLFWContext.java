@@ -22,19 +22,24 @@ import org.lwjgl.glfw.GLFWWindowMaximizeCallbackI;
 import org.lwjgl.glfw.GLFWWindowPosCallbackI;
 import org.lwjgl.glfw.GLFWWindowRefreshCallbackI;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
-public class GLContext  implements AutoCloseable {
+public class GLFWContext  implements AutoCloseable {
 
 	protected final long id;
 	
-	public GLContext(final String title, final int width, final int height, final boolean resizable, final boolean fullscreen, final boolean visible, final GLContext share) {
+	public long getMonitor(){
+		return GLFW.glfwGetWindowMonitor(id);
+	}
+	
+	public GLFWContext(final String title, final int width, final int height, final boolean resizable, final boolean fullscreen, final boolean visible, final GLFWContext share) {
 		GLFW.glfwDefaultWindowHints();
 		GLFW.glfwWindowHint(GLFW.GLFW_DOUBLEBUFFER, GLFW.GLFW_TRUE);
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, resizable?GLFW.GLFW_TRUE:GLFW.GLFW_FALSE);
-		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, visible?GLFW.GLFW_TRUE:GLFW.GLFW_FALSE);
+		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
 		{
 			var shareID = (share == null)?MemoryUtil.NULL:share.id;
 		if(fullscreen)
@@ -42,8 +47,9 @@ public class GLContext  implements AutoCloseable {
 		else
 			try(MemoryStack stack = MemoryStack.stackPush()) {
 				id = GLFW.glfwCreateWindow(width, height, title, MemoryUtil.NULL, shareID);
-				final GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-				GLFW.glfwSetWindowPos(id, (vidmode.width() - width) / 2, (vidmode.height() - height) / 2);
+				
+				final GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+				GLFW.glfwSetWindowPos(id, (mode.width() - width) / 2, (mode.height() - height) / 2);
 			}
 		}
 		if(id == MemoryUtil.NULL) throw new IllegalStateException("Failed to create the BulbGL window " + title + " " + width + "x" + height + " fullscreen: " + fullscreen + " resizable: " + resizable + " visible: " + visible);
@@ -60,10 +66,10 @@ public class GLContext  implements AutoCloseable {
 
 		final GLCapabilities glCapabilities = GL.createCapabilities(false);
 		if(null == glCapabilities) throw new IllegalStateException("Failed to load OpenGL native");
-
-		GLFW.glfwShowWindow(id);
-		GLFW.glfwFocusWindow(id);
+		
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GLFW.glfwSwapInterval(1);
+		if(visible)GLFW.glfwShowWindow(id);
 		GLFW.glfwMakeContextCurrent(0);
 	}
 	private int width, height;
@@ -180,7 +186,7 @@ public class GLContext  implements AutoCloseable {
 		GLFW.glfwSwapBuffers(id);
 	}
 
-	public void updateEvents() {
+	public static void updateEvents() {
 		GLFW.glfwPollEvents();
 	}
 

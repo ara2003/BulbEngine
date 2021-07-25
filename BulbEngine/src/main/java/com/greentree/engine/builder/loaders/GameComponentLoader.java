@@ -2,8 +2,8 @@ package com.greentree.engine.builder.loaders;
 
 import com.greentree.data.loaders.AbstractLoader;
 import com.greentree.data.loaders.value.ValueLoader;
+import com.greentree.engine.core.SceneMananger;
 import com.greentree.engine.core.object.GameComponent;
-import com.greentree.engine.core.util.SceneMananger;
 
 /** @author Arseny Latyshev */
 public class GameComponentLoader extends AbstractLoader implements ValueLoader {

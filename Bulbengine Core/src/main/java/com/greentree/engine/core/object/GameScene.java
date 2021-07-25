@@ -8,29 +8,25 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import com.greentree.action.EventAction;
 import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
-import com.greentree.engine.core.system.GameSystem;
-import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
-import com.greentree.engine.core.system.RequireSystems;
+import com.greentree.engine.core.builder.RequireSystems;
+import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
 
 /** @author Arseny Latyshev */
 public final class GameScene extends GameObjectParent {
 
 	private final GameScene parent;
-	private final SystemCollection systems;
-	private final EventAction<GameComponent> newComponent;
+	private final SystemCollection systems  = new SystemCollection();
+	private final EventAction<GameComponent> newComponent = new EventAction<>();
 
 	public GameScene(final String name) {
 		super(name);
-		newComponent = new EventAction<>();
-		systems = new SystemCollection();
 		parent = null;
 	}
 
 	public GameScene(final String name, GameScene parent) {
 		super(name);
-		newComponent = new EventAction<>();
-		systems = new SystemCollection();
 		this.parent = parent;
+		newComponent.addListener(c -> parent.newComponent.action(c));
 	}
 
 	public boolean addSystem(final GameSystem<?> system) {
@@ -38,11 +34,11 @@ public final class GameScene extends GameObjectParent {
 	}
 
 	public boolean contains(Class<? extends MultiBehaviour> class1) {
-		return systems.containsClass(class1) || parent != null&&parent.contains(class1);
+		return systems.containsClass(class1) || (parent != null&&parent.contains(class1));
 	}
 
 	@Override
-	public void destroy_full() {
+	protected void destroy_full() {
 		super.destroy_full();
 		systems.destroy();
 		allTreeComponents.clear();
@@ -53,10 +49,10 @@ public final class GameScene extends GameObjectParent {
 	}
 
 	public <T extends MultiBehaviour> GameSystem<T> getSystem(final Class<T> clazz) {
-		return systems.get(clazz);
-	}
-	public Collection<GameSystem<?>> getSystems() {
-		return systems;
+		var res = systems.get(clazz);
+		if(res != null)return res;
+		if(parent != null)return parent.getSystem(clazz);
+		return null;
 	}
 
 	@Override
@@ -71,27 +67,28 @@ public final class GameScene extends GameObjectParent {
 
 	@Override
 	public String toSimpleString() {
-		return String.format("GameScene[name=\"%s\"]@%d", name, super.hashCode());
+		return String.format("GameScene(%s)@%d", name, super.hashCode()) + ((parent == null)?"":" -> "+parent.toSimpleString());
 	}
 
 	@Override
 	public String toString() {
-		return "GameScene [systems=" + systems + " children=" + childrens + "]@" + super.hashCode();
+		return toSimpleString() + " [systems=" + systems + " children=" + childrens + "]";
 	}
 
 	@Override
 	public void update() {
 		systems.update();
-		if(parent == null)parent.update();
+		if(parent != null)parent.update();
 	}
 
 	@Override
 	public void updateUpTreeComponents() {
 		allTreeComponents.clear();
 		for(final GameObject object : childrens) allTreeComponents.addAll(object.getAllComponents(GameComponent.class));
+		if(parent != null)parent.updateUpTreeComponents();
 	}
 
-	private final class SystemCollection extends CopyOnWriteArrayList<GameSystem<?>> {
+	private final static class SystemCollection extends CopyOnWriteArrayList<GameSystem<?>> {
 		private static final long serialVersionUID = 1L;
 
 		public <S extends MultiBehaviour> boolean containsClass(final Class<S> clazz) {

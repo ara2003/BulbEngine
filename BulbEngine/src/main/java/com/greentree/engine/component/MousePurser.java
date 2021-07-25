@@ -1,9 +1,8 @@
 package com.greentree.engine.component;
 
-import com.greentree.engine.Cameras;
 import com.greentree.engine.Mouse;
-import com.greentree.engine.core.component.RequireComponent;
-import com.greentree.engine.core.component.UpdatingGameComponent;
+import com.greentree.engine.core.builder.RequireComponent;
+import com.greentree.engine.util.Cameras;
 
 @RequireComponent(Transform.class)
 public class MousePurser extends UpdatingGameComponent {

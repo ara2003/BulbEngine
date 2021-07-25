@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import com.greentree.common.logger.Log;
+import com.greentree.engine.util.Windows;
 import com.greentree.graphics.input.Key;
 
 /**
@@ -50,7 +51,7 @@ public abstract class KeyBoard {
 	}
 
 	public static void init() {
-		Windows.window.getKeyRelease().addListener(key -> {
+		Windows.getWindow().getKeyRelease().addListener(key -> {
 			try {
 				press[key] = false;
 			}catch (ArrayIndexOutOfBoundsException e) {
@@ -58,7 +59,7 @@ public abstract class KeyBoard {
 			}
 		});
 
-		Windows.window.getKeyPressOrRepeat().addListener(key -> {
+		Windows.getWindow().getKeyPressOrRepeat().addListener(key -> {
 			try {
 				press[key] = true;
 			}catch (ArrayIndexOutOfBoundsException e) {
@@ -71,7 +72,7 @@ public abstract class KeyBoard {
 				a.append(getClipboardContents());
 			});
 		});
-		Windows.window.getCharEnter().addListener(e -> {
+		Windows.getWindow().getCharEnter().addListener(e -> {
 			list.forEach(a -> a.append(e));
 		});
 	}

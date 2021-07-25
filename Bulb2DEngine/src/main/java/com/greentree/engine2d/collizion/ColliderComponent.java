@@ -5,11 +5,11 @@ import java.util.function.Consumer;
 
 import com.greentree.action.EventAction;
 import com.greentree.common.Sized;
+import com.greentree.engine.component.StartUpdatingGameComponent;
 import com.greentree.engine.component.Transform;
-import com.greentree.engine.core.component.RequireComponent;
-import com.greentree.engine.core.component.StartUpdatingGameComponent;
+import com.greentree.engine.core.builder.RequireComponent;
+import com.greentree.engine.core.builder.RequireSystems;
 import com.greentree.engine.core.object.GameObject;
-import com.greentree.engine.core.system.RequireSystems;
 import com.greentree.engine.geom2d.Point2D;
 import com.greentree.engine.geom2d.Shape2D;
 

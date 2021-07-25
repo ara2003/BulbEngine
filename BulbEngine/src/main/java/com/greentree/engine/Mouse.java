@@ -1,6 +1,7 @@
 package com.greentree.engine;
 
 import com.greentree.common.logger.Log;
+import com.greentree.engine.util.Windows;
 import com.greentree.graphics.input.DoublePoisitionAction;
 
 /**
@@ -12,6 +13,7 @@ public class Mouse {
 
 	private final static boolean[] mouseButton = new boolean[3];
 	private static int mouseX, mouseY;
+	
 	private static boolean ignore = true;
 
 	public static boolean anyButtonPressed() {
@@ -35,7 +37,7 @@ public class Mouse {
 		return mouseY;
 	}
 	public static void init() {
-		Windows.window.getMousePosition().addListener((x, y) -> {
+		Windows.getWindow().getMousePosition().addListener((x, y) -> {
 			if(ignore)ignore = false; else
 				if(anyButtonPressed()) mouseDragged.action(mouseX, mouseY, x, y);
 				else mouseMoved.action(mouseX, mouseY, x, y);
@@ -43,14 +45,14 @@ public class Mouse {
 			mouseX = x;
 			mouseY = y;
 		});
-		Windows.window.getMouseButtonPress().addListener(b -> {
+		Windows.getWindow().getMouseButtonPress().addListener(b -> {
 			try {
 				mouseButton[b] = true;
 			}catch (ArrayIndexOutOfBoundsException e) {
 				Log.warn(e);
 			}
 		});
-		Windows.window.getMouseButtonRelease().addListener(b -> {
+		Windows.getWindow().getMouseButtonRelease().addListener(b -> {
 			try {
 				mouseButton[b] = false;
 			}catch (ArrayIndexOutOfBoundsException e) {
@@ -65,7 +67,7 @@ public class Mouse {
 
 	public static void setMousePos(int x, int y) {
 		ignore = true;
-		Windows.window.setMousePos(x, y);
+		Windows.getWindow().setMousePos(x, y);
 	}
 
 }

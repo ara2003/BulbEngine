@@ -7,7 +7,7 @@ import com.greentree.common.math.vector.AbstractVector3f;
 import com.greentree.common.pair.Pair;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.object.GameObject;
-import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
 import com.greentree.engine2d.collizion.ColliderComponent;
 import com.greentree.engine2d.collizion.ColliderSystem;
 

@@ -2,7 +2,7 @@ package com.greentree.engine2d.physics;
 
 import com.greentree.common.math.vector.Vector2f;
 import com.greentree.engine.core.builder.EditorData;
-import com.greentree.engine.core.component.RequireComponent;
+import com.greentree.engine.core.builder.RequireComponent;
 import com.greentree.engine.core.object.GameComponent;
 import com.greentree.engine2d.collizion.ColliderComponent;
 

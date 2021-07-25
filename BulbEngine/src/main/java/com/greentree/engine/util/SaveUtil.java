@@ -1,6 +1,6 @@
-package com.greentree.engine;
+package com.greentree.engine.util;
 
-import com.greentree.engine.core.util.SceneMananger;
+import com.greentree.engine.core.SceneMananger;
 import com.greentree.engine.system.SaveSystem;
 
 public abstract class SaveUtil {

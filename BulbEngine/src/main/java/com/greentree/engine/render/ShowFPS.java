@@ -1,11 +1,14 @@
 package com.greentree.engine.render;
 
-import com.greentree.common.time.Time;
-import com.greentree.engine.Cameras;
-import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.builder.RequireSystems;
+import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
+import com.greentree.engine.system.TimeSystem;
+import com.greentree.engine.util.Cameras;
+import com.greentree.engine.util.Time;
 import com.greentree.graphics.Color;
 import com.greentree.graphics.Graphics;
 
+@RequireSystems(TimeSystem.class)
 /** @author Arseny Latyshev */
 public class ShowFPS extends MultiBehaviour {
 

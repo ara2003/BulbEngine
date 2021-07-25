@@ -35,7 +35,6 @@ public class GLTexture2D {
 		texWidth  = (width + 0.0f) / Mathf.get2Fold(width);
 		texHeight = (height + 0.0f) / Mathf.get2Fold(height);
 		setMinFilter(Filtering.NEAREST);
-		System.out.println("sys : " + textureID);
 	}
 
 	public static void unbindTexture() {

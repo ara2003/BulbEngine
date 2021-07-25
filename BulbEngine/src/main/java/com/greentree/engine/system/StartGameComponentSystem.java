@@ -1,10 +1,10 @@
-package com.greentree.engine.core.system;
+package com.greentree.engine.system;
 
 import com.greentree.common.Starting;
-import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
 
 
-public class StartGameSystem extends MultiBehaviour {
+public class StartGameComponentSystem extends MultiBehaviour {
 
 	@Override
 	protected void start() {

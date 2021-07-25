@@ -1,13 +1,13 @@
-package com.greentree.engine.core.component;
+package com.greentree.engine.component;
 
 import com.greentree.common.Updating;
+import com.greentree.engine.core.builder.RequireSystems;
 import com.greentree.engine.core.object.GameComponent;
-import com.greentree.engine.core.system.RequireSystems;
-import com.greentree.engine.core.system.UpdatingComponentSystem;
+import com.greentree.engine.system.UpdatingGameComponentSystem;
 
 
 /** @author Arseny Latyshev */
-@RequireSystems(UpdatingComponentSystem.class)
+@RequireSystems(UpdatingGameComponentSystem.class)
 public abstract class UpdatingGameComponent extends GameComponent implements Updating {
 
 	@Override

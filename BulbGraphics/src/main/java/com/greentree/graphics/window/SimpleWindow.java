@@ -5,9 +5,10 @@ import org.lwjgl.glfw.GLFWCharCallbackI;
 import org.lwjgl.glfw.GLFWCursorPosCallbackI;
 import org.lwjgl.glfw.GLFWKeyCallbackI;
 import org.lwjgl.glfw.GLFWMouseButtonCallbackI;
+import org.lwjgl.glfw.GLFWWindowCloseCallbackI;
 
 import com.greentree.action.EventAction;
-import com.greentree.graphics.GLContext;
+import com.greentree.graphics.GLFWContext;
 import com.greentree.graphics.Window;
 import com.greentree.graphics.input.PoisitionAction;
 
@@ -49,10 +50,9 @@ public class SimpleWindow extends Window {
 		mouseButtonRelease = new EventAction<>();
 		mouseButtonRepeat  = new EventAction<>();
 		this.setCallback((GLFWMouseButtonCallbackI) (window, button, action, mods)-> {
-			if(window != SimpleWindow.this.getId()) return;
-			if(action == GLFW.GLFW_RELEASE) SimpleWindow.this.mouseButtonPress.action(button);
-			if(action == GLFW.GLFW_REPEAT) SimpleWindow.this.mouseButtonRelease.action(button);
-			if(action == GLFW.GLFW_PRESS) SimpleWindow.this.mouseButtonRepeat.action(button);
+			if(action == GLFW.GLFW_PRESS) SimpleWindow.this.mouseButtonPress.action(button);
+			if(action == GLFW.GLFW_RELEASE) SimpleWindow.this.mouseButtonRelease.action(button);
+			if(action == GLFW.GLFW_REPEAT) SimpleWindow.this.mouseButtonRepeat.action(button);
 		});
 		mousePosition = new PoisitionAction();
 		this.setCallback((GLFWCursorPosCallbackI) (window, xpos, ypos)-> {
@@ -61,6 +61,10 @@ public class SimpleWindow extends Window {
 
 	}
 
+	public void setWindowCloseCallback(final Runnable listener) {
+		setCallback((GLFWWindowCloseCallbackI)w -> listener.run());
+	}
+	
 	public SimpleWindow(final String title, final int width, final int height) {
 		this(title, width, height, null);
 	}
@@ -69,7 +73,7 @@ public class SimpleWindow extends Window {
 		super(title, width, height, resizable, fullscreen, null);
 	}
 
-	public SimpleWindow(final String title, final int width, final int height, GLContext share) {
+	public SimpleWindow(final String title, final int width, final int height, GLFWContext share) {
 		super(title, width, height, true, false, share);
 	}
 

@@ -1,7 +1,7 @@
 package com.greentree.engine2d.render;
 
-import com.greentree.engine.Cameras;
-import com.greentree.engine.core.system.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
+import com.greentree.engine.util.Cameras;
 
 /** @author Arseny Latyshev */
 public class CameraRenderSystem extends MultiBehaviour {

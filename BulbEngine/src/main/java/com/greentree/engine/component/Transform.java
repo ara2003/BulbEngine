@@ -5,7 +5,6 @@ import org.joml.Matrix4f;
 import com.greentree.common.math.Mathf;
 import com.greentree.common.math.vector.VectorAction3f;
 import com.greentree.engine.core.builder.EditorData;
-import com.greentree.engine.core.component.StartGameComponent;
 import com.greentree.engine.core.object.GameObject;
 import com.greentree.engine.core.object.GameObjectParent;
 

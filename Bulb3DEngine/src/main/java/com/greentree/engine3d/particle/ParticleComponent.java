@@ -10,13 +10,13 @@ import org.lwjgl.system.MemoryStack;
 import com.greentree.common.math.Mathf;
 import com.greentree.common.math.vector.AbstractVector3f;
 import com.greentree.common.math.vector.Vector3f;
-import com.greentree.common.time.Time;
-import com.greentree.engine.Cameras;
 import com.greentree.engine.component.AbstractMeshComponent;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.builder.EditorData;
+import com.greentree.engine.core.builder.RequireComponent;
 import com.greentree.engine.core.builder.Required;
-import com.greentree.engine.core.component.RequireComponent;
+import com.greentree.engine.util.Cameras;
+import com.greentree.engine.util.Time;
 import com.greentree.engine3d.render.Camera3DRendenerComponent;
 import com.greentree.graphics.Color;
 import com.greentree.graphics.GLPrimitive;
@@ -57,7 +57,7 @@ public class ParticleComponent extends Camera3DRendenerComponent {
 	private float speed = 20f;
 	@EditorData
 	private Color color = Color.white;
-	@EditorData("Rate over Time")
+	@EditorData("Rate over TimeUtil")
 	private float RateOverTime = 150f;
 	private float deltaTime;
 	private Transform position;
