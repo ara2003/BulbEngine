@@ -1,6 +1,6 @@
 package com.greentree.engine.render.ui;
 
-import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.node.GameSystem.MultiBehaviour;
 import com.greentree.engine.util.Cameras;
 import com.greentree.graphics.Graphics;
 

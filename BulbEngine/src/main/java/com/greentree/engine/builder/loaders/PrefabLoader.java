@@ -3,7 +3,7 @@ package com.greentree.engine.builder.loaders;
 import com.greentree.data.loaders.AbstractLoader;
 import com.greentree.data.loaders.value.ValueLoader;
 import com.greentree.engine.Game;
-import com.greentree.engine.core.object.GameObject;
+import com.greentree.engine.core.node.GameObject;
 
 public class PrefabLoader extends AbstractLoader implements ValueLoader {
 

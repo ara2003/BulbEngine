@@ -6,6 +6,7 @@ open module bulbengine.data {
 	requires transitive bulbengine.action;
 
 	exports com.greentree.data;
+	exports com.greentree.data.asset;
 	exports com.greentree.data.loaders;
 	exports com.greentree.data.loaders.collection;
 	exports com.greentree.data.loaders.value;

@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.BufferUtils;
 
+import com.greentree.common.math.Mathf;
 import com.greentree.graphics.core.PNGDecoder;
 
 public class PNGImageData implements LoadableImageData {
@@ -19,13 +20,6 @@ public class PNGImageData implements LoadableImageData {
 
 	@Override
 	public void configureEdging(final boolean edging) {
-	}
-
-	private int get2Fold(final int fold) {
-		int ret;
-		for(ret = 2; ret < fold; ret *= 2) {
-		}
-		return ret;
 	}
 
 	@Override
@@ -74,8 +68,8 @@ public class PNGImageData implements LoadableImageData {
 		if(!decoder.isRGB()) throw new IOException("Only RGB formatted images are supported by the PNGLoader");
 		width = decoder.getWidth();
 		height = decoder.getHeight();
-		texWidth = get2Fold(width);
-		texHeight = get2Fold(height);
+		texWidth = Mathf.get2Fold(width);
+		texHeight = Mathf.get2Fold(height);
 		final int perPixel = decoder.hasAlpha() ? 4 : 3;
 		bitDepth = decoder.hasAlpha() ? 32 : 24;
 		decoder.decode(scratch = BufferUtils.createByteBuffer(texWidth * texHeight * perPixel), texWidth * perPixel,

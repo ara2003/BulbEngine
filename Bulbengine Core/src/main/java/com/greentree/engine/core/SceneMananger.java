@@ -3,26 +3,14 @@ package com.greentree.engine.core;
 
 import java.util.Objects;
 
-import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
 import com.greentree.data.loading.ResourceLoader;
 import com.greentree.data.loading.ResourceNotFound;
 import com.greentree.engine.core.builder.context.SceneBuildContext;
-import com.greentree.engine.core.object.GameScene;
-import com.greentree.engine.core.object.GameSystem;
-import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.node.GameScene;
 
 /** @author Arseny Latyshev */
 public abstract class SceneMananger {
-
-	private static final GameScene superParent = new GameScene("super-parent");
-	static {
-		try {
-			superParent.addSystem(new GameSystem<MultiBehaviour>(superParent, (MultiBehaviour) ClassUtil.newInstance(Class.forName("com.greentree.engine.system.TimeSystem"))));
-		}catch(ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
 	
 	protected static GameScene currentScene;
 
@@ -39,7 +27,7 @@ public abstract class SceneMananger {
 	}
 	
 	public static GameScene loadScene(String file) {
-		return loadSceneWithParent(file, superParent);
+		return loadSceneWithParent(file, null);
 	}
 	
 	public static GameScene loadSceneCurretAsParent(String file) {

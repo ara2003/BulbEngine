@@ -8,7 +8,7 @@ open module bulbengine.core {
 
 	exports com.greentree.engine.core.builder;
 	exports com.greentree.engine.core.builder.context;
-	exports com.greentree.engine.core.object;
+	exports com.greentree.engine.core.node;
 	exports com.greentree.engine.core;
 
 }

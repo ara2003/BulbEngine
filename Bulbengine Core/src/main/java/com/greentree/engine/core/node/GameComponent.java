@@ -1,4 +1,4 @@
-package com.greentree.engine.core.object;
+package com.greentree.engine.core.node;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -12,17 +12,13 @@ public abstract class GameComponent {
 
 	GameObject object;
 
-
-
 	public final GameComponent copy() {
 		GameComponent c = ClassUtil.newInstance(getClass());
 		for(Field f : ClassUtil.getAllFields(getClass())) if((f.getModifiers() & (Modifier.FINAL | Modifier.STATIC)) == 0)if(!"object".equals(f.getName())) try {
-			boolean flag1 = f.canAccess(c);
-			boolean flag2 = f.canAccess(this);
-			if(flag1 != flag2)throw new RuntimeException();
+			boolean flag = f.canAccess(this);
 			f.setAccessible(true);
 			f.set(c, f.get(this));
-			f.setAccessible(flag1);
+			f.setAccessible(flag);
 		}catch(IllegalArgumentException | IllegalAccessException e) {
 			e.printStackTrace();
 		}

@@ -3,7 +3,7 @@ package com.greentree.engine.core;
 import java.io.File;
 
 import com.greentree.engine.core.builder.Builder;
-import com.greentree.engine.core.object.GameObject;
+import com.greentree.engine.core.node.GameObject;
 
 public abstract class GameCore {
 

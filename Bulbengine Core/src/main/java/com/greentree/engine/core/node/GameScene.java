@@ -1,4 +1,4 @@
-package com.greentree.engine.core.object;
+package com.greentree.engine.core.node;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -9,7 +9,7 @@ import com.greentree.action.EventAction;
 import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
 import com.greentree.engine.core.builder.RequireSystems;
-import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.node.GameSystem.MultiBehaviour;
 
 /** @author Arseny Latyshev */
 public final class GameScene extends GameObjectParent {
@@ -33,8 +33,8 @@ public final class GameScene extends GameObjectParent {
 		return systems.add(system);
 	}
 
-	public boolean contains(Class<? extends MultiBehaviour> class1) {
-		return systems.containsClass(class1) || (parent != null&&parent.contains(class1));
+	public boolean containsSystem(Class<? extends MultiBehaviour> clazz) {
+		return null != getSystem(clazz);
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public final class GameScene extends GameObjectParent {
 
 	@Override
 	public String toSimpleString() {
-		return String.format("GameScene(%s)@%d", name, super.hashCode()) + ((parent == null)?"":" -> "+parent.toSimpleString());
+		return String.format("GameScene(%s)@%d", name, super.hashCode()) + (parent == null?"":" -> "+parent.toSimpleString());
 	}
 
 	@Override
@@ -77,6 +77,7 @@ public final class GameScene extends GameObjectParent {
 
 	@Override
 	public void update() {
+		System.out.println("update " + toSimpleString());
 		systems.update();
 		if(parent != null)parent.update();
 	}
@@ -89,10 +90,12 @@ public final class GameScene extends GameObjectParent {
 	}
 
 	private final static class SystemCollection extends CopyOnWriteArrayList<GameSystem<?>> {
+		private long time = 0;
+
 		private static final long serialVersionUID = 1L;
 
-		public <S extends MultiBehaviour> boolean containsClass(final Class<S> clazz) {
-			return null != get(clazz);
+		private static void log(long time) {
+			System.out.printf("%10d %-10.2f \n", time, time / 1_000_000_000.0 * 60 * 100);
 		}
 
 		public void destroy() {
@@ -105,15 +108,25 @@ public final class GameScene extends GameObjectParent {
 			for(GameSystem<?> s : this) if(s.getBehaviour().getClass().isAssignableFrom(clazz))return (GameSystem<B>) s;
 			return null;
 		}
-
 		public void initSratr() {
 			forEach(GameSystem::initSratr);
 		}
 
 		public void update() {
-			forEach(s -> s.getBehaviour().update());
+			time = 0;
+			for(var s :this) {
+				var start = System.nanoTime();
+				var b = s.getBehaviour();
+				b.update();
+				long delta = System.nanoTime() - start;
+//				if(delta / 1_000_000_000.0 * 60 * 100 > .1) {
+					System.out.printf("%-65s", b.getClass().getName());
+					log(delta);
+//				}
+				time += delta;
+			};
+			log(time);
 		}
-
 	}
 
 	private final static class Validator {

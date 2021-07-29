@@ -1,4 +1,4 @@
-package com.greentree.engine.core.object;
+package com.greentree.engine.core.node;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +21,7 @@ public abstract class GameObjectParent {
 
 	protected final String name;
 
-	public GameObjectParent(final String name) {
+	GameObjectParent(final String name) {
 		this.name         = name;
 		allTreeComponents = new HashMapClassTree<>();
 		childrens         = new CopyOnWriteArraySet<>();

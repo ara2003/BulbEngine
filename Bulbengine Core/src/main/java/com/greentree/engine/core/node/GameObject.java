@@ -1,4 +1,4 @@
-package com.greentree.engine.core.object;
+package com.greentree.engine.core.node;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -13,7 +13,7 @@ import com.greentree.common.logger.Log;
 import com.greentree.engine.core.SceneMananger;
 import com.greentree.engine.core.builder.RequireComponent;
 import com.greentree.engine.core.builder.RequireSystems;
-import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.node.GameSystem.MultiBehaviour;
 
 public final class GameObject extends GameObjectParent {
 	protected final WeakClassTree<GameComponent> components;
@@ -190,7 +190,7 @@ public final class GameObject extends GameObjectParent {
 
 		public static boolean checkRequireSystem(final Iterable<GameComponent> components, final GameScene scene) {
 			if(scene == null)return false;
-			for(final Class<? extends MultiBehaviour> requireClass : Validator.getRequireSystemClasses(components)) if(!scene.contains(requireClass))return false;
+			for(final Class<? extends MultiBehaviour> requireClass : Validator.getRequireSystemClasses(components)) if(!scene.containsSystem(requireClass))return false;
 			return true;
 		}
 
@@ -203,7 +203,7 @@ public final class GameObject extends GameObjectParent {
 
 		public static Class<? extends MultiBehaviour> getBrokRequireSystemClass(final Iterable<GameComponent> components, final GameScene scene) {
 			for(final Class<? extends MultiBehaviour> clazz : Validator.getRequireSystemClasses(components))
-				if(!scene.contains(clazz)) return clazz;
+				if(!scene.containsSystem(clazz)) return clazz;
 			return null;
 		}
 

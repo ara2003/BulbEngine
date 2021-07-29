@@ -1,7 +1,7 @@
 package com.greentree.engine.layer;
 
 import com.greentree.engine.core.builder.EditorData;
-import com.greentree.engine.core.object.GameComponent;
+import com.greentree.engine.core.node.GameComponent;
 
 
 public class LayerComponent extends GameComponent {

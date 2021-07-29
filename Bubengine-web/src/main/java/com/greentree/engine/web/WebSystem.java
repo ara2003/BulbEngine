@@ -2,7 +2,7 @@ package com.greentree.engine.web;
 
 import com.greentree.common.web.Client;
 import com.greentree.engine.core.builder.EditorData;
-import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.node.GameSystem.MultiBehaviour;
 
 
 public class WebSystem extends MultiBehaviour {

@@ -2,7 +2,7 @@ package com.greentree.engine2d.collizion;
 
 import com.greentree.engine.component.StartGameComponent;
 import com.greentree.engine.core.builder.RequireComponent;
-import com.greentree.engine.core.object.GameObject;
+import com.greentree.engine.core.node.GameObject;
 
 /** @author Arseny Latyshev */
 @RequireComponent({ColliderComponent.class})

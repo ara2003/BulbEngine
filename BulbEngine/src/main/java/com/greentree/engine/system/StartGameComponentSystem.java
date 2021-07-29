@@ -1,7 +1,7 @@
 package com.greentree.engine.system;
 
 import com.greentree.common.Starting;
-import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.node.GameSystem.MultiBehaviour;
 
 
 public class StartGameComponentSystem extends MultiBehaviour {

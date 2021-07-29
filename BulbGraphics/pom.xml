@@ -11,6 +11,15 @@
 		<name>Green Tree</name>
 	</organization>
 	
+	<repositories>
+		<repository>
+			<id>sonatype-snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<releases><enabled>false</enabled></releases>
+			<snapshots><enabled>true</enabled></snapshots>
+		</repository>
+	</repositories>
+	
 	<developers>
         <developer>
             <name>Arseny Latyshev</name>
@@ -95,6 +104,7 @@
 			<artifactId>math</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
+		
 		<!--test-->
         <dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -116,7 +126,6 @@
 		<dependency>
 			<groupId>org.lwjgl</groupId>
 			<artifactId>lwjgl-opengl</artifactId>
-			<version>${lwjgl.version}</version>
 			<classifier>natives-${os.family}</classifier>
 		</dependency>
 		<dependency>
@@ -126,30 +135,13 @@
 		<dependency>
 			<groupId>org.lwjgl</groupId>
 			<artifactId>lwjgl-glfw</artifactId>
-			<version>${lwjgl.version}</version>
 			<classifier>natives-${os.family}</classifier>
-		</dependency>
-		<dependency>
-		    <groupId>org.lwjgl</groupId>
-		    <artifactId>lwjgl-stb</artifactId>
 		</dependency>
 	</dependencies>
   
   
  	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-				    <groupId>org.codehaus.mojo</groupId>
-				    <artifactId>versions-maven-plugin</artifactId>
-				    <version>2.5</version>
-				    <configuration>
-				        <generateBackupPoms>false</generateBackupPoms>
-				    </configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-		<plugins>
+ 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -158,26 +150,6 @@
 					<source>${java.version}</source>
 					<target>${java.version}</target>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.0.0-M3</version>
-				<executions>
-					<execution>
-						<id>enforce-os</id>
-						<goals>
-							<goal>enforce</goal>
-						</goals>
-						<configuration>
-							<rules>
-								<requireJavaVersion>
-									<version>${java.version}</version>
-								</requireJavaVersion>
-							</rules>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

@@ -3,7 +3,7 @@ package com.greentree.engine.system.bootstrap;
 import com.greentree.engine.Game;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.builder.Required;
-import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.node.GameSystem.MultiBehaviour;
 import com.greentree.engine.util.Windows;
 
 

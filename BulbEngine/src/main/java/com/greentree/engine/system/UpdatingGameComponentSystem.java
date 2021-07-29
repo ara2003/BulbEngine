@@ -1,7 +1,7 @@
 package com.greentree.engine.system;
 
 import com.greentree.common.Updating;
-import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.node.GameSystem.MultiBehaviour;
 
 /** @author Arseny Latyshev */
 public class UpdatingGameComponentSystem extends MultiBehaviour {

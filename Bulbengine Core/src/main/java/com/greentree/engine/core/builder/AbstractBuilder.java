@@ -10,12 +10,12 @@ import com.greentree.common.ClassUtil;
 import com.greentree.common.logger.Log;
 import com.greentree.common.pair.Pair;
 import com.greentree.engine.core.builder.context.SceneBuildContext;
-import com.greentree.engine.core.object.GameComponent;
-import com.greentree.engine.core.object.GameObject;
-import com.greentree.engine.core.object.GameObjectParent;
-import com.greentree.engine.core.object.GameScene;
-import com.greentree.engine.core.object.GameSystem;
-import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.node.GameComponent;
+import com.greentree.engine.core.node.GameObject;
+import com.greentree.engine.core.node.GameObjectParent;
+import com.greentree.engine.core.node.GameScene;
+import com.greentree.engine.core.node.GameSystem;
+import com.greentree.engine.core.node.GameSystem.MultiBehaviour;
 
 /** @author Arseny Latyshev */
 public abstract class AbstractBuilder<T> implements Builder {

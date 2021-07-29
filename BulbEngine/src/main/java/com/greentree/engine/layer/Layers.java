@@ -1,7 +1,7 @@
 package com.greentree.engine.layer;
 
 import com.greentree.common.ClassUtil;
-import com.greentree.engine.core.object.GameObject;
+import com.greentree.engine.core.node.GameObject;
 
 public abstract class Layers {
 

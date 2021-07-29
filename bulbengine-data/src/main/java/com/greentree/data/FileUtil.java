@@ -1,12 +1,12 @@
 package com.greentree.data;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.nio.file.CopyOption;
 import java.nio.file.FileVisitResult;
@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -47,6 +46,17 @@ public abstract class FileUtil {
 		openFile.addListener(c);
 	}
 
+	public static void checkDirectory(File directory) {
+		if(directory.exists()) {
+			if(!directory.isDirectory())throw new IllegalArgumentException("is not directory " + directory);
+		}else throw new IllegalArgumentException("not exists " + directory);
+	}
+
+	public static void checkFile(File file) {
+		if(file.exists()) {
+			if(!file.isFile())throw new IllegalArgumentException("is not file " + file);
+		}else throw new IllegalArgumentException("not exists " + file);
+	}
 	public static void copy(File from, File to) throws IOException {
 		Path srcPath = from.toPath();
 		Path destPath = to.toPath();
@@ -55,6 +65,16 @@ public abstract class FileUtil {
 
 	}
 
+	public static boolean delete(File file) {
+		if(!file.exists())
+			throw new IllegalArgumentException(file.toString());
+		if(file.isFile())return file.delete();
+		if(file.isDirectory()) {
+			for(var f : file.listFiles())delete(f);
+			return file.delete();
+		}
+		throw new IllegalArgumentException(file.toString());
+	}
 	public static void dirToZip(File dir, File zipFile) throws FileNotFoundException, IOException {
 		int len = 0;
 		while(dir.getAbsolutePath().charAt(len) == zipFile.getAbsolutePath().charAt(len))len++;
@@ -64,6 +84,7 @@ public abstract class FileUtil {
 			for(File file : getAllFile(dir)) addFileToZip0(file, file.getAbsolutePath().substring(len), zout);
 		}
 	}
+
 	public static Collection<File> getAllFile(File file) {
 		Collection<File> res = new ArrayList<>();
 		Queue<File> dir = new LinkedList<>();
@@ -78,7 +99,6 @@ public abstract class FileUtil {
 		}
 		return res;
 	}
-
 	public static File getFile(String file) {
 		try {
 			return new File(ResourceLoader.getResource(file).toURI().getPath());
@@ -88,35 +108,36 @@ public abstract class FileUtil {
 		return null;
 	}
 
-	public static String getName(String f) {
-		int index = f.lastIndexOf('.');
-		if(index == -1)return f;
-		return f.substring(0, index);
+	public static String getName(File file) {
+		return getName(file.getName());
 	}
-	public static String getType(String f) {
-		int index = f.lastIndexOf('.');
+
+	public static String getName(String fileName) {
+		int index = fileName.lastIndexOf('.');
+		if(index == -1)return fileName;
+		return fileName.substring(0, index);
+	}
+	public static String getType(File file) {
+		return getType(file.getName());
+	}
+
+	public static String getType(String fileName) {
+		int index = fileName.lastIndexOf('.');
 		if(index == -1)return "";
-		return f.substring(index+1);
+		return fileName.substring(index+1);
 	}
 
-	public static String getName(File f) {
-		return getName(f.getName());
-	}
-	public static String getType(File f) {
-		return getType(f.getName());
+	public static boolean isEmpty(File file) {
+		if(file.isDirectory())return file.list().length == 0;
+		throw new IllegalArgumentException(file.toString());
 	}
 
-	public static void isDirectory(File directory) {
-		if(directory.exists()) {
-			if(!directory.isDirectory())throw new IllegalArgumentException("is not directory " + directory);
-		}else throw new IllegalArgumentException("not exists " + directory);
+	@Deprecated
+	public static void openExploer(File file) {
+		//		if(System.getenv())
+		System.out.println(System.getProperty("os.name"));
 	}
 
-	public static void isFile(File file) {
-		if(file.exists()) {
-			if(!file.isFile())throw new IllegalArgumentException("is not file " + file);
-		}else throw new IllegalArgumentException("not exists " + file);
-	}
 	public static FileInputStream openStream(File file) throws FileNotFoundException {
 		FileInputStream stream = new FileInputStream(file);
 		openFile.action(file);
@@ -125,11 +146,17 @@ public abstract class FileUtil {
 	}
 
 	public static String readFile(File file) throws FileNotFoundException {
-		StringBuilder b = new StringBuilder();
-		try(Scanner sc = new Scanner(file)){
-			while(sc.hasNextLine()) b.append(sc.nextLine());
-		}
-		return b.toString();
+		return InputStreamUtil.readString(new FileInputStream(file));
+	}
+
+
+	public static void write(File to, InputStream in) throws FileNotFoundException, IOException {
+		InputStreamUtil.copy(in, new FileOutputStream(to));
+	}
+
+
+	public static void write(File to, String text) throws FileNotFoundException, IOException {
+		write(to, new ByteArrayInputStream(text.getBytes()));
 	}
 
 	public static void zipToDir(File zip, File dir) throws FileNotFoundException, IOException {
@@ -179,37 +206,6 @@ public abstract class FileUtil {
 			Files.copy(file, toPath.resolve(fromPath.relativize(file)), copyOption);
 			return FileVisitResult.CONTINUE;
 		}
-	}
-
-	public static boolean isEmpty(File file) {
-		if(file.isDirectory())return file.list().length == 0;
-		throw new IllegalArgumentException(file.toString());
-	}
-
-	public static boolean delete(File file) {
-		if(!file.exists())
-			throw new IllegalArgumentException(file.toString());
-		if(file.isFile())return file.delete();
-		if(file.isDirectory()) {
-			for(var f : file.listFiles())delete(f);
-			return file.delete();
-		}
-		throw new IllegalArgumentException(file.toString());
-	}
-
-
-	public static void copy(InputStream source, OutputStream target) throws IOException {
-		try(source; target){
-    	    byte[] buf = new byte[1024];
-    	    int length;
-    	    while ((length = source.read(buf)) > 0) {
-    	        target.write(buf, 0, length);
-    	    }
-		}
-	}
-
-	public static void write(File to, InputStream in) throws FileNotFoundException, IOException {
-		copy(in, new FileOutputStream(to));
 	}
 
 }

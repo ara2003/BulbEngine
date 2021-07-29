@@ -1,9 +1,9 @@
-package com.greentree.engine.core.object;
+package com.greentree.engine.core.node;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.node.GameSystem.MultiBehaviour;
 
 public final class GameSystem<B extends MultiBehaviour> {
 

@@ -2,7 +2,7 @@ package com.greentree.engine2d.collizion;
 
 import java.util.List;
 
-import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.node.GameSystem.MultiBehaviour;
 import com.greentree.engine.geom2d.Point2D;
 import com.greentree.engine.util.Cameras;
 import com.greentree.graphics.Color;

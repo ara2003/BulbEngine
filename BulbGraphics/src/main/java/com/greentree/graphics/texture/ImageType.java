@@ -25,6 +25,7 @@ public enum ImageType {
 
 		@Override
 		public LoadableImageData get() {
+			
 			return new ImageIOImageData();
 		}
 	}, JPEG {

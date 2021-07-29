@@ -4,7 +4,7 @@ import com.greentree.common.math.vector.Vector3f;
 import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.builder.Required;
-import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.node.GameSystem.MultiBehaviour;
 
 
 public class GravitySystem extends MultiBehaviour {

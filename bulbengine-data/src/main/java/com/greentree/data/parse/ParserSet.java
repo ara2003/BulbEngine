@@ -54,7 +54,7 @@ public class ParserSet<V, R, P extends Parser<V, R>> implements Parser<V, R>, It
 			return null;
 		}else {
 			for(final Pair<P, Exception> e : exception) {
-				var e0 = new UnsupportedOperationException(String.format("%s in %s error:%s", value, e.first, e.seconde.getMessage()));
+				var e0 = new UnsupportedOperationException(String.format("%s in %s error: %s", value, e.first, e.seconde));
 				e0.setStackTrace(e.seconde.getStackTrace());
 				e0.printStackTrace();
 			}

@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.greentree.engine.core.SceneMananger;
-import com.greentree.engine.core.object.GameObject;
+import com.greentree.engine.core.node.GameObject;
 import com.greentree.engine.render.CameraComponent;
 
 /** @author Arseny Latyshev */

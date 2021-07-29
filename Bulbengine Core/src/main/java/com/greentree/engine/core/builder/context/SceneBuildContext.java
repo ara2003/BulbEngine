@@ -2,7 +2,7 @@ package com.greentree.engine.core.builder.context;
 
 import java.io.InputStream;
 
-import com.greentree.engine.core.object.GameScene;
+import com.greentree.engine.core.node.GameScene;
 
 public abstract class SceneBuildContext implements BuildContext {
 	protected final GameScene scene;

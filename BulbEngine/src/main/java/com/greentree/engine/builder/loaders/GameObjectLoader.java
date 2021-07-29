@@ -5,7 +5,7 @@ import java.util.List;
 import com.greentree.data.loaders.AbstractLoader;
 import com.greentree.data.loaders.value.ValueLoader;
 import com.greentree.engine.core.SceneMananger;
-import com.greentree.engine.core.object.GameObject;
+import com.greentree.engine.core.node.GameObject;
 
 /** @author Arseny Latyshev */
 public class GameObjectLoader extends AbstractLoader implements ValueLoader {

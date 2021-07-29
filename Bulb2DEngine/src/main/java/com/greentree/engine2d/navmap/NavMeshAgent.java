@@ -8,7 +8,7 @@ import com.greentree.engine.component.Transform;
 import com.greentree.engine.core.builder.EditorData;
 import com.greentree.engine.core.builder.RequireComponent;
 import com.greentree.engine.core.builder.RequireSystems;
-import com.greentree.engine.core.object.GameComponent;
+import com.greentree.engine.core.node.GameComponent;
 
 @RequireSystems({NavMeshSystem.class})
 @RequireComponent({Transform.class})

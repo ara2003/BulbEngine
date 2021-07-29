@@ -18,6 +18,7 @@ import com.greentree.graphics.core.Decoder;
 /** @author Arseny Latyshev */
 public abstract class GLTextureLoader {
 	
+	
 	public static GLTexture2D getTexture2D(final int x, final int y) {
 		final GLTexture2D texture = new GLTexture2D(x, y);
 		texture.bind();
@@ -27,8 +28,8 @@ public abstract class GLTextureLoader {
 		return texture;
 	}
 	
-	public static GLTexture2D getTexture2D(final String value) {
-		return InternalTextureLoader.get().getTexture(value);
+	public static GLTexture2D getTexture2D(final String filename) {
+		return InternalTextureLoader.get().getTexture(filename);
 	}
 
 	public static void glTexImage2D(int mipmapLevel, PixelFormat dstPixelFormat, int width, int height, PixelFormat srcPixelFormat, GLType type, ByteBuffer data) {

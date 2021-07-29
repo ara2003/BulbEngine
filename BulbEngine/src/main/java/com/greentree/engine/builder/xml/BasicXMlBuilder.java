@@ -45,11 +45,11 @@ import com.greentree.engine.builder.loaders.Vector2fLoader;
 import com.greentree.engine.builder.loaders.Vector3fLoader;
 import com.greentree.engine.core.builder.AbstractBuilder;
 import com.greentree.engine.core.builder.EditorData;
-import com.greentree.engine.core.object.GameComponent;
-import com.greentree.engine.core.object.GameObject;
-import com.greentree.engine.core.object.GameScene;
-import com.greentree.engine.core.object.GameSystem;
-import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.node.GameComponent;
+import com.greentree.engine.core.node.GameObject;
+import com.greentree.engine.core.node.GameScene;
+import com.greentree.engine.core.node.GameSystem;
+import com.greentree.engine.core.node.GameSystem.MultiBehaviour;
 import com.greentree.engine.layer.Layers;
 
 /** @author Arseny Latyshev */

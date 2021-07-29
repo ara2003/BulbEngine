@@ -1,6 +1,6 @@
 package com.greentree.engine.system;
 
-import com.greentree.engine.core.object.GameSystem.MultiBehaviour;
+import com.greentree.engine.core.node.GameSystem.MultiBehaviour;
 
 
 public class TimeSystem extends MultiBehaviour {
