@@ -101,7 +101,7 @@ public class BasicXMlBuilder extends AbstractBuilder<XMLElement> {
 
 	@Override
 	public GameObject createPrefab(final String name, final String prefabPath) {
-		final XMLElement in     = parse(ResourceLoader.getResourceAsStream(prefabPath + ".xml"));
+		final XMLElement in     = parse(ResourceLoader.getResourceAsStream(prefabPath));
 		final GameObject  object = new GameObject(name+"#"+getObjectName(in));
 		pushComponents();
 		this.fillObject(object, in);

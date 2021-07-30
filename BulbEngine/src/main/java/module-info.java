@@ -9,6 +9,8 @@ open module bulbengine {
 	requires mylan;
 
 	exports com.greentree.engine;
+	exports com.greentree.engine.assets;
+	exports com.greentree.engine.assets.handler;
 	exports com.greentree.engine.util;
 	exports com.greentree.engine.system;
 	exports com.greentree.engine.layer;

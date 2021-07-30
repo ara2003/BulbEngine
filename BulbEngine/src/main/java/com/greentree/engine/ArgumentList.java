@@ -4,26 +4,19 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.function.Consumer;
 
-@Deprecated
 public class ArgumentList {
 
 	private final HashSet<String> set = new HashSet<>();
-	private final Map<String, String> conflict = new HashMap<>();
+	private final Map<String, String> conflict = new HashMap<>(), equivalent = new HashMap<>();
 
 	public void add(String[] arguments) {
-		var list = Arrays.asList(arguments);
-		for(String s : list) if(list.contains(conflict.get(s))) throw new RuntimeException("conflict arguments \"" + s + "\" \"" + conflict.get(s) + "\"");
-		set.addAll(list);
-	}
-
-	public void addCommand(String string, Consumer<String> run) {
-
-	}
-
-	public void addCommand(String string, Runnable run) {
-
+		set.addAll(Arrays.asList(arguments));
+		for(String s : set) if(set.contains(conflict.get(s))) throw new RuntimeException("conflict arguments \"" + s + "\" \"" + conflict.get(s) + "\"");
+		for(String s : set) {
+			var r = equivalent.get(s);
+			if(r != null)set.add(r);
+		}
 	}
 
 	public void addConflict(String a, String b) {
@@ -33,4 +26,10 @@ public class ArgumentList {
 	public boolean hasArguments(String arg) {
 		return set.contains(arg);
 	}
+
+	public void addEquivalent(String a, String b) {
+		equivalent.put(a, b);
+		equivalent.put(b, a);
+	}
+	
 }

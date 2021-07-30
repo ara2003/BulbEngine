@@ -1,4 +1,4 @@
-package com.greentree.data.asset.basic;
+package com.greentree.data.assets.basic;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,8 +11,8 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.greentree.common.logger.Log;
 import com.greentree.data.FileUtil;
-import com.greentree.data.asset.Asset;
-import com.greentree.data.asset.AssetHandler;
+import com.greentree.data.assets.Asset;
+import com.greentree.data.assets.AssetHandler;
 import com.greentree.data.parse.ParserSet;
 
 public class AssetFinderList extends ParserSet<File, Asset, AssetHandler> {

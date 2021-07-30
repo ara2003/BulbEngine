@@ -36,11 +36,11 @@ public abstract class GLTextureLoader {
 		GL11.glTexImage2D(GL_TEXTURE_2D, mipmapLevel, Decoder.glEnum(dstPixelFormat), width, height, 0, Decoder.glEnum(srcPixelFormat), type.glEnum(), data);
 	}
 
-	public static GLTexture2D getTexture2D(InputStream data, ImageType imageType) {
+	public static GLTexture2D getTexture2D(InputStream data) {
 		try {
-		return InternalTextureLoader.get().getTexture(data, imageType);
+		return InternalTextureLoader.get().getTexture(data);
 	}catch(IOException e) {
-		throw new IllegalArgumentException(data + " " + imageType, e);
+		throw new IllegalArgumentException(data.toString(), e);
 	}
 	}
 	

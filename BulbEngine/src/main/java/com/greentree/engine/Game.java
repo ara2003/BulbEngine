@@ -35,6 +35,8 @@ public class Game extends GameCore {
 	}
 
 	public static void start(final String[] args) {
+		
+		
 		RootFiles.start(new File("Build"));
 		GameCore.setBuilder(new BasicXMlBuilder());
 		

@@ -77,7 +77,7 @@ public final class GameScene extends GameObjectParent {
 
 	@Override
 	public void update() {
-		System.out.println("update " + toSimpleString());
+//		System.out.println("update " + toSimpleString());
 		systems.update();
 		if(parent != null)parent.update();
 	}
@@ -90,13 +90,13 @@ public final class GameScene extends GameObjectParent {
 	}
 
 	private final static class SystemCollection extends CopyOnWriteArrayList<GameSystem<?>> {
-		private long time = 0;
+//		private long time = 0;
 
 		private static final long serialVersionUID = 1L;
 
-		private static void log(long time) {
-			System.out.printf("%10d %-10.2f \n", time, time / 1_000_000_000.0 * 60 * 100);
-		}
+//		private static void log(long time) {
+//			System.out.printf("%10d %-10.2f \n", time, time / 1_000_000_000.0 * 60 * 100);
+//		}
 
 		public void destroy() {
 			forEach(GameSystem::initDestroy);
@@ -113,19 +113,19 @@ public final class GameScene extends GameObjectParent {
 		}
 
 		public void update() {
-			time = 0;
+//			time = 0;
 			for(var s :this) {
-				var start = System.nanoTime();
+//				var start = System.nanoTime();
 				var b = s.getBehaviour();
 				b.update();
-				long delta = System.nanoTime() - start;
-//				if(delta / 1_000_000_000.0 * 60 * 100 > .1) {
-					System.out.printf("%-65s", b.getClass().getName());
-					log(delta);
-//				}
-				time += delta;
-			};
-			log(time);
+//				long delta = System.nanoTime() - start;
+////				if(delta / 1_000_000_000.0 * 60 * 100 > .1) {
+//					System.out.printf("%-65s", b.getClass().getName());
+//					log(delta);
+////				}
+//				time += delta;
+			}
+//			log(time);
 		}
 	}
 

@@ -1,4 +1,4 @@
-package com.greentree.data.asset;
+package com.greentree.data.assets;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -6,6 +6,11 @@ import java.net.URL;
 import com.greentree.data.loading.ResourceLocation;
 
 public class AssetResourceLocation implements ResourceLocation {
+
+	@Override
+	public String toString() {
+		return "AssetResourceLocation [context=" + context.getAssets() + "]";
+	}
 
 	private final AssetContext context;
 	
@@ -21,7 +26,11 @@ public class AssetResourceLocation implements ResourceLocation {
 
 	@Override
 	public InputStream getResourceAsStream(String name) {
-		return context.openWithName(name);
+		try {
+			return context.openWithName(name);
+		}catch (IllegalArgumentException e) {
+			return null;
+		}
 	}
 
 }

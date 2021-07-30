@@ -208,4 +208,9 @@ public abstract class FileUtil {
 		}
 	}
 
+	public static void clearDir(File dir) {
+		delete(dir);
+		dir.mkdirs();
+	}
+
 }

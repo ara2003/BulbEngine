@@ -1,4 +1,4 @@
-package com.greentree.data.asset;
+package com.greentree.data.assets;
 
 import java.io.File;
 import java.io.InputStream;

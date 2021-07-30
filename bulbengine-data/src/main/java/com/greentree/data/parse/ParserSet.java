@@ -42,7 +42,7 @@ public class ParserSet<V, R, P extends Parser<V, R>> implements Parser<V, R>, It
 	}
 
 	protected final R parse(final V value, Collection<P> collection) throws Exception {
-		if(collection.isEmpty())throw new IllegalArgumentException("not parsers for " + value);
+		if(collection.isEmpty())throw new IllegalArgumentException("not parsers for " + value + " " + getParsers());
 		final Collection<Pair<P, Exception>> exception = new ArrayList<>();
 		for(final P p : collection) try {
 			var res = p.parse(value);

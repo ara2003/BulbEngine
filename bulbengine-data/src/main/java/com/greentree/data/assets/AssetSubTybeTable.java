@@ -1,4 +1,4 @@
-package com.greentree.data.asset;
+package com.greentree.data.assets;
 
 import java.util.HashMap;
 import java.util.Map;

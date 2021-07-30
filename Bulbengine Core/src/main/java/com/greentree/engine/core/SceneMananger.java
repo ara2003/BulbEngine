@@ -37,7 +37,6 @@ public abstract class SceneMananger {
 	public static GameScene loadSceneWithParent(String file, GameScene parent) {
 		Log.info("Scene load : " + file);
 		try {
-			if(!file.endsWith(".xml"))file += ".xml";
     		final SceneBuildContext   sceneBuildContext       = GameCore.getBuilder().createScene(ResourceLoader.getResourceAsStream(file), parent);
     		GameScene scene = sceneBuildContext.getScene();
     

@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.greentree.common.math.Mathf;
 import com.greentree.data.loading.ResourceLoader;
+import com.greentree.graphics.core.ImageIOImageData;
 
 public class InternalTextureLoader {
 	
@@ -28,12 +29,14 @@ public class InternalTextureLoader {
 		return InternalTextureLoader.loader;
 	}
 	
-	public GLTexture2D getTexture(final InputStream in, final ImageType type) throws IOException {
-		final LoadableImageData imageData     = type.get();
-		final ByteBuffer        textureBuffer = imageData.loadImage(new BufferedInputStream(in), false, null);
-		final int               width         = imageData.getWidth();
-		final int               height        = imageData.getHeight();
-		final boolean           hasAlpha      = imageData.getDepth() == 32; 
+	public GLTexture2D getTexture(final InputStream in) throws IOException {
+		final CompositeImageData data = new CompositeImageData();
+		data.add(new ImageIOImageData());
+		data.add(new PNGImageData());
+		final ByteBuffer        textureBuffer = data.loadImage(new BufferedInputStream(in), false, null);
+		final int               width         = data.getWidth();
+		final int               height        = data.getHeight();
+		final boolean           hasAlpha      = data.getDepth() == 32; 
 		final GLTexture2D       texture       = new GLTexture2D(width, height);
 		texture.bind();
 		final int srcPixelFormat = hasAlpha ? GL11.GL_RGBA : GL11.GL_RGB;
@@ -47,7 +50,7 @@ public class InternalTextureLoader {
 	
 	public GLTexture2D getTexture(final String resourceName) {
 		try {
-    		return this.getTexture(ResourceLoader.getResourceAsStream(resourceName), ImageType.getImageType(resourceName));
+    		return this.getTexture(ResourceLoader.getResourceAsStream(resourceName));
     	}catch(IOException e) {
     		throw new IllegalArgumentException(resourceName, e);
     	}

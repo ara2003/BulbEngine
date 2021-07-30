@@ -55,7 +55,7 @@ public class SimpleWindow extends Window {
 			if(action == GLFW.GLFW_REPEAT) SimpleWindow.this.mouseButtonRepeat.action(button);
 		});
 		mousePosition = new PoisitionAction();
-		this.setCallback((GLFWCursorPosCallbackI) (window, xpos, ypos)-> {
+		this.setCallback((GLFWCursorPosCallbackI) (window, xpos, ypos) -> {
 			mousePosition.action((int)(xpos-getWidth()/2f), (int)(getHeight()/2f-ypos));
 		});
 

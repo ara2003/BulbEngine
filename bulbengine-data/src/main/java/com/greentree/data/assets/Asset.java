@@ -1,7 +1,6 @@
-package com.greentree.data.asset;
+package com.greentree.data.assets;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -33,7 +32,7 @@ public final class Asset implements Serializable {
 	}
 	public Asset(String type, File file, int...subType) {
 		this(type, FileUtil.getName(file), () -> {
-			return new FileInputStream(file);
+			return FileUtil.openStream(file);
 		}, subType);
 	}
 	

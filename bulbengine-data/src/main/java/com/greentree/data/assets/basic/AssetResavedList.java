@@ -1,4 +1,4 @@
-package com.greentree.data.asset.basic;
+package com.greentree.data.assets.basic;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -11,8 +11,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.greentree.common.logger.Log;
-import com.greentree.data.asset.Asset;
-import com.greentree.data.asset.AssetResaved;
+import com.greentree.data.assets.Asset;
+import com.greentree.data.assets.AssetResaved;
 import com.greentree.data.parse.ParserSet;
 
 public class AssetResavedList extends ParserSet<Asset, InputStream, AssetResaved> {

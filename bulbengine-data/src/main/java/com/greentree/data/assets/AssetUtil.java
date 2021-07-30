@@ -1,21 +1,20 @@
-package com.greentree.data.asset;
+package com.greentree.data.assets;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import com.greentree.common.logger.Log;
 import com.greentree.data.FileUtil;
 import com.greentree.data.InputStreamUtil;
-import com.greentree.data.asset.basic.AssetFinderList;
-import com.greentree.data.asset.basic.AssetResavedList;
+import com.greentree.data.assets.basic.AssetFinderList;
+import com.greentree.data.assets.basic.AssetResavedList;
 
 public abstract class AssetUtil {
 
@@ -38,7 +37,6 @@ public abstract class AssetUtil {
 			if(!assets.isDirectory())throw new IllegalArgumentException("is not directory " + assets);
 			for(File file : FileUtil.getAllFile(assets)) {
 				var res = parse(file);
-				System.out.println(res);
 				if(res != null) context.add(res);
 			}
 			return context;
@@ -113,7 +111,7 @@ public abstract class AssetUtil {
 		String name = null, type = null;
 		int[] arr = null;
 		
-		try(BufferedReader br = new BufferedReader(new FileReader(file))) {
+		try(BufferedReader br = new BufferedReader(new InputStreamReader(FileUtil.openStream(file)))) {
 			var line = br.readLine();
 			int index = line.indexOf(' ');
 			type = line.substring(0, index);
@@ -135,7 +133,7 @@ public abstract class AssetUtil {
 			e.printStackTrace();
 		}
 		return new Asset(type, name, () -> {
-			InputStream in = new FileInputStream(file);
+			InputStream in = FileUtil.openStream(file);
 			for(byte[] b = {1}; b[0] != '\n'; b = in.readNBytes(1));
 			return in;
 		}, arr);
